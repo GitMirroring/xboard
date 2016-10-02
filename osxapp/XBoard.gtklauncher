@@ -43,15 +43,6 @@ export GEGL_PATH="$bundle_lib/gegl-0.2"
 # Define gtkrc file
 export GTK2_RC_FILES="$bundle_etc/gtk-2.0/gtkrc"
 
-# set as absolute directory to find GTK resources internally, thanks GIMP.
-LNDIR=/tmp/skl/XBoard.app
-if [ ! -e "$LNDIR/Contents/Resources/launcher_rc" ]; then
-rm -f "$LNDIR"
-mkdir -p /tmp/skl
-chmod a+w /tmp/skl
-ln -s "$bundle" "$LNDIR"
-fi
-
 # set the working directory to users home
 cd ~/ > /dev/null
 

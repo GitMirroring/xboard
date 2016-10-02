@@ -310,8 +310,8 @@ macportsprefix = $(shell which port | sed s/[/]bin[/]port//)
 	echo '-saveSettingsFile "~/Library/Preferences/XBoard.conf"' >>$(sysconfdir)/xboard.conf
 	echo '-settingsFile "~/Library/Preferences/XBoard.conf"' >>$(sysconfdir)/xboard.conf
 
-	sed 's?$(macportsprefix)/lib?/tmp/skl/XBoard.app/Contents/Resources/lib?' <$(macportsprefix)/etc/gtk-2.0/gdk-pixbuf.loaders >$(sysconfdir)/gtk-2.0/gdk-pixbuf.loaders
-	sed -e 's?$(macportsprefix)/lib?/tmp/skl/XBoard.app/Contents/Resources/lib?' -e 's?$(macportsprefix)/share/locale?/tmp/skl/XBoard.app/Contents/Resources/share/locale?' <$(macportsprefix)/etc/gtk-2.0/gtk.immodules >$(sysconfdir)/gtk-2.0/gtk.immodules
+	sed 's?$(macportsprefix)/lib?@executable_path/../Resources/lib?' <$(macportsprefix)/etc/gtk-2.0/gdk-pixbuf.loaders >$(sysconfdir)/gtk-2.0/gdk-pixbuf.loaders
+	sed -e 's?$(macportsprefix)/lib?@executable_path/../Resources/lib?' -e 's?$(macportsprefix)/share/locale?@executable_path/../Resources/share/locale?' <$(macportsprefix)/etc/gtk-2.0/gtk.immodules >$(sysconfdir)/gtk-2.0/gtk.immodules
 	$(INSTALL) ./osxapp/launcher_rc $(datarootdir)/
 	$(INSTALL) $(macportsprefix)/etc/gtk-2.0/im-multipress.conf $(sysconfdir)/gtk-2.0
 	$(INSTALL) ./osxapp/gtkrc $(sysconfdir)/gtk-2.0/gtkrc
