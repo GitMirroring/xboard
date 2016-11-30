@@ -22,6 +22,9 @@ export PATH="$bundle_contents/MacOS/:$PATH"
 
 chmod -R +x $bundle_bin
 
+# Fix pixbuf mime issue
+export XDG_DATA_DIRS="$bundle_data" 
+
 # Use fallback instead of normal dlyd path, may not be required
 export DYLD_FALLBACK_LIBRARY_PATH="$bundle_lib:$DYLD_FALLBACK_LIBRARY_PATH"
 

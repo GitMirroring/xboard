@@ -272,6 +272,7 @@ macportsprefix = $(shell which port | sed s/[/]bin[/]port//)
 	$(MKDIR_P) $(datadir)/themes
 	$(MKDIR_P) $(datadir)/gtk-engines
 	$(MKDIR_P) $(gamedatadir)/themes
+	$(MKDIR_P) $(datadir)/mime
 	$(INSTALL) ./osxapp/Info.plist $(prefix)
 	$(INSTALL) ./osxapp/PkgInfo $(prefix)
 	$(INSTALL) ./osxapp/XBoard.gtklauncher $(bindir)/XBoard
@@ -321,6 +322,7 @@ macportsprefix = $(shell which port | sed s/[/]bin[/]port//)
 	cp -R ./osxapp/gtk2-themes/Mac/gtk-2.0 $(datadir)/themes/Mac
 	cp -R ./osxapp/themes/default/. $(gamedatadir)/themes/default
 	cp $(macportsprefix)/share/gtk-engines/murrine.xml $(datadir)/gtk-engines/murrine.xml
+	cp $(macportsprefix)/share/mime/mime.cache $(datadir)/mime/mime.cache
 	$(INSTALL) ./png/marble_d.png $(gamedatadir)/themes/textures
 	$(INSTALL) ./png/marble_l.png $(gamedatadir)/themes/textures
 	$(INSTALL) ./png/xqwood-9x10.png $(gamedatadir)/themes/textures
