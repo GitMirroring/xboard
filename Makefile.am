@@ -313,7 +313,6 @@ macportsprefix = $(shell which port | sed s/[/]bin[/]port//)
 
 	sed 's?$(macportsprefix)/lib?@executable_path/../Resources/lib?' <$(macportsprefix)/etc/gtk-2.0/gdk-pixbuf.loaders >$(sysconfdir)/gtk-2.0/gdk-pixbuf.loaders
 	sed -e 's?$(macportsprefix)/lib?@executable_path/../Resources/lib?' -e 's?$(macportsprefix)/share/locale?@executable_path/../Resources/share/locale?' <$(macportsprefix)/etc/gtk-2.0/gtk.immodules >$(sysconfdir)/gtk-2.0/gtk.immodules
-	$(INSTALL) ./osxapp/launcher_rc $(datarootdir)/
 	$(INSTALL) $(macportsprefix)/etc/gtk-2.0/im-multipress.conf $(sysconfdir)/gtk-2.0
 	$(INSTALL) ./osxapp/gtkrc $(sysconfdir)/gtk-2.0/gtkrc
 	cp -R $(macportsprefix)/lib/gtk-2.0 $(datarootdir)/lib
