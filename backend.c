@@ -7182,7 +7182,7 @@ UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
 	    DrawPosition(FALSE, boards[currentMove]);
 	    return;
 	} else if (toX >= 0 && toY >= 0) {
-	    if(!appData.pieceMenu && toX == fromX && toY == fromY && boards[0][rf][ff] != EmptySquare) {
+	    if(toX == fromX && toY == fromY && boards[0][rf][ff] != EmptySquare) {
 		ChessSquare p = boards[0][rf][ff];
 		if(PieceToChar(p) == '+') gatingPiece = CHUDEMOTED(p); else
 		if(PieceToChar(CHUPROMOTED(p)) =='+') gatingPiece = CHUPROMOTED(p); else
@@ -7610,6 +7610,7 @@ void ReportClick(char *action, int x, int y)
 Boolean right; // instructs front-end to use button-1 events as if they were button 3
 Boolean deferChoice;
 int createX = -1, createY = -1; // square where we last created a piece in EditPosition mode
+ChessSquare selectedType = EmptySquare;
 
 void
 LeftClick (ClickType clickType, int xPix, int yPix)
@@ -7631,6 +7632,19 @@ LeftClick (ClickType clickType, int xPix, int yPix)
     }
     if (flipView && x >= 0) {
 	x = BOARD_WIDTH - 1 - x;
+    }
+
+    if(gameMode == EditPosition && fromX < 0 && selectedType != EmptySquare &&
+       (boards[currentMove][y][x] == EmptySquare || x == createX && y == createY)) { // placement click
+	if(clickType == Press) {
+	    ChessSquare newType = boards[currentMove][y][x];
+	    if(newType != EmptySquare) {
+		do { if(++newType == EmptySquare) newType = WhitePawn; } while(PieceToChar(newType) == '.');
+	    } else newType = selectedType;
+	    EditPositionMenuEvent(newType, x, y);
+	    createX = x; createY = y; // remember where we last dropped
+	}
+	return;
     }
 
     // map clicks in offsetted holdings back to true coords (or switch the offset)
@@ -8042,6 +8056,13 @@ LeftClick (ClickType clickType, int xPix, int yPix)
     }
 }
 
+void
+Deselect ()
+{
+    fromX = -1;
+    ClearHighlights();
+}
+
 int
 RightClick (ClickType action, int x, int y, int *fromX, int *fromY)
 {   // front-end-free part taken out of PieceMenuPopup
@@ -8086,8 +8107,32 @@ RightClick (ClickType action, int x, int y, int *fromX, int *fromY)
       case EditPosition:
 	if (xSqr == BOARD_LEFT-1 || xSqr == BOARD_RGHT) return -1;
 	if (xSqr < 0 || ySqr < 0) return -1;
-	if(appData.pieceMenu) { whichMenu = 0; break; } // edit-position menu
+//	if(appData.pieceMenu) { whichMenu = 0; break; } // edit-position menu
 	if(flipView) xSqr = BOARD_WIDTH - 1 - xSqr; else ySqr = BOARD_HEIGHT - 1 - ySqr;
+	if(appData.pieceMenu) { // select click
+	    ChessSquare newType = boards[currentMove][ySqr][xSqr];
+	    boards[currentMove][ySqr][xSqr] = EmptySquare;
+	    if(newType == EmptySquare && selectedType == EmptySquare) { // click on empty summons context menu if not deselect
+		DisplayNote(  _("To edit the position you can:\n"
+				"* Move pieces around with left button\n"
+				"* Copy pieces by moving with Ctrl key pressed\n"
+				"   OR by starting the move with a double-click\n"
+				"* Click a K, R or P a second time to toggle its rights\n"
+				"* 'Lift' piece with right-click for multi-dropping\n"
+				"* Drop a piece of the lifted type by left-click on empty\n"
+				"* Adjust the type of a dropped piece by clicking it again\n"
+				"* Click a clock to set the side to move"));
+		return -2;
+	    }
+	    selectedType = newType; Deselect();
+	    if(selectedType == EmptySquare) DisplayMessage("", ""); else {
+		char buf[MSG_SIZ];
+		snprintf(buf, MSG_SIZ, "left-click places %s %c", newType < BlackPawn ? _("white") : _("black"), ToUpper(PieceToChar(newType)));
+		DisplayMessage("", buf);
+	    }
+            DrawPosition(FALSE, boards[currentMove]);
+	    return -2;
+	}
 	if(xSqr == createX && ySqr == createY && xSqr != BOARD_LEFT-2 && xSqr != BOARD_RGHT+1) {
 	    ChessSquare p = boards[currentMove][ySqr][xSqr];
 	    do { if(++p == EmptySquare) p = WhitePawn; } while(PieceToChar(p) == '.');
@@ -15578,6 +15623,7 @@ EditPositionDone (Boolean fakeRights)
 {
     int king = gameInfo.variant == VariantKnightmate ? WhiteUnicorn : WhiteKing;
 
+    selectedType = EmptySquare;
     startedFromSetupPosition = TRUE;
     InitChessProgram(&first, FALSE);
     if(fakeRights) { // [HGM] suppress this if we just pasted a FEN.
