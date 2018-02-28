@@ -16055,7 +16055,7 @@ ClockClick (int which)
 {	// [HGM] code moved to back-end from winboard.c
 	if(which) { // black clock
 	  if (gameMode == EditPosition || gameMode == IcsExamining) {
-	    if(!appData.pieceMenu && blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
+	    if(blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
 	    SetBlackToPlayEvent();
 	  } else if ((gameMode == AnalyzeMode || gameMode == EditGame ||
 		      gameMode == MachinePlaysBlack && PosFlags(0) & F_NULL_MOVE && !blackFlag && !shiftKey) && WhiteOnMove(currentMove)) {
@@ -16068,7 +16068,7 @@ ClockClick (int which)
 	  }
 	} else { // white clock
 	  if (gameMode == EditPosition || gameMode == IcsExamining) {
-	    if(!appData.pieceMenu && !blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
+	    if(!blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
 	    SetWhiteToPlayEvent();
 	  } else if ((gameMode == AnalyzeMode || gameMode == EditGame ||
 		      gameMode == MachinePlaysWhite && PosFlags(0) & F_NULL_MOVE && !whiteFlag && !shiftKey) && !WhiteOnMove(currentMove)) {
