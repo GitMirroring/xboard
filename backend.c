@@ -15735,6 +15735,8 @@ SetBlackToPlayEvent ()
     }
 }
 
+int clearCycle;
+
 void
 EditPositionMenuEvent (ChessSquare selection, int x, int y)
 {
@@ -15769,9 +15771,6 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
                                     AAA + x, ONE + y);
 			    SendToICS(buf);
 			}
-		    } else if(boards[0][y][x] != DarkSquare) {
-			if(boards[0][y][x] != p) nonEmpty++;
-			boards[0][y][x] = p;
 		    }
 		}
 	    }
@@ -15787,17 +15786,33 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 		menuBoard[CASTLING][0] = menuBoard[CASTLING][3] = NoRights; // h-side Rook was deleted
 		DisplayMessage("Clicking clock again restores position", "");
 		if(gameInfo.variant != lastVariant) lastVariant = gameInfo.variant, CopyBoard(erasedBoard, boards[0]);
-		if(!nonEmpty) { // asked to clear an empty board
-		    CopyBoard(boards[0], menuBoard);
-		} else
-		if(CompareBoards(currentBoard, menuBoard)) { // asked to clear an empty board
-		    CopyBoard(boards[0], initialPosition);
-		} else
-		if(CompareBoards(currentBoard, initialPosition) && !CompareBoards(currentBoard, erasedBoard)
-								 && !CompareBoards(nullBoard, erasedBoard)) {
+printf("cycle = %d\n",clearCycle);
+		switch(clearCycle++) {
+		  case 0:
+		    if(!CompareBoards(currentBoard, initialPosition)) { // initial position if notyet there
+		      CopyBoard(erasedBoard, boards[0]);
+		      CopyBoard(boards[0], initialPosition);
+		      break;
+		    }
+		    clearCycle++;
+		  case 1:
+		    CopyBoard(boards[0], menuBoard); break;
+		  case 2:
+		    for(r = 0; r < BOARD_HEIGHT; r++) {
+		      ChessSquare king = WhiteKing;
+		      for(x = 0; x < BOARD_WIDTH; x++) { // erase except Kings and center
+			ChessSquare p = (x == BOARD_LEFT-1 || x == BOARD_RGHT ? 0 : EmptySquare);
+		        if((x < BOARD_WIDTH/2 - 2 || x >= BOARD_WIDTH/2 + 2 ||
+		            r < BOARD_HEIGHT/2 - 2 || r >= BOARD_HEIGHT/2 + 2) &&
+			    boards[0][r][x] != king && boards[0][r][x] != king + BlackPawn
+			    && boards[0][r][x] != DarkSquare && boards[0][r][x] != p) boards[0][r][x] = EmptySquare;
+		      }
+		    }
+		    break;
+		  case 3:
 		    CopyBoard(boards[0], erasedBoard);
-		} else
-		    CopyBoard(erasedBoard, currentBoard);
+		}
+		clearCycle &= 3; // wrap
 
 		for(i=0; i<nrCastlingRights; i++) if(boards[0][CASTLING][i] != NoRights)
 		    rightsBoard[castlingRank[i]][boards[0][CASTLING][i]] = 1; // copy remaining rights
