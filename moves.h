@@ -64,6 +64,7 @@ extern void CopyBoard P((Board to, Board from));
 extern int CompareBoards P((Board board1, Board board2));
 extern unsigned char pieceToChar[(int)EmptySquare+1];
 extern unsigned char pieceNickName[(int)EmptySquare];
+extern unsigned char autoProm[(int)EmptySquare];
 extern int promoPartner[(int)EmptySquare];
 extern char *pieceDesc[(int)EmptySquare];
 extern Board initialPosition;

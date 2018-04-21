@@ -5402,10 +5402,15 @@ void
 CoordsToComputerAlgebraic (int rf, int ff, int rt, int ft, char promoChar, char move[9])
 {
     if (rf == DROP_RANK) {
-      if(ff == EmptySquare) sprintf(move, "@@@@\n"); else // [HGM] pass
-      sprintf(move, "%c@%c%c\n",
-                ToUpper(PieceToChar((ChessSquare) ff)), AAA + ft, ONE + rt);
+      if(ff == EmptySquare) sprintf(move, "@@@@\n"); else { // [HGM] pass
+	char p = PieceToChar((ChessSquare) ff);
+	if(p == '+' && pieceNickName[ff] >= 'A') p = pieceNickName[ff]; // prefer nick over +X
+        sprintf(move, "%c@%c%c\n",
+                ToUpper(p), AAA + ft, ONE + rt);
+      }
     } else {
+	char c = autoProm[boards[forwardMostMove][rf][ff]];
+	if(c && (c == '-' || boards[forwardMostMove][rt][ft] != EmptySquare)) promoChar = '+';
 	if (promoChar == 'x' || promoChar == NULLCHAR) {
 	  sprintf(move, "%c%c%c%c\n",
                     AAA + ff, ONE + rf, AAA + ft, ONE + rt);
@@ -6066,7 +6071,7 @@ ptclen (const char *s, char *escapes)
 {
     int n = 0;
     if(!*escapes) return strlen(s);
-    while(*s) n += (*s != '/' && *s != '-' && *s != '^' && *s != '*' && !strchr(escapes, *s)) - 2*(*s == '='), s++;
+    while(*s) n += (!strchr("-*/^", *s) && !strchr(escapes, *s)) - 2*(*s == '='), s++;
     return n;
 }
 
@@ -6114,12 +6119,13 @@ SetCharTableEsc (unsigned char *table, const char * map, char * escapes)
                 if(c == '^' || c == '-') { // has specified partner
                     int p;
                     for(p=0; p<EmptySquare; p++) if(table[p] == partner[i]) break;
-                    if(c == '^') table[i] = '+';
                     if(p < EmptySquare) {
                         if(promoPartner[promoPartner[p]] == p) promoPartner[promoPartner[p]] = promoPartner[p]; // divorce old partners
                         if(promoPartner[promoPartner[i]] == i) promoPartner[promoPartner[i]] = promoPartner[i];
                         promoPartner[p] = i, promoPartner[i] = p; // and marry this couple
                     }
+                    if(c == '-') autoProm[i] = autoProm[p] = '-', c = '^';
+                    if(c == '^') table[i] = '+';
                 } else if(c == '*') {
                     table[i] = partner[i];
                     promoPartner[i] = (i < BlackPawn ? WhiteTokin : BlackTokin); // promotes to Tokin
@@ -6220,6 +6226,7 @@ InitPosition (int redraw)
     initialPosition[EP_STATUS] = EP_NONE;
     initialPosition[TOUCHED_W] = initialPosition[TOUCHED_B] = 0;
     SetCharTableEsc(pieceToChar, "PNBRQ...........Kpnbrq...........k", SUFFIXES);
+    for(i=0; i<EmptySquare; i++) autoProm[i] = 0;
     if(startVariant == gameInfo.variant) // [HGM] nicks: enable nicknames in original variant
          SetCharTable(pieceNickName, appData.pieceNickNames);
     else SetCharTable(pieceNickName, "............");
@@ -10495,6 +10502,10 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
      if(gameInfo.variant == VariantKnightmate)
          king += (int) WhiteUnicorn - (int) WhiteKing;
 
+    if(autoProm[piece]) {
+	board[toY][toX] = (autoProm[piece] != '!' || board[toY][toX] != EmptySquare ? CHUPROMOTED(piece) : piece);
+	board[fromY][fromX] = EmptySquare;
+    } else
     if(pieceDesc[piece] && killX >= 0 && strchr(pieceDesc[piece], 'O') // Betza castling-enabled
        && (piece < BlackPawn ? killed < BlackPawn : killed >= BlackPawn)) {    // and tramples own
 	board[toY][toX] = piece; board[fromY][fromX] = EmptySquare;
@@ -10668,6 +10679,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
         /* and erasing image if necessary            */
         p = fromY == DROP_RANK ? (int) fromX : CharToPiece(piece > BlackPawn ? ToLower(promoChar) : ToUpper(promoChar));
         if(p < (int) BlackPawn) { /* white drop */
+             if(PieceToChar(p) == '+') p = CHUDEMOTED(p); // promoted drop
              p -= (int)WhitePawn;
 		 p = PieceToNumber((ChessSquare)p);
              if(p >= gameInfo.holdingsSize) p = 0;
@@ -10677,6 +10689,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 			board[p][BOARD_WIDTH-2] = 0;
         } else {                  /* black drop */
              p -= (int)BlackPawn;
+             if(PieceToChar(p) == '+') p = CHUDEMOTED(p);
 		 p = PieceToNumber((ChessSquare)p);
              if(p >= gameInfo.holdingsSize) p = 0;
              if(--board[handSize-1-p][1] <= 0)
@@ -18474,7 +18487,7 @@ PositionToFEN (int move, char *overrideCastling, int moveCounts)
     int i, j, fromX, fromY, toX, toY;
     int whiteToPlay, haveRights = nrCastlingRights;
     char buf[MSG_SIZ];
-    char *p, *q;
+    char *p, *q, c;
     int emptycount;
     ChessSquare piece;
 
@@ -18496,12 +18509,13 @@ PositionToFEN (int move, char *overrideCastling, int moveCounts)
                     else { *p++ = '0' + emptycount/10; *p++ = '0' + emptycount%10; }
 		    emptycount = 0;
 		}
-                if(PieceToChar(piece) == '+') {
+                c = PieceToChar(piece);
+                if(c == '+') {
                     /* [HGM] write promoted pieces as '+<unpromoted>' (Shogi) */
-                    *p++ = '+';
-                    piece = (ChessSquare)(CHUDEMOTED(piece));
+                    if(autoProm[piece] && pieceNickName[piece] >= 'A') c = pieceNickName[piece]; else
+                    *p++ = '+', piece = (ChessSquare)(CHUDEMOTED(piece)), c = PieceToChar(piece);
                 }
-                *p++ = (piece == DarkSquare ? '*' : PieceToChar(piece));
+                *p++ = (piece == DarkSquare ? '*' : c);
                 if(*p = PieceSuffix(piece)) p++;
                 if(p[-1] == '~') {
                     /* [HGM] flag promoted pieces as '<promoted>~' (Crazyhouse) */

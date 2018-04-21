@@ -553,8 +553,10 @@ NextUnit (char **p)
 			if(!(appData.icsActive && PieceToChar(realPiece) == '+') && // trust ICS if it moves promoted pieces
 			   piece && realPiece != cl.pieceIn) return ImpossibleMove;
 		    } else if(!separator && **p == '+') { // could be a protocol move, where bare '+' suffix means shogi-style promotion
-			if(realPiece < (wom ?  WhiteCannon : BlackCannon) && PieceToChar(PROMOTED(realPiece)) == '+') // seems to be that
+			if(PieceToChar(CHUPROMOTED(realPiece)) == '+') {    // seems to be that
+			   if(!autoProm[realPiece]) **p++; else             // for now ignore promosuffix on auto-promoting pieces' protocol moves
 			   currentMoveString[4] = cl.promoCharIn = *(*p)++; // append promochar after all
+			}
 		    }
 		    result = LegalityTest(boards[yyboardindex], PosFlags(yyboardindex), fromY, fromX, toY, toX, cl.promoCharIn);
 		    if (currentMoveString[4] == NULLCHAR) { // suppy missing mandatory promotion character

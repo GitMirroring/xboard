@@ -122,6 +122,7 @@ unsigned char pieceToChar[EmptySquare+1] = {
                         'x' };
 unsigned char pieceNickName[EmptySquare];
 int promoPartner[EmptySquare];
+unsigned char autoProm[EmptySquare];
 
 char
 PieceToChar (ChessSquare p)
@@ -790,7 +791,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
               }
               if (rf < BOARD_HEIGHT-1 && board[rf + 1][ff] == EmptySquare) {
 		  callback(board, flags,
-			   rf >= BOARD_HEIGHT-1-promoRank ? WhitePromotion : NormalMove,
+			   rf >= BOARD_HEIGHT-1-promoRank && !autoProm[WhitePawn] ? WhitePromotion : NormalMove,
 			   rf, ff, rf + 1, ff, closure);
 	      }
 	      if (rf <= (BOARD_HEIGHT>>1)-3 && board[rf+1][ff] == EmptySquare && // [HGM] grand: also on 3rd rank on 10-board
@@ -805,7 +806,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		      ((flags & F_KRIEGSPIEL_CAPTURE) ||
 		       BlackPiece(board[rf + 1][ff + s]))) {
 		      callback(board, flags,
-			       rf >= BOARD_HEIGHT-1-promoRank ? WhitePromotion : NormalMove,
+			       rf >= BOARD_HEIGHT-1-promoRank && !autoProm[WhitePawn] ? WhitePromotion : NormalMove,
 			       rf, ff, rf + 1, ff + s, closure);
 		  }
 		  if (rf >= BOARD_HEIGHT+1>>1) {// [HGM] grand: 4th & 5th rank on 10-board
@@ -841,7 +842,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
               }
 	      if (rf > 0 && board[rf - 1][ff] == EmptySquare) {
 		  callback(board, flags,
-			   rf <= promoRank ? BlackPromotion : NormalMove,
+			   rf <= promoRank && !autoProm[BlackPawn] ? BlackPromotion : NormalMove,
 			   rf, ff, rf - 1, ff, closure);
 	      }
 	      if (rf >= (BOARD_HEIGHT+1>>1)+2 && board[rf-1][ff] == EmptySquare && // [HGM] grand
@@ -856,7 +857,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		      ((flags & F_KRIEGSPIEL_CAPTURE) ||
 		       WhitePiece(board[rf - 1][ff + s]))) {
 		      callback(board, flags,
-			       rf <= promoRank ? BlackPromotion : NormalMove,
+			       rf <= promoRank && !autoProm[BlackPawn] ? BlackPromotion : NormalMove,
 			       rf, ff, rf - 1, ff + s, closure);
 		  }
 		  if (rf < BOARD_HEIGHT>>1) {
@@ -1822,14 +1823,15 @@ HasLion (Board board, int flags)
 ChessMove
 LegalDrop (Board board, int flags, ChessSquare piece, int rt, int ft)
 {   // [HGM] put drop legality testing in separate routine for clarity
-    int n;
+    int n, p = piece;
 if(appData.debugMode) fprintf(debugFP, "LegalDrop: %d @ %d,%d)\n", piece, ft, rt);
     if(board[rt][ft] != EmptySquare) return ImpossibleMove; // must drop to empty square
-    n = PieceToNumber(piece);
-    if((gameInfo.holdingsWidth == 0 || (flags & F_WHITE_ON_MOVE ? board[n][BOARD_WIDTH-1] : board[handSize-1-n][0]) != piece)
+    if(PieceToChar(piece) == '+') p = CHUDEMOTED(p);
+    n = PieceToNumber(p);
+    if((gameInfo.holdingsWidth == 0 || (flags & F_WHITE_ON_MOVE ? board[n][BOARD_WIDTH-1] : board[handSize-1-n][0]) != p)
 	&& gameInfo.variant != VariantBughouse) // in bughouse we don't check for availability, because ICS doesn't always tell us
         return ImpossibleMove; // piece not available
-    if(gameInfo.variant == VariantShogi) { // in Shogi lots of drops are forbidden!
+    if(gameInfo.variant == VariantShogi && !autoProm[piece]) { // in Shogi lots of drops are forbidden! (but not in Kyoto/micro-)
         if((piece == WhitePawn || piece == WhiteQueen) && rt == BOARD_HEIGHT-1 ||
            (piece == BlackPawn || piece == BlackQueen) && rt == 0 ||
             piece == WhiteKnight && rt > BOARD_HEIGHT-3 ||
@@ -1897,6 +1899,7 @@ LegalityTest (Board board, int flags, int rf, int ff, int rt, int ft, int promoC
 	return(IllegalMove); // [HGM] losers: if there are legal captures, non-capts are illegal
 
     if(promoChar == 'x') promoChar = NULLCHAR; // [HGM] is this ever the case?
+    if(autoProm[piece]) promoChar = NULLCHAR;  // ignore promotion characters on auto-promoting pieces
     if(gameInfo.variant == VariantSChess && promoChar && promoChar != '=' && board[rf][ff] != WhitePawn && board[rf][ff] != BlackPawn) {
         if(board[rf][ff] < BlackPawn) { // white
             if(rf != 0) return IllegalMove; // must be on back rank
@@ -2323,7 +2326,9 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
     if (rf == DROP_RANK) {
 	if(ff == EmptySquare) { strncpy(outp, "--",3); return NormalMove; } // [HGM] pass
 	/* Bughouse piece drop */
-	*outp++ = ToUpper(PieceToChar((ChessSquare) ff));
+	c = PieceToChar((ChessSquare) ff);
+	if(c == '+') c = pieceNickName[ff]; // must have nickname for promote drop
+	*outp++ = ToUpper(c);
 	*outp++ = '@';
         *outp++ = ft + AAA;
         if(rt+ONE <= '9')
@@ -2443,12 +2448,15 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
 	   else "N1f3" or "N5xf7",
 	   else "Ng1f3" or "Ng5xf7".
 	*/
+        if(c=='+') {
+            c = pieceNickName[piece]; // prefer any nick over +X notation
+            if(c < 'A') *outp++ = c = '+';
+        }
         if( c == '~' || c == '+') {
            /* [HGM] print nonexistent piece as its demoted version */
-           piece = (ChessSquare) (CHUDEMOTED(piece));
+           c = PieceToChar((ChessSquare) (CHUDEMOTED(piece)));
         }
-        if(c=='+') *outp++ = c;
-        *outp++ = ToUpper(PieceToChar(piece));
+        *outp++ = ToUpper(c);
         if(*outp = PieceSuffix(piece)) outp++;
 
 	if (cl.file || (cl.either && !cl.rank)) {
@@ -2467,6 +2475,7 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
         if(rt+ONE <= '9')
            *outp++ = rt + ONE;
         else { *outp++ = (rt+ONE-'0')/10 + '0';*outp++ = (rt+ONE-'0')%10 + '0'; }
+        if(autoProm[piece]) promoChar = 0; // no promotion suffix for implied promotions
         if (IS_SHOGI(gameInfo.variant)) {
             /* [HGM] in Shogi non-pawns can promote */
             *outp++ = promoChar; // Don't bother to correct move type, return value is never used!
