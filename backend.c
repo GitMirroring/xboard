@@ -7234,6 +7234,7 @@ UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
 	   fromX = fromX ? WhitePawn : BlackPawn; // first piece type in selected holdings
 	   while(PieceToChar(fromX) == '.' || PieceToChar(fromX) == '+' || PieceToNumber(fromX) != fromY && fromX != (int) EmptySquare) fromX++;
          fromY = DROP_RANK;
+         if(autoProm[fromX] && shiftKey) fromX = CHUPROMOTED(fromX);
     }
 
     /* [HGM] always test for legality, to get promotion info */
