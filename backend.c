@@ -15587,6 +15587,8 @@ EditGameEvent ()
     SetGameInfo();
 }
 
+int clearCycle;
+
 void
 EditPositionEvent ()
 {
@@ -15614,6 +15616,7 @@ EditPositionEvent ()
     HistorySet(parseList, backwardMostMove, forwardMostMove, currentMove-1);
     DisplayMove(-1);
     if(!appData.pieceMenu) DisplayMessage(_("Click clock to clear board"), "");
+    clearCycle = 0;
 }
 
 void
@@ -15749,15 +15752,12 @@ SetBlackToPlayEvent ()
     }
 }
 
-int clearCycle;
-
 void
 EditPositionMenuEvent (ChessSquare selection, int x, int y)
 {
     char buf[MSG_SIZ];
     ChessSquare piece = boards[0][y][x];
     static Board erasedBoard, currentBoard, menuBoard, nullBoard;
-    static int lastVariant;
     int baseRank = BOARD_HEIGHT-1, hasRights = 0;
 
     if (gameMode != EditPosition && gameMode != IcsExamining) return;
@@ -15775,7 +15775,6 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 	    SendToICS(ics_prefix);
 	    SendToICS("clearboard\n");
 	} else {
-            int nonEmpty = 0;
             for (x = 0; x < BOARD_WIDTH; x++) { ChessSquare p = EmptySquare;
 		if(x == BOARD_LEFT-1 || x == BOARD_RGHT) p = (ChessSquare) 0; /* [HGM] holdings */
                 for (y = 0; y < BOARD_HEIGHT; y++) {
@@ -15791,6 +15790,7 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 	    CopyBoard(rightsBoard, nullBoard);
 	    if(gameMode != IcsExamining) { // [HGM] editpos: cycle trough boards
 		int r, i;
+		CopyBoard(menuBoard, initialPosition);
 		for(r = 0; r < BOARD_HEIGHT; r++) {
 		  for(x = BOARD_LEFT; x < BOARD_RGHT; x++) { // create 'menu board' by removing duplicates 
 		    ChessSquare p = menuBoard[r][x];
@@ -15798,20 +15798,13 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 		  }
 		}
 		menuBoard[CASTLING][0] = menuBoard[CASTLING][3] = NoRights; // h-side Rook was deleted
-		DisplayMessage("Clicking clock again restores position", "");
-		if(gameInfo.variant != lastVariant) lastVariant = gameInfo.variant, CopyBoard(erasedBoard, boards[0]);
-printf("cycle = %d\n",clearCycle);
 		switch(clearCycle++) {
 		  case 0:
-		    if(!CompareBoards(currentBoard, initialPosition)) { // initial position if notyet there
-		      CopyBoard(erasedBoard, boards[0]);
-		      CopyBoard(boards[0], initialPosition);
-		      break;
-		    }
-		    clearCycle++;
-		  case 1:
+		    DisplayMessage(_("Click again to clear more"), "");
+		    CopyBoard(erasedBoard, boards[0]);
 		    CopyBoard(boards[0], menuBoard); break;
-		  case 2:
+		  case 1:
+		    DisplayMessage(_("Keep clicking clock to restore position"), "");
 		    for(r = 0; r < BOARD_HEIGHT; r++) {
 		      ChessSquare king = WhiteKing;
 		      for(x = 0; x < BOARD_WIDTH; x++) { // erase except Kings and center
@@ -15823,7 +15816,14 @@ printf("cycle = %d\n",clearCycle);
 		      }
 		    }
 		    break;
+		  case 2:
+		    if(!CompareBoards(erasedBoard, initialPosition)) { // initial position if notyet there
+		      CopyBoard(boards[0], initialPosition);
+		      break;
+		    }
+		    clearCycle++;
 		  case 3:
+		    DisplayMessage(_("Keep Ctrl pressed to duplicate pieces"), "");
 		    CopyBoard(boards[0], erasedBoard);
 		}
 		clearCycle &= 3; // wrap
