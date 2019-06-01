@@ -2181,8 +2181,10 @@ ChatOK (int n)
 	// from here on it could be back-end
 	if(line[strlen(line)-1] == '\n') line[strlen(line)-1] = NULLCHAR;
 	SaveInHistory(line);
-	if(hidden || !*chatPartner[activePartner]) snprintf(buf, MSG_SIZ, "%s\n", line); else // command for ICS
-	if(!strcmp("whispers", chatPartner[activePartner]))
+	if(hidden || !*chatPartner[activePartner]) { // command for ICS
+		snprintf(buf, MSG_SIZ, "%s\n", line);
+		if(!remoteEchoOption) ConsoleWrite(buf, strlen(buf));
+	} else if(!strcmp("whispers", chatPartner[activePartner]))
 	      snprintf(buf, MSG_SIZ, "whisper %s\n", line); // WHISPER box uses "whisper" to send
 	else if(!strcmp("shouts", chatPartner[activePartner]))
 	      snprintf(buf, MSG_SIZ, "shout %s\n", line); // SHOUT box uses "shout" to send

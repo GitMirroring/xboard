@@ -2844,6 +2844,8 @@ SeekGraphClick (ClickType click, int x, int y, int moving)
     return TRUE;
 }
 
+int remoteEchoOption = FALSE; /* telnet ECHO option */
+
 void
 read_from_ics (InputSourceRef isr, VOIDSTAR closure, char *data, int count, int error)
 {
@@ -2977,7 +2979,6 @@ read_from_ics (InputSourceRef isr, VOIDSTAR closure, char *data, int count, int 
 	       telnet server that will try to keep WILL ECHO on permanently.
              */
 	    if (buf_len - i >= 3 && (unsigned char) buf[i] == TN_IAC) {
-		static int remoteEchoOption = FALSE; /* telnet ECHO option */
 		unsigned char option;
 		oldi = i;
 		switch ((unsigned char) buf[++i]) {

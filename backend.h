@@ -411,6 +411,7 @@ typedef struct {
 extern ChessProgramStats_Move pvInfoList[MAX_MOVES];
 extern Boolean shuffleOpenings;
 extern ChessProgramStats programStats;
+extern int remoteEchoOption;
 extern int opponentKibitzes; // used by wengineo.c
 extern int errorExitStatus;
 extern char *recentEngines;
