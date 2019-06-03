@@ -8130,14 +8130,16 @@ RightClick (ClickType action, int x, int y, int *fromX, int *fromY)
 	    boards[currentMove][ySqr][xSqr] = EmptySquare;
 	    if(newType == EmptySquare && selectedType == EmptySquare) { // click on empty summons context menu if not deselect
 		DisplayNote(  _("To edit the position you can:\n"
-				"* Move pieces around with left button\n"
+				"* Move pieces around with left mouse button\n"
 				"* Copy pieces by moving with Ctrl key pressed\n"
 				"   OR by starting the move with a double-click\n"
 				"* Click a K, R or P a second time to toggle its rights\n"
-				"* 'Lift' piece with right-click for multi-dropping\n"
+				"* 'Lift' a piece with right-click for multi-dropping\n"
 				"* Drop a piece of the lifted type by left-click on empty\n"
+				"* Right-click on empty to finish dropping\n"
 				"* Adjust the type of a dropped piece by clicking it again\n"
-				"* Click a clock to set the side to move"));
+				"* Click the active clock (repeatedly) to clear the board\n"
+				"* Click the inactive clock to change the side to move"));
 		return -2;
 	    }
 	    selectedType = newType; Deselect();
