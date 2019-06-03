@@ -442,7 +442,7 @@ char *currentDebugFile; // [HGM] debug split: to remember name
 */
 
 char cmailMove[CMAIL_MAX_GAMES][MOVE_LEN], cmailMsg[MSG_SIZ];
-char bookOutput[MSG_SIZ*10], thinkOutput[MSG_SIZ*10], lastHint[MSG_SIZ];
+char bookOutput[MSG_SIZ*10], thinkOutput[MSG_SIZ*10], lastHint[MSG_SIZ], hintSrc;
 char thinkOutput1[MSG_SIZ*10];
 char promoRestrict[MSG_SIZ];
 
@@ -5678,7 +5678,7 @@ Boolean pushed = FALSE;
 char *lastParseAttempt;
 
 void
-ParsePV (char *pv, Boolean storeComments, Boolean atEnd)
+ParsePV (char *pv, Boolean storeComments, Boolean atEnd, int engine)
 { // Parse a string of PV moves, and append to current game, behind forwardMostMove
   int fromX, fromY, toX, toY; char promoChar;
   ChessMove moveType;
@@ -5696,10 +5696,15 @@ ParsePV (char *pv, Boolean storeComments, Boolean atEnd)
     if(nr == 0 && !storeComments && *pv == '(') pv++; // first (ponder) move can be in parentheses
     lastParseAttempt = pv;
     valid = ParseOneMove(pv, endPV, &moveType, &fromX, &fromY, &toX, &toY, &promoChar);
-    if(!valid && nr == 0 &&
-       ParseOneMove(pv, endPV-1, &moveType, &fromX, &fromY, &toX, &toY, &promoChar)){
-        nr++; moveType = Comment; // First move has been played; kludge to make sure we continue
-        // Hande case where played move is different from leading PV move
+    if(!valid && nr == 0) {
+       if(engine == hintSrc && *lastHint && appData.ponderNextMove &&
+                 ParseOneMove(lastHint, endPV, &moveType, &fromX, &fromY, &toX, &toY, &promoChar)){
+        // first PV move is invalid, but the engine provided hint and is probably pondering on it
+        valid++; goto append_move; // use this hint as first move
+       }
+       if(ParseOneMove(pv, endPV-1, &moveType, &fromX, &fromY, &toX, &toY, &promoChar)){
+        nr++; moveType = Comment; // PV was for previous position; kludge to make sure we continue
+        // Handle case where played move is different from leading PV move
         CopyBoard(boards[endPV+1], boards[endPV-1]); // tentatively unplay last game move
         CopyBoard(boards[endPV+2], boards[endPV-1]); // and play first move of PV
         ApplyMove(fromX, fromY, toX, toY, promoChar, boards[endPV+2]);
@@ -5712,7 +5717,8 @@ ParsePV (char *pv, Boolean storeComments, Boolean atEnd)
           parseList[endPV-1][0] = NULLCHAR;
           safeStrCpy(moveList[endPV-2], "_0_0", sizeof(moveList[endPV-2])/sizeof(moveList[endPV-2][0])); // suppress premove highlight on takeback move
         }
-      }
+       }
+    }
     pv = strstr(pv, yy_textstr) + strlen(yy_textstr); // skip what we parsed
     if(nr == 0 && !storeComments && *pv == ')') pv++; // closing parenthesis of ponder move;
     if(moveType == Comment && storeComments) AppendComment(endPV, yy_textstr, FALSE);
@@ -5720,6 +5726,7 @@ ParsePV (char *pv, Boolean storeComments, Boolean atEnd)
 	valid++; // allow comments in PV
 	continue;
     }
+  append_move:
     nr++;
     if(endPV+1 > framePtr) break; // no space, truncate
     if(!valid) break;
@@ -5798,7 +5805,7 @@ LoadMultiPV (int x, int y, char *buf, int index, int *start, int *end, int pane)
 		Collapse(origIndex - lineStart);
 		return FALSE;
 	}
-	ParsePV(buf+startPV, FALSE, gameMode != AnalyzeMode);
+	ParsePV(buf+startPV, FALSE, gameMode != AnalyzeMode, pane+1);
 	*start = startPV; *end = index-1;
 	extendGame = (gameMode == AnalyzeMode && appData.autoExtend && origIndex - startPV < 5);
 	return TRUE;
@@ -5811,7 +5818,7 @@ PvToSAN (char *pv)
 	int i, k=0, savedEnd=endPV, saveFMM = forwardMostMove;
 	*buf = NULLCHAR;
 	if(forwardMostMove < endPV) PushInner(forwardMostMove, endPV); // shelve PV of PV-walk
-	ParsePV(pv, FALSE, 2); // this appends PV to game, suppressing any display of it
+	ParsePV(pv, FALSE, 2, 0); // this appends PV to game, suppressing any display of it
 	for(i = forwardMostMove; i<endPV; i++){
 	    if(i&1) snprintf(buf+k, 10*MSG_SIZ-k, "%s ", parseList[i]);
 	    else    snprintf(buf+k, 10*MSG_SIZ-k, "%d. %s ", i/2 + 1, parseList[i]);
@@ -5829,7 +5836,7 @@ LoadPV (int x, int y)
 { // called on right mouse click to load PV
   int which = gameMode == TwoMachinesPlay && (WhiteOnMove(forwardMostMove) == (second.twoMachinesColor[0] == 'w'));
   lastX = x; lastY = y;
-  ParsePV(lastPV[which], FALSE, TRUE); // load the PV of the thinking engine in the boards array.
+  ParsePV(lastPV[which], FALSE, TRUE, 0); // load the PV of the thinking engine in the boards array.
   extendGame = FALSE;
   return TRUE;
 }
@@ -9129,7 +9136,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
            }
         }
 	hintRequested = FALSE;
-	lastHint[0] = NULLCHAR;
+	lastHint[0] = NULLCHAR; hintSrc = 0;
 	bookRequested = FALSE;
 	/* Program may be pondering now */
 	cps->maybeThinking = TRUE;
@@ -9692,7 +9699,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 		DisplayError(buf2, 0);
 	    }
 	} else {
-	  safeStrCpy(lastHint, buf1, sizeof(lastHint)/sizeof(lastHint[0]));
+	  safeStrCpy(lastHint, buf1, sizeof(lastHint)/sizeof(lastHint[0])); hintSrc = (cps != &first) + 1;
 	}
 	return;
     }
@@ -12300,7 +12307,7 @@ Reset (int redraw, int init)
     first.bookSuspend = FALSE; // [HGM] book
     second.bookSuspend = FALSE;
     thinkOutput[0] = NULLCHAR;
-    lastHint[0] = NULLCHAR;
+    lastHint[0] = NULLCHAR; hintSrc = 0;
     ClearGameInfo(&gameInfo);
     gameInfo.variant = StringToVariant(appData.variant);
     if(gameInfo.variant == VariantNormal && strcmp(appData.variant, "normal")) {
@@ -19362,7 +19369,7 @@ LoadVariation (int index, char *text)
 	PushTail(currentMove, forwardMostMove); // shelve main variation. This truncates game
 	// kludge: use ParsePV() to append variation to game
 	move = currentMove;
-	ParsePV(start, TRUE, TRUE);
+	ParsePV(start, TRUE, TRUE, 0);
 	forwardMostMove = endPV; endPV = -1; currentMove = move; // cleanup what ParsePV did
 	ClearPremoveHighlights();
 	CommentPopDown();
