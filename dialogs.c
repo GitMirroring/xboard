@@ -850,7 +850,7 @@ static Option soundOptions[] = {
 { 0, 0, 0, NULL, (void*) &appData.soundIcsAlarm, (char*) soundFiles, soundNames, ComboBox, N_("Alarm:") },
 { 0, 0, 0, NULL, (void*) &appData.soundChallenge, (char*) soundFiles, soundNames, ComboBox, N_("Challenge:") },
 { 0, SAME_ROW, 0, NULL, NULL, NULL, NULL, Break, "" },
-{ 0, 0, 0, NULL, (void*) &appData.soundDirectory, "", NULL, PathName, N_("Sounds Directory:") },
+{ 0, 0, 0, NULL, (void*) &appData.soundDirectory, NULL, NULL, PathName, N_("Sounds Directory:") },
 { 0, 0, 0, NULL, (void*) &appData.soundShout, (char*) soundFiles, soundNames, ComboBox, N_("Shout:") },
 { 0, 0, 0, NULL, (void*) &appData.soundSShout, (char*) soundFiles, soundNames, ComboBox, N_("S-Shout:") },
 { 0, 0, 0, NULL, (void*) &appData.soundChannel, (char*) soundFiles, soundNames, ComboBox, N_("Channel:") },
@@ -947,7 +947,7 @@ static Option boardOptions[] = {
 { 0, 0, 0, NULL, (void*) &appData.darkBackTextureFile, ".png", (char**)(intptr_t) 1, FileName, N_("Dark-Squares Texture File:") },
 { 0, 0, 0, NULL, (void*) &appData.liteBackTextureFile, ".png", (char**)(intptr_t) 2, FileName, N_("Light-Squares Texture File:") },
 { 0, 0, 0, NULL, (void*) &appData.trueColors, "", NULL, CheckBox, N_("Use external piece bitmaps with their own colors") },
-{ 0, 0, 0, NULL, (void*) &appData.pieceDirectory, "",  (char**)(intptr_t) 3, PathName, N_("Directory with Pieces Images:") },
+{ 0, 0, 0, NULL, (void*) &appData.pieceDirectory, NULL,  (char**)(intptr_t) 3, PathName, N_("Directory with Pieces Images:") },
 { 0, 0, 0, NULL, (void*) &BoardOptionsOK, "", NULL, EndMark , "" }
 };
 
