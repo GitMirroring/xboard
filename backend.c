@@ -11195,7 +11195,7 @@ StartChessProgram (ChessProgramState *cps)
 	  snprintf(buf, sizeof(buf), "%s %s -l %s %s", appData.remoteShell,
 		    cps->host, appData.remoteUser, cps->program);
 	}
-	err = StartChildProcess(buf, "", &cps->pr, priority);
+	err = StartChildProcess(buf, "", &cps->pr, 0);
     }
 
     if (err != 0) {
