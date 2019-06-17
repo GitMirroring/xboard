@@ -11176,13 +11176,15 @@ void
 StartChessProgram (ChessProgramState *cps)
 {
     char buf[MSG_SIZ];
-    int err;
+    int err, priority = appData.niceEngines;
 
     if (appData.noChessProgram) return;
     cps->initDone = FALSE;
 
+    if(cps->isUCI && strstr(appData.adapterCommand, "%niceEngines")) priority = 0; // no nicing on nice adapters!
+
     if (strcmp(cps->host, "localhost") == 0) {
-	err = StartChildProcess(cps->program, cps->dir, &cps->pr, appData.niceEngines);
+	err = StartChildProcess(cps->program, cps->dir, &cps->pr, priority);
     } else if (*appData.remoteShell == NULLCHAR) {
 	err = OpenRcmd(cps->host, appData.remoteUser, cps->program, &cps->pr);
     } else {
@@ -11193,7 +11195,7 @@ StartChessProgram (ChessProgramState *cps)
 	  snprintf(buf, sizeof(buf), "%s %s -l %s %s", appData.remoteShell,
 		    cps->host, appData.remoteUser, cps->program);
 	}
-	err = StartChildProcess(buf, "", &cps->pr, appData.niceEngines);
+	err = StartChildProcess(buf, "", &cps->pr, priority);
     }
 
     if (err != 0) {
