@@ -141,7 +141,7 @@ void LeftClick P((ClickType c, int x, int y));
 int  RightClick P((ClickType c, int x, int y, int *col, int *row));
 void Wheel P((int dir, int x, int y));
 
-int StartChildProcess P((char *cmdLine, char *dir, ProcRef *pr));
+int StartChildProcess P((char *cmdLine, char *dir, ProcRef *pr, int priority));
 void DestroyChildProcess P((ProcRef pr, int/*boolean*/ signal));
 void InterruptChildProcess P((ProcRef pr));
 char *BufferCommandOutput P((char *command, int size));

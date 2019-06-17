@@ -2069,6 +2069,7 @@ static int TranslatePieceToFontPiece( int piece )
         return PM_WSG;
     case WhiteLance:
 
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -9248,7 +9249,7 @@ void RunCommand(char *cmdLine)
    later.
 */
 int
-StartChildProcess(char *cmdLine, char *dir, ProcRef *pr)
+StartChildProcess(char *cmdLine, char *dir, ProcRef *pr, int priority)
 {
 #define BUFSIZE 4096
 
@@ -9357,7 +9358,7 @@ StartChildProcess(char *cmdLine, char *dir, ProcRef *pr)
 
   if (appData.niceEngines){ // [HGM] nice: adjust engine proc priority
     if(appData.debugMode) fprintf(debugFP, "nice engine proc to %d\n", appData.niceEngines);
-    SetPriorityClass(piProcInfo.hProcess, GetWin32Priority(appData.niceEngines));
+    SetPriorityClass(piProcInfo.hProcess, GetWin32Priority(priority));
   }
 
   /* Close the handles we don't need in the parent */
@@ -9487,7 +9488,7 @@ OpenTelnet(char *host, char *port, ProcRef *pr)
   } else {
     snprintf(cmdLine, MSG_SIZ, "%s %s %s", appData.telnetProgram, host, port);
   }
-  return StartChildProcess(cmdLine, "", pr);
+  return StartChildProcess(cmdLine, "", pr, 0);
 }
 
 

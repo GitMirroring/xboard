@@ -1884,7 +1884,7 @@ establish ()
 			appData.remoteUser, appData.telnetProgram,
 			appData.icsHost, appData.icsPort);
 	    }
-	    return StartChildProcess(buf, "", &icsPR);
+	    return StartChildProcess(buf, "", &icsPR, 0);
 
 	}
     } else if (appData.useTelnet) {
@@ -11182,7 +11182,7 @@ StartChessProgram (ChessProgramState *cps)
     cps->initDone = FALSE;
 
     if (strcmp(cps->host, "localhost") == 0) {
-	err = StartChildProcess(cps->program, cps->dir, &cps->pr);
+	err = StartChildProcess(cps->program, cps->dir, &cps->pr, appData.niceEngines);
     } else if (*appData.remoteShell == NULLCHAR) {
 	err = OpenRcmd(cps->host, appData.remoteUser, cps->program, &cps->pr);
     } else {
@@ -11193,7 +11193,7 @@ StartChessProgram (ChessProgramState *cps)
 	  snprintf(buf, sizeof(buf), "%s %s -l %s %s", appData.remoteShell,
 		    cps->host, appData.remoteUser, cps->program);
 	}
-	err = StartChildProcess(buf, "", &cps->pr);
+	err = StartChildProcess(buf, "", &cps->pr, appData.niceEngines);
     }
 
     if (err != 0) {

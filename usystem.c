@@ -413,7 +413,7 @@ HostName ()
 
 
 int
-StartChildProcess (char *cmdLine, char *dir, ProcRef *pr)
+StartChildProcess (char *cmdLine, char *dir, ProcRef *pr, int priority)
 {
     char *argv[64], *p;
     int i, pid;
@@ -462,7 +462,7 @@ StartChildProcess (char *cmdLine, char *dir, ProcRef *pr)
 	    exit(1);
 	}
 
-	nice(appData.niceEngines); // [HGM] nice: adjust priority of engine proc
+	nice(priority); // [HGM] nice: adjust priority of engine proc
 
         execvp(argv[0], argv);
 
@@ -561,7 +561,7 @@ OpenTelnet (char *host, char *port, ProcRef *pr)
     } else {
       snprintf(cmdLine, sizeof(cmdLine), "%s %s %s", appData.telnetProgram, host, port);
     }
-    return StartChildProcess(cmdLine, "", pr);
+    return StartChildProcess(cmdLine, "", pr, 0);
 }
 
 int
