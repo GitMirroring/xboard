@@ -2068,8 +2068,6 @@ static int TranslatePieceToFontPiece( int piece )
     case WhiteSilver:
         return PM_WSG;
     case WhiteLance:
-
-
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -10257,19 +10255,19 @@ SettingsPopUp(ChessProgramState *cps)
 
 int flock(int fid, int code)
 {
+    int res;
     HANDLE hFile = (HANDLE) _get_osfhandle(fid);
     OVERLAPPED ov;
     ov.hEvent = NULL;
     ov.Offset = 0;
     ov.OffsetHigh = 0;
     switch(code) {
-      case 1: LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_SH
-
-      case 2: LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_EX
-      case 3: UnlockFileEx(hFile, 0, 1024, 0, &ov); break; // LOCK_UN
+      case 1: res = LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_SH
+      case 2: res = LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_EX
+      case 3: res = UnlockFileEx(hFile, 0, 1024, 0, &ov); break; // LOCK_UN
       default: return -1;
     }
-    return 0;
+    return -!res;
 }
 
 char *

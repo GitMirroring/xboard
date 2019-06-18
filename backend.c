@@ -1522,7 +1522,10 @@ ReserveGame (int gameNr, char resChar)
     if(tf == NULL) { nextGame = appData.matchGames + 1; return; } // kludge to terminate match
     safeStrCpy(buf, lastMsg, MSG_SIZ);
     DisplayMessage(_("Pick new game"), "");
-    flock(fileno(tf), LOCK_EX); // lock the tourney file while we are messing with it
+    if(flock(fileno(tf), LOCK_EX)) { // lock the tourney file while we are messing with it
+	abortMatch = TRUE; appData.matchMode = FALSE; DisplayError("Access to tourney file denied", 0);
+	fclose(tf); return;
+    }
     ParseArgsFromFile(tf);
     p = q = appData.results;
     if(appData.debugMode) {
