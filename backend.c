@@ -789,7 +789,7 @@ UnloadEngine (ChessProgramState *cps)
 	    ExitAnalyzeMode();
             DoSleep( appData.delayBeforeQuit );
 	    SendToProgram("quit\n", cps);
-	    DestroyChildProcess(cps->pr, 4 + cps->useSigterm);
+	    DestroyChildProcess(cps->pr, 4*!cps->isUCI + cps->useSigterm);
 	}
 	cps->pr = NoProc;
 	if(appData.debugMode) fprintf(debugFP, "Unload %s\n", cps->which);
@@ -12089,7 +12089,7 @@ GameEnds (ChessMove result, char *resultDetails, int whosays)
 	    ExitAnalyzeMode();
             DoSleep( appData.delayBeforeQuit );
 	    SendToProgram("quit\n", &first);
-	    DestroyChildProcess(first.pr, 4 + first.useSigterm);
+	    DestroyChildProcess(first.pr, 4*!first.isUCI + first.useSigterm);
 	    first.reload = TRUE;
 	}
 	first.pr = NoProc;
@@ -12114,7 +12114,7 @@ GameEnds (ChessMove result, char *resultDetails, int whosays)
 	if (second.pr != NoProc) {
             DoSleep( appData.delayBeforeQuit );
 	    SendToProgram("quit\n", &second);
-	    DestroyChildProcess(second.pr, 4 + second.useSigterm);
+	    DestroyChildProcess(second.pr, 4*!second.isUCI + second.useSigterm);
 	    second.reload = TRUE;
 	}
 	second.pr = NoProc;
@@ -14769,12 +14769,12 @@ ExitEvent (int status)
 
         DoSleep( appData.delayBeforeQuit );
 	SendToProgram("quit\n", &first);
-	DestroyChildProcess(first.pr, 4 + first.useSigterm /* [AS] first.useSigterm */ );
+	DestroyChildProcess(first.pr, 4*!first.isUCI + first.useSigterm /* [AS] first.useSigterm */ );
     }
     if (second.pr != NoProc) {
         DoSleep( appData.delayBeforeQuit );
 	SendToProgram("quit\n", &second);
-	DestroyChildProcess(second.pr, 4 + second.useSigterm /* [AS] second.useSigterm */ );
+	DestroyChildProcess(second.pr, 4*!second.isUCI + second.useSigterm /* [AS] second.useSigterm */ );
     }
     if (first.isr != NULL) {
 	RemoveInputSource(first.isr);
