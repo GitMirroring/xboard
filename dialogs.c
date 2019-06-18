@@ -1246,9 +1246,7 @@ static void
 changeTags (int n)
 {
     GenericReadout(tagsOptions, 1);
-    if(bookUp) SaveToBook(tagsText), DisplayBook(currentMove); else
-    if(resPtr) { ASSIGN(*resPtr, tagsText); } else
-    ReplaceTags(tagsText, &gameInfo);
+    NewTagsCallback(0);
 }
 
 void

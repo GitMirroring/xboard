@@ -11498,7 +11498,7 @@ SaveEngineSettings (int n)
     s = malloc(len);
     snprintf(s, len, "%s%s%s", firstChessProgramNames, currentEngine[n], q);
     FREE(firstChessProgramNames); firstChessProgramNames = s; // new list
-    if(*engineListFile) SaveEngineList();
+    SaveEngineList();
 }
 
 // following implemented as macro to avoid type limitations
