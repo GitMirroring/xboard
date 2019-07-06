@@ -9327,8 +9327,9 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
       if(appData.icsActive || forwardMostMove != 0 || cps != &first) return;
       *buf = NULLCHAR;
       if(sscanf(message, "setup (%s", buf) == 1) {
-        s = 8 + strlen(buf), buf[s-9] = NULLCHAR, SetCharTableEsc(pieceToChar, buf, SUFFIXES);
-        ASSIGN(appData.pieceToCharTable, buf);
+        char *ptc = strlen(buf) < 3 ? "PNBRQKpnbrqk" : buf;
+        s = 8 + strlen(buf), buf[s-9] = NULLCHAR, SetCharTableEsc(pieceToChar, ptc, SUFFIXES);
+        ASSIGN(appData.pieceToCharTable, ptc);
       }
       dummy = sscanf(message+s, "%dx%d+%d_%s", &w, &h, &hand, varName);
       if(dummy >= 3) {
