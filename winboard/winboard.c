@@ -2068,6 +2068,7 @@ static int TranslatePieceToFontPiece( int piece )
     case WhiteSilver:
         return PM_WSG;
     case WhiteLance:
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -2370,12 +2371,15 @@ InitDrawingSizes(BoardSize boardSize, int flags)
 
   if(boardSize != SizeMiddling && boardSize != SizePetite && boardSize != SizeBulky && !appData.useFont)
   { // correct board size to one where built-in pieces exist
+    int fairies = 0;
+    for(i=WhiteQueen+1; i<WhiteKing; i++) fairies += (PieceToChar(i) != '.' || PieceToChar(WHITE_TO_BLACK i) != '.');
     if((v == VariantCapablanca || v == VariantGothic || v == VariantGrand || v == VariantCapaRandom || v == VariantJanus || v == VariantSuper)
        && (boardSize < SizePetite || boardSize > SizeBulky) // Archbishop and Chancellor available in entire middle range
 
       || (v == VariantShogi && boardSize != SizeModerate)   // Japanese-style Shogi
       ||  v == VariantKnightmate || v == VariantSChess || v == VariantXiangqi || v == VariantSpartan
-      ||  v == VariantShatranj || v == VariantMakruk || v == VariantGreat || v == VariantFairy || v == VariantLion ) {
+      ||  v == VariantShatranj || v == VariantMakruk || v == VariantGreat|| v == VariantLion ||
+          v == VariantFairy && fairies ) {
       if(boardSize < SizeMediocre) boardSize = SizePetite; else
       if(boardSize > SizeModerate) boardSize = SizeBulky;  else
                                    boardSize = SizeMiddling;
@@ -5351,6 +5355,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
       ForwardEvent();
       SetFocus(hwndMain);
       break;
+
 
 
     case IDM_ToStart:
@@ -8764,6 +8769,7 @@ GLT_GetFromList( int index, char *name )
 	    if( SendDlgItemMessage( gameListOptionsDialog, IDC_GameListTags, LB_GETTEXT, index, (LPARAM) name ) != LB_ERR )
 		return TRUE;
     }
+
     return FALSE;
 }
 
