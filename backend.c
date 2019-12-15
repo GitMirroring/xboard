@@ -8919,7 +8919,6 @@ HandleMachineMove (char *message, ChessProgramState *cps)
     static char firstLeg[20], legs;
     char machineMove[MSG_SIZ], buf1[MSG_SIZ*10], buf2[MSG_SIZ];
     char realname[MSG_SIZ];
-    int fromX, fromY, toX, toY;
     ChessMove moveType;
     char promoChar, roar;
     char *p, *pv=buf1;
@@ -8978,6 +8977,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
     if ((sscanf(message, "%s %s %s", buf1, buf2, machineMove) == 3 && strcmp(buf2, "...") == 0) ||
 	(sscanf(message, "%s %s", buf1, machineMove) == 2 && strcmp(buf1, "move") == 0))
     {
+        int fromX, fromY, toX, toY;
         if(pausing && !cps->pause) { // for pausing engine that does not support 'pause', we stash its move for processing when we resume.
 	    if(appData.debugMode) fprintf(debugFP, "pause %s engine after move\n", cps->which);
 	    safeStrCpy(stashedInputMove, message, MSG_SIZ);
@@ -9320,6 +9320,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 
     if (!strncmp(message, "setup ", 6) && 
 	(!appData.testLegality || gameInfo.variant == VariantFairy || gameInfo.variant == VariantUnknown ||
+          gameInfo.variant == VariantPrelude ||
           NonStandardBoardSize(gameInfo.variant, gameInfo.boardWidth, gameInfo.boardHeight, gameInfo.holdingsSize))
 					) { // [HGM] allow first engine to define opening position
       int dummy, w, h, hand, s=6; char buf[MSG_SIZ], varName[MSG_SIZ];
@@ -9345,12 +9346,13 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
           startedFromSetupPosition = FALSE;
         }
       }
+      fromX = fromY = -1;
       CopyBoard(tmp, boards[0]);
       ParseFEN(boards[0], &dummy, message+s, FALSE);
       CopyBoard(initialPosition, boards[0]);
       if(startedFromSetupPosition) { CopyBoard(boards[0], tmp); return; }
       DrawPosition(TRUE, boards[0]);
-      startedFromSetupPosition = TRUE;
+      if(gameInfo.variant != VariantPrelude) startedFromSetupPosition = TRUE;
       return;
     }
     if(sscanf(message, "piece %s %s", buf2, buf1) == 2) {
@@ -9688,6 +9690,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
      * Look for hint output
      */
     if (sscanf(message, "Hint: %s", buf1) == 1) {
+        int fromX, fromY, toX, toY;
 	if (cps == &first && hintRequested) {
 	    hintRequested = FALSE;
 	    if (ParseOneMove(buf1, forwardMostMove, &moveType,
@@ -18768,6 +18771,8 @@ ParseFEN (Board board, int *blackPlaysFirst, char *fen, Boolean autoSize)
 #endif
             } else if (*p == '*') {
 		board[i][(j++)+gameInfo.holdingsWidth] = DarkSquare; p++;
+	    } else if(*p == '0') {
+		p++; board[i][(j++) + gameInfo.holdingsWidth] = EmptySquare;
             } else if (isdigit(*p)) {
 		emptycount = *p++ - '0';
                 while(isdigit(*p)) emptycount = 10*emptycount + *p++ - '0'; /* [HGM] allow > 9 */
