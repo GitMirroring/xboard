@@ -144,6 +144,13 @@ extern ChessMove LegalityTest P((Board board, int flags,
 				 int rf, int ff, int rt, int ft,
 				 int promoChar));
 
+/* Is a move from (rf, ff) to (rt, ft) en e.p. capture for the player
+   whom the flags say is on move, or does it create e.p. rights?
+   Returns 2 if rights are created (and stored in board as side effect) */
+extern int EnPassantTest P((Board board, int flags,
+				 int rf, int ff, int rt, int ft,
+				 int promoChar));
+
 #define MT_NONE 0
 #define MT_CHECK 1
 #define MT_CHECKMATE 2

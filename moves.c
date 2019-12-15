@@ -311,6 +311,8 @@ OK (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, VOID
     (*(int*)cl)++;
 }
 
+static int viaX = 100, viaY = 100, epFlag;
+
 void
 MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle, int range, char *desc, MoveCallback cb, VOIDSTAR cl)
 {
@@ -409,6 +411,8 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 	if(isdigit(*++p)) expo = atoi(p++);           // read exponent
 	if(expo > 9) p++;                             // allow double-digit
 	desc = p;                                     // this is start of next move
+	epFlag = // flags initial orthogonal and diagonal pawn non-capture multi-pushes (which have legacy meaning)
+		(initial && promo != NormalMove && !cont && mode == 4 && (!dx || dx == dy) && (dy > 1 ? !jump : expo > 1));
 	if(initial == 2) { if(board[r][f] != initialPosition[r-2*his+3][f]) continue; initial = 0; } else
 	if(initial && !range) {
 		if(   (board[r][f] != initialPosition[r][f] ||
@@ -450,7 +454,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		if(y < 0 || y >= BOARD_HEIGHT) break; // vertically off-board: always done
 		if(x <  BOARD_LEFT) { if(mode & 128) x += BOARD_RGHT - BOARD_LEFT, loop++; else break; }
 		if(x >= BOARD_RGHT) { if(mode & 128) x -= BOARD_RGHT - BOARD_LEFT, loop++; else break; }
-		if(j) { j--; continue; }              // skip irrespective of occupation
+		if(j > 0) { j--; continue; }          // skip irrespective of occupation
 		if(board[y][x] == DarkSquare) break;  // black squares are supposed to be off board
 		if(!jump    && board[y - vy + vy/2][x - vx + vx/2] != EmptySquare) break; // blocked
 		if(jump > 1 && board[y - vy + vy/2][x - vx + vx/2] == EmptySquare) break; // no hop
@@ -461,12 +465,20 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		if(initial && expo - i + 1 != range) { if(occup == 4) continue; else break; }
 		if(cont) {                            // non-final leg
 		  if(mode&16 && his&occup) occup &= 3;// suppress hopping foe in t-mode
+		  if(skip < 0) mode |= 4;             // 'n' = 'm' + rights creation in non-final step leg
 		  if(occup & mode) {                  // valid intermediate square, do continuation
 		    char origAtom = *atom;
-		    int rg = (expo != 1 ? expo - i + 1 : range);   // pass length of last *slider* leg
+		    int rg = (expo != 1 ? expo - i + 1 : range);  // pass length of last *slider* leg
 		    if(!(bit & all)) *atom = rotate[*atom - 'A']; // orth-diag interconversion to make direction valid
-		    if(occup & mode & 0x104)          // no side effects, merge legs to one move
+		    if(occup & mode & 0x104) {        // no side effects, merge legs to one move
+			if(skip < 0 && occup == 4) {  // create e.p. rights on this square
+			    if(viaX != 100) {         // second e.p. square!
+				if(viaX == x && viaY == y - vy) viaY = y | 128; // flag it when we can handle it
+			    } else viaX = x, viaY = y;
+			}
 			MovesFromString(board, flags, f, r, x, y, dir, rg, cont, cb, cl);
+			if(viaY & 128) viaY = y - vy; else viaX = viaY = 100;
+		    }
 		    if(occup & mode & 3 && (killX < 0 || kill2X < 0 && (legNr > 1 || killX == x && killY == y) ||
 					    (legNr == 1 ? kill2X == x && kill2Y == y : killX == x && killY == y))) {     // destructive first leg
 			int cnt = 0;
@@ -1808,6 +1820,29 @@ CheckTest (Board board, int flags, int rf, int ff, int rt, int ft, int enPassant
     }
 
     return cl.fking < BOARD_RGHT ? cl.check : (gameInfo.variant == VariantAtomic)*1000; // [HGM] atomic: return 1000 if we have no king
+}
+
+typedef struct { int rt, ft, ep; } EnPassantClosure;
+
+void
+EnPassantCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, VOIDSTAR closure)
+{
+    EnPassantClosure *cl = (EnPassantClosure *) closure;
+    if(rt == cl->rt && ft == cl->ft) {
+        if(kind = WhiteCapturesEnPassant || kind == BlackCapturesEnPassant) cl->ep = 2; // is e.p. capture
+	if(epFlag) cl->ep = 0; // for backward compatibility lets any imn pawn multi-push handle by old code
+	if(viaX != 100) board[EP_FILE] = viaX, board[EP_RANK] = viaY, cl->ep = 1; // generates e.p. rights
+    }
+}
+
+int
+EnPassantTest (Board board, int flags, int rf, int ff, int rt, int ft, int promoChar)
+{   // sets e.p. square in board if move generated rights, returns whether move is an e.p. capture
+    EnPassantClosure cl;
+    ChessSquare piece = board[rf][ff];
+    cl.rt = rt; cl.ft = ft; cl.ep = 0;
+    MovesFromString(board, flags, ff, rf, -1, -1, 0, 0, pieceDesc[piece], EnPassantCallback, (void *) &cl);
+    return cl.ep;
 }
 
 int
