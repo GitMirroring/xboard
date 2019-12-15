@@ -7774,6 +7774,14 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 		ReportClick("lift", x, y);
 		MarkTargetSquares(0);
 		if(gameMode == EditPosition && controlKey) gatingPiece = boards[currentMove][fromY][fromX];
+		if(gameInfo.variant == VariantSChess && !gameInfo.holdingsWidth) { // auto-gating
+		    int white = (boards[currentMove][fromY][fromX] < BlackPawn);
+		    if(fromY == (white ? 1 : BOARD_HEIGHT - 2)                     // piece on shifted back-rank
+		       && boards[currentMove][VIRGIN][fromX] & (white ? VIRGIN_W : VIRGIN_B)) { // and is virgin
+			int p = boards[currentMove][fromY - 2*white + 1][fromX];
+			if(p != DarkSquare) gatingPiece = p;
+		    }
+		}
 		DragPieceBegin(xPix, yPix, FALSE); dragging = 1;
 		if(appData.sweepSelect && CanPromote(piece = boards[currentMove][fromY][fromX], fromY)) {
 		    promoSweep = defaultPromoChoice;
@@ -7831,7 +7839,7 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 	    }
 	    if (OKToStartUserMove(x, y)) {
 		if(gameInfo.variant == VariantSChess && // S-Chess: back-rank piece selected after holdings means gating
-		  (fromX == BOARD_LEFT-2 || fromX == BOARD_RGHT+1) &&
+		  (fromX == BOARD_LEFT-2 || fromX == BOARD_RGHT+1) && gameInfo.holdingsWidth &&
                y == (toP < BlackPawn ? 0 : BOARD_HEIGHT-1))
                  gatingPiece = boards[currentMove][fromY][fromX];
 		else gatingPiece = doubleClick ? fromP : EmptySquare;
@@ -10509,10 +10517,11 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
        }
 
        if(gameInfo.variant == VariantSChess) { // update virginity
-	   if(fromY == 0)              board[VIRGIN][fromX] &= ~VIRGIN_W; // loss by moving
-	   if(fromY == BOARD_HEIGHT-1) board[VIRGIN][fromX] &= ~VIRGIN_B;
-	   if(toY == 0)                board[VIRGIN][toX]   &= ~VIRGIN_W; // loss by capture
-	   if(toY == BOARD_HEIGHT-1)   board[VIRGIN][toX]   &= ~VIRGIN_B;
+	   int offs = !gameInfo.holdingsSize;
+	   if(fromY == offs)                board[VIRGIN][fromX] &= ~VIRGIN_W; // loss by moving
+	   if(fromY == BOARD_HEIGHT-1-offs) board[VIRGIN][fromX] &= ~VIRGIN_B;
+	   if(toY == offs)                  board[VIRGIN][toX]   &= ~VIRGIN_W; // loss by capture
+	   if(toY == BOARD_HEIGHT-1-offs)   board[VIRGIN][toX]   &= ~VIRGIN_B;
        }
 
      if (fromX == toX && fromY == toY && killX < 0) return;
@@ -10766,6 +10775,8 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 
     if(gameInfo.variant == VariantSChess && promoChar != NULLCHAR && promoChar != '=' && piece != WhitePawn && piece != BlackPawn) {
         board[fromY][fromX] = CharToPiece(piece < BlackPawn ? ToUpper(promoChar) : ToLower(promoChar)); // S-Chess gating
+	int white = (piece < BlackPawn);
+	if(!gameInfo.holdingsSize) board[fromY-2*white+1][fromX] = DarkSquare;
     } else
     if(promoChar == '+') {
         /* [HGM] Shogi-style promotions, to piece implied by original (Might overwrite ordinary Pawn promotion) */
