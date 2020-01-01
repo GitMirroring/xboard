@@ -7284,6 +7284,20 @@ UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
 	return;
     }
 
+    if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize && !promoChar) {
+	int piece, rank, file;
+	switch(moveType) { // detect castlings
+	    case WhiteKingSideCastle:  file = BOARD_RGHT-1; rank = 0; break;
+	    case WhiteQueenSideCastle: file = BOARD_LEFT;   rank = 0; break;
+	    case BlackKingSideCastle:  file = BOARD_RGHT-1; rank = BOARD_HEIGHT-1; break;
+	    case BlackQueenSideCastle: file = BOARD_LEFT;   rank = BOARD_HEIGHT-1; break;
+	    default: file = -1;
+	}
+	if(file >= 0 && (piece = boards[currentMove][rank][file]) != DarkSquare) { // castling that should have gated at Rook
+	    promoChar = ToLower(PieceToChar(piece));
+	}
+    }
+
     FinishMove(moveType, fromX, fromY, toX, toY, promoChar);
 }
 
@@ -10776,9 +10790,15 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
     }
 
     if(gameInfo.variant == VariantSChess && promoChar != NULLCHAR && promoChar != '=' && piece != WhitePawn && piece != BlackPawn) {
-        board[fromY][fromX] = CharToPiece(piece < BlackPawn ? ToUpper(promoChar) : ToLower(promoChar)); // S-Chess gating
-	int white = (piece < BlackPawn);
-	if(!gameInfo.holdingsSize) board[fromY-2*white+1][fromX] = DarkSquare;
+	int file = fromX, white = (piece < BlackPawn);
+	if(!gameInfo.holdingsSize) {
+	    int rank = fromY-2*white+1;
+	    if(rank >= 0 && rank < BOARD_HEIGHT) {
+		if(board[rank][file] == DarkSquare) file = (toX > fromX ? BOARD_RGHT -1 : BOARD_LEFT); // must be castling
+	 	board[rank][file] = DarkSquare;
+	    }
+	}
+        board[fromY][file] = CharToPiece(piece < BlackPawn ? ToUpper(promoChar) : ToLower(promoChar)); // S-Chess gating
     } else
     if(promoChar == '+') {
         /* [HGM] Shogi-style promotions, to piece implied by original (Might overwrite ordinary Pawn promotion) */
