@@ -9374,6 +9374,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
       ParseFEN(boards[0], &dummy, message+s, FALSE);
       CopyBoard(initialPosition, boards[0]);
       if(startedFromSetupPosition) { CopyBoard(boards[0], tmp); return; }
+      MarkTargetSquares(1); ClearHighlights();
       DrawPosition(TRUE, boards[0]);
       if(gameInfo.variant != VariantPrelude) startedFromSetupPosition = TRUE;
       return;
