@@ -757,10 +757,11 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
     int rf, ff;
     int i, j, d, s, fs, rs, rt, ft, m;
     int epfile = (signed char)board[EP_STATUS]; // [HGM] gamestate: extract ep status from board
+    int dead = (gameInfo.variant == VariantSChess && !gameInfo.holdingsSize ? 1 : 0);
     int promoRank = gameInfo.variant == VariantMakruk || gameInfo.variant == VariantGrand || gameInfo.variant == VariantChuChess ? 3 : 1;
 
     if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize) promoRank = 2;
-    for (rf = 0; rf < BOARD_HEIGHT; rf++)
+    for (rf = dead; rf < BOARD_HEIGHT - dead; rf++)
       for (ff = BOARD_LEFT; ff < BOARD_RGHT; ff++) {
           ChessSquare piece;
 
