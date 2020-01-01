@@ -6767,7 +6767,7 @@ HasPromotionChoice (int fromX, int fromY, int toX, int toY, char *promoChoice, i
         if(PieceToChar(piece) != '+' && PieceToChar(CHUPROMOTED(piece)) == '+') highestPromotingPiece = piece;
     } else if(gameInfo.variant == VariantMakruk || gameInfo.variant == VariantGrand || gameInfo.variant == VariantChuChess) {
         promotionZoneSize = 3;
-    }
+    } else if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize) promotionZoneSize = 2;
 
     // Treat Lance as Pawn when it is not representing Amazon or Lance
     if(gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu) {
@@ -7576,6 +7576,7 @@ CanPromote (ChessSquare piece, int y)
         int zone = (gameInfo.variant == VariantChuChess ? 3 : 1);
 	if(gameMode == EditPosition) return FALSE; // no promotions when editing position
 	// some variants have fixed promotion piece, no promotion at all, or another selection mechanism
+	if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize) zone = 2;
 	if(IS_SHOGI(gameInfo.variant)          || gameInfo.variant == VariantXiangqi ||
 	   gameInfo.variant == VariantSuper    || gameInfo.variant == VariantGreat   ||
 	  (gameInfo.variant == VariantShatranj || gameInfo.variant == VariantCourier ||
@@ -10428,6 +10429,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
     /* we can always do that 'in place', now pointers to these rights are passed to ApplyMove */
 
       if(gameInfo.variant == VariantBerolina) berolina = EP_BEROLIN_A;
+      if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize) promoRank = 2;
       oldEP = (signed char)board[EP_STATUS]; epRank = board[EP_RANK]; epFile = board[EP_FILE]; lastFile = board[LAST_TO] & 255,lastRank = board[LAST_TO] >> 8;
       board[EP_STATUS] = EP_NONE;
       board[EP_FILE] = board[EP_RANK] = 100, board[LAST_TO] = toX + 256*toY;
