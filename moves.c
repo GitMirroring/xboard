@@ -1938,6 +1938,7 @@ LegalityTest (Board board, int flags, int rf, int ff, int rt, int ft, int promoC
     if(promoChar == 'x') promoChar = NULLCHAR; // [HGM] is this ever the case?
     if(autoProm[piece]) promoChar = NULLCHAR;  // ignore promotion characters on auto-promoting pieces
     if(gameInfo.variant == VariantSChess && promoChar && promoChar != '=' && board[rf][ff] != WhitePawn && board[rf][ff] != BlackPawn) {
+      if(gameInfo.holdingsSize) {
         if(board[rf][ff] < BlackPawn) { // white
             if(rf != 0) return IllegalMove; // must be on back rank
             if(!(board[VIRGIN][ff] & VIRGIN_W)) return IllegalMove; // non-virgin
@@ -1951,6 +1952,7 @@ LegalityTest (Board board, int flags, int rf, int ff, int rt, int ft, int promoC
             if(cl.kind == BlackHSideCastleFR && (ff == BOARD_RGHT-2 || ff == BOARD_RGHT-3)) return ImpossibleMove;
             if(cl.kind == BlackASideCastleFR && (ff == BOARD_LEFT+2 || ff == BOARD_LEFT+3)) return ImpossibleMove;
         }
+      }
     } else
     if(gameInfo.variant == VariantChu) {
         if(cl.kind != NormalMove || promoChar == NULLCHAR || promoChar == '=') return cl.kind;
