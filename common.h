@@ -414,7 +414,6 @@ typedef enum {
     VariantASEAN,
     VariantLion,
     VariantChuChess,
-    VariantPrelude,
     VariantUnknown       /* Catchall for other unknown variants */
 } VariantClass;
 
@@ -465,7 +464,6 @@ typedef enum {
   "asean",\
   "lion",\
   "elven",\
-  "prelude", \
   "unknown" \
 }
 

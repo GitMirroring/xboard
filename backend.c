@@ -8935,6 +8935,7 @@ DeferredBookMove (void)
 static int savedWhitePlayer, savedBlackPlayer, pairingReceived;
 static ChessProgramState *stalledEngine;
 static char stashedInputMove[MSG_SIZ], abortEngineThink;
+static Boolean prelude;
 
 void
 HandleMachineMove (char *message, ChessProgramState *cps)
@@ -9342,8 +9343,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
     }
 
     if (!strncmp(message, "setup ", 6) && 
-	(!appData.testLegality || gameInfo.variant == VariantFairy || gameInfo.variant == VariantUnknown ||
-          gameInfo.variant == VariantPrelude ||
+	(!appData.testLegality || gameInfo.variant == VariantFairy || gameInfo.variant == VariantUnknown || prelude ||
           NonStandardBoardSize(gameInfo.variant, gameInfo.boardWidth, gameInfo.boardHeight, gameInfo.holdingsSize))
 					) { // [HGM] allow first engine to define opening position
       int dummy, w, h, hand, s=6; char buf[MSG_SIZ], varName[MSG_SIZ], *p = varName;
@@ -9364,7 +9364,10 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 //	    if(hand <= h) deadRanks = 0; else deadRanks = hand - h, h = hand; // adapt board to over-sized holdings
 	  if(hand > h) handSize = hand; else handSize = h;
 	  appData.NrFiles = w; appData.NrRanks = h; appData.holdingsSize = hand;
-	  if(dummy == 4) gameInfo.variant = StringToVariant(varName);     // parent variant
+	  if(dummy == 4) {
+	    p += prelude = (*p == '!');             // strip leading '!', and enable acceptance of further setups
+	    gameInfo.variant = StringToVariant(p);  // parent variant
+	  }
           InitPosition(1); // calls InitDrawingSizes to let new parameters take effect
           if(*buf) SetCharTableEsc(pieceToChar, buf, SUFFIXES); // do again, for it was spoiled by InitPosition
 //          startedFromSetupPosition = FALSE;
@@ -9376,7 +9379,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
       MarkTargetSquares(1); ClearHighlights();
       if(startedFromSetupPosition) CopyBoard(boards[0], tmp);
       DrawPosition(TRUE, boards[0]);
-      if(gameInfo.variant != VariantPrelude) startedFromSetupPosition = TRUE;
+      if(!prelude) startedFromSetupPosition = TRUE;
       return;
     }
     if(sscanf(message, "piece %s %s", buf2, buf1) == 2) {
@@ -12340,6 +12343,7 @@ Reset (int redraw, int init)
     pieceDefs = FALSE; // [HGM] gen: reset engine-defined piece moves
     deadRanks = 0; // assume entire board is used
     handSize = 0;
+    prelude = FALSE;
     for(i=0; i<EmptySquare; i++) { FREE(pieceDesc[i]); pieceDesc[i] = NULL; }
     CleanupTail(); // [HGM] vari: delete any stored variations
     CommentPopDown(); // [HGM] make sure no comments to the previous game keep hanging on
