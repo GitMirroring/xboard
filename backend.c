@@ -7222,6 +7222,8 @@ UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
 		    if(boards[0][fromY][BOARD_WIDTH-2]) boards[0][fromY][BOARD_WIDTH-2]--;
 		    if(boards[0][fromY][BOARD_WIDTH-2] == 0)  boards[0][fromY][BOARD_WIDTH-1] = EmptySquare;
 		}
+	    } else if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize && gatingPiece == EmptySquare && (fromY == 0 || fromY == BOARD_HEIGHT-1)) {
+		boards[0][fromY][fromX] = DarkSquare; // empty on gating rank -> dark
 	    } else
 	    boards[0][fromY][fromX] = gatingPiece;
 	    ClearHighlights();
