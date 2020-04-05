@@ -10799,16 +10799,21 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
       }
     }
 
-    if(gameInfo.variant == VariantSChess && promoChar != NULLCHAR && promoChar != '=' && piece != WhitePawn && piece != BlackPawn) {
-	int file = fromX, white = (piece < BlackPawn);
-	if(!gameInfo.holdingsSize) {
-	    int rank = fromY-2*white+1;
-	    if(rank >= 0 && rank < BOARD_HEIGHT) {
-		if(board[rank][file] == DarkSquare) file = (toX > fromX ? BOARD_RGHT -1 : BOARD_LEFT); // must be castling
-	 	board[rank][file] = DarkSquare;
-	    }
+    if(gameInfo.variant == VariantSChess) {
+      int file = fromX, white = (piece < BlackPawn);
+      int rank = fromY-2*white+1;
+      if(promoChar != NULLCHAR && promoChar != '=' && piece != WhitePawn && piece != BlackPawn) {
+	if(!gameInfo.holdingsSize && rank >= 0 && rank < BOARD_HEIGHT) {
+	  if(board[rank][file] == DarkSquare) file = (toX > fromX ? BOARD_RGHT -1 : BOARD_LEFT); // must be castling
+	  board[rank][file] = DarkSquare;
 	}
         board[fromY][file] = CharToPiece(piece < BlackPawn ? ToUpper(promoChar) : ToLower(promoChar)); // S-Chess gating
+      }
+      if(!gameInfo.holdingsSize) {
+	rank = toY+2*white-1;
+	if(captured != EmptySquare && (rank == 0 || rank == BOARD_HEIGHT-1))
+	  board[rank][toX] = DarkSquare; // gateable piece disappears with its gator
+      }
     } else
     if(promoChar == '+') {
         /* [HGM] Shogi-style promotions, to piece implied by original (Might overwrite ordinary Pawn promotion) */
