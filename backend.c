@@ -1509,7 +1509,7 @@ LoadGameOrPosition (int gameNr)
 				  appData.loadPositionFile)) {
 	    DisplayFatalError(_("Bad position file"), 0, 1);
 	    return 0;
-	}
+	} else startedFromSetupPosition = TRUE;
     }
     return 1;
 }
@@ -9346,7 +9346,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
           gameInfo.variant == VariantPrelude ||
           NonStandardBoardSize(gameInfo.variant, gameInfo.boardWidth, gameInfo.boardHeight, gameInfo.holdingsSize))
 					) { // [HGM] allow first engine to define opening position
-      int dummy, w, h, hand, s=6; char buf[MSG_SIZ], varName[MSG_SIZ];
+      int dummy, w, h, hand, s=6; char buf[MSG_SIZ], varName[MSG_SIZ], *p = varName;
       Board tmp;
       if(appData.icsActive || forwardMostMove != 0 || cps != &first) return;
       *buf = NULLCHAR;
@@ -9355,26 +9355,26 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
         s = 8 + strlen(buf), buf[s-9] = NULLCHAR, SetCharTableEsc(pieceToChar, ptc, SUFFIXES);
         ASSIGN(appData.pieceToCharTable, ptc);
       }
+      CopyBoard(tmp, boards[0]);
       dummy = sscanf(message+s, "%dx%d+%d_%s", &w, &h, &hand, varName);
       if(dummy >= 3) {
         while(message[s] && message[s++] != ' ');
-        if(BOARD_HEIGHT != h || BOARD_WIDTH != w + 4*(hand != 0) || gameInfo.holdingsSize != hand ||
-           dummy == 4 && gameInfo.variant != StringToVariant(varName) ) { // engine wants to change board format or variant
+        if(BOARD_HEIGHT != h || BOARD_WIDTH != w + 4*(hand != 0) || gameInfo.holdingsSize != hand || dummy == 4) {
+          // engine wants to change board format or variant
 //	    if(hand <= h) deadRanks = 0; else deadRanks = hand - h, h = hand; // adapt board to over-sized holdings
-	    if(hand > h) handSize = hand; else handSize = h;
-	    appData.NrFiles = w; appData.NrRanks = h; appData.holdingsSize = hand;
-	    if(dummy == 4) gameInfo.variant = StringToVariant(varName);     // parent variant
+	  if(hand > h) handSize = hand; else handSize = h;
+	  appData.NrFiles = w; appData.NrRanks = h; appData.holdingsSize = hand;
+	  if(dummy == 4) gameInfo.variant = StringToVariant(varName);     // parent variant
           InitPosition(1); // calls InitDrawingSizes to let new parameters take effect
           if(*buf) SetCharTableEsc(pieceToChar, buf, SUFFIXES); // do again, for it was spoiled by InitPosition
-          startedFromSetupPosition = FALSE;
+//          startedFromSetupPosition = FALSE;
         }
       }
       fromX = fromY = -1;
-      CopyBoard(tmp, boards[0]);
       ParseFEN(boards[0], &dummy, message+s, FALSE);
       CopyBoard(initialPosition, boards[0]);
-      if(startedFromSetupPosition) { CopyBoard(boards[0], tmp); return; }
       MarkTargetSquares(1); ClearHighlights();
+      if(startedFromSetupPosition) CopyBoard(boards[0], tmp);
       DrawPosition(TRUE, boards[0]);
       if(gameInfo.variant != VariantPrelude) startedFromSetupPosition = TRUE;
       return;
