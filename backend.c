@@ -8936,6 +8936,7 @@ static int savedWhitePlayer, savedBlackPlayer, pairingReceived;
 static ChessProgramState *stalledEngine;
 static char stashedInputMove[MSG_SIZ], abortEngineThink;
 static Boolean prelude;
+static char preludeText[MSG_SIZ];
 
 void
 HandleMachineMove (char *message, ChessProgramState *cps)
@@ -9469,7 +9470,12 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 	  snprintf(buf1, sizeof(buf1), "%swhisper %s\n", ics_prefix, message + 11);
 	  SendToICS(buf1);
 	}
-      } else if(appData.autoComment) AppendComment (forwardMostMove, message + 11, 1); // in local mode, add as move comment
+      } else {
+	if(forwardMostMove == 0 && !strncmp(message+11, "prelude ", 8)) { // allow engine to add Prelude tag
+	    strncpy(preludeText, message+19, MSG_SIZ);
+	} else
+	if(appData.autoComment) AppendComment (forwardMostMove, message + 11, 1); // in local mode, add as move comment
+      }
       return;
     }
     if (!strncmp(message, "tellall ", 8)) {
@@ -12343,7 +12349,7 @@ Reset (int redraw, int init)
     pieceDefs = FALSE; // [HGM] gen: reset engine-defined piece moves
     deadRanks = 0; // assume entire board is used
     handSize = 0;
-    prelude = FALSE;
+    prelude = FALSE; preludeText[0] = NULLCHAR;
     for(i=0; i<EmptySquare; i++) { FREE(pieceDesc[i]); pieceDesc[i] = NULL; }
     CleanupTail(); // [HGM] vari: delete any stored variations
     CommentPopDown(); // [HGM] make sure no comments to the previous game keep hanging on
@@ -14157,6 +14163,7 @@ SaveGamePGN2 (FILE *f)
     if (backwardMostMove > 0 || startedFromSetupPosition) {
         char *fen = PositionToFEN(backwardMostMove, NULL, 1);
         fprintf(f, "[FEN \"%s\"]\n[SetUp \"1\"]\n", fen);
+	if(*preludeText) fprintf(f, "[Prelude \"%s\"]\n", preludeText);
 	fprintf(f, "\n{--------------\n");
 	PrintPosition(f, backwardMostMove);
 	fprintf(f, "--------------}\n");
