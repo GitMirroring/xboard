@@ -2069,6 +2069,7 @@ static int TranslatePieceToFontPiece( int piece )
         return PM_WSG;
     case WhiteLance:
 
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -7764,7 +7765,7 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
               RECT *rect, char *color, char *flagFell)
 {
   char buf[100];
-  char *str;
+  char *str, *p;
   COLORREF oldFg, oldBg;
   HFONT oldFont;
 
@@ -7773,11 +7774,13 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
     if (tinyLayout == 2)
       snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%c %s %s", color[0], TimeString(timeRemaining), flagFell);
     else
-      snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s:%c%s %s", color, (logoHeight>0 ? 0 : ' '), TimeString(timeRemaining), flagFell);
+      snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s:_%s %s", color, TimeString(timeRemaining), flagFell);
     str = buf;
   } else {
     str = color;
   }
+  p = strchr(str, '_');
+  if(p) *p = (logoHeight > 0 ? 0 : ' ');
 
   if (highlight) {
     oldFg = SetTextColor(hdc, RGB(255, 255, 255)); /* white */
@@ -7794,9 +7797,9 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
   ExtTextOut(hdc, rect->left + MESSAGE_LINE_LEFTMARGIN,
 	     rect->top, ETO_CLIPPED|ETO_OPAQUE,
 	     rect, str, strlen(str), NULL);
-  if(logoHeight > 0 && appData.clockMode) {
+  if(logoHeight > 0 && p) {
       RECT r;
-      str += strlen(color)+2;
+      str = p + 1;
       r.top = rect->top + logoHeight/2;
       r.left = rect->left;
       r.right = rect->right;

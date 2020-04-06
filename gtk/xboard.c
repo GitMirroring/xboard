@@ -2132,7 +2132,7 @@ DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
     static int twoLines = -1;
     GtkWidget *w = (GtkWidget *) opt->handle;
     GdkColor col;
-    char *markup, two = (appData.logoSize != 0);
+    char buf[MSG_SIZ], *p, *markup, two = (appData.logoSize != 0);
     char bgcolor[10];
     char fgcolor[10];
 
@@ -2155,16 +2155,13 @@ DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
     gtk_widget_modify_bg(gtk_widget_get_parent(opt->handle), GTK_STATE_NORMAL, &col);
 
     if (appData.clockMode) {
-        markup = g_markup_printf_escaped("<span font=\"%s\" background=\"%s\" foreground=\"%s\">%s:%s%s</span>", appData.clockFont,
-					 bgcolor, fgcolor, color, two ? "\n" : " ", TimeString(timer));
-//        markup = g_markup_printf_escaped("<span size=\"xx-large\" weight=\"heavy\" background=\"%s\" foreground=\"%s\">%s:%s%s</span>",
-//					 bgcolor, fgcolor, color, appData.logoSize && !partnerUp ? "\n" : " ", TimeString(timer));
+        snprintf(buf, MSG_SIZ, "%s:_%s", color, TimeString(timer));
     } else {
-        markup = g_markup_printf_escaped("<span font=\"%s\" background=\"%s\" foreground=\"%s\">%s  </span>", appData.clockFont,
-					 bgcolor, fgcolor, color);
-//        markup = g_markup_printf_escaped("<span size=\"xx-large\" weight=\"heavy\" background=\"%s\" foreground=\"%s\">%s  </span>",
-//					 bgcolor, fgcolor, color);
+        snprintf(buf, MSG_SIZ, "%s  ", color);
     }
+    p = strchr(buf, '_'); if(p) *p = (two ? '\n' : ' ');
+    markup = g_markup_printf_escaped("<span font=\"%s\" background=\"%s\" foreground=\"%s\">%s</span>", appData.clockFont,
+					 bgcolor, fgcolor, buf);
     gtk_label_set_markup(GTK_LABEL(w), markup);
     g_free(markup);
 
