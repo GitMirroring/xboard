@@ -8936,7 +8936,7 @@ DeferredBookMove (void)
 
 static int savedWhitePlayer, savedBlackPlayer, pairingReceived;
 static ChessProgramState *stalledEngine;
-static char stashedInputMove[MSG_SIZ], abortEngineThink;
+static char stashedInputMove[MSG_SIZ], abortEngineThink, startPieceToChar[MSG_SIZ];
 static Boolean prelude;
 static char preludeText[MSG_SIZ];
 
@@ -9357,6 +9357,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
         char *ptc = strlen(buf) < 3 ? "PNBRQKpnbrqk" : buf;
         s = 8 + strlen(buf), buf[s-9] = NULLCHAR, SetCharTableEsc(pieceToChar, ptc, SUFFIXES);
         ASSIGN(appData.pieceToCharTable, ptc);
+        if(gameInfo.variant == VariantUnknown) safeStrCpy(startPieceToChar, ptc, MSG_SIZ);
       }
       CopyBoard(tmp, boards[0]);
       dummy = sscanf(message+s, "%dx%d+%d_%s", &w, &h, &hand, varName);
@@ -11806,8 +11807,10 @@ NextMatchGame ()
     appData.noChessProgram = (first.pr == NoProc); // kludge to prevent Reset from starting up chess program
     if(appData.loadGameIndex == -2) srandom(appData.seedBase + 68163*(nextGame & ~1)); // deterministic seed to force same opening
     Reset(FALSE, first.pr != NoProc);
+    if(startPieceToChar[0]) SetCharTableEsc(pieceToChar, startPieceToChar, SUFFIXES);
     res = LoadGameOrPosition(matchGame); // setup game
     appData.noChessProgram = FALSE; // LoadGameOrPosition might call Reset too!
+    if(startPieceToChar[0]) SetCharTableEsc(pieceToChar, startPieceToChar, SUFFIXES);
     if(!res) return; // abort when bad game/pos file
     if(appData.epd) {// in EPD mode we make sure first engine is to move
 	firstWhite = !(forwardMostMove & 1);
