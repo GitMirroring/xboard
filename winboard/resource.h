@@ -207,6 +207,7 @@
 #define DLG_Analysis                    1017
 #define OPT_AnalysisText                1018
 #define DLG_Error                       1019
+#define DLG_Big                         2019
 #define OPT_ErrorIcon                   1020
 #define IDD_DIALOG1                     1021
 #define DLG_ConsoleRich                 1022

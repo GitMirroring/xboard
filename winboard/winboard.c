@@ -6902,8 +6902,10 @@ ErrorPopUp(char *title, char *content)
   if (modal) {
     MessageBox(NULL, errorMessage, errorTitle, MB_OK|MB_ICONEXCLAMATION);
   } else {
+    int i, n = 0;
+    for(i=0; errorMessage[i]; i++) n += (errorMessage[i] == '\n');
     lpProc = MakeProcInstance((FARPROC)ErrorDialog, hInst);
-    CreateDialog(hInst, MAKEINTRESOURCE(DLG_Error),
+    CreateDialog(hInst, MAKEINTRESOURCE(n > 4 ? DLG_Big : DLG_Error),
 		 hwndMain, (DLGPROC)lpProc);
     FreeProcInstance(lpProc);
   }
