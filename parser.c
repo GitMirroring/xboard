@@ -566,6 +566,12 @@ NextUnit (char **p)
 			  case VariantShatranj: currentMoveString[4] = PieceToChar(BlackFerz); break;
 			  case VariantGreat:    currentMoveString[4] = PieceToChar(BlackMan); break;
 			  case VariantShogi:    currentMoveString[4] = '+'; break;
+			  case VariantSChess:   if(!gameInfo.holdingsSize) { // missing auto-gating
+						    ChessSquare p = boards[yyboardindex][fromY^1][fromX];
+						    if(p == DarkSquare) p = boards[yyboardindex][fromY^1][toX<fromX?BOARD_LEFT:BOARD_RGHT-1];
+						    currentMoveString[4] = ToLower(PieceToChar(p));
+						    break;
+						}
 			  default:              currentMoveString[4] = PieceToChar(BlackQueen);
 			}
 		      } else if(result == WhiteNonPromotion  || result == BlackNonPromotion) {

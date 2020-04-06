@@ -1937,8 +1937,24 @@ LegalityTest (Board board, int flags, int rf, int ff, int rt, int ft, int promoC
 
     if(promoChar == 'x') promoChar = NULLCHAR; // [HGM] is this ever the case?
     if(autoProm[piece]) promoChar = NULLCHAR;  // ignore promotion characters on auto-promoting pieces
-    if(gameInfo.variant == VariantSChess && promoChar && promoChar != '=' && board[rf][ff] != WhitePawn && board[rf][ff] != BlackPawn) {
-      if(gameInfo.holdingsSize) {
+    if(gameInfo.variant == VariantSChess) {
+      if(!gameInfo.holdingsSize) {  // holdingless Seirawan
+        if(promoChar == NULLCHAR) { // gating indicator could be missing
+          if(flags & F_WHITE_ON_MOVE) {
+            if(rf == 1) {
+              if(board[0][ff] != DarkSquare) return WhitePromotion; // mandatory gating, report it as promotion
+              if(cl.kind == WhiteQueenSideCastle && board[0][0] != DarkSquare) return WhitePromotion;
+              if(cl.kind == WhiteKingSideCastle && board[0][BOARD_RGHT-1] != DarkSquare) return WhitePromotion;
+            }
+          } else {
+            if(rf == BOARD_HEIGHT-2) {
+              if(board[BOARD_HEIGHT-1][ff] != DarkSquare) return BlackPromotion;
+              if(cl.kind == BlackQueenSideCastle && board[BOARD_HEIGHT-1][0] != DarkSquare) return BlackPromotion;
+              if(cl.kind == BlackKingSideCastle && board[BOARD_HEIGHT-1][BOARD_RGHT-1] != DarkSquare) return BlackPromotion;
+            }
+          }
+        }
+      } else if(promoChar && promoChar != '=' && board[rf][ff] != WhitePawn && board[rf][ff] != BlackPawn) {
         if(board[rf][ff] < BlackPawn) { // white
             if(rf != 0) return IllegalMove; // must be on back rank
             if(!(board[VIRGIN][ff] & VIRGIN_W)) return IllegalMove; // non-virgin
