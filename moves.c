@@ -2377,6 +2377,7 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
     ChessMove kind;
     char *outp = out, c, capture;
     CoordsToAlgebraicClosure cl;
+    int d;
 
     if (rf == DROP_RANK) {
 	if(ff == EmptySquare) { strncpy(outp, "--",3); return NormalMove; } // [HGM] pass
@@ -2442,6 +2443,7 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
 
       case WhiteKing:
       case BlackKing:
+        d = (gameInfo.variant == VariantSChess && !gameInfo.holdingsSize);
         /* Fabien moved code: FRC castling first (if KxR), wild castling second */
 	/* Code added by Tord:  FRC castling. */
 	if((piece == WhiteKing && board[rt][ft] == WhiteRook) ||
@@ -2456,7 +2458,7 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
 	/* Test for castling or ICS wild castling */
 	/* Use style "O-O" (oh-oh) for PGN compatibility */
 	else if (rf == rt &&
-	    rf == ((piece == WhiteKing) ? 0 : BOARD_HEIGHT-1) &&
+	    rf == ((piece == WhiteKing) ? d : BOARD_HEIGHT-1-d) &&
             (ft - ff > 1 || ff - ft > 1) &&  // No castling if legal King move (on narrow boards!)
             ((ff == BOARD_WIDTH>>1 && (ft == BOARD_LEFT+2 || ft == BOARD_RGHT-2)) ||
              (ff == (BOARD_WIDTH-1)>>1 && (ft == BOARD_LEFT+1 || ft == BOARD_RGHT-3)))) {
