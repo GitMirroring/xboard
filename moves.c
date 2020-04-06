@@ -2239,17 +2239,21 @@ Disambiguate (Board board, int flags, DisambiguateClosure *closure)
     if (c == 'x') c = NULLCHAR; // get rid of any 'x' (which should never happen?)
     if(gameInfo.variant == VariantSChess && c && c != '=' && closure->piece != WhitePawn && closure->piece != BlackPawn) {
         if(closure->piece < BlackPawn) { // white
-            if(closure->rf != 0) closure->kind = IllegalMove; // must be on back rank
-            if(!(board[VIRGIN][closure->ff] & VIRGIN_W)) closure->kind = IllegalMove; // non-virgin
+          if(closure->rf != !gameInfo.holdingsSize) closure->kind = IllegalMove; // must be on back rank
+          if(!(board[VIRGIN][closure->ff] & VIRGIN_W)) closure->kind = IllegalMove; // non-virgin
+          if(gameInfo.holdingsSize) {
             if(board[PieceToNumber(CharToPiece(ToUpper(c)))][BOARD_WIDTH-2] == 0) closure->kind = ImpossibleMove;// must be in stock
             if(closure->kind == WhiteHSideCastleFR && (closure->ff == BOARD_RGHT-2 || closure->ff == BOARD_RGHT-3)) closure->kind = ImpossibleMove;
             if(closure->kind == WhiteASideCastleFR && (closure->ff == BOARD_LEFT+2 || closure->ff == BOARD_LEFT+3)) closure->kind = ImpossibleMove;
+          }
         } else {
-            if(closure->rf != BOARD_HEIGHT-1) closure->kind = IllegalMove;
-            if(!(board[VIRGIN][closure->ff] & VIRGIN_B)) closure->kind = IllegalMove; // non-virgin
+          if(closure->rf != BOARD_HEIGHT-1-!gameInfo.holdingsSize) closure->kind = IllegalMove;
+          if(!(board[VIRGIN][closure->ff] & VIRGIN_B)) closure->kind = IllegalMove; // non-virgin
+          if(gameInfo.holdingsSize) {
             if(board[BOARD_HEIGHT-1-PieceToNumber(CharToPiece(ToLower(c)))][1] == 0) closure->kind = ImpossibleMove;
             if(closure->kind == BlackHSideCastleFR && (closure->ff == BOARD_RGHT-2 || closure->ff == BOARD_RGHT-3)) closure->kind = ImpossibleMove;
             if(closure->kind == BlackASideCastleFR && (closure->ff == BOARD_LEFT+2 || closure->ff == BOARD_LEFT+3)) closure->kind = ImpossibleMove;
+          }
         }
     } else
     if(gameInfo.variant == VariantChu) {
