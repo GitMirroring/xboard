@@ -3053,7 +3053,7 @@ DisplayBlackClock (long timeRemaining, int highlight)
 void
 SetClockMessage (int n, char *msg)
 {
-    safeStrCpy(clockMsg[n], msg, MSG_SIZ);
+    safeStrCpy(clockMsg[n], !msg ? "" : *msg ? msg : clockMsg[!n], MSG_SIZ);
 }
 
 //---------------------------------------------
