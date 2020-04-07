@@ -2340,7 +2340,10 @@ DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
         (timer / 1000) < appData.icsAlarmTime)
       foregroundOrWarningColor = lowTimeWarningColor;
 
-    if (appData.clockMode) {
+    if(highlight > 1) {
+      highlight &= 1;
+      snprintf(buf, MSG_SIZ, "%s", color);
+    } else if (appData.clockMode) {
       snprintf(buf, MSG_SIZ, "%s:_%s", color, TimeString(timer));
     } else {
       snprintf(buf, MSG_SIZ, "%s  ", color);

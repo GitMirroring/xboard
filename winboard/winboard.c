@@ -2070,6 +2070,7 @@ static int TranslatePieceToFontPiece( int piece )
     case WhiteLance:
 
 
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -6486,6 +6487,7 @@ StartupDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	appData.icsActive = FALSE;
       } else {
 	MessageBox(hDlg, _("Choose an option, or cancel to exit"),
+
 		   _("Option Error"), MB_OK|MB_ICONEXCLAMATION);
 	return TRUE;
       }
@@ -7087,6 +7089,7 @@ HMENU
 LoadIcsTextMenu(IcsTextMenuEntry *e)
 {
   HMENU hmenu, h;
+
   int i = 0;
   hmenu = LoadMenu(hInst, "TextMenu");
   h = GetSubMenu(hmenu, 0);
@@ -7772,13 +7775,14 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
   HFONT oldFont;
 
   if (twoBoards && partnerUp) return;
-  if (appData.clockMode) {
+  if (appData.clockMode && highlight < 2) { // highlight used as kludge to force printing of message
     if (tinyLayout == 2)
       snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%c %s %s", color[0], TimeString(timeRemaining), flagFell);
     else
       snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s:_%s %s", color, TimeString(timeRemaining), flagFell);
     str = buf;
   } else {
+    highlight &= 1;
     str = color;
   }
   p = strchr(str, '_');
@@ -9074,17 +9078,20 @@ StartClockTimer(long millisec)
 			     (UINT) millisec, NULL);
 }
 
+static char clockMsg[2][MSG_SIZ];
+
 void
 DisplayWhiteClock(long timeRemaining, int highlight)
 {
   HDC hdc;
-  char *flag = whiteFlag && gameMode == TwoMachinesPlay ? "(!)" : "";
+  char *msg, *flag = whiteFlag && gameMode == TwoMachinesPlay ? "(!)" : "";
 
   if(appData.noGUI) return;
   hdc = GetDC(hwndMain);
   if (!IsIconic(hwndMain)) {
-    DisplayAClock(hdc, timeRemaining, highlight, 
-			flipClock ? &blackRect : &whiteRect, _("White"), flag);
+    int m = (clockMsg[0][0] != 0); 
+    DisplayAClock(hdc, timeRemaining, highlight + 2*m, 
+			flipClock ? &blackRect : &whiteRect, m ? clockMsg[0] : _("White"), flag);
   }
   if (highlight && iconCurrent == iconBlack) {
     iconCurrent = iconWhite;
@@ -9108,8 +9115,9 @@ DisplayBlackClock(long timeRemaining, int highlight)
   if(appData.noGUI) return;
   hdc = GetDC(hwndMain);
   if (!IsIconic(hwndMain)) {
-    DisplayAClock(hdc, timeRemaining, highlight, 
-			flipClock ? &whiteRect : &blackRect, _("Black"), flag);
+    int m = (clockMsg[1][0] != 0); 
+    DisplayAClock(hdc, timeRemaining, highlight + 2*m, 
+			flipClock ? &whiteRect : &blackRect, m ? clockMsg[1] : _("Black"), flag);
   }
   if (highlight && iconCurrent == iconWhite) {
     iconCurrent = iconBlack;
@@ -9123,6 +9131,11 @@ DisplayBlackClock(long timeRemaining, int highlight)
     PostMessage(hwndConsole, WM_SETICON, (WPARAM) TRUE, (LPARAM) iconCurrent);
 }
 
+void
+SetClockMessage (int color, char *msg)
+{
+  safeStrCpy(clockMsg[n], msg, MSG_SIZ);
+}
 
 int
 LoadGameTimerRunning()

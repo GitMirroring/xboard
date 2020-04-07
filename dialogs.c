@@ -3022,30 +3022,39 @@ SlavePopUp ()
     SlaveResize(dualOptions+3);
 }
 
+static char clockMsg[2][MSG_SIZ];
+
 void
 DisplayWhiteClock (long timeRemaining, int highlight)
 {
+    int m = (clockMsg[0][0] != 0); // printing message prevails over printing color:time
     if(appData.noGUI) return;
     if(twoBoards && partnerUp) {
 	DisplayTimerLabel(&dualOptions[0], _("White"), timeRemaining, highlight);
 	return;
     }
-    DisplayTimerLabel(&mainOptions[W_WHITE], _("White"), timeRemaining, highlight);
+    DisplayTimerLabel(&mainOptions[W_WHITE], m ? clockMsg[0] : _("White"), timeRemaining, highlight + 2*m);
     if(highlight) SetClockIcon(0);
 }
 
 void
 DisplayBlackClock (long timeRemaining, int highlight)
 {
+    int m = (clockMsg[1][0] != 0);
     if(appData.noGUI) return;
     if(twoBoards && partnerUp) {
 	DisplayTimerLabel(&dualOptions[1], _("Black"), timeRemaining, highlight);
 	return;
     }
-    DisplayTimerLabel(&mainOptions[W_BLACK], _("Black"), timeRemaining, highlight);
+    DisplayTimerLabel(&mainOptions[W_BLACK], m ? clockMsg[1] : _("Black"), timeRemaining, highlight + 2*m);
     if(highlight) SetClockIcon(1);
 }
 
+void
+SetClockMessage (int n, char *msg)
+{
+    safeStrCpy(clockMsg[n], msg, MSG_SIZ);
+}
 
 //---------------------------------------------
 

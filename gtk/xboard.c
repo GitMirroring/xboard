@@ -2136,6 +2136,15 @@ DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
     char bgcolor[10];
     char fgcolor[10];
 
+    if(highlight > 1) { // kludge to force message printing
+        highlight &= 1;
+        snprintf(buf, MSG_SIZ, " %s", color);
+    } else if (appData.clockMode) {
+        snprintf(buf, MSG_SIZ, "%s:_%s", color, TimeString(timer));
+    } else {
+        snprintf(buf, MSG_SIZ, "%s  ", color);
+    }
+
     if (highlight) {
 	strcpy(bgcolor, "black");
         strcpy(fgcolor, "white");
@@ -2154,11 +2163,6 @@ DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
     gdk_color_parse( bgcolor, &col );
     gtk_widget_modify_bg(gtk_widget_get_parent(opt->handle), GTK_STATE_NORMAL, &col);
 
-    if (appData.clockMode) {
-        snprintf(buf, MSG_SIZ, "%s:_%s", color, TimeString(timer));
-    } else {
-        snprintf(buf, MSG_SIZ, "%s  ", color);
-    }
     p = strchr(buf, '_'); if(p) *p = (two ? '\n' : ' ');
     markup = g_markup_printf_escaped("<span font=\"%s\" background=\"%s\" foreground=\"%s\">%s</span>", appData.clockFont,
 					 bgcolor, fgcolor, buf);
