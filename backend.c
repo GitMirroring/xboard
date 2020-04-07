@@ -15663,6 +15663,15 @@ EditGameEvent ()
     SetGameInfo();
 }
 
+void
+DisplayClockMessage (char *msg)
+{
+  if(!msg) SetClockMessage(0, NULL), SetClockMessage(1, NULL); else
+  if(blackPlaysFirst) SetClockMessage(1, msg), SetClockMessage(0, _("Set White_to Move"));
+  else                SetClockMessage(0, msg), SetClockMessage(1, _("Set Black_to Move"));
+  DisplayBothClocks();
+}
+
 int clearCycle;
 
 void
@@ -15691,7 +15700,8 @@ EditPositionEvent ()
     currentMove = forwardMostMove = backwardMostMove = 0;
     HistorySet(parseList, backwardMostMove, forwardMostMove, currentMove-1);
     DisplayMove(-1);
-    if(!appData.pieceMenu) DisplayMessage(_("Click clock to clear board"), "");
+    DisplayMessage(_("Keep Ctrl pressed to duplicate pieces"), "");
+    DisplayClockMessage(_("Clear_Board"));
     clearCycle = 0;
 }
 
@@ -15755,6 +15765,7 @@ EditPositionDone (Boolean fakeRights)
     }
     DisplayTitle("");
     DisplayMessage("", "");
+    DisplayClockMessage(NULL);
     timeRemaining[0][forwardMostMove] = whiteTimeRemaining;
     timeRemaining[1][forwardMostMove] = blackTimeRemaining;
     gameMode = EditGame;
@@ -15876,11 +15887,11 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 		menuBoard[CASTLING][0] = menuBoard[CASTLING][3] = NoRights; // h-side Rook was deleted
 		switch(clearCycle++) {
 		  case 0:
-		    DisplayMessage(_("Click again to clear more"), "");
+		    DisplayClockMessage(_("Clear_More"));
 		    CopyBoard(erasedBoard, boards[0]);
 		    CopyBoard(boards[0], menuBoard); break;
 		  case 1:
-		    DisplayMessage(_("Keep clicking clock to restore position"), "");
+		    DisplayClockMessage(_("Restore_Position"));
 		    for(r = 0; r < BOARD_HEIGHT; r++) {
 		      ChessSquare king = WhiteKing;
 		      for(x = 0; x < BOARD_WIDTH; x++) { // erase except Kings and center
@@ -15894,12 +15905,13 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 		    break;
 		  case 2:
 		    if(!CompareBoards(erasedBoard, initialPosition)) { // initial position if notyet there
+		      DisplayClockMessage(_("Resume_Edit"));
 		      CopyBoard(boards[0], initialPosition);
 		      break;
 		    }
 		    clearCycle++;
 		  case 3:
-		    DisplayMessage(_("Keep Ctrl pressed to duplicate pieces"), "");
+		    DisplayClockMessage(_("Clear_Board"));
 		    CopyBoard(boards[0], erasedBoard);
 		}
 		clearCycle &= 3; // wrap
@@ -15915,10 +15927,12 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 
       case WhitePlay:
 	SetWhiteToPlayEvent();
+	DisplayClockMessage("");
 	break;
 
       case BlackPlay:
 	SetBlackToPlayEvent();
+	DisplayClockMessage("");
 	break;
 
       case EmptySquare:
@@ -16161,7 +16175,7 @@ ClockClick (int which)
 	if(which) { // black clock
 	  if (gameMode == EditPosition || gameMode == IcsExamining) {
 	    if(blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
-	    SetBlackToPlayEvent();
+	    else EditPositionMenuEvent(BlackPlay, 0, 0);
 	  } else if ((gameMode == AnalyzeMode || gameMode == EditGame ||
 		      gameMode == MachinePlaysBlack && PosFlags(0) & F_NULL_MOVE && !blackFlag && !shiftKey) && WhiteOnMove(currentMove)) {
           UserMoveEvent((int)EmptySquare, DROP_RANK, 0, 0, 0); // [HGM] multi-move: if not out of time, enters null move
@@ -16174,7 +16188,7 @@ ClockClick (int which)
 	} else { // white clock
 	  if (gameMode == EditPosition || gameMode == IcsExamining) {
 	    if(!blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
-	    SetWhiteToPlayEvent();
+	    else EditPositionMenuEvent(WhitePlay, 0, 0);
 	  } else if ((gameMode == AnalyzeMode || gameMode == EditGame ||
 		      gameMode == MachinePlaysWhite && PosFlags(0) & F_NULL_MOVE && !whiteFlag && !shiftKey) && !WhiteOnMove(currentMove)) {
           UserMoveEvent((int)EmptySquare, DROP_RANK, 0, 0, 0); // [HGM] multi-move
