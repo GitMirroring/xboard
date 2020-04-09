@@ -2071,6 +2071,7 @@ static int TranslatePieceToFontPiece( int piece )
 
 
 
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -7770,7 +7771,7 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
               RECT *rect, char *color, char *flagFell)
 {
   char buf[100];
-  char *str, *p;
+  char *str = buf, *p;
   COLORREF oldFg, oldBg;
   HFONT oldFont;
 
@@ -7783,7 +7784,7 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
     str = buf;
   } else {
     highlight &= 1;
-    str = color;
+    snprintf(buf, 100, "%s", color);
   }
   p = strchr(str, '_');
   if(p) *p = (logoHeight > 0 ? 0 : ' ');
@@ -9084,7 +9085,7 @@ void
 DisplayWhiteClock(long timeRemaining, int highlight)
 {
   HDC hdc;
-  char *msg, *flag = whiteFlag && gameMode == TwoMachinesPlay ? "(!)" : "";
+  char *flag = whiteFlag && gameMode == TwoMachinesPlay ? "(!)" : "";
 
   if(appData.noGUI) return;
   hdc = GetDC(hwndMain);
@@ -9134,7 +9135,7 @@ DisplayBlackClock(long timeRemaining, int highlight)
 void
 SetClockMessage (int color, char *msg)
 {
-  safeStrCpy(clockMsg[n], !msg ? "" : *msg ? msg : clockMsg[!n], MSG_SIZ);
+  safeStrCpy(clockMsg[color], !msg ? "" : *msg ? msg : clockMsg[!color], MSG_SIZ);
 }
 
 int
