@@ -8938,7 +8938,7 @@ static int savedWhitePlayer, savedBlackPlayer, pairingReceived;
 static ChessProgramState *stalledEngine;
 static char stashedInputMove[MSG_SIZ], abortEngineThink, startPieceToChar[MSG_SIZ];
 static Boolean prelude;
-static char preludeText[MSG_SIZ];
+static char preludeText[MSG_SIZ], diceRoll[MSG_SIZ];
 
 void
 HandleMachineMove (char *message, ChessProgramState *cps)
@@ -9413,6 +9413,31 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
       } else if(promoSweep != EmptySquare) {
         promoSweep = CharToPiece(currentMove&1 ? ToLower(*promoRestrict) : ToUpper(*promoRestrict));
         if(strlen(promoRestrict) > 1) Sweep(0);
+      }
+      return;
+    }
+    if(!strncmp(message, "dice ", 5)) { // [HGM] dice: provide dice rolls
+      if(gameMode != TwoMachinesPlay || (cps->twoMachinesColor[0] == 'w') == WhiteOnMove(forwardMostMove)) {
+	static char previousRoll[MSG_SIZ];
+	char buf[MSG_SIZ], *p = message + 5;
+	int n, k, l;
+	sprintf(buf, "pips");
+	while(sscanf(p, "%d", &n) == 1) {
+	  k = (random() + 256*random() & 0xFFFF)*n >> 16;
+	  l = strlen(buf);
+	  snprintf(buf + l, MSG_SIZ - 1 - l, " %d/%d", k+1, n);
+	  while(*++p > ' ') {}
+	}
+	l = strlen(diceRoll);
+	if(l == 0) safeStrCpy(previousRoll, diceRoll+1, MSG_SIZ); // remember series from previous turn
+	snprintf(diceRoll + l, MSG_SIZ - l, "%s", buf + 4);       // accumulate rolls for display
+	strcat(buf, "\n"); SendToProgram(buf, cps);
+	if(gameMode != TwoMachinesPlay) {
+	  int human = (gameMode == MachinePlaysWhite) != WhiteOnMove(forwardMostMove);
+	  if(human) snprintf(buf, MSG_SIZ, "Your dice roll:%s (mine %s)", diceRoll, previousRoll);
+	  else      snprintf(buf, MSG_SIZ, "My dice roll:%s", diceRoll);
+	  DisplayTitle(buf);
+	} else if(cps->other->dice) SendToProgram(buf, cps->other);
       }
       return;
     }
@@ -10852,6 +10877,7 @@ MakeMove (int fromX, int fromY, int toX, int toY, int promoChar)
     ChessSquare p = boards[forwardMostMove][toY][toX];
 //    forwardMostMove++; // [HGM] bare: moved downstream
 
+    diceRoll[0] = NULLCHAR; // [HGM] dice: consumed by this move
     if(kill2X >= 0) x = kill2X, y = kill2Y; else
     if(killX >= 0 && killY >= 0) x = killX, y = killY; // [HGM] lion: make SAN move to intermediate square, if there is one
     (void) CoordsToAlgebraic(boards[forwardMostMove],
@@ -12373,6 +12399,7 @@ Reset (int redraw, int init)
     second.maybeThinking = FALSE;
     first.bookSuspend = FALSE; // [HGM] book
     second.bookSuspend = FALSE;
+    diceRoll[0] = NULLCHAR;
     thinkOutput[0] = NULLCHAR;
     lastHint[0] = NULLCHAR; hintSrc = 0;
     ClearGameInfo(&gameInfo);
@@ -17696,6 +17723,7 @@ ParseFeatures (char *args, ChessProgramState *cps)
     if (BoolFeature(&p, "exclude", &cps->excludeMoves, cps)) continue;
     if (BoolFeature(&p, "ics", &cps->sendICS, cps)) continue;
     if (BoolFeature(&p, "name", &cps->sendName, cps)) continue;
+    if (BoolFeature(&p, "dice", &cps->dice, cps)) continue; // [HGM] dice
     if (BoolFeature(&p, "pause", &cps->pause, cps)) continue; // [HGM] pause
     if (IntFeature(&p, "done", &val, cps)) {
       FeatureDone(cps, val);
