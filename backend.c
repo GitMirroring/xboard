@@ -6757,6 +6757,7 @@ HasPromotionChoice (int fromX, int fromY, int toX, int toY, char *promoChoice, i
     if(legal[toY][toX] == 4) return FALSE;
 
     piece = boards[currentMove][fromY][fromX];
+    if(PieceToChar(CHUPROMOTED(piece)) == '+') highestPromotingPiece = WhiteKing; // always obey PTC table
     if(gameInfo.variant == VariantChu) {
         promotionZoneSize = (BOARD_HEIGHT - deadRanks)/3;
         if(legal[toY][toX] == 6) return FALSE; // no promotion if highlights deny it
@@ -6779,12 +6780,13 @@ HasPromotionChoice (int fromX, int fromY, int toX, int toY, char *promoChoice, i
     if((int)piece >= BlackPawn) {
         if(toY >= promotionZoneSize && fromY >= promotionZoneSize)
              return FALSE;
-        if(fromY < promotionZoneSize && gameInfo.variant == VariantChuChess) return FALSE;
+        if(fromY < promotionZoneSize && (gameInfo.variant == VariantChuChess || gameInfo.variant == VariantFairy)) return FALSE;
         highestPromotingPiece = WHITE_TO_BLACK highestPromotingPiece;
     } else {
         if(  toY < BOARD_HEIGHT - deadRanks - promotionZoneSize &&
            fromY < BOARD_HEIGHT - deadRanks - promotionZoneSize) return FALSE;
-        if(fromY >= BOARD_HEIGHT - deadRanks - promotionZoneSize && gameInfo.variant == VariantChuChess)
+        if(fromY >= BOARD_HEIGHT - deadRanks - promotionZoneSize &&
+           (gameInfo.variant == VariantChuChess || gameInfo.variant == VariantFairy))
              return FALSE;
     }
 
