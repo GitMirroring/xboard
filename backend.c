@@ -10499,6 +10499,9 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 //      ChessSquare victim;
       int i;
 
+      piece = board[fromY][fromX]; /* [HGM] remember, for Shogi promotion and igui */
+      board[fromY][fromX] = EmptySquare;
+
       if( killX >= 0 && killY >= 0 ) { // [HGM] lion: Lion trampled over something
 //           victim = board[killY][killX],
            killed = board[killY][killX],
@@ -10511,13 +10514,13 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
       if( board[toY][toX] != EmptySquare ) {
            board[EP_STATUS] = EP_CAPTURE;
            if( (fromX != toX || fromY != toY) && // not igui!
-               (captured == WhiteLion && board[fromY][fromX] != BlackLion ||
-                captured == BlackLion && board[fromY][fromX] != WhiteLion   ) ) { // [HGM] lion: Chu Lion-capture rules
+               (captured == WhiteLion && piece != BlackLion ||
+                captured == BlackLion && piece != WhiteLion   ) ) { // [HGM] lion: Chu Lion-capture rules
                board[EP_STATUS] = EP_IRON_LION; // non-Lion x Lion: no counter-strike allowed
            }
       }
 
-      pawn = board[fromY][fromX];
+      pawn = piece;
       if(pieceDesc[pawn] && strchr(pieceDesc[pawn], 'e')) { // piece with user-defined e.p. capture
 	board[EP_RANK] = epRank; board[EP_FILE] = epFile;   // Ughh! cleared it too soon :-(
 	isEP = EnPassantTest(board, PosFlags(currentMove), fromY, fromX, toY, toX, promoChar);
@@ -10582,18 +10585,16 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 
      if (fromX == toX && fromY == toY && killX < 0) return;
 
-     piece = board[fromY][fromX]; /* [HGM] remember, for Shogi promotion */
      king = piece < (int) BlackPawn ? WhiteKing : BlackKing; /* [HGM] Knightmate simplify testing for castling */
      if(gameInfo.variant == VariantKnightmate)
          king += (int) WhiteUnicorn - (int) WhiteKing;
 
     if(autoProm[piece]) {
 	board[toY][toX] = (autoProm[piece] != '!' || board[toY][toX] != EmptySquare ? CHUPROMOTED(piece) : piece);
-	board[fromY][fromX] = EmptySquare;
     } else
     if(pieceDesc[piece] && killX >= 0 && strchr(pieceDesc[piece], 'O') // Betza castling-enabled
        && (piece < BlackPawn ? killed < BlackPawn : killed >= BlackPawn)) {    // and tramples own
-	board[toY][toX] = piece; board[fromY][fromX] = EmptySquare;
+	board[toY][toX] = piece;
 	board[toY][toX + (killX < fromX ? 1 : -1)] = killed;
         board[EP_STATUS] = EP_NONE; // capture was fake!
     } else
@@ -10604,20 +10605,18 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
     } else
     /* Code added by Tord: */
     /* FRC castling assumed when king captures friendly rook. [HGM] or RxK for S-Chess */
-    if (board[fromY][fromX] == WhiteKing && board[toY][toX] == WhiteRook ||
-        board[fromY][fromX] == WhiteRook && board[toY][toX] == WhiteKing) {
+    if (piece == WhiteKing && board[toY][toX] == WhiteRook ||
+        piece == WhiteRook && board[toY][toX] == WhiteKing) {
       board[EP_STATUS] = EP_NONE; // capture was fake!
-      board[fromY][fromX] = EmptySquare;
       board[toY][toX] = EmptySquare;
       if((toX > fromX) != (piece == WhiteRook)) {
         board[0][BOARD_RGHT-2] = WhiteKing; board[0][BOARD_RGHT-3] = WhiteRook;
       } else {
         board[0][BOARD_LEFT+2] = WhiteKing; board[0][BOARD_LEFT+3] = WhiteRook;
       }
-    } else if (board[fromY][fromX] == BlackKing && board[toY][toX] == BlackRook ||
-               board[fromY][fromX] == BlackRook && board[toY][toX] == BlackKing) {
+    } else if (piece == BlackKing && board[toY][toX] == BlackRook ||
+               piece == BlackRook && board[toY][toX] == BlackKing) {
       board[EP_STATUS] = EP_NONE;
-      board[fromY][fromX] = EmptySquare;
       board[toY][toX] = EmptySquare;
       if((toX > fromX) != (piece == BlackRook)) {
         board[BOARD_HEIGHT-1][BOARD_RGHT-2] = BlackKing; board[BOARD_HEIGHT-1][BOARD_RGHT-3] = BlackRook;
@@ -10627,35 +10626,31 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
     /* End of code added by Tord */
 
     } else if (pieceDesc[piece] && piece == king && !strchr(pieceDesc[piece], 'O') && strchr(pieceDesc[piece], 'i')) {
-	board[fromY][fromX] = EmptySquare; // never castle if King has virgin moves defined on it other than castling
-	board[toY][toX] = piece;
-    } else if (board[fromY][fromX] == king
+	board[toY][toX] = piece; // never castle if King has virgin moves defined on it other than castling
+    } else if (piece == king
         && fromX != BOARD_LEFT && fromX != BOARD_RGHT-1 // [HGM] cylinder */
         && toY == fromY && toX > fromX+1) {
 	for(rookX=fromX+1; board[toY][rookX] == EmptySquare && rookX < BOARD_RGHT-1; rookX++)
 											     ; // castle with nearest piece
         board[fromY][toX-1] = board[fromY][rookX];
         board[fromY][rookX] = EmptySquare;
-	board[fromY][fromX] = EmptySquare;
         board[toY][toX] = king;
-    } else if (board[fromY][fromX] == king
+    } else if (piece == king
         && fromX != BOARD_LEFT && fromX != BOARD_RGHT-1 // [HGM] cylinder */
                && toY == fromY && toX < fromX-1) {
 	for(rookX=fromX-1; board[toY][rookX] == EmptySquare && rookX > 0; rookX--)
 										  ; // castle with nearest piece
         board[fromY][toX+1] = board[fromY][rookX];
         board[fromY][rookX] = EmptySquare;
-	board[fromY][fromX] = EmptySquare;
         board[toY][toX] = king;
-    } else if ((board[fromY][fromX] == WhitePawn && gameInfo.variant != VariantXiangqi ||
-                board[fromY][fromX] == WhiteLance && gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu)
+    } else if ((piece == WhitePawn && gameInfo.variant != VariantXiangqi ||
+                piece == WhiteLance && gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu)
                && toY >= BOARD_HEIGHT-promoRank && promoChar // defaulting to Q is done elsewhere
                ) {
 	/* white pawn promotion */
         board[toY][toX] = CharToPiece(ToUpper(promoChar));
         if(board[toY][toX] < WhiteCannon && PieceToChar(PROMOTED(board[toY][toX])) == '~') /* [HGM] use shadow piece (if available) */
             board[toY][toX] = (ChessSquare) (PROMOTED(board[toY][toX]));
-	board[fromY][fromX] = EmptySquare;
     } else if ((fromY >= BOARD_HEIGHT>>1)
 	       && (epFile == toX || oldEP == EP_UNKNOWN || appData.testLegality || abs(toX - fromX) > 4)
 	       && (toX != fromX)
@@ -10664,15 +10659,13 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 	       && (pawn == WhitePawn)
 	       && (board[toY][toX] == EmptySquare)) {
 	if(lastFile == 100) lastFile = (board[fromY][toX] == BlackPawn ? toX : fromX), lastRank = fromY; // assume FIDE e.p. if victim present
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = piece;
 	captured = board[lastRank][lastFile], board[lastRank][lastFile] = EmptySquare;
     } else if ((fromY == BOARD_HEIGHT-4)
 	       && (toX == fromX)
                && gameInfo.variant == VariantBerolina
-	       && (board[fromY][fromX] == WhitePawn)
+	       && (piece == WhitePawn)
 	       && (board[toY][toX] == EmptySquare)) {
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = WhitePawn;
 	if(oldEP & EP_BEROLIN_A) {
 		captured = board[fromY][fromX-1];
@@ -10680,47 +10673,42 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 	}else{	captured = board[fromY][fromX+1];
 		board[fromY][fromX+1] = EmptySquare;
 	}
-    } else if (board[fromY][fromX] == king
+    } else if (piece == king
         && fromX != BOARD_LEFT && fromX != BOARD_RGHT-1 // [HGM] cylinder */
                && toY == fromY && toX > fromX+1) {
 	for(rookX=toX+1; board[toY][rookX] == EmptySquare && rookX < BOARD_RGHT - 1; rookX++)
 											     ;
         board[fromY][toX-1] = board[fromY][rookX];
         board[fromY][rookX] = EmptySquare;
-	board[fromY][fromX] = EmptySquare;
         board[toY][toX] = king;
-    } else if (board[fromY][fromX] == king
+    } else if (piece == king
         && fromX != BOARD_LEFT && fromX != BOARD_RGHT-1 // [HGM] cylinder */
                && toY == fromY && toX < fromX-1) {
 	for(rookX=toX-1; board[toY][rookX] == EmptySquare && rookX > 0; rookX--)
 										;
         board[fromY][toX+1] = board[fromY][rookX];
         board[fromY][rookX] = EmptySquare;
-	board[fromY][fromX] = EmptySquare;
         board[toY][toX] = king;
     } else if (fromY == 7 && fromX == 3
-	       && board[fromY][fromX] == BlackKing
+	       && piece == BlackKing
 	       && toY == 7 && toX == 5) {
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = BlackKing;
 	board[fromY][7] = EmptySquare;
 	board[toY][4] = BlackRook;
     } else if (fromY == 7 && fromX == 3
-	       && board[fromY][fromX] == BlackKing
+	       && piece == BlackKing
 	       && toY == 7 && toX == 1) {
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = BlackKing;
 	board[fromY][0] = EmptySquare;
 	board[toY][2] = BlackRook;
-    } else if ((board[fromY][fromX] == BlackPawn && gameInfo.variant != VariantXiangqi ||
-                board[fromY][fromX] == BlackLance && gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu)
+    } else if ((piece == BlackPawn && gameInfo.variant != VariantXiangqi ||
+                piece == BlackLance && gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu)
 	       && toY < promoRank && promoChar
                ) {
 	/* black pawn promotion */
 	board[toY][toX] = CharToPiece(ToLower(promoChar));
         if(board[toY][toX] < BlackCannon && PieceToChar(PROMOTED(board[toY][toX])) == '~') /* [HGM] use shadow piece (if available) */
             board[toY][toX] = (ChessSquare) (PROMOTED(board[toY][toX]));
-	board[fromY][fromX] = EmptySquare;
     } else if ((fromY < BOARD_HEIGHT>>1)
 	       && (epFile == toX && epRank == toY || oldEP == EP_UNKNOWN || appData.testLegality || abs(toX - fromX) > 4)
 	       && (toX != fromX)
@@ -10729,15 +10717,13 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 	       && (pawn == BlackPawn)
 	       && (board[toY][toX] == EmptySquare)) {
 	if(lastFile == 100) lastFile = (board[fromY][toX] == WhitePawn ? toX : fromX), lastRank = fromY;
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = piece;
 	captured = board[lastRank][lastFile], board[lastRank][lastFile] = EmptySquare;
     } else if ((fromY == 3)
 	       && (toX == fromX)
                && gameInfo.variant == VariantBerolina
-	       && (board[fromY][fromX] == BlackPawn)
+	       && (piece == BlackPawn)
 	       && (board[toY][toX] == EmptySquare)) {
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = BlackPawn;
 	if(oldEP & EP_BEROLIN_A) {
 		captured = board[fromY][fromX-1];
@@ -10746,8 +10732,6 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 		board[fromY][fromX+1] = EmptySquare;
 	}
     } else {
-	ChessSquare piece = board[fromY][fromX]; // [HGM] lion: allow for igui (where from == to)
-	board[fromY][fromX] = EmptySquare;
 	board[toY][toX] = piece;
     }
   }
