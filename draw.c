@@ -407,6 +407,8 @@ SaveWindowsBitmap(ChessSquare piece, int color, int *data, int stride, int w, in
     if(appData.bmpSave && piece == WhiteKing && color) exit(0);
 }
 
+void InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y);
+
 static void
 ScaleOnePiece (int color, int piece, char *pieceDir)
 {
@@ -456,6 +458,9 @@ ScaleOnePiece (int color, int piece, char *pieceDir)
   cairo_set_source_surface (cr, img, 0, 0);
   cairo_paint (cr);
   cairo_destroy (cr);
+if(appData.inscriptions[0]) InscribeKanji(cs, piece+BlackPawn*color, 0, 0);
+sprintf(buf, "%c2%d.png", color ? 'b' : 'w', piece);
+if(piece < 22) cairo_surface_write_to_png(cs, buf);
 
   if(!appData.trueColors || !*pieceDir) { // operate on bitmap to color it (king-size hack...)
     int stride = cairo_image_surface_get_stride(cs)/4;
@@ -917,7 +922,7 @@ DrawText (char *string, int x, int y, int align)
 void
 InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y)
 {
-    char *p, *q, buf[20], nr = 1;
+    char *p, *q, *oldq, buf[20], nr = 1;
     int i, n, size = 40, flip = appData.upsideDown && flipView == (piece < BlackPawn);
     if(piece == EmptySquare) return;
     if(piece >= BlackPawn) piece = BLACK_TO_WHITE piece;
@@ -928,10 +933,10 @@ InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y)
       if(*p == '/') p++, piece = n - WhitePBishop; // secondary series
       if(*p++ == NULLCHAR) {
         if(n != WhiteKing) return;
-        p = q;
+        p = oldq;
         break;
       }
-      q = p - 1;
+      oldq = q; q = p - 1;
       while((*p & 0xC0) == 0x80) p++; // skip UTF-8 continuation bytes
       if(*q != '.' && ++i < nr) continue; // yet more kanji for the current piece
       piece--; i = 0;
@@ -941,8 +946,8 @@ InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y)
     if(nr > 1) {
       p = q;
       while((*++p & 0xC0) == 0x80) {} // skip second unicode
-      *p = NULLCHAR; size = 30; i = 16;
-      DrawUnicode(canvas, q, x, y, PieceToChar(n), flip, size, -10);
+      *p = NULLCHAR; size = 30; i = -12;
+      DrawUnicode(canvas, q, x, y, PieceToChar(n), flip, size, 16);
     } else i = 4;
     *q = NULLCHAR;
     DrawUnicode(canvas, buf, x, y, PieceToChar(n), flip, size, i);
@@ -957,7 +962,7 @@ DrawOneSquare (int x, int y, ChessSquare piece, int square_color, int marker, ch
 	BlankSquare(CsBoardWindow(currBoard), x, y, square_color, piece, 1);
     } else {
 	pngDrawPiece(CsBoardWindow(currBoard), piece, square_color, x, y);
-        if(appData.inscriptions[0]) InscribeKanji(CsBoardWindow(currBoard), piece, x, y);
+//        if(appData.inscriptions[0]) InscribeKanji(CsBoardWindow(currBoard), piece, x, y);
     }
 
     if(align) { // square carries inscription (coord or piece count)
