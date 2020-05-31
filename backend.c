@@ -444,7 +444,7 @@ char *currentDebugFile; // [HGM] debug split: to remember name
 char cmailMove[CMAIL_MAX_GAMES][MOVE_LEN], cmailMsg[MSG_SIZ];
 char bookOutput[MSG_SIZ*10], thinkOutput[MSG_SIZ*10], lastHint[MSG_SIZ], hintSrc;
 char thinkOutput1[MSG_SIZ*10];
-char promoRestrict[MSG_SIZ];
+char promoRestrict[MSG_SIZ], defaultChoice[MSG_SIZ];
 
 ChessProgramState first, second, pairing;
 
@@ -7785,7 +7785,7 @@ LeftClick (ClickType clickType, int xPix, int yPix)
       if(gameMode == AnalyzeMode && (pausing || controlKey) && first.excludeMoves) { // use pause state to exclude moves
 	doubleClick = TRUE; gatingPiece = boards[currentMove][y][x];
       }
-      fromX = x; fromY = y; toX = toY = killX = killY = kill2X = kill2Y = -1; *promoRestrict = NULLCHAR;
+      fromX = x; fromY = y; toX = toY = killX = killY = kill2X = kill2Y = -1; safeStrCpy(promoRestrict, defaultChoice, MSG_SIZ);
       if(!appData.oneClick || !OnlyMove(&x, &y, FALSE) ||
 	 // even if only move, we treat as normal when this would trigger a promotion popup, to allow sweep selection
 	 appData.sweepSelect && CanPromote(boards[currentMove][fromY][fromX], fromY) && originalY != y) {
@@ -7806,7 +7806,7 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 		DragPieceBegin(xPix, yPix, FALSE); dragging = 1;
 		if(appData.sweepSelect && CanPromote(piece = boards[currentMove][fromY][fromX], fromY)) {
 		    promoSweep = defaultPromoChoice;
-		    selectFlag = 0; lastX = xPix; lastY = yPix; *promoRestrict = 0;
+		    selectFlag = 0; lastX = xPix; lastY = yPix; safeStrCpy(promoRestrict, defaultChoice, MSG_SIZ);
 		    Sweep(0); // Pawn that is going to promote: preview promotion piece
 		    DisplayMessage("", _("Pull pawn backwards to under-promote"));
 		}
@@ -7845,7 +7845,7 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 	     !(fromP == BlackKing && toP == BlackRook && frc)))) {
 	    /* Clicked again on same color piece -- changed his mind */
 	    second = (x == fromX && y == fromY);
-	    killX = killY = kill2X = kill2Y = -1; *promoRestrict = NULLCHAR;
+	    killX = killY = kill2X = kill2Y = -1; safeStrCpy(promoRestrict, defaultChoice, MSG_SIZ);
 	    if(second && gameMode == AnalyzeMode && SubtractTimeMarks(&lastClickTime, &prevClickTime) < 200) {
 		second = FALSE; // first double-click rather than scond click
 		doubleClick = first.excludeMoves; // used by UserMoveEvent to recognize exclude moves
@@ -7871,7 +7871,7 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 		DragPieceBegin(xPix, yPix, FALSE);
 		if(appData.sweepSelect && CanPromote(piece = boards[currentMove][y][x], y)) {
 		    promoSweep = defaultPromoChoice;
-		    selectFlag = 0; lastX = xPix; lastY = yPix; *promoRestrict = 0;
+		    selectFlag = 0; lastX = xPix; lastY = yPix; safeStrCpy(promoRestrict, defaultChoice, MSG_SIZ);
 		    Sweep(0); // Pawn that is going to promote: preview promotion piece
 		}
 	    }
@@ -7978,7 +7978,7 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 	MarkTargetSquares(1);
     } else if(sweepSelecting) { // this must be the up-click corresponding to the down-click that started the sweep
 	sweepSelecting = 0; appData.animate = FALSE; // do not animate, a selected piece already on to-square
-        *promoRestrict = 0; appData.flashCount = saveFlash;
+        safeStrCpy(promoRestrict, defaultChoice, MSG_SIZ); appData.flashCount = saveFlash;
 	if (appData.animate || appData.highlightLastMove) {
 	    SetHighlights(fromX, fromY, toX, toY);
 	} else {
@@ -9411,7 +9411,13 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
       }
       return;
     }
-    if(!appData.testLegality && sscanf(message, "choice %s", promoRestrict) == 1) {
+    if(sscanf(message, "choice %s", promoRestrict) == 1) {
+      if(gameMode == BeginningOfGame && cps == &first && 
+         (!appData.testLegality || *engineVariant != NULLCHAR || gameInfo.variant == VariantFairy)) {
+        safeStrCpy(defaultChoice, promoRestrict, MSG_SIZ); // redefine promotion choice for entire game
+        return;
+      }
+      if(appData.testLegality) return;
       if(deferChoice) {
         LeftClick(Press, 0, 0); // finish the click that was interrupted
       } else if(promoSweep != EmptySquare) {
@@ -12394,6 +12400,7 @@ Reset (int redraw, int init)
     lastHint[0] = NULLCHAR; hintSrc = 0;
     ClearGameInfo(&gameInfo);
     gameInfo.variant = StringToVariant(appData.variant);
+    *defaultChoice = NULLCHAR; // [HGM] promo
     if(gameInfo.variant == VariantNormal && strcmp(appData.variant, "normal")) {
 	gameInfo.variant = VariantUnknown;
 	strncpy(engineVariant, appData.variant, MSG_SIZ);
