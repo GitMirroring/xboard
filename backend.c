@@ -7302,6 +7302,7 @@ UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
 	}
     }
 
+    if(moveType == Swap && killX < 0) killX = fromX, killY = fromY, moveType = NormalMove;
     FinishMove(moveType, fromX, fromY, toX, toY, promoChar);
 }
 
@@ -7541,11 +7542,12 @@ Mark (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, VO
     typedef char Markers[BOARD_RANKS][BOARD_FILES];
     Markers *m = (Markers *) closure;
     if(rf == fromY && ff == fromX && (killX < 0 ? !(rt == rf && ft == ff) && legNr & 1 :
-				      kill2X < 0 ? rt == killY && ft == killX || legNr & 2 : rt == killY && ft == killX || legNr & 4))
+				      kill2X < 0 ? rt == killY && ft == killX || legNr & 2 : rt == killY && ft == killX || legNr & 4)) {
 	(*m)[rt][ft] = 1 + (board[rt][ft] != EmptySquare
 			 || kind == WhiteCapturesEnPassant
-			 || kind == BlackCapturesEnPassant) + 3*(kind == FirstLeg && (killX < 0 & legNr || legNr & 2 && kill2X < 0)), legal[rt][ft] = 3;
-    else if(flags & F_MANDATORY_CAPTURE && board[rt][ft] != EmptySquare) (*m)[rt][ft] = 3, legal[rt][ft] = 3;
+			 || kind == BlackCapturesEnPassant), legal[rt][ft] = 3;
+	if(kind == FirstLeg && (killX < 0 & legNr || legNr & 2 && kill2X < 0)) (*m)[rt][ft] = 5;
+    } else if(flags & F_MANDATORY_CAPTURE && board[rt][ft] != EmptySquare) (*m)[rt][ft] = 3, legal[rt][ft] = 3;
 }
 
 static int hoverSavedValid;
@@ -10509,6 +10511,8 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
            board[EP_STATUS] = EP_CAPTURE;
            if( kill2X >= 0 && kill2Y >= 0)
              killed2 = board[kill2Y][kill2X], board[kill2Y][kill2X] = EmptySquare;
+           if(killed == EmptySquare) // [HGM] unload: kill-square also used for push destination
+             board[killY][killX] = board[toY][toX], board[EP_STATUS] = EP_NONE;
       }
 
       if( board[toY][toX] != EmptySquare ) {

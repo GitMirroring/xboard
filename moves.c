@@ -324,8 +324,8 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
     if(pc == WhitePawn || pc == WhiteLance) promo = WhitePromotion, promoRank = BOARD_HEIGHT-1; else
     if(pc == BlackPawn || pc == BlackLance) promo = BlackPromotion, promoRank = 0;
     while(*p) {                  // more moves to go
-	int expo = -1, dx, dy, x, y, mode, dirSet, ds2=0, retry=0, initial=0, jump=1, skip = 0, all = 0;
-	char *cont = NULL;
+	int expo = -1, dx, dy, x, y, mode, dirSet, ds2=0, retry=0, initial=0, jump=1, skip = 0, all = 0, put = 0, u = 0;
+	char *cont = NULL, *q;
 	while(*p == 'i') initial++, desc = ++p;
 	while(islower(*p)) p++;  // skip prefixes
 	if(!isupper(*p)) return; // syntax error: no atom
@@ -396,6 +396,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 	}
 	if(mine == 2 && tx < 0) dirSet = dirSet >> 4 | dirSet << 4 & 255;   // invert black moves
 	mode = 0;                // build mode mask
+	if(*desc == 'u') put++, desc++;               // unload stuff at start of leg
 	if(*desc == 'm') mode |= 4, desc++;           // move to empty
 	if(*desc == 'c') mode |= his, desc++;         // capture foe
 	if(*desc == 'd') mode |= mine, desc++;        // destroy (capture friend)
@@ -429,6 +430,8 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 	} else {
 	    strncpy(buf, cont, 80); cont = buf;       // copy next leg(s), so we can modify
 	    atom = buf; while(islower(*atom)) atom++; // skip to atom
+	    for(q=buf; q!=atom && *q != 'a'; q++)     // test whether next leg unloads
+              if(*q == 'u') u = 1;
 	    if(mode & 32) mode ^= 256 + 32;           // in non-final legs 'p' means 'pass through'
 	    if(mode & 64 + 512) {
 		mode |= 256;                          // and 'g' too, but converts leaper <-> slider
@@ -469,8 +472,9 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		  if(occup & mode) {                  // valid intermediate square, do continuation
 		    char origAtom = *atom;
 		    int rg = (expo != 1 ? expo - i + 1 : range);  // pass length of last *slider* leg
+		    int transp = occup & mode & 0x104;            // no side effect on intermediate square
 		    if(!(bit & all)) *atom = rotate[*atom - 'A']; // orth-diag interconversion to make direction valid
-		    if(occup & mode & 0x104) {        // no side effects, merge legs to one move
+		    if(transp && !u) {                // no side effects, merge legs to one move
 			if(skip < 0 && occup == 4) {  // create e.p. rights on this square
 			    if(viaX != 100) {         // second e.p. square!
 				if(viaX == x && viaY == y - vy) viaY = y | 128; // flag it when we can handle it
@@ -479,7 +483,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 			MovesFromString(board, flags, f, r, x, y, dir, rg, cont, cb, cl);
 			if(viaY & 128) viaY = y - vy; else viaX = viaY = 100;
 		    }
-		    if(occup & mode & 3 && (killX < 0 || kill2X < 0 && (legNr > 1 || killX == x && killY == y) ||
+		    if((occup & mode & 3 || transp && u) && (killX < 0 || kill2X < 0 && (legNr > 1 || killX == x && killY == y) ||
 					    (legNr == 1 ? kill2X == x && kill2Y == y : killX == x && killY == y))) {     // destructive first leg
 			int cnt = 0;
 			legNr <<= 1;
@@ -524,7 +528,9 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		    break;
 		}
 		if(mode & 16 && (board[y][x] == WhiteKing || board[y][x] == BlackKing)) break; // tame piece, cannot capture royal
-		if(occup & mode) cb(board, flags, y == promoRank ? promo : NormalMove, r, f, y, x, cl); // allowed, generate
+		if(occup & mode) {
+		  cb(board, flags, y == promoRank ? promo : put ? Swap : NormalMove, r, f, y, x, cl); // allowed, generate
+		}
 		if(occup != 4) break; // not valid transit square
 	    } while(--i);
 	  }

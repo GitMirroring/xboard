@@ -348,7 +348,7 @@ typedef enum {
     WhitePromotion, WhiteNonPromotion,
     BlackPromotion, BlackNonPromotion,
     WhiteCapturesEnPassant, BlackCapturesEnPassant,
-    WhiteDrop, BlackDrop, FirstLeg,
+    WhiteDrop, BlackDrop, FirstLeg, Swap,
     NormalMove, AmbiguousMove, IllegalMove, ImpossibleMove,
     WhiteWins, BlackWins, GameIsDrawn, GameUnfinished,
     GNUChessGame, XBoardGame, MoveNumberOne, Open, Close, Nothing,
