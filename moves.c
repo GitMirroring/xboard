@@ -414,6 +414,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 	if(isdigit(*++p)) expo = atoi(p++);           // read exponent
 	if(expo > 9) p++;                             // allow double-digit
 	desc = p;                                     // this is start of next move
+	if(tx == -2 && mode & 1<<12) continue;        // prevent recursive move borrowing (flaky)
 	epFlag = // flags initial orthogonal and diagonal pawn non-capture multi-pushes (which have legacy meaning)
 		(initial && promo != NormalMove && !cont && mode == 4 && (!dx || dx == dy) && (dy > 1 ? !jump : expo > 1));
 	if(initial == 2) { if(board[r][f] != initialPosition[r-2*his+3][f]) continue; initial = 0; } else
@@ -532,7 +533,11 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		}
 		if(mode & 16 && (board[y][x] == WhiteKing || board[y][x] == BlackKing)) break; // tame piece, cannot capture royal
 		if(occup & mode) {
-		  cb(board, flags, y == promoRank ? promo : put ? Swap : NormalMove, r, f, y, x, cl); // allowed, generate
+		  if(mode & 1<<12) {
+		    ChessSquare neighbor = board[y][x];
+		    char *borrow = (neighbor == pc ? NULL : pieceDesc[neighbor]); // do not borrow from equal type
+		    if(borrow) MovesFromString(board, flags, f, r, -2, -2, dir, range, borrow, cb, cl);      // borrow moves from neighbor
+		  } else cb(board, flags, y == promoRank ? promo : put ? Swap : NormalMove, r, f, y, x, cl); // allowed, generate
 		}
 		if(occup != 4) break; // not valid transit square
 	    } while(--i);
