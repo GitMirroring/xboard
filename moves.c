@@ -401,6 +401,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 	if(*desc == 'c') mode |= his, desc++;         // capture foe
 	if(*desc == 'd') mode |= mine, desc++;        // destroy (capture friend)
 	if(*desc == 'e') mode |= 8, desc++;           // e.p. capture last mover
+	if(*desc == 'x') mode  = mine|1<<12, desc++;  // induction step
 	if(*desc == 't') mode |= 16, desc++;          // exclude enemies as hop platform ('test')
 	if(*desc == 'p') mode |= 32, desc++;          // hop over occupied
 	if(*desc == 'g') mode |= 64, desc++;          // hop and toggle range
@@ -472,7 +473,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		  if(occup & mode) {                  // valid intermediate square, do continuation
 		    char origAtom = *atom;
 		    int rg = (expo != 1 ? expo - i + 1 : range);  // pass length of last *slider* leg
-		    int transp = occup & mode & 0x104;            // no side effect on intermediate square
+		    int transp = (occup | 1<<12) & mode & 0x1104; // no side effect on intermediate square
 		    if(!(bit & all)) *atom = rotate[*atom - 'A']; // orth-diag interconversion to make direction valid
 		    if(transp && !u) {                // no side effects, merge legs to one move
 			if(skip < 0 && occup == 4) {  // create e.p. rights on this square
@@ -480,6 +481,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 				if(viaX == x && viaY == y - vy) viaY = y | 128; // flag it when we can handle it
 			    } else viaX = x, viaY = y;
 			}
+			if(mode & 1<<12) MovesFromString(board, flags,  x, y, x, y, dir, rg, cont, cb, cl), occup = 0; else
 			MovesFromString(board, flags, f, r, x, y, dir, rg, cont, cb, cl);
 			if(viaY & 128) viaY = y - vy; else viaX = viaY = 100;
 		    }
