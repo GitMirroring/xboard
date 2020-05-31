@@ -387,6 +387,7 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
 		    if(!dirSet) dirSet = (tx < 0 ? 0xFF                     // default is all directions, but in continuation leg
 					  : all == 0xFF ? 0xEF : 0x45);     // omits backward, and for 4-fold atoms also diags
 		    dirSet = (dirSet << angle | dirSet >> 8-angle) & 255;   // re-orient direction system
+		    if(dx && dx != dy) break;     // oblique continuation
 		    ds2 = dirSet & 0xAA;          // extract diagonal directions
 		    if(dirSet &= 0x55)            // start with orthogonal moves, if present
 		         retry = 1, dx = 0;       // and schedule the diagonal moves for later
