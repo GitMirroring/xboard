@@ -5815,13 +5815,13 @@ LoadMultiPV (int x, int y, char *buf, int index, int *start, int *end, int pane)
 }
 
 char *
-PvToSAN (char *pv)
+PvToSAN (char *pv, int engine)
 {
 	static char buf[10*MSG_SIZ];
 	int i, k=0, savedEnd=endPV, saveFMM = forwardMostMove;
 	*buf = NULLCHAR;
 	if(forwardMostMove < endPV) PushInner(forwardMostMove, endPV); // shelve PV of PV-walk
-	ParsePV(pv, FALSE, 2, 0); // this appends PV to game, suppressing any display of it
+	ParsePV(pv, FALSE, 2, engine+1); // this appends PV to game, suppressing any display of it
 	for(i = forwardMostMove; i<endPV; i++){
 	    if(i&1) snprintf(buf+k, 10*MSG_SIZ-k, "%s ", parseList[i]);
 	    else    snprintf(buf+k, 10*MSG_SIZ-k, "%d. %s ", i/2 + 1, parseList[i]);
@@ -10024,7 +10024,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
                     curscore = -curscore;
                 }
 
-		if(appData.pvSAN[cps==&second]) pv = PvToSAN(buf1);
+		if(appData.pvSAN[cps==&second]) pv = PvToSAN(buf1, cps == &second);
 
 		if(*bestMove) { // rememer time best EPD move was first found
 		    int ff1, tf1, fr1, tr1, ff2, tf2, fr2, tr2; char pp1, pp2;
@@ -10265,6 +10265,8 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
                     curscore = -curscore;
                 }
 
+		if(appData.pvSAN[cps==&second]) pv = PvToSAN(buf1, cps == &second);
+
 		cpstats.depth = plylev;
 		cpstats.nodes = nodes;
 		cpstats.time = time;
@@ -10273,7 +10275,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
                 cpstats.movelist[0] = '\0';
 
 		if (buf1[0] != NULLCHAR) {
-                    safeStrCpy( cpstats.movelist, buf1, sizeof(cpstats.movelist)/sizeof(cpstats.movelist[0]) );
+                    safeStrCpy( cpstats.movelist, pv, sizeof(cpstats.movelist)/sizeof(cpstats.movelist[0]) );
 		}
 
 		cpstats.ok_to_send = 0;
