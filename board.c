@@ -235,7 +235,7 @@ SquareColor (int row, int column)
 {
     int square_color;
 
-    if (gameInfo.variant == VariantXiangqi) {
+    if (gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) {
         if (column >= 3 && column <= 5 && row >= 0 && row <= 2) {
             square_color = 1;
         } else if (column >= 3 && column <= 5 && row >= 7 && row <= 9) {

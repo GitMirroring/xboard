@@ -513,6 +513,7 @@
 #define OPT_VariantASEAN                1532
 #define OPT_VariantGrand                1534
 #define OPT_VariantLion                 1535
+#define OPT_VariantJanggi               1536
 #define OPT_EngineVariant               1560
 #define IDC_Files                       1550
 #define IDC_Ranks                       1551

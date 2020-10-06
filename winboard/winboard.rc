@@ -777,6 +777,8 @@ BEGIN
                     10
     CONTROL         "&xiangqi",OPT_VariantXiangqi,"Button",BS_AUTORADIOBUTTON,154,114,70,
                     10
+    CONTROL         "&janggi",OPT_VariantJanggi,"Button",BS_AUTORADIOBUTTON,154,124,70,
+                    10
     CONTROL         "",OPT_EngineVariant+0,"Button",BS_AUTORADIOBUTTON,9,134,70,10
     CONTROL         "",OPT_EngineVariant+1,"Button",BS_AUTORADIOBUTTON,80,134,70,10
     CONTROL         "",OPT_EngineVariant+2,"Button",BS_AUTORADIOBUTTON,154,134,70,10
@@ -2021,6 +2023,7 @@ V49O                    BITMAP  MOVEABLE PURE   "bitmaps/v49o.bmp"
 S49O                    BITMAP  MOVEABLE PURE   "bitmaps/s49o.bmp"
 L49O                    BITMAP  MOVEABLE PURE   "bitmaps/l49o.bmp"
 DK49O                   BITMAP  MOVEABLE PURE   "bitmaps/dk49o.bmp"
+
 LN49O                   BITMAP  MOVEABLE PURE   "bitmaps/ln49o.bmp"
 WOLF49O                 BITMAP  MOVEABLE PURE   "bitmaps/wolf49o.bmp"
 CAMEL49O                BITMAP  MOVEABLE PURE   "bitmaps/camel49o.bmp"

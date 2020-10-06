@@ -756,6 +756,39 @@ Knight (Board board, int flags, int rf, int ff, MoveCallback callback, VOIDSTAR 
 	    }
 }
 
+void
+Zebra (Board board, int flags, int rf, int ff, MoveCallback callback, VOIDSTAR closure)
+{
+    int i, j, s, rt, ft;
+    for (i = -1; i <= 1; i += 2)
+	for (j = -1; j <= 1; j += 2)
+	    for (s = 2; s <= 3; s++) {
+		rt = rf + i*s;
+		ft = ff + j*(5-s);
+		if (!(rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT)
+		    && ( gameInfo.variant != VariantJanggi || board[rf+i*(s-2)][ff+j*(3-s)] && board[rf+i*(s-1)][ff+j*(4-s)] == EmptySquare)
+		    && !SameColor(board[rf][ff], board[rt][ft]))
+		    callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
+	    }
+}
+
+void
+PalaceDiags (Board board, int flags, int rf, int ff, int isRook, MoveCallback callback, VOIDSTAR closure)
+{   // Janggi diagonal palace moves
+    int piece = board[rf][ff];
+    int middle = BOARD_WIDTH/2;
+    int palace = (piece < BlackPawn ? 1 : BOARD_HEIGHT-2);
+    if(ff == middle) {
+	if(rf == palace && isRook) Ferz(board, flags, rf, ff, callback, closure);
+    } else if((ff == middle+1 || ff == middle-1) && (rf == palace+1 || rf == palace-1)) { // Palace corner
+	int rt = 2*palace - rf, ft = 2*middle - ff; // reflect
+	if((board[palace][middle] == EmptySquare) == isRook && !SameColor(piece, board[rt][ft]))
+	    callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
+	if(isRook && !SameColor(piece, board[palace][middle]))
+	    callback(board, flags, NormalMove, rf, ff, palace, middle, closure);
+    }
+}
+
 /* Call callback once for each pseudo-legal move in the given
    position, except castling moves. A move is pseudo-legal if it is
    legal, or if it would be legal except that it leaves the king in
@@ -770,11 +803,12 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 {
     int rf, ff;
     int i, j, d, s, fs, rs, rt, ft, m;
+    int vari = gameInfo.variant;
     int epfile = (signed char)board[EP_STATUS]; // [HGM] gamestate: extract ep status from board
-    int dead = (gameInfo.variant == VariantSChess && !gameInfo.holdingsSize ? 1 : 0);
-    int promoRank = gameInfo.variant == VariantMakruk || gameInfo.variant == VariantGrand || gameInfo.variant == VariantChuChess ? 3 : 1;
+    int dead = (vari == VariantSChess && !gameInfo.holdingsSize ? 1 : 0);
+    int promoRank = vari == VariantMakruk || vari == VariantGrand || vari == VariantChuChess ? 3 : 1;
 
-    if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize) promoRank = 2;
+    if(vari == VariantSChess && !gameInfo.holdingsSize) promoRank = 2;
     for (rf = dead; rf < BOARD_HEIGHT - dead; rf++)
       for (ff = BOARD_LEFT; ff < BOARD_RGHT; ff++) {
           ChessSquare piece;
@@ -789,7 +823,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
               MovesFromString(board, flags, ff, rf, -1, -1, 0, 0, pieceDesc[piece], callback, closure);
               continue;
           }
-          if(IS_SHOGI(gameInfo.variant))
+          if(IS_SHOGI(vari))
                  piece = (ChessSquare) ( SHOGI piece );
 
           switch ((int)piece) {
@@ -799,7 +833,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 	      break;
 
              case WhitePawn:
-              if(gameInfo.variant == VariantXiangqi) {
+              if(vari != VariantNormal && (vari == VariantXiangqi || vari == VariantJanggi)) {
                   /* [HGM] capture and move straight ahead in Xiangqi */
                   if (rf < BOARD_HEIGHT-1 &&
                            !SameColor(board[rf][ff], board[rf + 1][ff]) ) {
@@ -808,7 +842,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
                   }
                   /* and move sideways when across the river */
                   for (s = -1; s <= 1; s += 2) {
-                      if (rf >= BOARD_HEIGHT>>1 &&
+                      if ((rf >= BOARD_HEIGHT>>1 || vari == VariantJanggi) &&
                           ff + s >= BOARD_LEFT && ff + s < BOARD_RGHT &&
                           !WhitePiece(board[rf][ff+s]) ) {
                            callback(board, flags, NormalMove,
@@ -823,8 +857,8 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 			   rf, ff, rf + 1, ff, closure);
 	      }
 	      if (rf <= (BOARD_HEIGHT>>1)-3 && board[rf+1][ff] == EmptySquare && // [HGM] grand: also on 3rd rank on 10-board
-                  gameInfo.variant != VariantShatranj && /* [HGM] */
-                  gameInfo.variant != VariantCourier  && /* [HGM] */
+                  vari != VariantShatranj && /* [HGM] */
+                  vari != VariantCourier  && /* [HGM] */
                   board[rf+2][ff] == EmptySquare ) {
                       callback(board, flags, NormalMove,
                                rf, ff, rf+2, ff, closure);
@@ -851,7 +885,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 	      break;
 
 	    case BlackPawn:
-              if(gameInfo.variant == VariantXiangqi) {
+              if(vari != VariantNormal && (vari == VariantXiangqi || vari == VariantJanggi)) {
                   /* [HGM] capture straight ahead in Xiangqi */
                   if (rf > 0 && !SameColor(board[rf][ff], board[rf - 1][ff]) ) {
                            callback(board, flags, NormalMove,
@@ -859,7 +893,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
                   }
                   /* and move sideways when across the river */
                   for (s = -1; s <= 1; s += 2) {
-                      if (rf < BOARD_HEIGHT>>1 &&
+                      if ((rf < BOARD_HEIGHT>>1 || vari == VariantJanggi) &&
                           ff + s >= BOARD_LEFT && ff + s < BOARD_RGHT &&
                           !BlackPiece(board[rf][ff+s]) ) {
                            callback(board, flags, NormalMove,
@@ -874,8 +908,8 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 			   rf, ff, rf - 1, ff, closure);
 	      }
 	      if (rf >= (BOARD_HEIGHT+1>>1)+2 && board[rf-1][ff] == EmptySquare && // [HGM] grand
-                  gameInfo.variant != VariantShatranj && /* [HGM] */
-                  gameInfo.variant != VariantCourier  && /* [HGM] */
+                  vari != VariantShatranj && /* [HGM] */
+                  vari != VariantCourier  && /* [HGM] */
 		  board[rf-2][ff] == EmptySquare) {
 		  callback(board, flags, NormalMove,
 			   rf, ff, rf-2, ff, closure);
@@ -911,7 +945,8 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		      rt = rf + i*s;
 		      ft = ff + j*(3-s);
                       if (!(rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT)
-                          && ( gameInfo.variant != VariantXiangqi || board[rf+i*(s-1)][ff+j*(2-s)] == EmptySquare)
+                          && ( vari == VariantNormal ||
+                               vari != VariantJanggi && vari != VariantXiangqi || board[rf+i*(s-1)][ff+j*(2-s)] == EmptySquare)
                           && !SameColor(board[rf][ff], board[rt][ft]))
 		      callback(board, flags, NormalMove,
 			       rf, ff, rt, ft, closure);
@@ -940,6 +975,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 
             case WhiteCannon:
             case BlackCannon:
+	      if(vari == VariantJanggi) PalaceDiags(board, flags, rf, ff, FALSE, callback, closure);
               for (d = 0; d <= 1; d++)
                 for (s = -1; s <= 1; s += 2) {
                   m = 0;
@@ -947,10 +983,13 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		      rt = rf + (i * s) * d;
 		      ft = ff + (i * s) * (1 - d);
                       if (rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT) break;
+		      if(vari == VariantJanggi) {
+			  if(board[rt][ft] == WhiteCannon || board[rt][ft] == BlackCannon) break;
+                      } else
                       if (m == 0 && board[rt][ft] == EmptySquare)
                                  callback(board, flags, NormalMove,
                                           rf, ff, rt, ft, closure);
-                      if (m == 1 && board[rt][ft] != EmptySquare &&
+                      if (m == 1 && (board[rt][ft] != EmptySquare || vari == VariantJanggi) &&
                           !SameColor(board[rf][ff], board[rt][ft]) )
                                  callback(board, flags, NormalMove,
                                           rf, ff, rt, ft, closure);
@@ -962,16 +1001,16 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
             /* Gold General (and all its promoted versions) . First do the */
             /* diagonal forward steps, then proceed as normal Wazir        */
             case SHOGI (PROMO WhitePawn):
-		if(gameInfo.variant == VariantShogi) goto WhiteGold;
+		if(vari == VariantShogi) goto WhiteGold;
             case SHOGI (PROMO BlackPawn):
-		if(gameInfo.variant == VariantShogi) goto BlackGold;
+		if(vari == VariantShogi) goto BlackGold;
             case SHOGI WhiteAxe:
             case SHOGI BlackAxe:
 		SlideVertical(board, flags, rf, ff, callback, closure);
 		break;
 
             case SHOGI (PROMO WhiteKnight):
-		if(gameInfo.variant == VariantShogi) goto WhiteGold;
+		if(vari == VariantShogi) goto WhiteGold;
             case SHOGI WhiteClaw:
             case SHOGI BlackDrunk:
             case SHOGI BlackAlfil:
@@ -981,7 +1020,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		break;
 
             case SHOGI (PROMO BlackKnight):
-		if(gameInfo.variant == VariantShogi) goto BlackGold;
+		if(vari == VariantShogi) goto BlackGold;
             case SHOGI BlackClaw:
             case SHOGI WhiteDrunk:
             case SHOGI WhiteAlfil:
@@ -993,7 +1032,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 
             case SHOGI WhiteGnu:
             case SHOGI BlackGnu:
-		if(gameInfo.variant == VariantShogi) goto BlackGold;
+		if(vari == VariantShogi) goto BlackGold;
 		SlideVertical(board, flags, rf, ff, callback, closure);
 		Ferz(board, flags, rf, ff, callback, closure);
 		StepSideways(board, flags, rf, ff, callback, closure);
@@ -1017,12 +1056,20 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 
             case WhiteWazir:
             case BlackWazir:
-		if(gameInfo.variant == VariantXiangqi) {
-		    int palace = (piece == WhiteWazir ? 1 : BOARD_HEIGHT-2); // Palace center
-		    if(ff <= BOARD_WIDTH/2 && !SameColor(board[rf][ff+1], piece)) callback(board, flags, NormalMove, rf, ff, rf, ff+1, closure);
-		    if(ff >= BOARD_WIDTH/2 && !SameColor(board[rf][ff-1], piece)) callback(board, flags, NormalMove, rf, ff, rf, ff-1, closure);
+	    janggi:
+		if(vari == VariantXiangqi || vari == VariantJanggi) {
+		    int palace = (piece < BlackPawn ? 1 : BOARD_HEIGHT-2); // Palace center
+		    int middle = BOARD_WIDTH/2;
+		    if(ff <= middle && !SameColor(board[rf][ff+1], piece)) callback(board, flags, NormalMove, rf, ff, rf, ff+1, closure);
+		    if(ff >= middle && !SameColor(board[rf][ff-1], piece)) callback(board, flags, NormalMove, rf, ff, rf, ff-1, closure);
 		    if(rf >= palace && !SameColor(board[rf-1][ff], piece)) callback(board, flags, NormalMove, rf, ff, rf-1, ff, closure);
 		    if(rf <= palace && !SameColor(board[rf+1][ff], piece)) callback(board, flags, NormalMove, rf, ff, rf+1, ff, closure);
+		    if(vari == VariantJanggi) {
+			if(ff == middle) {
+			    if(rf == palace) Ferz(board, flags, rf, ff, callback, closure);
+			} else if(rf != palace && !SameColor(board[palace][middle], piece))
+			    callback(board, flags, NormalMove, rf, ff, palace, middle, closure);
+		    }
 		    break;
 		}
 		Wazir(board, flags, rf, ff, callback, closure);
@@ -1047,20 +1094,21 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 
             case WhiteAlfil:
             case BlackAlfil:
+		if(vari == VariantJanggi) { Zebra(board, flags, rf, ff, callback, closure); break; }
                 /* [HGM] support Shatranj pieces */
                 for (rs = -1; rs <= 1; rs += 2)
                   for (fs = -1; fs <= 1; fs += 2) {
                       rt = rf + 2 * rs;
                       ft = ff + 2 * fs;
                       if (!(rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT)
-                          && ( gameInfo.variant != VariantXiangqi ||
+                          && ( vari != VariantXiangqi ||
                                board[rf+rs][ff+fs] == EmptySquare && (2*rf < BOARD_HEIGHT) == (2*rt < BOARD_HEIGHT) )
 
                           && !SameColor(board[rf][ff], board[rt][ft]))
                                callback(board, flags, NormalMove,
                                         rf, ff, rt, ft, closure);
-                      if(gameInfo.variant == VariantShatranj || gameInfo.variant == VariantCourier ||
-                         gameInfo.variant == VariantChu      || gameInfo.variant == VariantXiangqi) continue; // classical Alfil
+                      if(vari == VariantShatranj || vari == VariantCourier ||
+                         vari == VariantChu      || vari == VariantXiangqi) continue; // classical Alfil
                       rt = rf + rs; // in unknown variant we assume Modern Elephant, which can also do one step
                       ft = ff + fs;
                       if (!(rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT)
@@ -1068,7 +1116,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
                                callback(board, flags, NormalMove,
                                         rf, ff, rt, ft, closure);
 		  }
-                if(gameInfo.variant == VariantSpartan)
+                if(vari == VariantSpartan)
                    for(fs = -1; fs <= 1; fs += 2) {
                       ft = ff + fs;
                       if (!(ft < BOARD_LEFT || ft >= BOARD_RGHT) && board[rf][ft] == EmptySquare)
@@ -1079,7 +1127,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
             /* Make Dragon-Horse also do Dababba moves outside Shogi, for better disambiguation in variant Fairy */
 	    case WhiteCardinal:
 	    case BlackCardinal:
-              if(gameInfo.variant == VariantChuChess) goto DragonHorse;
+              if(vari == VariantChuChess) goto DragonHorse;
               for (d = 0; d <= 1; d++) // Dababba moves that Rook cannot do
                 for (s = -2; s <= 2; s += 4) {
 		      rt = rf + s * d;
@@ -1116,7 +1164,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 
             /* Shogi Lance is unlike anything, and asymmetric at that */
             case SHOGI WhiteQueen:
-              if(gameInfo.variant == VariantChu) goto doQueen;
+              if(vari == VariantChu) goto doQueen;
               for(i = 1;; i++) {
                       rt = rf + i;
                       ft = ff;
@@ -1129,7 +1177,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
               break;
 
             case SHOGI BlackQueen:
-              if(gameInfo.variant == VariantChu) goto doQueen;
+              if(vari == VariantChu) goto doQueen;
               for(i = 1;; i++) {
                       rt = rf - i;
                       ft = ff;
@@ -1144,7 +1192,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
             /* Make Dragon-King Dababba & Rook-like outside Shogi, for better disambiguation in variant Fairy */
 	    case WhiteDragon:
 	    case BlackDragon:
-              if(gameInfo.variant == VariantChuChess || gameInfo.variant == VariantSpartan) goto DragonKing;
+              if(vari == VariantChuChess || vari == VariantSpartan) goto DragonKing;
               for (d = 0; d <= 1; d++) // Dababba moves that Rook cannot do
                 for (s = -2; s <= 2; s += 4) {
 		      rt = rf + s * d;
@@ -1172,7 +1220,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
             case WhiteMarshall:
             case BlackMarshall:
 		Rook(board, flags, rf, ff, callback, closure);
-		if(gameInfo.variant == VariantSpartan) // in Spartan Chess Chancellor is used for Dragon King.
+		if(vari == VariantSpartan) // in Spartan Chess Chancellor is used for Dragon King.
 		    Ferz(board, flags, rf, ff, callback, closure);
 		else
 		    Knight(board, flags, rf, ff, callback, closure);
@@ -1192,12 +1240,13 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		break;
 
             /* Shogi Rooks are ordinary Rooks */
+	    case WhiteRook:
+	    case BlackRook:
+		if(vari == VariantJanggi) PalaceDiags(board, flags, rf, ff, TRUE, callback, closure);
             case SHOGI WhiteRook:
             case SHOGI BlackRook:
             case SHOGI WhitePRook:
             case SHOGI BlackPRook:
-	    case WhiteRook:
-	    case BlackRook:
 		Rook(board, flags, rf, ff, callback, closure);
 		break;
 
@@ -1219,20 +1268,21 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		break;
 
             case WhiteMan:
-                if(gameInfo.variant != VariantMakruk && gameInfo.variant != VariantASEAN) goto commoner;
+                if(vari != VariantMakruk && vari != VariantASEAN) goto commoner;
             case SHOGI WhiteFerz:
 		Ferz(board, flags, rf, ff, callback, closure);
 		StepForward(board, flags, rf, ff, callback, closure);
 		break;
 
             case BlackMan:
-                if(gameInfo.variant != VariantMakruk && gameInfo.variant != VariantASEAN) goto commoner;
+                if(vari != VariantMakruk && vari != VariantASEAN) goto commoner;
             case SHOGI BlackFerz:
 		StepBackward(board, flags, rf, ff, callback, closure);
 
             case WhiteFerz:
             case BlackFerz:
-		if(gameInfo.variant == VariantXiangqi && ff != BOARD_WIDTH>>1) {
+		if(vari == VariantJanggi) goto janggi;
+		if(vari == VariantXiangqi && ff != BOARD_WIDTH>>1) {
 		    int rt = (piece == BlackFerz ? BOARD_HEIGHT-2 : 1);
 		    int ft = BOARD_WIDTH>>1;
 		    if(!SameColor(board[rf][ff], board[rt][ft]))
@@ -1282,7 +1332,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 
 	    // Use Lance as Berolina / Spartan Pawn.
 	    case WhiteLance:
-	      if(gameInfo.variant == VariantSuper) goto Amazon;
+	      if(vari == VariantSuper) goto Amazon;
 	      if (rf < BOARD_HEIGHT-1 && BlackPiece(board[rf + 1][ff]))
 		  callback(board, flags,
 			   rf >= BOARD_HEIGHT-1-promoRank ? WhitePromotion : NormalMove,
@@ -1298,7 +1348,7 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 	      break;
 
 	    case BlackLance:
-	      if(gameInfo.variant == VariantSuper) goto Amazon;
+	      if(vari == VariantSuper) goto Amazon;
 	      if (rf > 0 && WhitePiece(board[rf - 1][ff]))
 		  callback(board, flags,
 			   rf <= promoRank ? BlackPromotion : NormalMove,
@@ -1343,9 +1393,9 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
 		break;
 
             case SHOGI (PROMO WhiteFerz):
-		if(gameInfo.variant == VariantShogi) goto WhiteGold;
+		if(vari == VariantShogi) goto WhiteGold;
             case SHOGI (PROMO BlackFerz):
-		if(gameInfo.variant == VariantShogi) goto BlackGold;
+		if(vari == VariantShogi) goto BlackGold;
             case SHOGI WhiteSword:
             case SHOGI BlackSword:
             case SHOGI WhitePSword:

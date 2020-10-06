@@ -6311,6 +6311,7 @@ InitPosition (int redraw)
       SetCharTable(pieceToChar, "PNBRQ............FKpnbrq............fk");
       break;
     case VariantXiangqi:
+    case VariantJanggi:
       pieces = XiangqiArray;
       gameInfo.boardWidth  = 9;
       gameInfo.boardHeight = 10;
@@ -6423,7 +6424,9 @@ InitPosition (int redraw)
     if(appData.pieceToCharTable != NULL)
         SetCharTableEsc(pieceToChar, appData.pieceToCharTable, SUFFIXES);
 
-    for( j=0; j<BOARD_WIDTH; j++ ) { ChessSquare s = EmptySquare;
+    for( j=0; j<BOARD_WIDTH; j++ ) {
+        ChessSquare s = EmptySquare;
+        int fw = (gameInfo.variant == VariantGrand || gameInfo.variant == VariantChuChess || gameInfo.variant == VariantJanggi && j == BOARD_WIDTH/2);
 
         if(j==BOARD_LEFT-1 || j==BOARD_RGHT)
             s = (ChessSquare) 0; /* account holding counts in guard band */
@@ -6431,10 +6434,10 @@ InitPosition (int redraw)
             initialPosition[i][j] = s;
 
         if(j < BOARD_LEFT || j >= BOARD_RGHT || overrule) continue;
-        initialPosition[gameInfo.variant == VariantGrand || gameInfo.variant == VariantChuChess][j] = pieces[0][j-gameInfo.holdingsWidth];
+        initialPosition[fw][j] = pieces[0][j-gameInfo.holdingsWidth];
         initialPosition[pawnRow][j] = WhitePawn;
         initialPosition[BOARD_HEIGHT-pawnRow-1][j] = gameInfo.variant == VariantSpartan ? BlackLance : BlackPawn;
-        if(gameInfo.variant == VariantXiangqi) {
+        if(gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) {
             if(j&1) {
                 initialPosition[pawnRow][j] =
                 initialPosition[BOARD_HEIGHT-pawnRow-1][j] = EmptySquare;
@@ -6459,7 +6462,7 @@ InitPosition (int redraw)
                initialPosition[BOARD_HEIGHT-1][j] = BlackRook;
             }
         }
-        initialPosition[BOARD_HEIGHT-1-(gameInfo.variant == VariantGrand || gameInfo.variant == VariantChuChess)][j] =  pieces[1][j-gameInfo.holdingsWidth];
+        initialPosition[BOARD_HEIGHT-1-fw][j] =  pieces[1][j-gameInfo.holdingsWidth];
     }
     if(gameInfo.variant == VariantChuChess) initialPosition[0][BOARD_WIDTH/2] = WhiteKing, initialPosition[BOARD_HEIGHT-1][BOARD_WIDTH/2-1] = BlackKing;
     if( (gameInfo.variant == VariantShogi) && !overrule ) {
