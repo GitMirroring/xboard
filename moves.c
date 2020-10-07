@@ -321,8 +321,10 @@ MovesFromString (Board board, int flags, int f, int r, int tx, int ty, int angle
     ChessMove promo= NormalMove; ChessSquare pc = board[r][f];
     if(pc == DarkSquare) return; // this is not a piece, but a 'hole' in the board
     if(flags & F_WHITE_ON_MOVE) his = 2, mine = 1; else his = 1, mine = 2;
-    if(pc == WhitePawn || pc == WhiteLance) promo = WhitePromotion, promoRank = BOARD_HEIGHT-1; else
-    if(pc == BlackPawn || pc == BlackLance) promo = BlackPromotion, promoRank = 0;
+    if(gameInfo.variant != VariantXiangqi && gameInfo.variant != VariantJanggi) {
+	if(pc == WhitePawn || pc == WhiteLance) promo = WhitePromotion, promoRank = BOARD_HEIGHT-1; else
+	if(pc == BlackPawn || pc == BlackLance) promo = BlackPromotion, promoRank = 0;
+    }
     while(*p) {                  // more moves to go
 	int expo = -1, dx, dy, x, y, mode, dirSet, ds2=0, retry=0, initial=0, jump=1, skip = 0, all = 0, put = 0, u = 0;
 	char *cont = NULL, *q;
