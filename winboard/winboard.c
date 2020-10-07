@@ -322,7 +322,7 @@ int dialogItems[][42] = {
   OPT_VariantKnightmate, OPT_VariantBerolina, OPT_VariantCylinder, OPT_VariantFairy,
   OPT_VariantMakruk, OPT_VariantGothic, OPT_VariantCapablanca, OPT_VariantJanus,
   OPT_VariantCRC, OPT_VariantFalcon, OPT_VariantCourier, OPT_VariantGreat, OPT_VariantSChess,
-  OPT_VariantShatranj, OPT_VariantXiangqi, GPB_Variant, GPB_Board, IDC_Height,
+  OPT_VariantShatranj, OPT_VariantXiangqi, OPT_VariantJanggi, GPB_Variant, GPB_Board, IDC_Height,
   IDC_Width, IDC_Hand, IDC_Pieces, IDC_Def }, 
 { DLG_Fonts, IDOK, IDCANCEL, OPT_ChooseClockFont, OPT_ChooseMessageFont,
   OPT_ChooseCoordFont, OPT_ChooseTagFont, OPT_ChooseCommentsFont,  OPT_ChooseConsoleFont, OPT_ChooseMoveHistoryFont, OPT_DefaultFonts,
@@ -2072,6 +2072,7 @@ static int TranslatePieceToFontPiece( int piece )
 
 
 
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -2382,7 +2383,7 @@ InitDrawingSizes(BoardSize boardSize, int flags)
       || (v == VariantShogi && boardSize != SizeModerate)   // Japanese-style Shogi
       ||  v == VariantKnightmate || v == VariantSChess || v == VariantXiangqi || v == VariantSpartan
       ||  v == VariantShatranj || v == VariantMakruk || v == VariantGreat|| v == VariantLion ||
-          v == VariantFairy && fairies ) {
+          v == VariantJanggi || v == VariantFairy && fairies ) {
       if(boardSize < SizeMediocre) boardSize = SizePetite; else
       if(boardSize > SizeModerate) boardSize = SizeBulky;  else
                                    boardSize = SizeMiddling;
@@ -3580,7 +3581,7 @@ DrawBoardOnDC(HDC hdc, Board board, HDC tmphdc)
       piece = board[row][column];
 
       square_color = ((column + row) % 2) == 1;
-      if( gameInfo.variant == VariantXiangqi ) {
+      if( gameInfo.variant == VariantXiangqi|| gameInfo.variant == VariantJanggi ) {
           square_color = !InPalace(row, column);
           if(BOARD_HEIGHT&1) { if(row==BOARD_HEIGHT/2) square_color ^= 1; }
           else if(row < BOARD_HEIGHT/2) square_color ^= 1;
