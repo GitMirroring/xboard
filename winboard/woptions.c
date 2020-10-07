@@ -871,6 +871,8 @@ int radioButton[] = {
     OPT_VariantXiangqi,
     OPT_VariantASEAN,
     OPT_VariantLion,
+    -1,
+    OPT_VariantJanggi,
     -2 // sentinel
 };
 

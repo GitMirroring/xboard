@@ -6754,6 +6754,7 @@ HasPromotionChoice (int fromX, int fromY, int toX, int toY, char *promoChoice, i
     if(toX   < BOARD_LEFT || toX   >= BOARD_RGHT) return FALSE; // move into holdings
 
     if(gameMode == EditPosition || gameInfo.variant == VariantXiangqi || // no promotions
+                                   gameInfo.variant == VariantJanggi ||
       !(fromX >=0 && fromY >= 0 && toX >= 0 && toY >= 0) ) // invalid move
 	return FALSE;
 
@@ -7601,6 +7602,7 @@ CanPromote (ChessSquare piece, int y)
 	// some variants have fixed promotion piece, no promotion at all, or another selection mechanism
 	if(gameInfo.variant == VariantSChess && !gameInfo.holdingsSize) zone = 2;
 	if(IS_SHOGI(gameInfo.variant)          || gameInfo.variant == VariantXiangqi ||
+                                                  gameInfo.variant == VariantJanggi  ||
 	   gameInfo.variant == VariantSuper    || gameInfo.variant == VariantGreat   ||
 	  (gameInfo.variant == VariantShatranj || gameInfo.variant == VariantCourier ||
            gameInfo.variant == VariantMakruk) && !*engineVariant) return FALSE;
@@ -10658,7 +10660,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
         board[fromY][toX+1] = board[fromY][rookX];
         board[fromY][rookX] = EmptySquare;
         board[toY][toX] = king;
-    } else if ((piece == WhitePawn && gameInfo.variant != VariantXiangqi ||
+    } else if ((piece == WhitePawn && gameInfo.variant != VariantXiangqi && gameInfo.variant != VariantJanggi ||
                 piece == WhiteLance && gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu)
                && toY >= BOARD_HEIGHT-promoRank && promoChar // defaulting to Q is done elsewhere
                ) {
@@ -10670,6 +10672,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 	       && (epFile == toX || oldEP == EP_UNKNOWN || appData.testLegality || abs(toX - fromX) > 4)
 	       && (toX != fromX)
                && gameInfo.variant != VariantXiangqi
+               && gameInfo.variant != VariantJanggi
                && gameInfo.variant != VariantBerolina
 	       && (pawn == WhitePawn)
 	       && (board[toY][toX] == EmptySquare)) {
@@ -10716,7 +10719,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 	board[toY][toX] = BlackKing;
 	board[fromY][0] = EmptySquare;
 	board[toY][2] = BlackRook;
-    } else if ((piece == BlackPawn && gameInfo.variant != VariantXiangqi ||
+    } else if ((piece == BlackPawn && gameInfo.variant != VariantXiangqi && gameInfo.variant != VariantJanggi ||
                 piece == BlackLance && gameInfo.variant != VariantSuper && gameInfo.variant != VariantChu)
 	       && toY < promoRank && promoChar
                ) {
@@ -10728,6 +10731,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 	       && (epFile == toX && epRank == toY || oldEP == EP_UNKNOWN || appData.testLegality || abs(toX - fromX) > 4)
 	       && (toX != fromX)
                && gameInfo.variant != VariantXiangqi
+               && gameInfo.variant != VariantJanggi
                && gameInfo.variant != VariantBerolina
 	       && (pawn == BlackPawn)
 	       && (board[toY][toX] == EmptySquare)) {
@@ -11061,7 +11065,7 @@ NonStandardBoardSize (VariantClass v, int boardWidth, int boardHeight, int holdi
       int width = 8, height = 8, holdings = 0;             // most common sizes
       if( v == VariantUnknown || *engineVariant) return 0; // engine-defined name never needs prefix
       // correct the deviations default for each variant
-      if( v == VariantXiangqi ) width = 9,  height = 10;
+      if( v == VariantXiangqi || v == VariantJanggi ) width = 9,  height = 10;
       if( v == VariantShogi )   width = 9,  height = 9,  holdings = 7;
       if( v == VariantBughouse || v == VariantCrazyhouse) holdings = 5;
       if( v == VariantCapablanca || v == VariantCapaRandom ||
@@ -13042,7 +13046,7 @@ MakePieceList (Board board, int *counts)
 	    total++;
 	}
     }
-    epOK = gameInfo.variant != VariantXiangqi && gameInfo.variant != VariantBerolina;
+    epOK = gameInfo.variant != VariantXiangqi && gameInfo.variant != VariantJanggi && gameInfo.variant != VariantBerolina;
     return total;
 }
 
@@ -16005,6 +16009,7 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
       case BlackQueen:
         if(gameInfo.variant == VariantShatranj ||
            gameInfo.variant == VariantXiangqi  ||
+           gameInfo.variant == VariantJanggi  ||
            gameInfo.variant == VariantCourier  ||
            gameInfo.variant == VariantASEAN    ||
            gameInfo.variant == VariantMakruk     )
@@ -16021,7 +16026,7 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
       case WhiteKing:
         baseRank = 0;
       case BlackKing:
-        if(gameInfo.variant == VariantXiangqi)
+        if(gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi)
             selection = (ChessSquare)((int)selection - (int)WhiteKing + (int)WhiteWazir);
         if(gameInfo.variant == VariantKnightmate)
             selection = (ChessSquare)((int)selection - (int)WhiteKing + (int)WhiteUnicorn);
@@ -18768,6 +18773,7 @@ PositionToFEN (int move, char *overrideCastling, int moveCounts)
   }
 
   if(gameInfo.variant != VariantShogi    && gameInfo.variant != VariantXiangqi &&
+     gameInfo.variant != VariantJanggi   &&
      gameInfo.variant != VariantShatranj && gameInfo.variant != VariantCourier &&
      gameInfo.variant != VariantMakruk   && gameInfo.variant != VariantASEAN ) {
     /* En passant target square */
@@ -19157,7 +19163,7 @@ ParseFEN (Board board, int *blackPlaysFirst, char *fen, Boolean autoSize)
     if(shuffle) SetUpShuffle(board, appData.defaultFrcPosition);
 
     /* read e.p. field in games that know e.p. capture */
-    if(gameInfo.variant != VariantShogi    && gameInfo.variant != VariantXiangqi &&
+    if(gameInfo.variant != VariantShogi    && gameInfo.variant != VariantXiangqi && gameInfo.variant != VariantJanggi &&
        gameInfo.variant != VariantShatranj && gameInfo.variant != VariantCourier &&
        gameInfo.variant != VariantMakruk && gameInfo.variant != VariantASEAN ) {
       if(*p=='-') {

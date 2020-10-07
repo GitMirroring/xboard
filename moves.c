@@ -849,6 +849,15 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
                                     rf, ff, rf, ff+s, closure);
                       }
                   }
+		  if(vari == VariantJanggi) { // diagonal moves in palace
+		      int d = BOARD_HEIGHT - rf;
+		      if(d == 3 || d == 2) {
+			  if(ff == BOARD_WIDTH/2 - d + 2 && !WhitePiece(board[rf+1][ff+1]))
+			      callback(board, flags, NormalMove, rf, ff, rf+1, ff+1, closure);
+			  if(ff == BOARD_WIDTH/2 + d - 2 && !WhitePiece(board[rf+1][ff-1]))
+			      callback(board, flags, NormalMove, rf, ff, rf+1, ff-1, closure);
+		      }
+		  }
                   break;
               }
               if (rf < BOARD_HEIGHT-1 && board[rf + 1][ff] == EmptySquare) {
@@ -900,6 +909,14 @@ GenPseudoLegal (Board board, int flags, MoveCallback callback, VOIDSTAR closure,
                                     rf, ff, rf, ff+s, closure);
                       }
                   }
+		  if(vari == VariantJanggi) { // diagonal moves in palace
+		      if(rf == 1 || rf == 2) {
+			  if(ff == BOARD_WIDTH/2 - rf + 1 && !BlackPiece(board[rf-1][ff+1]))
+			      callback(board, flags, NormalMove, rf, ff, rf-1, ff+1, closure);
+			  if(ff == BOARD_WIDTH/2 + rf - 1 && !BlackPiece(board[rf-1][ff-1]))
+			      callback(board, flags, NormalMove, rf, ff, rf-1, ff-1, closure);
+		      }
+		  }
                   break;
               }
 	      if (rf > 0 && board[rf - 1][ff] == EmptySquare) {
@@ -1801,7 +1818,7 @@ CheckTest (Board board, int flags, int rf, int ff, int rt, int ft, int enPassant
     int saveKill = killX;
     /*  Suppress warnings on uninitialized variables    */
 
-    if(gameInfo.variant == VariantXiangqi)
+    if(gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi)
         king = flags & F_WHITE_ON_MOVE ? WhiteWazir : BlackWazir;
     if(gameInfo.variant == VariantKnightmate)
         king = flags & F_WHITE_ON_MOVE ? WhiteUnicorn : BlackUnicorn;
