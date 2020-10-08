@@ -420,6 +420,7 @@ PosFlags (int index)
   case VariantChu:
   case VariantChuChess:
   case VariantLion:
+  case VariantJanggi:
     flags |= F_NULL_MOVE;
     break;
   default:
