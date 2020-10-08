@@ -779,15 +779,18 @@ PalaceDiags (Board board, int flags, int rf, int ff, int isRook, MoveCallback ca
 {   // Janggi diagonal palace moves
     int piece = board[rf][ff];
     int middle = BOARD_WIDTH/2;
-    int palace = (piece < BlackPawn ? 1 : BOARD_HEIGHT-2);
+    int palace = (rf < 3 ? 1 : BOARD_HEIGHT-2);
     if(ff == middle) {
 	if(rf == palace && isRook) Ferz(board, flags, rf, ff, callback, closure);
     } else if((ff == middle+1 || ff == middle-1) && (rf == palace+1 || rf == palace-1)) { // Palace corner
 	int rt = 2*palace - rf, ft = 2*middle - ff; // reflect
-	if((board[palace][middle] == EmptySquare) == isRook && !SameColor(piece, board[rt][ft]))
-	    callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
-	if(isRook && !SameColor(piece, board[palace][middle]))
+	ChessSquare center = board[palace][middle];
+	if(isRook && !SameColor(piece, center))
 	    callback(board, flags, NormalMove, rf, ff, palace, middle, closure);
+	if(center == WhiteCannon || center == BlackCannon) return;
+	if((center == EmptySquare) == isRook && !SameColor(piece, board[rt][ft])
+	   && piece + board[rt][ft] != WhiteCannon + BlackCannon)
+	    callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
     }
 }
 
