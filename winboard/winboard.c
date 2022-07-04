@@ -664,7 +664,7 @@ typedef struct {
   SOCKET sock2;  /* stderr socket for OpenRcmd */
 } ChildProc;
 
-#define INPUT_SOURCE_BUF_SIZE 4096
+#define INPUT_SOURCE_BUF_SIZE 10240
 
 typedef struct _InputSource {
   CPKind kind;
