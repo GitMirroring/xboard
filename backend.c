@@ -15766,7 +15766,7 @@ EditPositionDone (Boolean fakeRights)
     if(fakeRights) { // [HGM] suppress this if we just pasted a FEN.
       int r, f;
       boards[0][EP_STATUS] = EP_NONE;
-      for(f=0; f<=nrCastlingRights; f++) boards[0][CASTLING][f] = NoRights;
+      for(f=0; f<=6; f++) boards[0][CASTLING][f] = NoRights;
       for(r=BOARD_HEIGHT-1; r>=0; r--) for(f=BOARD_RGHT-1; f>=BOARD_LEFT; f--) { // first pass: Kings & e.p.
 	if(rightsBoard[r][f]) {
 	  ChessSquare p = boards[0][r][f];
@@ -19029,7 +19029,7 @@ ParseFEN (Board board, int *blackPlaysFirst, char *fen, Boolean autoSize)
     /* set defaults in case FEN is incomplete */
     board[EP_STATUS] = EP_UNKNOWN;
     board[TOUCHED_W] = board[TOUCHED_B] = 0;
-    for(i=0; i<nrCastlingRights; i++ ) {
+    for(i=0; i<6; i++ ) {
         board[CASTLING][i] =
             appData.fischerCastling ? NoRights : initialRights[i];
     }   /* assume possible unless obviously impossible */
