@@ -284,9 +284,40 @@ uint64 *RandomCastle    =Random64+768;
 uint64 *RandomEnPassant =Random64+772;
 uint64 *RandomTurn      =Random64+780;
 
+static char *sym;
+
+int
+MustFlip (int moveNr)
+{
+    int r, f, w = BOARD_WIDTH/2;
+    for(r=0; r<BOARD_HEIGHT; r++) for(f=0; f<w; f++) {
+	ChessSquare a=boards[moveNr][r][f], b = boards[moveNr][r][BOARD_WIDTH-1-f];
+	if(a != b) return (a < b);
+    }
+    return 0;
+}
+
+int
+FlipMove (int move)
+{
+    int f,fr,ff,t,tr,tf,p;
+    int width = BOARD_RGHT - BOARD_LEFT, size;
+
+    size = width * BOARD_HEIGHT;
+    p    = move / (size*size);
+    move = move % (size*size);
+    f  = move / size;
+    fr = f / width;
+    ff = f % width;
+    t  = move % size;
+    tr = t / width;
+    tf = t % width;
+
+    return p*size*size + (fr*width + width - 1 - ff)*size + (tr*width + width - 1 - tf);
+}
 
 uint64
-hash (int moveNr)
+hash (int moveNr, int flip, int old)
 {
     int r, f, p_enc, squareNr, pieceGroup;
     uint64 key=0, holdingsKey=0, Zobrist;
@@ -310,7 +341,7 @@ hash (int moveNr)
 
     for(f=0; f<BOARD_WIDTH; f++){
         for(r=0; r<BOARD_HEIGHT;r++){
-            ChessSquare p = boards[moveNr][r][f];
+            ChessSquare p = boards[moveNr][r][flip ? BOARD_WIDTH-1-f : f];
 	    if(f == BOARD_LEFT-1 || f == BOARD_RGHT) continue; // between board and holdings
             if(p != EmptySquare){
 		    int j = (int)p, promoted = 0;
@@ -549,19 +580,21 @@ move_to_string (char move_s[20], uint16 move)
 int
 GetBookMoves (FILE *f, int moveNr, entry_t entries[], int max)
 {   // retrieve all entries for given position from book in 'entries', return number.
+    int flip = sym && MustFlip(moveNr);
     entry_t entry;
     int offset;
     uint64 key;
     int count;
     int ret;
 
-    key = hash(moveNr);
+    key = hash(moveNr, flip, 0);
     if(appData.debugMode) fprintf(debugFP, "book key = %08x%08x\n", (unsigned int)(key>>32), (unsigned int)key);
 
     offset=find_key(f, key, &entry);
     if(entry.key != key) {
 	  return FALSE;
     }
+    if(flip) entry.move = FlipMove(entry.move);
     entries[0] = entry;
     count=1;
     fsseek(f, 16*(offset+1), SEEK_SET);
@@ -573,6 +606,7 @@ GetBookMoves (FILE *f, int moveNr, entry_t entries[], int max)
         if(entry.key != key){
             break;
         }
+	if(flip) entry.move = FlipMove(entry.move);
         if(count == max) break;
         entries[count++] = entry;
     }
@@ -593,6 +627,7 @@ ReadFromBookFile (int moveNr, char *book, entry_t entries[])
 	strncpy(curBook, book, MSG_SIZ);
 	if(f) fclose(f);
 	f = fopen(book,"rb");
+	sym = strstr(appData.polyglotBook, "-sym.");
     }
     if(!f){
 	DisplayError(_("Polyglot book not valid"), 0);
@@ -783,8 +818,9 @@ CoordsToMove (int fromX, int fromY, int toX, int toY, char promoChar)
 int
 TextToMoves (char *text, int moveNum, entry_t *entries)
 {
-	int i, w, count=0;
-	uint64 hashKey = hash(moveNum);
+	int flip = sym && MustFlip(moveNum);
+	int i, w, move, count=0;
+	uint64 hashKey = hash(moveNum, flip, 0);
 	int  fromX, fromY, toX, toY;
 	ChessMove  moveType;
 	char promoChar, valid;
@@ -809,7 +845,9 @@ TextToMoves (char *text, int moveNum, entry_t *entries)
 		entries[count].learnPoints = 0;
 		entries[count].learnCount  = 0;
 	    }
-	    entries[count].move = CoordsToMove(fromX, fromY, toX, toY, promoChar); killX = killY = -1;
+	    move = CoordsToMove(fromX, fromY, toX, toY, promoChar); killX = killY = -1;
+	    if(flip) move = FlipMove(move);
+	    entries[count].move = move;
 	    entries[count].key  = hashKey;
 	    entries[count].weight = w;
 	    count++;
@@ -871,6 +909,7 @@ SaveToBook (char *text)
     FILE *f;
     if(!count && !currentCount) return;
     f=fopen(appData.polyglotBook, "rb+");
+    sym = strstr(appData.polyglotBook, "-sym.");
     if(!f){	DisplayError(_("Polyglot book not valid"), 0); return; }
     offset=find_key(f, entries[0].key, &entry);
     if(entries[0].key != entry.key && currentCount) {
@@ -934,6 +973,7 @@ Merge ()
 void
 AddToBook (int moveNr, int result)
 {
+    int flip = sym && MustFlip(moveNr);
     entry_t entry;
     int offset, start, move;
     uint64 key;
@@ -946,13 +986,14 @@ extern char moveList[][MOVE_LEN];
     if(appData.debugMode) fprintf(debugFP, "add move %d to book %s", moveNr, moveList[moveNr]);
 
     // calculate key and book representation of move
-    key = hash(moveNr);
+    key = hash(moveNr, flip, 0);
     if(moveList[moveNr][1] == '@') {
 	sscanf(moveList[moveNr], "%c@%c%d", &promo, &toX, &toY);
 	fromX = CharToPiece(WhiteOnMove(moveNr) ? ToUpper(promo) : ToLower(promo));
 	fromY = DROP_RANK; promo = NULLCHAR;
     } else sscanf(moveList[moveNr], "%c%d%c%d%c", &fromX, &fromY, &toX, &toY, &promo), fromX -= AAA, fromY -= ONE - '0';
     move = CoordsToMove(fromX, fromY, toX-AAA, toY-ONE+'0', promo);
+    if(flip) move = FlipMove(move);
 
     // if move already in book, just add count
     memBuf = (unsigned char*) memBook; bufSize = bookSize;   // in MC mode book resides in memory
@@ -1044,6 +1085,7 @@ FlushBook ()
     Merge(); // flush merge buffer to memBook
 
     if(f = fopen(appData.polyglotBook, "wb")) {
+	sym = strstr(appData.polyglotBook, "-sym.");
 	for(i=0; i<bookSize; i++) {
 	    entry_t entry = memBook[i];
 	    entry.weight = entry.learnPoints;
@@ -1051,5 +1093,6 @@ FlushBook ()
 //	    entry.learnCount  = 0;
 	    entry_to_file(f, &entry);
 	}
+        fclose(f);
     } else DisplayError(_("Could not create book"), 0);
 }
