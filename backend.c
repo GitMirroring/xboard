@@ -13381,7 +13381,7 @@ LoadGame (FILE *f, int gameNumber, char *title, int useList)
     int err, pos = -1;
     GameMode oldGameMode;
     VariantClass v, oldVariant = gameInfo.variant; /* [HGM] PGNvariant */
-    char oldName[MSG_SIZ];
+    char oldName[MSG_SIZ], vs = 0;
 
     safeStrCpy(oldName, engineVariant, MSG_SIZ); v = oldVariant;
 
@@ -13600,11 +13600,12 @@ LoadGame (FILE *f, int gameNumber, char *title, int useList)
 	if (!err) numPGNTags++;
 
         /* [HGM] PGNvariant: automatically switch to variant given in PGN tag */
-        if(gameInfo.variant != oldVariant && (gameInfo.variant != VariantNormal || gameInfo.variantName == NULL || *gameInfo.variantName == NULLCHAR)) {
+        if(gameInfo.variant != oldVariant && gameInfo.variant != VariantUnknown &&
+          (gameInfo.variant != VariantNormal || gameInfo.variantName == NULL || *gameInfo.variantName == NULLCHAR) || vs) {
             startedFromPositionFile = FALSE; /* [HGM] loadPos: variant switch likely makes position invalid */
 	    ResetFrontEnd(); // [HGM] might need other bitmaps. Cannot use Reset() because it clears gameInfo :-(
 	    InitPosition(TRUE);
-            oldVariant = gameInfo.variant;
+            oldVariant = gameInfo.variant; vs++; // force obeying second variant switch
 	    if (appData.debugMode)
 	      fprintf(debugFP, "New variant %d\n", (int) oldVariant);
         }
