@@ -213,7 +213,7 @@ CollectPieceDescriptors ()
     if(!pieceDefs) return "";
     if(gameInfo.variant == VariantChu) return ""; // for now don't do this for Chu Shogi
     if(gameInfo.variant == VariantShogi) pieceName = shogiName;
-    if(gameInfo.variant == VariantXiangqi) pieceName = xqName;
+    if(gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) pieceName = xqName;
     for(p=WhitePawn; p<EmptySquare; p++) {
 	if((c = pieceToChar[p]) == '.' || c == '~') continue;  // does not participate
 	m = pieceDesc[p]; d = (c == '+' ? pieceToChar[DEMOTED(p)] : c);
@@ -768,7 +768,7 @@ Zebra (Board board, int flags, int rf, int ff, MoveCallback callback, VOIDSTAR c
 		rt = rf + i*s;
 		ft = ff + j*(5-s);
 		if (!(rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT)
-		    && ( gameInfo.variant != VariantJanggi || board[rf+i*(s-2)][ff+j*(3-s)] && board[rf+i*(s-1)][ff+j*(4-s)] == EmptySquare)
+		    && ( gameInfo.variant != VariantJanggi || board[rf+i*(s-2)][ff+j*(3-s)] == EmptySquare && board[rf+i*(s-1)][ff+j*(4-s)] == EmptySquare)
 		    && !SameColor(board[rf][ff], board[rt][ft]))
 		    callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
 	    }
@@ -2203,6 +2203,7 @@ MateTest (Board board, int flags)
 					myPieces > hisPieces ? MT_STAINMATE : MT_STEALMATE;
 	else if(gameInfo.variant == VariantLosers) return inCheck ? MT_TRICKMATE : MT_STEALMATE;
 	else if(gameInfo.variant == VariantGiveaway) return MT_STEALMATE; // no check exists, stalemated = win
+	else if(gameInfo.variant == VariantJanggi && !inCheck) return MT_NONE; // in Janggi turn passing is always an option
 
         return inCheck ? MT_CHECKMATE
 		       : (gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantShatranj || IS_SHOGI(gameInfo.variant)) ?
@@ -2309,17 +2310,20 @@ Disambiguate (Board board, int flags, DisambiguateClosure *closure)
 	    return;
 	  }
 	}
-    } else if(pieceDefs && closure->count > 1 && closure->rtIn >=0) { // [HGM] gen: move is ambiguous under engine-defined rules (and not one-click)
-	DisambiguateClosure spare = *closure;
-        if(gameInfo.variant == VariantXiangqi && closure->pieceIn == EmptySquare && closure->ffIn < 0) {
+    } else if(closure->count > 1 && closure->rtIn >=0) { // [HGM] gen: move is ambiguous under engine-defined rules (and not one-click)
+        if((gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) &&
+           (closure->pieceIn == WhitePawn || closure->pieceIn == BlackPawn) && closure->ffIn < 0) {
             closure->ffIn = closure->ftIn; //closure->pieceIn = (flags & 1 ? BlackPawn : WhitePawn); // forward Pawn push has priority
             Disambiguate(board, flags, closure);
             return;
         }
+      if(pieceDefs) {
+	DisambiguateClosure spare = *closure;
 	pieceDefs = FALSE; spare.count = 0;     // See if the (erroneous) built-in rules would resolve that
         GenLegal(board, flags, DisambiguateCallback, (VOIDSTAR) &spare, closure->pieceIn);
 	if(spare.count == 1) *closure = spare;  // It does, so use those in stead (game from file saved before gen patch?)
 	pieceDefs = TRUE;
+      }
     }
 
     if (c == 'x') c = NULLCHAR; // get rid of any 'x' (which should never happen?)
@@ -2509,6 +2513,9 @@ CoordsToAlgebraic (Board board, int flags, int rf, int ff, int rt, int ft, int p
             else { *outp++ = (rt+ONE-'0')/10 + '0';*outp++ = (rt+ONE-'0')%10 + '0'; }
 	} else {
 	    /* Capture; use style "exd5" */
+            if(gameInfo.variant == VariantJanggi && (rt < 2 || rt > BOARD_HEIGHT-3) && ft > BOARD_WIDTH/2 - 2 && ft < BOARD_WIDTH/2 + 2) {
+              *outp++ = rf + ONE;
+            }
             if(capture)
             *outp++ = 'x';  /* [HGM] Xiangqi has sideway noncaptures across river! */
             *outp++ = ft + AAA;
