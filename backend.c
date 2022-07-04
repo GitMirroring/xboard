@@ -5150,7 +5150,7 @@ SendMoveToProgram (int moveNum, ChessProgramState *cps)
     char buf[MSG_SIZ];
 
     if(moveList[moveNum][1] == '@' && moveList[moveNum][0] == '@') {
-	if(gameInfo.variant == VariantLion || gameInfo.variant == VariantChuChess || gameInfo.variant == VariantChu) {
+	if(PosFlags(0) & F_NULL_MOVE) {
 	    sprintf(buf, "%s@@@@\n", cps->useUsermove ? "usermove " : "");
 	    SendToProgram(buf, cps);
 	    return;
@@ -6915,6 +6915,8 @@ DrawPosition (int repaint, Board board)
     } else DrawPositionX(repaint, board);
 }
 
+static Boolean prelude;
+
 int
 OKToStartUserMove (int x, int y)
 {
@@ -6966,11 +6968,11 @@ OKToStartUserMove (int x, int y)
 	    if(!shiftKey || !appData.variations) return FALSE; // [HGM] allow starting variation in this mode
       case EditGame:
       case AnalyzeMode:
-	if (!white_piece && WhiteOnMove(currentMove)) {
+	if (!white_piece && WhiteOnMove(currentMove) && prelude != 2) {
 	    DisplayMoveError(_("It is White's turn"));
 	    return FALSE;
 	}
-	if (white_piece && !WhiteOnMove(currentMove)) {
+	if (white_piece && (!WhiteOnMove(currentMove) || prelude == 2)) {
 	    DisplayMoveError(_("It is Black's turn"));
 	    return FALSE;
 	}
@@ -8947,7 +8949,6 @@ DeferredBookMove (void)
 static int savedWhitePlayer, savedBlackPlayer, pairingReceived;
 static ChessProgramState *stalledEngine;
 static char stashedInputMove[MSG_SIZ], abortEngineThink, startPieceToChar[MSG_SIZ];
-static Boolean prelude;
 static char preludeText[MSG_SIZ], diceRoll[MSG_SIZ];
 
 void
@@ -9389,6 +9390,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
       }
       fromX = fromY = -1;
       ParseFEN(boards[0], &dummy, message+s, FALSE);
+      if(dummy) prelude *= 2;
       CopyBoard(initialPosition, boards[0]);
       MarkTargetSquares(1); ClearHighlights();
       if(startedFromSetupPosition) CopyBoard(boards[0], tmp);
@@ -16212,7 +16214,7 @@ ClockClick (int which)
 	  if (gameMode == EditPosition || gameMode == IcsExamining) {
 	    if(blackPlaysFirst) EditPositionMenuEvent(ClearBoard, 0, 0);
 	    else EditPositionMenuEvent(BlackPlay, 0, 0);
-	  } else if ((gameMode == AnalyzeMode || gameMode == EditGame ||
+	  } else if ((gameMode == AnalyzeMode || gameMode == EditGame || gameMode == BeginningOfGame ||
 		      gameMode == MachinePlaysBlack && PosFlags(0) & F_NULL_MOVE && !blackFlag && !shiftKey) && WhiteOnMove(currentMove)) {
           UserMoveEvent((int)EmptySquare, DROP_RANK, 0, 0, 0); // [HGM] multi-move: if not out of time, enters null move
 	  } else if (shiftKey) {
