@@ -7444,8 +7444,10 @@ FinishMove (ChessMove moveType, int fromX, int fromY, int toX, int toY, int prom
 	bookHit = SendMoveToBookUser(forwardMostMove-1, &first, FALSE);
 	first.maybeThinking = TRUE;
     } else if(fromY == DROP_RANK && fromX == EmptySquare) {
+      if(PosFlags(0) & F_NULL_MOVE) SendMoveToProgram(currentMove, &first); else {
 	if(!first.useSetboard) SendToProgram("undo\n", &first); // kludge to change stm in engines that do not support setboard
 	SendBoard(&first, currentMove+1);
+      }
 	if(second.analyzing) {
 	    if(!second.useSetboard) SendToProgram("undo\n", &second);
 	    SendBoard(&second, currentMove+1);
