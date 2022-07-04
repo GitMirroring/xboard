@@ -1272,6 +1272,7 @@ InitBackEnd1 ()
       case VariantSpartan:    /* should work */
       case VariantLion:       /* should work */
       case VariantChuChess:   /* should work */
+      case VariantJanggi:
 	break;
       }
     }
