@@ -128,19 +128,19 @@ char* PieceToName(p, i)
         if(black) p -= BlackPawn;
         sprintf(buf, i ? black ? "Black " : "White " : "");
         snprintf(buf + strlen(buf), " %s", pieceTypeName[(int) p]);
-		return buf;
+		return T_(buf);
 }
 
 char* SquareToChar(x)
 			int x;
 {
-		return squareToChar[x - BOARD_LEFT];
+		return T_(squareToChar[x - BOARD_LEFT]);
 }
 
 char* SquareToNum(y)
 			int y;
 {
-		return squareToNum[y + (gameInfo.boardHeight != 10)];
+		return T_(squareToNum[y + (gameInfo.boardHeight != 10)]);
 }
 
 
@@ -359,7 +359,7 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if(currentPiece != EmptySquare) {
 			char buf[MSG_SIZ];
 			n = boards[currentMove][fromY][1];
-			snprintf(buf, MSG_SIZ, "%d %s%s", n, T_(PieceToName(currentPiece,0)), n == 1 ? "" : "s");
+			snprintf(buf, MSG_SIZ, "%d %s%s", n, PieceToName(currentPiece,0), n == 1 ? "" : "s");
 			SayString(buf, FALSE);
 		}
 		SayString(" ", TRUE);
@@ -369,7 +369,7 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if(currentPiece != EmptySquare) {
 			char buf[MSG_SIZ];
 			n = boards[currentMove][fromY][BOARD_WIDTH-2];
-			snprintf(buf, MSG_SIZ,"%d %s%s", n, T_(PieceToName(currentPiece,0)), n == 1 ? "" : "s");
+			snprintf(buf, MSG_SIZ,"%d %s%s", n, PieceToName(currentPiece,0), n == 1 ? "" : "s");
 			SayString(buf, FALSE);
 		}
 		SayString(" ", TRUE);
@@ -379,8 +379,8 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		xchar = SquareToChar(fromX);
 		ynum = SquareToNum(fromY);
 		if(currentPiece != EmptySquare) {
-		  snprintf(buf, MSG_SIZ, "%s %s %s", T_(xchar), T_(ynum), T_(piece));
-		} else snprintf(buf, MSG_SIZ, "%s %s", T_(xchar), T_(ynum));
+		  snprintf(buf, MSG_SIZ, "%s %s %s", xchar, ynum, piece);
+		} else snprintf(buf, MSG_SIZ, "%s %s", xchar, ynum);
 		SayString(buf, FALSE);
 		SayString(" ", TRUE);
 	}
