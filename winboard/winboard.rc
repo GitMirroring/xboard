@@ -711,101 +711,20 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Variants"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "&normal",OPT_VariantNormal,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,9,14,70,10
-    CONTROL         "&FRC",OPT_VariantFRC,"Button",BS_AUTORADIOBUTTON,9,
-                    24,70,10
-    CONTROL         "&wildcastle",OPT_VariantWildcastle,"Button",BS_AUTORADIOBUTTON,9,34,
-                    50,10
-    CONTROL         "&nocastle",OPT_VariantNocastle,"Button",BS_AUTORADIOBUTTON,9,
-                    44,70,10
-    CONTROL         "&losers",OPT_VariantLosers,"Button",BS_AUTORADIOBUTTON,
-                    9,54,70,10
-    CONTROL         "&giveaway",OPT_VariantGiveaway,"Button",BS_AUTORADIOBUTTON,
-                    9,64,70,10
-    CONTROL         "s&uicide",OPT_VariantSuicide,"Button",BS_AUTORADIOBUTTON,
-                    9,74,70,10
-    CONTROL         "&3Check",OPT_Variant3Check,"Button",BS_AUTORADIOBUTTON,9,84,
-                    70,10
-    CONTROL         "&twokings",OPT_VariantTwoKings,"Button",BS_AUTORADIOBUTTON,9,94,
-                    70,10
-    CONTROL         "&atomic",OPT_VariantAtomic,"Button",BS_AUTORADIOBUTTON,
-                    9,104,70,10
-    CONTROL         "&Mighty Lion",OPT_VariantLion,"Button",BS_AUTORADIOBUTTON,
-                    9,114,70,10
-    CONTROL         "cra&zyhouse",OPT_VariantCrazyhouse,"Button",BS_AUTORADIOBUTTON,80,14,
-                    70,10
-    CONTROL         "&bughouse",OPT_VariantBughouse,"Button",BS_AUTORADIOBUTTON,80,24,70,
-                    10
-    CONTROL         "Sp&artan",OPT_VariantSpartan,"Button",BS_AUTORADIOBUTTON,80,34,70,
-                    10
-    CONTROL         "&shogi",OPT_VariantShogi,"Button",BS_AUTORADIOBUTTON,80,
-                    44,70,10
-    CONTROL         "su&per",OPT_VariantSuper,"Button",BS_AUTORADIOBUTTON,80,
-                    54,70,10
-    CONTROL         "&knightmate",OPT_VariantKnightmate,"Button",BS_AUTORADIOBUTTON,
-                    80,64,70,10
-    CONTROL         "&Berolina",OPT_VariantBerolina,"Button",BS_AUTORADIOBUTTON,80,74,
-                    70,10
-    CONTROL         "c&ylinder",OPT_VariantCylinder,"Button",BS_AUTORADIOBUTTON,80,
-                    84,70,10
-    CONTROL         "&fairy",OPT_VariantFairy,"Button",BS_AUTORADIOBUTTON,80,
-                    94,70,10
-    CONTROL         "&makruk",OPT_VariantMakruk,"Button",BS_AUTORADIOBUTTON,80,
-                    104,70,10
-    CONTROL         "&ASEAN",OPT_VariantASEAN,"Button",BS_AUTORADIOBUTTON,80,
-                    114,70,10
-    CONTROL         "&gothic",OPT_VariantGothic,"Button",BS_AUTORADIOBUTTON,154,14,
-                    70,10
-    CONTROL         "&capablanca",OPT_VariantCapablanca,"Button",BS_AUTORADIOBUTTON,154,
-                    24,70,10
-    CONTROL         "&Janus",OPT_VariantJanus,"Button",BS_AUTORADIOBUTTON,154,34,
-                    70,10
-    CONTROL         "&CRC",OPT_VariantCRC,"Button",BS_AUTORADIOBUTTON,154,44,
-                    70,10
-    CONTROL         "&Falcon",OPT_VariantFalcon,"Button",BS_AUTORADIOBUTTON,154,
-                    54,70,10
-    CONTROL         "cou&rier",OPT_VariantCourier,"Button",BS_AUTORADIOBUTTON,154,64,
-                    70,10
-    CONTROL         "&Great",OPT_VariantGreat,"Button",BS_AUTORADIOBUTTON,154,74,
-                    70,10
-    CONTROL         "&Shatranj",OPT_VariantShatranj,"Button",BS_AUTORADIOBUTTON,154,
-                    84,70,10
-    CONTROL         "Seira&wan",OPT_VariantSChess,"Button",BS_AUTORADIOBUTTON,154,94,70,
-                    10
-    CONTROL         "&Grand",OPT_VariantGrand,"Button",BS_AUTORADIOBUTTON,154,104,70,
-                    10
-    CONTROL         "&xiangqi",OPT_VariantXiangqi,"Button",BS_AUTORADIOBUTTON,154,114,70,
-                    10
-    CONTROL         "&janggi",OPT_VariantJanggi,"Button",BS_AUTORADIOBUTTON,154,124,70,
-                    10
-    CONTROL         "",OPT_EngineVariant+0,"Button",BS_AUTORADIOBUTTON,9,134,70,10
-    CONTROL         "",OPT_EngineVariant+1,"Button",BS_AUTORADIOBUTTON,80,134,70,10
-    CONTROL         "",OPT_EngineVariant+2,"Button",BS_AUTORADIOBUTTON,154,134,70,10
-    CONTROL         "",OPT_EngineVariant+3,"Button",BS_AUTORADIOBUTTON,9,144,70,10
-    CONTROL         "",OPT_EngineVariant+4,"Button",BS_AUTORADIOBUTTON,80,144,70,10
-    CONTROL         "",OPT_EngineVariant+5,"Button",BS_AUTORADIOBUTTON,154,144,70,10
-    CONTROL         "",OPT_EngineVariant+6,"Button",BS_AUTORADIOBUTTON,9,154,70,10
-    CONTROL         "",OPT_EngineVariant+7,"Button",BS_AUTORADIOBUTTON,80,154,70,10
-    CONTROL         "",OPT_EngineVariant+8,"Button",BS_AUTORADIOBUTTON,154,154,70,10
-    CONTROL         "",OPT_EngineVariant+9,"Button",BS_AUTORADIOBUTTON,9,164,70,10
-    CONTROL         "",OPT_EngineVariant+10,"Button",BS_AUTORADIOBUTTON,80,164,70,10
-    CONTROL         "",OPT_EngineVariant+11,"Button",BS_AUTORADIOBUTTON,154,164,70,10
-    CONTROL         "",OPT_EngineVariant+12,"Button",BS_AUTORADIOBUTTON,9,174,70,10
-    CONTROL         "",OPT_EngineVariant+13,"Button",BS_AUTORADIOBUTTON,80,174,70,10
-    CONTROL         "",OPT_EngineVariant+14,"Button",BS_AUTORADIOBUTTON,154,174,70,10
-    GROUPBOX        "Variant",GPB_Variant,4,4,215,185
-    LTEXT           "Board size:",GPB_Board,10,203,40,8,WS_TABSTOP
-    LTEXT           "ranks",IDC_Height,77,203,38,8
-    EDITTEXT        IDC_Ranks,60,199,14,14,ES_AUTOHSCROLL
-    LTEXT           "files",IDC_Width,133,203,80,8
-    EDITTEXT        IDC_Files,116,199,14,14,ES_AUTOHSCROLL
-    LTEXT           "Holdings with room for:",IDC_Hand,10,221,90,8
-    EDITTEXT        IDC_Holdings,93,217,14,14,ES_AUTOHSCROLL
-    LTEXT           "pieces",IDC_Pieces,110,221,100,8
-    LTEXT           "('-1' means defaults for selected variant)",IDC_Def,10,237,210,8
-    DEFPUSHBUTTON   "OK",IDOK,114,252,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,170,252,50,14
+    LTEXT           "Variant",GPB_Variant,9,14,50,10
+    COMBOBOX        OPT_EngineVariant,60,14,150,129,CBS_DROPDOWN | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Board size:",GPB_Board,10,43,40,8,WS_TABSTOP
+    LTEXT           "ranks",IDC_Height,77,43,38,8
+    EDITTEXT        IDC_Ranks,60,39,14,14,ES_AUTOHSCROLL
+    LTEXT           "files",IDC_Width,133,183,80,8
+    EDITTEXT        IDC_Files,116,39,14,14,ES_AUTOHSCROLL
+    LTEXT           "Holdings with room for:",IDC_Hand,10,61,90,8
+    EDITTEXT        IDC_Holdings,93,57,14,14,ES_AUTOHSCROLL
+    LTEXT           "pieces",IDC_Pieces,110,61,100,8
+    LTEXT           "('-1' means defaults for selected variant)",IDC_Def,10,77,210,8
+    DEFPUSHBUTTON   "OK",IDOK,114,92,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,170,92,50,14
 END
 
 DLG_Fonts DIALOG DISCARDABLE  0, 0, 266, 274
