@@ -86,40 +86,27 @@ extern long whiteTimeRemaining, blackTimeRemaining, timeControl, timeIncrement;
 
 // from moves.c, added WinBoard_F piece types and ranks / files
 
-char *squareToChar[] = { "ay", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l" };
+char *squareToChar[] = { "ay", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t" };
 
-char *squareToNum[] = {"naught", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+char *squareToNum[] = {"naught", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
 
-char *ordinals[] = {"zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth"};
-
-char *pieceToName[] = {
-		"White Pawn", "White Knight", "White Bishop", "White Rook", "White Queen",
-		"White Guard", "White Elephant", "White Arch Bishop", "White Chancellor",
-		"White General", "White Man", "White Cannon", "White Night Rider",
-		"White Crowned Bishop", "White Crowned Rook", "White Grass Hopper", "White Veteran",
-		"White Falcon", "White Amazon", "White Snake", "White Unicorn",
-		"White King",
-		"Black Pawn", "Black Knight", "Black Bishop", "Black Rook", "Black Queen",
-		"Black Guard", "Black Elephant", "Black Arch Bishop", "Black Chancellor",
-		"Black General", "Black Man", "Black Cannon", "Black Night Rider",
-		"Black Crowned Bishop", "Black Crowned Rook", "Black Grass Hopper", "Black Veteran",
-		"Black Falcon", "Black Amazon", "Black Snake", "Black Unicorn",
-		"Black King",
-		"Empty"
-	};
+char *ordinals[] = {"zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth", "eleventh", "twelfth", "thriteenth", "fourteenth", "fifteenth", "sixteenth" };
 
 char *pieceTypeName[] = {
 		"Pawn", "Knight", "Bishop", "Rook", "Queen",
 		"Guard", "Elephant", "Arch Bishop", "Chancellor",
 		"General", "Man", "Cannon", "Night Rider",
 		"Crowned Bishop", "Crowned Rook", "Grass Hopper", "Veteran",
-		"Falcon", "Amazon", "Snake", "Unicorn",
-		"King",
-		"Pawn", "Knight", "Bishop", "Rook", "Queen",
-		"Guard", "Elephant", "Arch Bishop", "Chancellor",
-		"General", "Man", "Cannon", "Night Rider",
-		"Crowned Bishop", "Crowned Rook", "Grass Hopper", "Veteran",
-		"Falcon", "Amazon", "Snake", "Unicorn",
+		"Falcon", "Lance", "Snake", "Unicorn", "Lion",
+		"Sword", "Zebra", "Camel", "Tower", "Wolf",
+		"Hat", "Duck", "Amazon", "Dragon", "Wildebeest", "Lion",
+		"Shield", "Pegasus", "Wizard", "Champion", "Helmet",
+		"Viking", "Flag", "Axe", "Dolphin", "Leopard", "Tiger",
+		"Wheel", "Butterfly", "Promo Bishop", "Promo Rook",
+		"Sleeping Beauty", "Reverse Shield", "Prince", "Promo Queen",
+		"Promo Lion", "Drunk Elephant", "Reverse Wheel", 
+		"Tokin", "Promo Knight", "Promo Horse", "Promo Dragon", "Promo Lance",
+		"Promo Silver", "Dagger", "Promo Sword", "Promo Dagger", "Princess",
 		"King",
 		"Empty"
 	};
@@ -136,8 +123,12 @@ char* PieceToName(p, i)
 	ChessSquare p;
 	int i;
 {
-	if(i) return pieceToName[(int) p];
-		return pieceTypeName[(int) p];
+	static char buf[MSG_SIZ];
+        int black = (p >= BlackPawn);
+        if(black) p -= BlackPawn;
+        sprintf(buf, i ? black ? "Black " : "White " : "");
+        snprintf(buf + strlen(buf), " %s", pieceTypeName[(int) p]);
+		return buf;
 }
 
 char* SquareToChar(x)
@@ -149,7 +140,7 @@ char* SquareToChar(x)
 char* SquareToNum(y)
 			int y;
 {
-		return squareToNum[y + (gameInfo.boardHeight < 10)];
+		return squareToNum[y + (gameInfo.boardHeight != 10)];
 }
 
 
@@ -167,7 +158,7 @@ VOID SayString(char *mess, BOOL flag)
         int l = strlen(buf);
 	if(appData.debugMode) fprintf(debugFP, "SAY '%s'\n", mess);
         if(l) buf[l++] = ' '; // separate by space from previous
-	safeStrCpy(buf+l, _(mess), 8000-1-l); // buffer
+	safeStrCpy(buf+l, T_(mess), 8000-1-l); // buffer
         if(!flag) return; // wait for flush
 	if(p = StrCaseStr(buf, "Xboard adjudication:")) {
 		int i;
@@ -337,7 +328,7 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if(currentPiece != EmptySquare) {
 			char buf[MSG_SIZ];
 			n = boards[currentMove][fromY][1];
-			snprintf(buf, MSG_SIZ, "%d %s%s", n, PieceToName(currentPiece,0), n == 1 ? "" : "s");
+			snprintf(buf, MSG_SIZ, "%d %s%s", n, T_(PieceToName(currentPiece,0)), n == 1 ? "" : "s");
 			SayString(buf, FALSE);
 		}
 		SayString(" ", TRUE);
@@ -347,7 +338,7 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if(currentPiece != EmptySquare) {
 			char buf[MSG_SIZ];
 			n = boards[currentMove][fromY][BOARD_WIDTH-2];
-			snprintf(buf, MSG_SIZ,"%d %s%s", n, PieceToName(currentPiece,0), n == 1 ? "" : "s");
+			snprintf(buf, MSG_SIZ,"%d %s%s", n, T_(PieceToName(currentPiece,0)), n == 1 ? "" : "s");
 			SayString(buf, FALSE);
 		}
 		SayString(" ", TRUE);
@@ -357,8 +348,8 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		xchar = SquareToChar(fromX);
 		ynum = SquareToNum(fromY);
 		if(currentPiece != EmptySquare) {
-		  snprintf(buf, MSG_SIZ, "%s %s %s", xchar, ynum, piece);
-		} else snprintf(buf, MSG_SIZ, "%s %s", xchar, ynum);
+		  snprintf(buf, MSG_SIZ, "%s %s %s", T_(xchar), T_(ynum), T_(piece));
+		} else snprintf(buf, MSG_SIZ, "%s %s", T_(xchar), T_(ynum));
 		SayString(buf, FALSE);
 		SayString(" ", TRUE);
 	}
@@ -443,7 +434,7 @@ PossibleAttackMove()
 	swapColor = piece <  (int)BlackPawn && !WhiteOnMove(currentMove) ||
 		    piece >= (int)BlackPawn &&  WhiteOnMove(currentMove);
 	cl.count = 0; cl.rf = fromY; cl.ff = fromX; cl.rt = cl.ft = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove + swapColor), ReadCallback, (VOIDSTAR) &cl);
+	GenLegal(boards[currentMove], PosFlags(currentMove + swapColor), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 	SayString("", TRUE); // flush
 	boards[currentMove][fromY][fromX] = victim; // repair
@@ -471,14 +462,14 @@ PossibleAttacked()
 	victim = boards[currentMove][fromY][fromX]; // put dummy piece on target square, to activate Pawn captures
 	boards[currentMove][fromY][fromX] = WhiteOnMove(currentMove) ? WhiteQueen : BlackQueen;
 	cl.count = 0; cl.rt = fromY; cl.ft = fromX; cl.rf = cl.ff = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove+1), ReadCallback, (VOIDSTAR) &cl);
+	GenLegal(boards[currentMove], PosFlags(currentMove+1), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 
 	SayString("You are defended by", FALSE);
 
 	boards[currentMove][fromY][fromX] = WhiteOnMove(currentMove) ? BlackQueen : WhiteQueen;
 	cl.count = 0; cl.rt = fromY; cl.ft = fromX; cl.rf = cl.ff = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove), ReadCallback, (VOIDSTAR) &cl);
+	GenLegal(boards[currentMove], PosFlags(currentMove), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 	SayString("", TRUE); // flush
 	boards[currentMove][fromY][fromX] = victim; // put back original occupant
@@ -1151,7 +1142,7 @@ KeyboardMove(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			click-click move is possible */
 			char promoChoice = NULLCHAR;
 
-			if (HasPromotionChoice(oldFromX, oldFromY, fromX, fromY, &promoChoice)) {
+			if (HasPromotionChoice(oldFromX, oldFromY, fromX, fromY, &promoChoice, FALSE)) {
 				if (appData.alwaysPromoteToQueen) {
 					UserMoveEvent(oldFromX, oldFromY, fromX, fromY, 'q');
 				}
