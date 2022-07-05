@@ -295,6 +295,12 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if(fromX == -1 || fromY == -1) {
 		fromX = BOARD_LEFT; fromY = 0;
         }
+	if(flipView) switch(wParam) {
+	case VK_LEFT:  wParam = VK_RIGHT; break;
+	case VK_RIGHT: wParam = VK_LEFT;  break;
+	case VK_UP:    wParam = VK_DOWN;  break;
+	case VK_DOWN:  wParam = VK_UP;    break;
+        }
 	switch(wParam) {
 	case VK_LEFT:
 		if(fromX == BOARD_RGHT+1) fromX -= 2; else
@@ -536,20 +542,26 @@ ReadColumn()
 	SayString("", TRUE); // flush
 }
 
+int
+OnBoard(int x, int y)
+{
+	return x >= BOARD_LEFT && x < BOARD_RGHT && y >= 0 && y < BOARD_HEIGHT;
+}
+
 VOID
 SayUpperDiagnols()
 {
 	ChessSquare currentpiece;
 	char *piece, *xchar, *ynum ;
-	int yPos, xPos;
+	int yPos, xPos, dir = (flipView ? -1 : 1);
 
 	if(fromX < 0 || fromY < 0) return;
 
-	if(fromX < BOARD_RGHT-1 && fromY < BOARD_HEIGHT-1) {
+	if(OnBoard(fromX+dir, fromY+dir)) {
 		SayString("The diagnol squares to your upper right contain", FALSE);
-		yPos = fromY+1;
-		xPos = fromX+1;
-		while(yPos<BOARD_HEIGHT && xPos<BOARD_RGHT) {
+		yPos = fromY+dir;
+		xPos = fromX+dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -557,17 +569,17 @@ SayUpperDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos++;
-			xPos++;
+			yPos+=dir;
+			xPos+=dir;
 		}
 	}
 	else SayString("There is no squares to your upper right", FALSE);
 
-	if(fromX > BOARD_LEFT && fromY < BOARD_HEIGHT-1) {
+	if(OnBoard(fromX-dir, fromY+dir)) {
 		SayString("The diagnol squares to your upper left contain", FALSE);
-		yPos = fromY+1;
-		xPos = fromX-1;
-		while(yPos<BOARD_HEIGHT && xPos>=BOARD_LEFT) {
+		yPos = fromY+dir;
+		xPos = fromX-dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -575,8 +587,8 @@ SayUpperDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos++;
-			xPos--;
+			yPos+=dir;
+			xPos-=dir;
 		}
 	}
 	else SayString("There is no squares to your upper left", FALSE);
@@ -588,15 +600,15 @@ SayLowerDiagnols()
 {
 	ChessSquare currentpiece;
 	char *piece, *xchar, *ynum ;
-	int yPos, xPos;
+	int yPos, xPos, dir = (flipView ? -1 : 1);
 
 	if(fromX < 0 || fromY < 0) return;
 
-	if(fromX < BOARD_RGHT-1 && fromY > 0) {
+	if(OnBoard(fromX+dir, fromY-dir)) {
 		SayString("The diagnol squares to your lower right contain", FALSE);
-		yPos = fromY-1;
-		xPos = fromX+1;
-		while(yPos>=0 && xPos<BOARD_RGHT) {
+		yPos = fromY-dir;
+		xPos = fromX+dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -604,17 +616,17 @@ SayLowerDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos--;
-			xPos++;
+			yPos-=dir;
+			xPos+=dir;
 		}
 	}
 	else SayString("There is no squares to your lower right", FALSE);
 
-	if(fromX > BOARD_LEFT && fromY > 0) {
+	if(OnBoard(fromX-dir, fromY-dir)) {
 		SayString("The diagnol squares to your lower left contain", FALSE);
-		yPos = fromY-1;
-		xPos = fromX-1;
-		while(yPos>=0 && xPos>=BOARD_LEFT) {
+		yPos = fromY-dir;
+		xPos = fromX-dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -622,8 +634,8 @@ SayLowerDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos--;
-			xPos--;
+			yPos-=dir;
+			xPos-=dir;
 		}
 	}
 	else SayString("There is no squares to your lower left", FALSE);
