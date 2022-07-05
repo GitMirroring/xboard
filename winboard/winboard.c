@@ -297,7 +297,8 @@ int dialogItems[][42] = {
   OPT_AutoFlipView, OPT_ShowButtonBar, OPT_AutoRaiseBoard, OPT_ShowCoordinates,
   OPT_Blindfold, OPT_ShowThinking, OPT_HighlightDragging, OPT_TestLegality,
   OPT_SaveExtPGN, OPT_HideThinkFromHuman, OPT_ExtraInfoInMoveHistory,
-  OPT_HighlightMoveArrow, OPT_AutoLogo ,OPT_SmartMove }, 
+  OPT_HighlightMoveArrow, OPT_AutoLogo ,OPT_SmartMove, OPT_AutoTags, OPT_AutoComment,
+  OPT_Headers, OPT_Variations, OPT_AutoExtend }, 
 { DLG_IcsOptions, IDOK, IDCANCEL, OPT_AutoComment, OPT_AutoKibitz, OPT_AutoObserve,
   OPT_GetMoveList, OPT_LocalLineEditing, OPT_QuietPlay, OPT_SeekGraph, OPT_AutoRefresh,
   OPT_BgObserve, OPT_DualBoard, OPT_Premove, OPT_PremoveWhite, OPT_PremoveBlack,
@@ -315,14 +316,7 @@ int dialogItems[][42] = {
   OPT_ChooseBlackPieceColor, OPT_ChooseHighlightSquareColor, OPT_ChoosePremoveHighlightColor,
   OPT_Monochrome, OPT_AllWhite, OPT_UpsideDown, OPT_DefaultBoardColors, GPB_Colors,
   IDC_Light, IDC_Dark, IDC_White, IDC_Black, IDC_High, IDC_PreHigh, GPB_Size, OPT_Bitmaps, OPT_PieceFont, OPT_Grid }, 
-{ DLG_NewVariant, IDOK, IDCANCEL, OPT_VariantNormal, OPT_VariantFRC, OPT_VariantWildcastle,
-  OPT_VariantNocastle, OPT_VariantLosers, OPT_VariantGiveaway, OPT_VariantSuicide,
-  OPT_Variant3Check, OPT_VariantTwoKings, OPT_VariantAtomic, OPT_VariantCrazyhouse,
-  OPT_VariantBughouse, OPT_VariantTwilight, OPT_VariantShogi, OPT_VariantSuper,
-  OPT_VariantKnightmate, OPT_VariantBerolina, OPT_VariantCylinder, OPT_VariantFairy,
-  OPT_VariantMakruk, OPT_VariantGothic, OPT_VariantCapablanca, OPT_VariantJanus,
-  OPT_VariantCRC, OPT_VariantFalcon, OPT_VariantCourier, OPT_VariantGreat, OPT_VariantSChess,
-  OPT_VariantShatranj, OPT_VariantXiangqi, OPT_VariantJanggi, GPB_Variant, GPB_Board, IDC_Height,
+{ DLG_NewVariant, IDOK, IDCANCEL, GPB_Variant, GPB_Board, IDC_Height,
   IDC_Width, IDC_Hand, IDC_Pieces, IDC_Def }, 
 { DLG_Fonts, IDOK, IDCANCEL, OPT_ChooseClockFont, OPT_ChooseMessageFont,
   OPT_ChooseCoordFont, OPT_ChooseTagFont, OPT_ChooseCommentsFont,  OPT_ChooseConsoleFont, OPT_ChooseMoveHistoryFont, OPT_DefaultFonts,
@@ -7898,6 +7892,7 @@ void CheckForInputBufferFull( InputSource * is )
 
             is->error = ERROR_BROKEN_PIPE; /* [AS] Just any non-successful code! */
             is->count = (DWORD) -1;
+
             is->next = is->buf;
         }
     }

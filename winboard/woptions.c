@@ -906,7 +906,7 @@ VariantShowRadio(HWND hDlg)
 	v = VariantName(i-1); p = strstr(first.variants, v);
 	if(p && p != &first.variants && p[-1] != ',') p == NULL;
 	if(appData.noChessProgram || p && (!*v || strlen(v) == strlen(p) || p[strlen(v)] == ',')) {
-	   SendMessage(combo, CB_ADDSTRING, 0, (LPARAM) v);
+	   SendMessage(combo, CB_ADDSTRING, 0, (LPARAM) T_(v));
            if(gameInfo.variant == i - 1) current = nr;
 	   meaning[nr++] = i - 1;
         }
