@@ -512,7 +512,10 @@ LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		          ofn.hwndOwner = hDlg;
 		          ofn.hInstance = hInst;
 		          ofn.lpstrFilter = filter;
+		          ofn.lpstrCustomFilter = (LPSTR) NULL;
 			  ofn.nFilterIndex      = 1L + (ext = activeCps ? 0 : activeList[layoutList[(i-2000)/2+1]].max & 31);
+			  ofn.lpstrFileTitle	= NULL;
+			  ofn.lpstrInitialDir   = NULL;
 			  ofn.lpstrDefExt       = defaultExt[ext];
 		          ofn.lpstrFile = buf;
 		          ofn.nMaxFile = sizeof(buf);
