@@ -706,7 +706,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,140,244,50,14
 END
 
-DLG_NewVariant DIALOG DISCARDABLE  0, 0, 224, 270
+DLG_NewVariant DIALOG DISCARDABLE  0, 0, 224, 110
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Variants"
 FONT 8, "MS Sans Serif"
@@ -717,7 +717,7 @@ BEGIN
     LTEXT           "Board size:",GPB_Board,10,43,40,8,WS_TABSTOP
     LTEXT           "ranks",IDC_Height,77,43,38,8
     EDITTEXT        IDC_Ranks,60,39,14,14,ES_AUTOHSCROLL
-    LTEXT           "files",IDC_Width,133,183,80,8
+    LTEXT           "files",IDC_Width,133,43,80,8
     EDITTEXT        IDC_Files,116,39,14,14,ES_AUTOHSCROLL
     LTEXT           "Holdings with room for:",IDC_Hand,10,61,90,8
     EDITTEXT        IDC_Holdings,93,57,14,14,ES_AUTOHSCROLL
