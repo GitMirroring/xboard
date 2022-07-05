@@ -842,6 +842,26 @@ SayPieces(ChessSquare p)
 }
 
 VOID
+SayPieceType(char id)
+{
+	int f, r, nr = 0;
+	char buf[MSG_SIZ];
+	ChessSquare piece = CharToPiece(id);
+	if(piece == EmptySquare) {
+		SayString(T_("That is not a valid piece"), FALSE);
+		return;
+	}
+	for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) {
+		if(boards[currentMove][r][f] != piece) continue;
+		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString(T_("on"), FALSE);
+		else SayString(T_("and"), FALSE);
+		SayString(SquareToChar(f), FALSE);
+		SayString(SquareToNum(r), FALSE);
+	}
+	if(!nr) SayString(T_("There is no"), FALSE); SayString(PieceToName(piece, 1), FALSE); SayString(T_("on the board"), FALSE);
+}
+
+VOID
 SayCurrentPos()
 {
 	ChessSquare currentpiece;

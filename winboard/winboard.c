@@ -381,6 +381,7 @@ LoadLanguageFile(char *name)
               case 't': k = '\t'; break;
             }
             languageBuf[--i] = k;
+
         }
         i++;
     }
@@ -6775,6 +6776,9 @@ TypeInMoveDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
       shiftKey = GetKeyState(VK_SHIFT) < 0; // [HGM] remember last shift status
       GetDlgItemText(hDlg, OPT_Move, move, sizeof(move));
+#ifdef JAWS
+      if(strlen(move) == 1 && !isdigit(*move)) SayPieceType(*move); else
+#endif
       TypeInDoneEvent(move);
       EndDialog(hDlg, TRUE);
       return TRUE;
