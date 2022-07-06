@@ -844,22 +844,33 @@ SayPieces(ChessSquare p)
 }
 
 VOID
+DelayedSpeak()
+{
+#ifdef NVDA
+	nvdaController_cancelSpeech();
+#endif
+	SayString("", TRUE);
+}
+
+VOID
 SayPieceType(char id)
 {
 	int f, r, nr = 0;
 	ChessSquare piece = CharToPiece(id);
 	if(piece == EmptySquare) {
 		SayString("That is not a valid piece", FALSE);
-		return;
-	}
-	for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) {
+	} else {
+	    for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) {
 		if(boards[currentMove][r][f] != piece) continue;
 		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString("on", FALSE);
 		else SayString("and", FALSE);
 		SayString(SquareToChar(f), FALSE);
 		SayString(SquareToNum(r), FALSE);
-	}
-	if(!nr) SayString("There is no", FALSE), SayString(PieceToName(piece, 1), FALSE), SayString("on the board", FALSE);
+	    }
+	    if(!nr) SayString("There is no", FALSE), SayString(PieceToName(piece, 1), FALSE), SayString("on the board", FALSE);
+        }
+	ScheduleDelayedEvent(DelayedSpeak, 50); // immediate flush is interrupted by reading title bar parent window
+//	SayString("", TRUE); // flush
 }
 
 VOID
