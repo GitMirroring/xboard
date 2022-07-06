@@ -127,7 +127,7 @@ char* PieceToName(p, i)
         int black = (p >= BlackPawn);
         if(black) p -= BlackPawn;
         sprintf(buf, i ? black ? "Black " : "White " : "");
-        snprintf(buf + strlen(buf), " %s", pieceTypeName[(int) p]);
+        sprintf(buf + strlen(buf), " %s", pieceTypeName[(int) p]);
 		return T_(buf);
 }
 
@@ -847,7 +847,6 @@ VOID
 SayPieceType(char id)
 {
 	int f, r, nr = 0;
-	char buf[MSG_SIZ];
 	ChessSquare piece = CharToPiece(id);
 	if(piece == EmptySquare) {
 		SayString(T_("That is not a valid piece"), FALSE);
@@ -860,7 +859,7 @@ SayPieceType(char id)
 		SayString(SquareToChar(f), FALSE);
 		SayString(SquareToNum(r), FALSE);
 	}
-	if(!nr) SayString(T_("There is no"), FALSE); SayString(PieceToName(piece, 1), FALSE); SayString(T_("on the board"), FALSE);
+	if(!nr) SayString(T_("There is no"), FALSE), SayString(PieceToName(piece, 1), FALSE), SayString(T_("on the board"), FALSE);
 }
 
 VOID
