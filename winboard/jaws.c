@@ -849,17 +849,17 @@ SayPieceType(char id)
 	int f, r, nr = 0;
 	ChessSquare piece = CharToPiece(id);
 	if(piece == EmptySquare) {
-		SayString(T_("That is not a valid piece"), FALSE);
+		SayString("That is not a valid piece", FALSE);
 		return;
 	}
 	for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) {
 		if(boards[currentMove][r][f] != piece) continue;
-		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString(T_("on"), FALSE);
-		else SayString(T_("and"), FALSE);
+		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString("on", FALSE);
+		else SayString("and", FALSE);
 		SayString(SquareToChar(f), FALSE);
 		SayString(SquareToNum(r), FALSE);
 	}
-	if(!nr) SayString(T_("There is no"), FALSE), SayString(PieceToName(piece, 1), FALSE), SayString(T_("on the board"), FALSE);
+	if(!nr) SayString("There is no", FALSE), SayString(PieceToName(piece, 1), FALSE), SayString("on the board", FALSE);
 }
 
 VOID
