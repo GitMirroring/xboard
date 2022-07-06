@@ -242,7 +242,9 @@ AdaptMenu()
 
 #ifdef NVDA
 
-#   include "nvdaController.h"
+#   define S2(X) #X
+#   define STRINGIFY(X) S2(X)
+#   include STRINGIFY(NVDA/nvdaController.h)
 
     void
     SayNVDA(char *text, BOOL interrupt)
