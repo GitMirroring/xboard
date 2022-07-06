@@ -127,7 +127,7 @@ char* PieceToName(p, i)
         int black = (p >= BlackPawn);
         if(black) p -= BlackPawn;
         sprintf(buf, i ? black ? "Black " : "White " : "");
-        sprintf(buf + strlen(buf), " %s", pieceTypeName[(int) p]);
+        sprintf(buf + strlen(buf), "%s", pieceTypeName[(int) p]);
 		return T_(buf);
 }
 

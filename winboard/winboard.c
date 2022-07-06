@@ -365,7 +365,7 @@ LoadLanguageFile(char *name)
             if(languageBuf[n] == '"' && languageBuf[i-1] == '"') {
                 char *p;
                 if(p = strstr(languageBuf + n + 1, "\" === \"")) {
-                    if(p > languageBuf+n+2 && p+8 < languageBuf+i) {
+                    if(p > languageBuf+n+1 && p+8 < languageBuf+i) {
                         if(j >= sizeof(english)) { DisplayError("Too many translated strings", 0); return; }
                         english[j] = languageBuf + n + 1; *p = 0;
                         foreign[j++] = p + 7; languageBuf[i-1] = 0;
@@ -381,6 +381,7 @@ LoadLanguageFile(char *name)
               case 't': k = '\t'; break;
             }
             languageBuf[--i] = k;
+
 
         }
         i++;
@@ -6776,6 +6777,7 @@ TypeInMoveDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
       shiftKey = GetKeyState(VK_SHIFT) < 0; // [HGM] remember last shift status
       GetDlgItemText(hDlg, OPT_Move, move, sizeof(move));
+
 #ifdef JAWS
       if(strlen(move) == 1 && !isdigit(*move)) SayPieceType(*move); else
 #endif
