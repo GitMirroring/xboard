@@ -298,7 +298,7 @@ int keepInfo = 0; /* [HGM] to protect PGN tags in auto-step game analysis */
 static int initPing = -1;
 int border;       /* [HGM] width of board rim, needed to size seek graph  */
 char bestMove[MSG_SIZ], avoidMove[MSG_SIZ];
-int solvingTime, totalTime;
+int solvingTime, totalTime, jawsClock;
 
 /* States for ics_getting_history */
 #define H_FALSE 0
@@ -14936,6 +14936,7 @@ PauseEvent ()
 	    else if(gameMode == TwoMachinesPlay && appData.ponderNextMove) SendToProgram("hard\n", &second);
 	    StartClocks();
 	} else {
+	    if(jawsClock && gameMode == EditGame) StartClocks();
 	    DisplayBothClocks();
 	}
 	if (gameMode == PlayFromGameFile) {
@@ -15000,6 +15001,12 @@ PauseEvent ()
 	    }
 	    // if no immediate pausing is possible, wait for engine to move, and stop clocks then
 	  case AnalyzeMode:
+	    pausing = TRUE;
+	    ModeHighlight();
+	    break;
+	  case EditGame:
+	    if(!jawsClock) return;
+	    StopClocks();
 	    pausing = TRUE;
 	    ModeHighlight();
 	    break;
@@ -18385,6 +18392,7 @@ SwitchClocks (int newMoveNr)
 	break;
 
       case EditGame:
+	if(jawsClock) break;
       case PlayFromGameFile:
       case IcsExamining:
 	return;
