@@ -863,7 +863,7 @@ SayPieceType(char id)
 	} else {
 	    for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) {
 		if(boards[currentMove][r][f] != piece) continue;
-		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString("on", FALSE);
+		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString("on ", FALSE);
 		else SayString("and", FALSE);
 		SayString(SquareToChar(f), FALSE);
 		SayString(SquareToNum(r), FALSE);
