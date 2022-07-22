@@ -8187,14 +8187,19 @@ Enables ncpEnables[] = {
   { IDM_Annotate, MF_BYCOMMAND|MF_GRAYED },
   { IDM_MoveNow, MF_BYCOMMAND|MF_GRAYED },
   { IDM_RetractMove, MF_BYCOMMAND|MF_GRAYED },
+#ifdef JAWS
+  { IDM_TimeControl, MF_BYCOMMAND|MF_ENABLED },
+  { IDM_Sounds, MF_BYCOMMAND|MF_ENABLED },
+#else
   { IDM_TimeControl, MF_BYCOMMAND|MF_GRAYED },
+  { IDM_Sounds, MF_BYCOMMAND|MF_GRAYED },
+#endif
   { IDM_Hint, MF_BYCOMMAND|MF_GRAYED },
   { IDM_Book, MF_BYCOMMAND|MF_GRAYED },
   { IDM_MachineBoth, MF_BYCOMMAND|MF_GRAYED },
   { IDM_NewChat, MF_BYCOMMAND|MF_GRAYED },
   { IDM_Engine1Options, MF_BYCOMMAND|MF_GRAYED },
   { IDM_Engine2Options, MF_BYCOMMAND|MF_GRAYED },
-  { IDM_Sounds, MF_BYCOMMAND|MF_GRAYED },
   { -1, -1 }
 };
 
