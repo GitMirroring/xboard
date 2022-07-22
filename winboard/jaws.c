@@ -176,6 +176,7 @@ static int timeflag;
 static int suppressClocks = 0;
 static int suppressOneKey = 0;
 static HANDLE hAccelJAWS;
+extern int jawsClock;
 
 typedef struct { char *name; int code; } MenuItemDesc;
 
@@ -966,6 +967,7 @@ SayAllBoard()
 				    Xpos--;
 				}
 				SayString("empty", FALSE);
+
 			}
 		}
 	}
@@ -1148,15 +1150,21 @@ SayMachineMove(int evenIfDuplicate)
 }
 
 VOID
-SayClockTime()
+SayClockTime(int warning)
 {
 	char buf1[50], buf2[50];
 	char *str1, *str2;
 	static long int lastWhiteTime, lastBlackTime;
 
-	suppressClocks = 1; // if user is using alt+T command, no reason to display them
+    if(!warning) {
+	suppressClocks = jawsClock = 1; // if user is using alt+T command, no reason to display them
 	if(abs(lastWhiteTime - whiteTimeRemaining) < 1000 && abs(lastBlackTime - blackTimeRemaining) < 1000)
 		suppressClocks = 0; // back on after two requests in rapid succession
+	else if(gameMode == EditGame || gameMode == BeginningOfGame) {
+		appData.clockMode = TRUE;
+		if(!pausing) StartClocks();
+	}
+    }
 	snprintf(buf1, sizeof(buf1)/sizeof(buf1[0]),"%s", TimeString(whiteTimeRemaining));
 	str1 = buf1;
 	SayString("White clock", FALSE);
@@ -1167,6 +1175,7 @@ SayClockTime()
 	SayString(str2, FALSE);
 	lastWhiteTime = whiteTimeRemaining;
 	lastBlackTime = blackTimeRemaining;
+	if(pausing) SayString("neither clock is running", FALSE);
 	SayString("", TRUE); // flush
 }
 
@@ -1269,12 +1278,32 @@ NiceTime(int x)
 	return (x%3000 == 0);
 }
 
+VOID
+TimeWarning()
+{
+  int ta, t = (whiteTimeRemaining < blackTimeRemaining ? whiteTimeRemaining: blackTimeRemaining);
+  char *p = appData.alarmTimes;
+  static int last_t;
+  t = (t + 1000)/2000;
+  if(t > last_t) last_t = 0;
+  while((ta = atoi(p))) {
+    if(t == ta/2 && t != last_t) {
+      last_t = t;
+      if(sounds[(int)SoundAlarm].name[0] == NULLCHAR) SayString("time warning", FALSE), SayClockTime(1);
+      else PlayAlarmSound();
+    }
+    p = strchr(p, ','); if(p == NULL) break;
+    p++;
+  }
+}
+
 #define JAWS_ARGS \
   { "beepOffBoard", ArgInt, (LPVOID) beeps, TRUE, (ArgIniType) 1 },\
   { "beepEmpty", ArgInt, (LPVOID) (beeps+1), TRUE, (ArgIniType) 0 },\
   { "beepWhite", ArgInt, (LPVOID) (beeps+2), TRUE, (ArgIniType) 0 },\
   { "beepBlack", ArgInt, (LPVOID) (beeps+3), TRUE, (ArgIniType) 0 },\
   { "beepHoldings", ArgInt, (LPVOID) (beeps+4), TRUE, (ArgIniType) 0 },\
+  { "alarmTimes", ArgString, (LPVOID) &appData.alarmTimes, TRUE, (ArgIniType) "" },\
 
 #define JAWS_ALT_INTERCEPT \
 	    if(suppressOneKey) {\
@@ -1394,7 +1423,7 @@ NiceTime(int x)
 			break;\
 \
 		case IDM_SayClockTime:  /*Say the clock time */\
-			SayClockTime();\
+			SayClockTime(0);\
 			break;\
 \
 		case IDM_SayWhosTurn:   /* Say whos turn it its */\
@@ -1447,7 +1476,7 @@ NiceTime(int x)
 
 #define JAWS_DELETE(X)
 
-#define JAWS_SILENCE if(suppressClocks) return;
+#define JAWS_SILENCE TimeWarning(); if(suppressClocks) return;
 
 #define JAWS_COPYRIGHT \
 	SetDlgItemText(hDlg, OPT_MESS, "Auditory/Keyboard Enhancements  By:  Ed Rodriguez (sort of)");

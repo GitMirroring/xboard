@@ -824,6 +824,7 @@ typedef struct {
     int tourneyCycles;
     int seedBase;
     int bmpSave;
+    char *alarmTimes;
     Boolean roundSync;
     Boolean cycleSync;
     Boolean numberTag;
