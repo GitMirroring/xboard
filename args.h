@@ -520,6 +520,7 @@ ArgDescriptor argDescriptors[] = {
     !XBOARD, (ArgIniType) SCP_NAMES },
   { "themeNames", ArgString, (void *) &appData.themeNames, TRUE, (ArgIniType) "native -upf false -ub false -ubt false -pid \"\"\n" },
   { "engineList", ArgFilename, (void *) &engineListFile, TRUE, (ArgIniType) "" },
+  { "languageDir", ArgFilename, (void *) &appData.languageDir, !XBOARD, (ArgIniType) "" },
   { "addMasterOption", ArgMaster, NULL, FALSE, INVALID },
   { "installEngine", ArgInstall, (void *) &firstChessProgramNames, FALSE, (ArgIniType) "" },
   { "installTheme", ArgInstall, (void *) &appData.themeNames, FALSE, (ArgIniType) "" },

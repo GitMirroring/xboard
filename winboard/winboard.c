@@ -383,6 +383,7 @@ LoadLanguageFile(char *name)
             languageBuf[--i] = k;
 
 
+
         }
         i++;
     }
@@ -459,6 +460,7 @@ void
 TranslateMenus(int addLanguage)
 {
     int i;
+    char buf[MSG_SIZ];
     WIN32_FIND_DATA fileData;
     HANDLE hFind;
 #define IDM_English 1970
@@ -474,7 +476,8 @@ TranslateMenus(int addLanguage)
     }
 
     if(!addLanguage) return;
-    if((hFind = FindFirstFile("*.LNG", &fileData)) != INVALID_HANDLE_VALUE) {
+    snprintf(buf, MSG_SIZ, "%s%s*.LNG", appData.languageDir, *appData.languageDir ? "\\" : "");
+    if((hFind = FindFirstFile(buf, &fileData)) != INVALID_HANDLE_VALUE) {
         HMENU mainMenu = GetMenu(hwndMain);
         HMENU subMenu = GetSubMenu(mainMenu, GetMenuItemCount(mainMenu)-1);
         AppendMenu(subMenu, MF_SEPARATOR, (UINT_PTR) 0, NULL);
@@ -483,7 +486,8 @@ TranslateMenus(int addLanguage)
         do {
             char *p, *q = fileData.cFileName;
             int checkFlag = MF_UNCHECKED;
-            languageFile[i] = strdup(q);
+            snprintf(buf, MSG_SIZ, "%s%s%s", appData.languageDir, *appData.languageDir ? "\\" : "", q);
+            languageFile[i] = strdup(buf);
             if(barbaric && !strcmp(oldLanguage, q)) {
                 checkFlag = MF_CHECKED;
                 lastChecked = IDM_English + i + 1;

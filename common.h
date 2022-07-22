@@ -750,6 +750,7 @@ typedef struct {
 
     char *serverFileName;
     char *serverMovesName;
+    char *languageDir;
     char *finger;
     Boolean suppressLoadMoves;
     int serverPause;
