@@ -381,9 +381,6 @@ LoadLanguageFile(char *name)
               case 't': k = '\t'; break;
             }
             languageBuf[--i] = k;
-
-
-
         }
         i++;
     }
@@ -4743,11 +4740,13 @@ LoadGameDialog(HWND hwnd, char* title)
 {
   UINT number = 0;
   FILE *f;
-  char fileTitle[MSG_SIZ];
+  char fileTitle[MSG_SIZ], dir[MSG_SIZ];
+  GetCurrentDirectory(MSG_SIZ, dir);
   f = OpenFileDialog(hwnd, "rb", "",
  	             appData.oldSaveStyle ? "gam" : "pgn",
 		     GAME_FILT,
 		     title, &number, fileTitle, NULL);
+  SetCurrentDirectory(MSG_SIZ, dir);
   if (f != NULL) {
     cmailMsgLoaded = FALSE;
     if (number == 0) {
@@ -4875,7 +4874,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
   char *defName;
   FILE *f;
   UINT number;
-  char fileTitle[MSG_SIZ];
+  char fileTitle[MSG_SIZ], dir[MSG_SIZ];
   static SnapData sd;
   static int peek=0;
 
@@ -5012,10 +5011,12 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         Reset(FALSE, TRUE);
       }
       number = 1;
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "rb", "",
 			 appData.oldSaveStyle ? "pos" : "fen",
 			 POSITION_FILT,
 			 _("Load Position from File"), &number, fileTitle, NULL);
+      SetCurrentDirectory(MSG_SIZ, dir);
       if (f != NULL) {
 	LoadPosition(f, number, fileTitle);
       }
@@ -5035,10 +5036,12 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case IDM_SaveGame:
       defName = DefaultFileName(appData.oldSaveStyle ? "gam" : "pgn");
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "a", defName,
 			 appData.oldSaveStyle ? "gam" : "pgn",
 			 GAME_FILT,
 			 _("Save Game to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(MSG_SIZ, dir);
       if (f != NULL) {
 	SaveGame(f, 0, "");
       }
@@ -5046,10 +5049,12 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case IDM_SavePosition:
       defName = DefaultFileName(appData.oldSaveStyle ? "pos" : "fen");
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "a", defName,
 			 appData.oldSaveStyle ? "pos" : "fen",
 			 POSITION_FILT,
 			 _("Save Position to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(MSG_SIZ, dir);
       if (f != NULL) {
 	SavePosition(f, 0, "");
       }
@@ -5057,20 +5062,24 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case IDM_SaveDiagram:
       defName = "diagram";
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "wb", defName,
 			 "bmp",
 			 DIAGRAM_FILT,
 			 _("Save Diagram to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(MSG_SIZ, dir);
       if (f != NULL) {
 	SaveDiagram(f);
       }
       break;
 
     case IDM_SaveSelected:
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "a", "",
 			 "pgn",
 			 GAME_FILT,
 			 _("Save Game to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(MSG_SIZ, dir);
       if (f != NULL) {
 	SaveSelected(f, 0, "");
       }
@@ -9176,13 +9185,15 @@ AutoSaveGame()
 {
   char *defName;
   FILE *f;
-  char fileTitle[MSG_SIZ];
+  char fileTitle[MSG_SIZ], dir[MSG_SIZ];
 
   defName = DefaultFileName(appData.oldSaveStyle ? "gam" : "pgn");
+  GetCurrentDirectory(MSG_SIZ, dir);
   f = OpenFileDialog(hwndMain, "a", defName,
 		     appData.oldSaveStyle ? "gam" : "pgn",
 		     GAME_FILT, 
 		     _("Save Game to File"), NULL, fileTitle, NULL);
+  GetCurrentDirectory(MSG_SIZ, dir);
   if (f != NULL) {
     SaveGame(f, 0, "");
     fclose(f);
@@ -10301,6 +10312,7 @@ int flock(int fid, int code)
       case 1: res = LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_SH
       case 2: res = LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_EX
       case 3: res = UnlockFileEx(hFile, 0, 1024, 0, &ov); break; // LOCK_UN
+
       default: return -1;
     }
     return -!res;

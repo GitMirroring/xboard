@@ -464,7 +464,7 @@ HWND settingsDlg;
 
 LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    char buf[MSG_SIZ];
+    char buf[MSG_SIZ], dir[MSG_SIZ];
     int i, j, ext;
 
     switch( message )
@@ -522,11 +522,13 @@ LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		          ofn.lpstrTitle = _("Choose File");
 		          ofn.Flags = OFN_FILEMUSTEXIST | OFN_LONGNAMES | OFN_HIDEREADONLY;
 
+			  GetCurrentDirectory(MSG_SIZ, dir);
 		          if( activeList[layoutList[(i-2000)/2+1]].max & 32 ?
 		                                       GetOpenFileName( &ofn ) :
 		                                       GetSaveFileName( &ofn ) ) {
 		              SetDlgItemText( hDlg, i+3, buf );
 		          }
+			  SetCurrentDirectory(MSG_SIZ, dir);
 		} else
 		if(j == -3) {
 		    GetDlgItemText( hDlg, i+3, buf, MSG_SIZ );
