@@ -523,6 +523,13 @@ NextUnit (char **p)
 		fromY = (currentMoveString[1] = coord[1] + '0') - ONE;
 		currentMoveString[4] = cl.promoCharIn = PromoSuffix(p);
 		currentMoveString[5] = NULLCHAR;
+		if(**p == ',' && gameInfo.variant == VariantDuck) { // Duck square follows
+		    currentMoveString[7] = currentMoveString[4];
+		    currentMoveString[4] = ';';
+		    currentMoveString[5] = *++*p; killX = **p - AAA;
+		    currentMoveString[6] = *++*p; killY = *(*p)++ - ONE;
+		    currentMoveString[8] = NULLCHAR;
+		}
 		if(**p == 'x' && !cl.promoCharIn) { // other leg follows
 		    char *q = *p;
 		    int x = *++*p, y;

@@ -498,7 +498,8 @@ static Option variantDescriptors[] = {
 { VariantJanggi, SAME_ROW, 135, NULL, (void*) &Pick, "#BFFFFF", NULL, Button, N_("Janggi (9x10)")}, // dummy, to have good alignment
 { VariantChuChess,      0, 135, NULL, (void*) &Pick, "#BFBFBF", NULL, Button, N_("elven chess (10x10)")},
 { VariantCourier, SAME_ROW,135, NULL, (void*) &Pick, "#BFFFBF", NULL, Button, N_("courier (12x8)")},
-{ -1,                   0, 135, NULL, (void*) &Pick, "#FFFFFF", NULL, Button, N_(" ")}, // dummy, to have good alignment
+{ VariantDuck,          0, 135, NULL, (void*) &Pick, "#FFFFFF", NULL, Button, N_("Duck Chess")},
+//{ -1,                   0, 135, NULL, (void*) &Pick, "#FFFFFF", NULL, Button, N_(" ")}, // dummy, to have good alignment
 { VariantChu,    SAME_ROW, 135, NULL, (void*) &Pick, "#BFFFBF", NULL, Button, N_("chu shogi (12x12)")},
 // optional buttons for engine-defined variants
 { 0, NO_OK, 0, NULL, NULL, "", NULL, EndMark , "" },

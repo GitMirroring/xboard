@@ -1273,6 +1273,7 @@ InitBackEnd1 ()
       case VariantLion:       /* should work */
       case VariantChuChess:   /* should work */
       case VariantJanggi:
+      case VariantDuck:
 	break;
       }
     }
@@ -7083,7 +7084,7 @@ int lastLoadGameNumber = 0, lastLoadPositionNumber = 0;
 int lastLoadGameUseList = FALSE;
 char lastLoadGameTitle[MSG_SIZ], lastLoadPositionTitle[MSG_SIZ];
 ChessMove lastLoadGameStart = EndOfFile;
-int doubleClick;
+int doubleClick, doDuck = -1, duckX, duckY;
 Boolean addToBookFlag;
 static Board rightsBoard, nullBoard;
 
@@ -7091,7 +7092,7 @@ void
 UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
 {
     ChessMove moveType;
-    ChessSquare pup;
+    ChessSquare pup = boards[currentMove][fromY][fromX];
     int ff=fromX, rf=fromY, ft=toX, rt=toY;
 
     /* Check if the user is playing in turn.  This is complicated because we
@@ -7139,14 +7140,14 @@ UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar)
       case AnalyzeMode:
       case Training:
 	if(fromY == DROP_RANK) break; // [HGM] drop moves (entered through move type-in) are automatically assigned to side-to-move
-	if ((int) boards[currentMove][fromY][fromX] >= (int) BlackPawn &&
-            (int) boards[currentMove][fromY][fromX] < (int) EmptySquare) {
+	if ((int) pup >= (int) BlackPawn &&
+            (int) pup < (int) EmptySquare) {
 	    /* User is moving for Black */
 	    if (WhiteOnMove(currentMove)) {
 		DisplayMoveError(_("It is White's turn"));
                 return;
 	    }
-	} else {
+	} else if(pup < (int) BlackPawn) {
 	    /* User is moving for White */
 	    if (!WhiteOnMove(currentMove)) {
 		DisplayMoveError(_("It is Black's turn"));
@@ -7383,6 +7384,17 @@ FinishMove (ChessMove moveType, int fromX, int fromY, int toX, int toY, int prom
   }
 
   ClearMap();
+
+  if(gameInfo.variant == VariantDuck) {
+    if(doDuck < 0) { // Duck move not yet indicated
+      Board testBoard;
+      CopyBoard(testBoard, boards[forwardMostMove]); // do the move without Duck
+      ApplyMove(fromX, fromY, toX, toY, promoChar, testBoard);
+      DrawPosition(TRUE, testBoard);
+      duckX = fromX; duckY = fromY; doDuck = promoChar; // remember promotion
+      return 1;
+    }
+  }
 
   /* If we need the chess program but it's dead, restart it */
   ResurrectChessProgram();
@@ -7685,6 +7697,18 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 	x = BOARD_WIDTH - 1 - x;
     }
 
+    saveAnimate = appData.animate;
+    if(clickType == Press && doDuck >= 0) { // extra click for Duck placement
+	if(boards[currentMove][y][x] != EmptySquare && (x != duckX || y != duckY)) return; // ignore clicks on occupied square
+	killX = x; killY = y;
+	appData.animate = FALSE;
+	UserMoveEvent(duckX, duckY, toX, toY, doDuck); // promoChoice remembered in doDuck
+	fromX = fromY = killX = killY = -1;
+	appData.animate = saveAnimate;
+	doDuck = -1;
+	return;
+    }
+
     if(gameMode == EditPosition && fromX < 0 && selectedType != EmptySquare &&
        (boards[currentMove][y][x] == EmptySquare || x == createX && y == createY)) { // placement click
 	if(clickType == Press) {
@@ -7950,7 +7974,6 @@ LeftClick (ClickType clickType, int xPix, int yPix)
 
     piece = boards[currentMove][fromY][fromX];
 
-    saveAnimate = appData.animate;
     if (clickType == Press) {
 	if(gameInfo.variant == VariantChuChess && piece != WhitePawn && piece != BlackPawn) defaultPromoChoice = piece;
 	if(gameMode == EditPosition && boards[currentMove][fromY][fromX] == EmptySquare) {
@@ -9120,9 +9143,13 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 	    if(q) legs = 2, p = q; else legs = 1;  // with 3-leg move we clipof first two legs!
 	    safeStrCpy(machineMove, firstLeg + (p - machineMove) + 1, 20);
 	}
-	if(firstLeg[0]) { // there was a previous leg;
+	if(firstLeg[0]) { // there was a previous leg
+	  char buf[20], *p = machineMove+1, *q = buf+1, f;
+	  if(gameInfo.variant == VariantDuck) { // Duck Chess: 1st leg is FIDE move, 2nd is Duck
+	    sscanf(machineMove, "%c%d%c%d", &f, &killY, &f, &killY); killX = f - AAA; killY -= ONE - '0';
+	    safeStrCpy(machineMove, firstLeg, 20);
+          } else {
 	    // only support case where same piece makes two step
-	    char buf[20], *p = machineMove+1, *q = buf+1, f;
 	    safeStrCpy(buf, machineMove, 20);
 	    while(isdigit(*q)) q++; // find start of to-square
 	    safeStrCpy(machineMove, firstLeg, 20);
@@ -9131,7 +9158,8 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 	    else if(*p == *buf)   // if first-leg to not equal to second-leg from first leg says unmodified (assume it is King move of castling)
 	    safeStrCpy(p, q, 20); // glue to-square of second leg to from-square of first, to process over-all move
 	    sscanf(buf, "%c%d", &f, &killY); killX = f - AAA; killY -= ONE - '0'; // pass intermediate square to MakeMove in global
-	    firstLeg[0] = NULLCHAR; legs = 0;
+          }
+	  firstLeg[0] = NULLCHAR; legs = 0;
 	}
 
         if (!ParseOneMove(machineMove, forwardMostMove, &moveType,
@@ -10525,6 +10553,11 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
 
       if( killX >= 0 && killY >= 0 ) { // [HGM] lion: Lion trampled over something
 //           victim = board[killY][killX],
+        if(gameInfo.variant == VariantDuck) { // killXY used to indicate Duck move
+           int r, f;
+           for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) if(board[r][f] == DarkSquare) board[r][f] = EmptySquare;
+           board[killY][killX] = DarkSquare;
+        } else {
            killed = board[killY][killX],
            board[killY][killX] = EmptySquare,
            board[EP_STATUS] = EP_CAPTURE;
@@ -10532,6 +10565,7 @@ ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board)
              killed2 = board[kill2Y][kill2X], board[kill2Y][kill2X] = EmptySquare;
            if(killed == EmptySquare) // [HGM] unload: kill-square also used for push destination
              board[killY][killX] = board[toY][toX], board[EP_STATUS] = EP_NONE;
+        }
       }
 
       if( board[toY][toX] != EmptySquare ) {
@@ -10889,17 +10923,24 @@ MakeMove (int fromX, int fromY, int toX, int toY, int promoChar)
 //    forwardMostMove++; // [HGM] bare: moved downstream
 
     diceRoll[0] = NULLCHAR; // [HGM] dice: consumed by this move
+  if(gameInfo.variant != VariantDuck) {
     if(kill2X >= 0) x = kill2X, y = kill2Y; else
     if(killX >= 0 && killY >= 0) x = killX, y = killY; // [HGM] lion: make SAN move to intermediate square, if there is one
+  }
     (void) CoordsToAlgebraic(boards[forwardMostMove],
 			     PosFlags(forwardMostMove),
 			     fromY, fromX, y, x, (killX < 0)*promoChar,
 			     s);
     if(kill2X >= 0 && kill2Y >= 0)
         sprintf(s + strlen(s), "x%c%d", killX + AAA, killY + ONE - '0'); // 2nd leg of 3-leg move is always capture
-    if(killX >= 0 && killY >= 0)
+    if(killX >= 0 && killY >= 0) {
+        if(gameInfo.variant == VariantDuck) {
+          if(promoChar) sprintf(s + strlen(s), "=%c,%c%d", ToUpper(promoChar), killX + AAA, killY + ONE - '0');
+          else sprintf(s + strlen(s), ",%c%d", killX + AAA, killY + ONE - '0');
+        } else
         sprintf(s + strlen(s), "%c%c%d%c", p == EmptySquare || toX == fromX && toY == fromY || toX== kill2X && toY == kill2Y ? '-' : 'x',
                                            toX + AAA, toY + ONE - '0', promoChar);
+    }
 
     if(serverMoves != NULL) { /* [HGM] write moves on file for broadcasting (should be separate routine, really) */
         int timeLeft; static int lastLoadFlag=0; int king, piece;

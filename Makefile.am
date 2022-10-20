@@ -169,7 +169,7 @@ dist_svg_DATA = svg/icon_white.svg         svg/icon_black.svg      \
            svg/eo_Analyzing.svg     svg/eo_Black.svg          \
            svg/eo_Clear.svg         svg/eo_Ponder.svg         \
            svg/eo_Thinking.svg      svg/eo_Unknown.svg        \
-           svg/eo_White.svg
+           svg/eo_White.svg         svg/WhiteDucky.svg
 
 shogidir = $(gamedatadir)/themes/shogi
 dist_shogi_DATA = \

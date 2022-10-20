@@ -106,10 +106,10 @@ extern char *getenv();
 Boolean cairoAnimate;
 Option *currBoard;
 cairo_surface_t *csBoardWindow;
-static cairo_surface_t *pngPieceImages[2][(int)BlackPawn];   // png 256 x 256 images
-static cairo_surface_t *pngPieceBitmaps[2][(int)BlackPawn];  // scaled pieces as used
-static cairo_surface_t *pngPieceBitmaps2[2][(int)BlackPawn]; // scaled pieces in store
-static RsvgHandle *svgPieces[2][(int)BlackPawn]; // vector pieces in store
+static cairo_surface_t *pngPieceImages[2][(int)BlackPawn+1];   // png 256 x 256 images
+static cairo_surface_t *pngPieceBitmaps[2][(int)BlackPawn+1];  // scaled pieces as used
+static cairo_surface_t *pngPieceBitmaps2[2][(int)BlackPawn+1]; // scaled pieces in store
+static RsvgHandle *svgPieces[2][(int)BlackPawn+1]; // vector pieces in store
 static cairo_surface_t *pngBoardBitmap[2], *pngOriginalBoardBitmap[2];
 int useTexture, textureW[2], textureH[2];
 
@@ -165,7 +165,7 @@ SelectPieces(VariantClass v)
     int i;
     for(i=0; i<2; i++) {
 	int p;
-	for(p=0; p<=(int)WhiteKing; p++)
+	for(p=0; p<=(int)WhiteKing+1; p++)
 	   pngPieceBitmaps[i][p] = pngPieceBitmaps2[i][p]; // defaults
 	if(v == VariantShogi && BOARD_HEIGHT != 7) { // no exceptions in Tori Shogi
 	   pngPieceBitmaps[i][(int)WhiteCannon] = pngPieceBitmaps2[i][(int)WhiteTokin];
@@ -311,7 +311,7 @@ char *pngPieceNames[] = // must be in same order as internal piece encoding
   "LShield", "Pegasus", "Wizard", "Copper", "Iron", "Viking", "Flag", "Axe", "Dolphin", "Leopard", "Claw",
   "Left", "Butterfly", "PromoBishop", "PromoRook", "HCrown", "RShield", "Prince", "Phoenix", "Kylin", "Drunk", "Right",
   "GoldPawn", "GoldKnight", "PromoHorse", "PromoDragon", "GoldLance", "GoldSilver", "HSword", "PromoSword", "PromoHSword", "Princess", "King",
-  NULL
+  "Ducky", NULL
 };
 
 char *backupPiece[] = { // pieces that map on other in default theme ("Crown" - "Drunk")
@@ -494,6 +494,7 @@ CreatePNGPieces (char *pieceDir)
   int p;
   for(p=0; pngPieceNames[p]; p++) {
     ScaleOnePiece(0, p, pieceDir);
+    if(p == BlackPawn) break; // no black Duck
     ScaleOnePiece(1, p, pieceDir);
   }
   SelectPieces(gameInfo.variant);
@@ -791,6 +792,7 @@ BlankSquare (cairo_surface_t *dest, int x, int y, int color, ChessSquare piece, 
 	  case 0: col = appData.darkSquareColor; break;
 	  case 1: col = appData.lightSquareColor; break;
 	  case 2: col = "#000000"; break;
+	  case 3: col = "#6080C0"; break;
 	  default: col = "#808080"; break; // cannot happen
 	}
 	SetPen(cr, 2.0, col, 0);
@@ -821,6 +823,7 @@ pngDrawPiece (cairo_surface_t *dest, ChessSquare piece, int square_color, int x,
     }
     if(piece == WhiteKing && kind == appData.jewelled) piece = WhiteZebra;
     if(appData.upsideDown && flipView) kind = 1 - kind; // swap white and black pieces
+    if(square_color == 3) piece = BlackPawn, kind = 0; // Ducky
     BlankSquare(dest, x, y, square_color, piece, 1); // erase previous contents with background
     cr = cairo_create (dest);
     cairo_set_source_surface (cr, pngPieceBitmaps[kind][piece], x, y);
