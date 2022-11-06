@@ -2342,7 +2342,7 @@ ResizeBoard(int newSizeX, int newSizeY, int flags)
   recurse--;
 }
 
-
+static HBITMAP ducky;
 extern Boolean twoBoards, partnerUp; // [HGM] dual
 
 VOID
@@ -2769,6 +2769,7 @@ InitDrawingSizes(BoardSize boardSize, int flags)
     pieceBitmap[0][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "s");
     pieceBitmap[1][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "o");
     pieceBitmap[2][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "w");
+    if(gameInfo.variant == VariantDuck) { char name[20]; sprintf(name, " ducky%d", squareSize); ducky = LoadBitmap(hInst, name); }
 
     if(gameInfo.variant == VariantShogi && BOARD_HEIGHT != 7) { /* promoted Gold representations (but not in Tori!)*/
       pieceBitmap[0][WhiteCannon] = DoLoadBitmap(hInst, "wp", squareSize, "s");
@@ -3607,8 +3608,13 @@ DrawBoardOnDC(HDC hdc, Board board, HDC tmphdc)
             DisplayHoldingsCount(hdc, x, y, flipView, (int) board[row][column]);
       else if( column == BOARD_RGHT) /* right align */
             DisplayHoldingsCount(hdc, x, y, !flipView, (int) board[row][column]);
-      else if( piece == DarkSquare) DisplayHoldingsCount(hdc, x, y, 0, 0);
-      else
+      else if( piece == DarkSquare) {
+            if(gameInfo.variant == VariantDuck && ducky) {
+                 HBITMAP oldBitmap = SelectObject(tmphdc, ducky);
+                 BitBlt( hdc, x, y, squareSize, tmphdc, 0, 0, SRCPAINT );
+                 SelectObject(tmphdc, oldBitmap);
+            } else DisplayHoldingsCount(hdc, x, y, 0, 0);
+      } else
       if (appData.monoMode) {
         if (piece == EmptySquare) {
           BitBlt(hdc, x, y, squareSize, squareSize, 0, 0, 0,
