@@ -382,6 +382,7 @@ LoadLanguageFile(char *name)
             }
             languageBuf[--i] = k;
 
+
         }
         i++;
     }
@@ -2770,7 +2771,7 @@ InitDrawingSizes(BoardSize boardSize, int flags)
     pieceBitmap[0][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "s");
     pieceBitmap[1][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "o");
     pieceBitmap[2][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "w");
-    if(gameInfo.variant == VariantDuck) { char name[20]; sprintf(name, " ducky%d", squareSize); ducky = LoadBitmap(hInst, name); }
+    if(gameInfo.variant == VariantDuck) { char name[20]; sprintf(name, "ducky%d", squareSize); ducky = LoadBitmap(hInst, name); }
 
     if(gameInfo.variant == VariantShogi && BOARD_HEIGHT != 7) { /* promoted Gold representations (but not in Tori!)*/
       pieceBitmap[0][WhiteCannon] = DoLoadBitmap(hInst, "wp", squareSize, "s");
@@ -3607,12 +3608,12 @@ DrawBoardOnDC(HDC hdc, Board board, HDC tmphdc)
       }
       if(column == BOARD_LEFT-1 ) /* left align */
             DisplayHoldingsCount(hdc, x, y, flipView, (int) board[row][column]);
-      else if( column == BOARD_RGHT) /* right align */
+      else if( column == BOARD_RGHT) /* right align */squareSize, 
             DisplayHoldingsCount(hdc, x, y, !flipView, (int) board[row][column]);
       else if( piece == DarkSquare) {
             if(gameInfo.variant == VariantDuck && ducky) {
                  HBITMAP oldBitmap = SelectObject(tmphdc, ducky);
-                 BitBlt( hdc, x, y, squareSize, tmphdc, 0, 0, SRCPAINT );
+                 BitBlt( hdc, x, y, squareSize, squareSize, tmphdc, 0, 0, SRCPAINT );
                  SelectObject(tmphdc, oldBitmap);
             } else DisplayHoldingsCount(hdc, x, y, 0, 0);
       } else
@@ -5061,7 +5062,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			 appData.oldSaveStyle ? "pos" : "fen",
 			 POSITION_FILT,
 			 _("Save Position to File"), NULL, fileTitle, NULL);
-      SetCurrentDirectory(MSG_SIZ, dir);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SavePosition(f, 0, "");
       }
@@ -7900,6 +7901,7 @@ DoWriteFile(HANDLE hFile, char *buf, int count, DWORD *outCount,
 
   }
   return err;
+
 }
 
 /* [AS] If input is line by line and a line exceed the buffer size, force an error */

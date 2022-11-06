@@ -5215,7 +5215,12 @@ SendMoveToProgram (int moveNum, ChessProgramState *cps)
 					       m[5], m[6] - '0',
 					       m[5], m[6] - '0',
 					       m[2], m[3] - '0', c);
-	} else
+	} else if(gameInfo.variant == VariantDuck)
+	  snprintf(buf, MSG_SIZ, "%c%d%c%d,%c%d%c%d%s\n", m[0], m[1] - '0', // convert to two moves
+					       m[2], m[3] - '0',
+					       m[2], m[3] - '0',
+					       m[5], m[6] - '0', c);
+	else
 	  snprintf(buf, MSG_SIZ, "%c%d%c%d,%c%d%c%d%s\n", m[0], m[1] - '0', // convert to two moves
 					       m[5], m[6] - '0',
 					       m[5], m[6] - '0',
@@ -8810,7 +8815,8 @@ Adjudicate (ChessProgramState *cps)
                  */
 		if((gameMode == TwoMachinesPlay ? second.offeredDraw : userOfferedDraw) || first.offeredDraw ) {
                          char *p = NULL;
-                         if((signed char)boards[forwardMostMove][EP_STATUS] == EP_RULE_DRAW)
+                         if((signed char)boards[forwardMostMove][EP_STATUS] == EP_RULE_DRAW)-	    safeStrCpy(machineMove, firstLeg, 20); machineMove[strlen(machineMove)-1] = 0;
+
                              p = "Draw claim: 50-move rule";
                          if((signed char)boards[forwardMostMove][EP_STATUS] == EP_REP_DRAW)
                              p = "Draw claim: 3-fold repetition";
@@ -9132,7 +9138,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 
 	// [HGM] lion: (some very limited) support for Alien protocol
 	killX = killY = kill2X = kill2Y = -1;
-	if(machineMove[strlen(machineMove)-1] == ',') { // move ends in coma: non-final leg of composite move
+	if(machineMove[strlen(machineMove)-1] == ',') { // move ends in comma: non-final leg of composite move
 	    if(legs++) return;                     // middle leg contains only redundant info, ignore (but count it)
 	    safeStrCpy(firstLeg, machineMove, 20); // just remember it for processing when second leg arrives
 	    return;
@@ -9147,7 +9153,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 	  char buf[20], *p = machineMove+1, *q = buf+1, f;
 	  if(gameInfo.variant == VariantDuck) { // Duck Chess: 1st leg is FIDE move, 2nd is Duck
 	    sscanf(machineMove, "%c%d%c%d", &f, &killY, &f, &killY); killX = f - AAA; killY -= ONE - '0';
-	    safeStrCpy(machineMove, firstLeg, 20);
+	    safeStrCpy(machineMove, firstLeg, 20); machineMove[strlen(machineMove)-1] = 0;
           } else {
 	    // only support case where same piece makes two step
 	    safeStrCpy(buf, machineMove, 20);
