@@ -905,7 +905,7 @@ VariantShowRadio(HWND hDlg)
   while((j = radioButton[i++]) != -2) {
 	if(j == -1) continue; // no menu button
 	v = VariantName(i-1); p = strstr(first.variants, v);
-	if(p && p != &first.variants && p[-1] != ',') p == NULL;
+	if(p && p != first.variants && p[-1] != ',') p = NULL;
 	if(appData.noChessProgram || p && (!*v || strlen(v) == strlen(p) || p[strlen(v)] == ',')) {
 	   SendMessage(combo, CB_ADDSTRING, 0, (LPARAM) T_(v));
            if(gameInfo.variant == i - 1) current = nr;
@@ -1218,6 +1218,7 @@ IcsOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
   COLORREF *colorref;
 
   switch (message) {
+
   case WM_INITDIALOG: /* message: initialize dialog box */
 
     mca = colorizeAttribs;

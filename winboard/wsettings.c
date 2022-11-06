@@ -528,7 +528,7 @@ LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		                                       GetSaveFileName( &ofn ) ) {
 		              SetDlgItemText( hDlg, i+3, buf );
 		          }
-			  SetCurrentDirectory(MSG_SIZ, dir);
+			  SetCurrentDirectory(dir);
 		} else
 		if(j == -3) {
 		    GetDlgItemText( hDlg, i+3, buf, MSG_SIZ );

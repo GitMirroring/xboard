@@ -381,6 +381,7 @@ LoadLanguageFile(char *name)
               case 't': k = '\t'; break;
             }
             languageBuf[--i] = k;
+
         }
         i++;
     }
@@ -4752,7 +4753,7 @@ LoadGameDialog(HWND hwnd, char* title)
  	             appData.oldSaveStyle ? "gam" : "pgn",
 		     GAME_FILT,
 		     title, &number, fileTitle, NULL);
-  SetCurrentDirectory(MSG_SIZ, dir);
+  SetCurrentDirectory(dir);
   if (f != NULL) {
     cmailMsgLoaded = FALSE;
     if (number == 0) {
@@ -5022,7 +5023,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			 appData.oldSaveStyle ? "pos" : "fen",
 			 POSITION_FILT,
 			 _("Load Position from File"), &number, fileTitle, NULL);
-      SetCurrentDirectory(MSG_SIZ, dir);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	LoadPosition(f, number, fileTitle);
       }
@@ -5047,7 +5048,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			 appData.oldSaveStyle ? "gam" : "pgn",
 			 GAME_FILT,
 			 _("Save Game to File"), NULL, fileTitle, NULL);
-      SetCurrentDirectory(MSG_SIZ, dir);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SaveGame(f, 0, "");
       }
@@ -5073,7 +5074,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			 "bmp",
 			 DIAGRAM_FILT,
 			 _("Save Diagram to File"), NULL, fileTitle, NULL);
-      SetCurrentDirectory(MSG_SIZ, dir);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SaveDiagram(f);
       }
@@ -5085,7 +5086,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			 "pgn",
 			 GAME_FILT,
 			 _("Save Game to File"), NULL, fileTitle, NULL);
-      SetCurrentDirectory(MSG_SIZ, dir);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SaveSelected(f, 0, "");
       }
@@ -5321,6 +5322,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     case IDM_Rematch:
 
       RematchEvent();
+
       break;
 
     case IDM_CallFlag:
@@ -5675,6 +5677,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case EP_BlackCannon:
       EditPositionMenuEvent(BlackCannon, fromX, fromY);
+
       fromX = fromY = -1;
       break;
 
