@@ -873,6 +873,7 @@ int radioButton[] = { // this is a remnant of the radiobuttons, and should be re
     OPT_VariantLion,
     -1,
     OPT_VariantJanggi,
+    666,
     -2 // sentinel
 };
 
