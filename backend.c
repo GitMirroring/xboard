@@ -15239,12 +15239,12 @@ MachineWhiteEvent ()
 
     if (gameMode == EditPosition)
         EditPositionDone(TRUE);
-
+/*
     if (!WhiteOnMove(currentMove)) {
 	DisplayError(_("It is not White's turn"), 0);
 	return;
     }
-
+*/
     if (gameMode == AnalyzeMode || gameMode == AnalyzeFile)
       ExitAnalyzeMode();
 
@@ -15260,6 +15260,14 @@ MachineWhiteEvent ()
     gameMode = MachinePlaysWhite;
     pausing = FALSE;
     ModeHighlight();
+
+    if(!WhiteOnMove(currentMove)) {
+        first.bookSuspend = TRUE;
+	StartClocks();
+	firstMove = FALSE;
+	return;
+    }
+
     SetGameInfo();
     snprintf(buf, MSG_SIZ, "%s %s %s", gameInfo.white, _("vs."), gameInfo.black);
     DisplayTitle(buf);
@@ -15322,12 +15330,12 @@ MachineBlackEvent ()
 
     if (gameMode == EditPosition)
         EditPositionDone(TRUE);
-
+/*
     if (WhiteOnMove(currentMove)) {
 	DisplayError(_("It is not Black's turn"), 0);
 	return;
     }
-
+*/
     if (gameMode == AnalyzeMode || gameMode == AnalyzeFile)
       ExitAnalyzeMode();
 
@@ -15339,6 +15347,14 @@ MachineBlackEvent ()
     gameMode = MachinePlaysBlack;
     pausing = FALSE;
     ModeHighlight();
+
+    if(WhiteOnMove(currentMove)) {
+        first.bookSuspend = TRUE;
+	StartClocks();
+	firstMove = FALSE;
+	return;
+    }
+
     SetGameInfo();
     snprintf(buf, MSG_SIZ, "%s %s %s", gameInfo.white, _("vs."), gameInfo.black);
     DisplayTitle(buf);
