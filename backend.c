@@ -8815,8 +8815,7 @@ Adjudicate (ChessProgramState *cps)
                  */
 		if((gameMode == TwoMachinesPlay ? second.offeredDraw : userOfferedDraw) || first.offeredDraw ) {
                          char *p = NULL;
-                         if((signed char)boards[forwardMostMove][EP_STATUS] == EP_RULE_DRAW)-	    safeStrCpy(machineMove, firstLeg, 20); machineMove[strlen(machineMove)-1] = 0;
-
+                         if((signed char)boards[forwardMostMove][EP_STATUS] == EP_RULE_DRAW)
                              p = "Draw claim: 50-move rule";
                          if((signed char)boards[forwardMostMove][EP_STATUS] == EP_REP_DRAW)
                              p = "Draw claim: 3-fold repetition";
