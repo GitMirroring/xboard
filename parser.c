@@ -706,6 +706,11 @@ badMove:// we failed to find algebraic move
 		}
 		sprintf(currentMoveString, "%c%c%c%c%c",ff+AAA,rf+ONE,ft+AAA,rt+ONE,promo);
 		if (appData.debugMode) fprintf(debugFP, "(%d-type) castling %d %d\n", castlingType, ff, ft);
+		if(**p == ',' && gameInfo.variant == VariantDuck) {
+		    killX = (*p)[1] - AAA; killY = (*p)[2] - ONE;
+		    sprintf(currentMoveString + 4, ";%c%c", (*p)[1], (*p)[2]);
+		    *p += 3;
+		}
 
 	        return (int) LegalityTest(boards[yyboardindex],
 			      PosFlags(yyboardindex)&~F_MANDATORY_CAPTURE, // [HGM] losers: e.p.!
