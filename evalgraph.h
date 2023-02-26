@@ -34,7 +34,7 @@ typedef enum { PEN_NONE, PEN_BLACK, PEN_DOTTED, PEN_BLUEDOTTED, PEN_BOLDWHITE, P
 #define OPEN   0
 
 /* Module globals */
-ChessProgramStats_Move * currPvInfo;
+extern ChessProgramStats_Move * currPvInfo;
 extern int currFirst;
 extern int currLast;
 extern int currCurrent;

@@ -459,8 +459,8 @@ ScaleOnePiece (int color, int piece, char *pieceDir)
   cairo_paint (cr);
   cairo_destroy (cr);
 if(appData.inscriptions[0]) InscribeKanji(cs, piece+BlackPawn*color, 0, 0);
-sprintf(buf, "%c2%d.png", color ? 'b' : 'w', piece);
-if(piece < 22) cairo_surface_write_to_png(cs, buf);
+//sprintf(buf, "%c2%d.png", color ? 'b' : 'w', piece);
+//if(piece < 66) cairo_surface_write_to_png(cs, buf);
 
   if(!appData.trueColors || !*pieceDir) { // operate on bitmap to color it (king-size hack...)
     int stride = cairo_image_surface_get_stride(cs)/4;
