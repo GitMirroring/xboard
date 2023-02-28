@@ -14,6 +14,7 @@ COPYING for details.
 
 You can build xboard on most systems with the following commands.
 
+        ./autogen.sh
 	./configure
 	make
 
@@ -58,6 +59,7 @@ Here is a sample of approximately what you should type (on Unix):
 
     script
     uname -a
+    ./autogen.sh
     ./configure
     make
     ./xboard -debug
