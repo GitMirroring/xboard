@@ -2202,7 +2202,7 @@ MateTest (Board board, int flags)
 		return myPieces == hisPieces ? MT_STALEMATE :
 					myPieces > hisPieces ? MT_STAINMATE : MT_STEALMATE;
 	else if(gameInfo.variant == VariantLosers) return inCheck ? MT_TRICKMATE : MT_STEALMATE;
-	else if(gameInfo.variant == VariantGiveaway) return MT_STEALMATE; // no check exists, stalemated = win
+	else if(gameInfo.variant == VariantGiveaway || gameInfo.variant == VariantDuck) return MT_STEALMATE; // no check exists, stalemated = win
 	else if(gameInfo.variant == VariantJanggi && !inCheck) return MT_NONE; // in Janggi turn passing is always an option
 
         return inCheck ? MT_CHECKMATE

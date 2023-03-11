@@ -423,6 +423,8 @@ PosFlags (int index)
   case VariantJanggi:
     flags |= F_NULL_MOVE;
     break;
+  case VariantDuck:
+    flags |= F_IGNORE_CHECK;
   default:
     break;
   }
@@ -5202,6 +5204,12 @@ SendMoveToProgram (int moveNum, ChessProgramState *cps)
 	char *m = moveList[moveNum];
 	static char c[2];
 	*c = m[7]; if(*c == '\n') *c = NULLCHAR; // promoChar
+	if(gameInfo.variant == VariantDuck)
+	  snprintf(buf, MSG_SIZ, "%c%d%c%d,%c%d%c%d%s\n", m[0], m[1] - '0', // convert to two moves
+					       m[2], m[3] - '0',
+					       m[2], m[3] - '0',
+					       m[5], m[6] - '0', c);
+	else
 	if((boards[moveNum][m[6]-ONE][m[5]-AAA] < BlackPawn) == (boards[moveNum][m[1]-ONE][m[0]-AAA] < BlackPawn)) // move is kludge to indicate castling
 	  snprintf(buf, MSG_SIZ, "%c%d%c%d,%c%d%c%d\n", m[0], m[1] - '0', // convert to two moves
 					       m[2], m[3] - '0',
@@ -5215,12 +5223,7 @@ SendMoveToProgram (int moveNum, ChessProgramState *cps)
 					       m[5], m[6] - '0',
 					       m[5], m[6] - '0',
 					       m[2], m[3] - '0', c);
-	} else if(gameInfo.variant == VariantDuck)
-	  snprintf(buf, MSG_SIZ, "%c%d%c%d,%c%d%c%d%s\n", m[0], m[1] - '0', // convert to two moves
-					       m[2], m[3] - '0',
-					       m[2], m[3] - '0',
-					       m[5], m[6] - '0', c);
-	else
+	} else
 	  snprintf(buf, MSG_SIZ, "%c%d%c%d,%c%d%c%d%s\n", m[0], m[1] - '0', // convert to two moves
 					       m[5], m[6] - '0',
 					       m[5], m[6] - '0',
@@ -7495,6 +7498,13 @@ FinishMove (ChessMove moveType, int fromX, int fromY, int toX, int toY, int prom
 	GameEnds(WhiteWins, "White mates", GE_PLAYER);
       }
       break;
+    case MT_STEALMATE:
+      if (WhiteOnMove(currentMove)) {
+	GameEnds(WhiteWins, "Stalemated", GE_PLAYER);
+      } else {
+	GameEnds(BlackWins, "Stalemated", GE_PLAYER);
+      }
+      break;
     case MT_STALEMATE:
       GameEnds(GameIsDrawn, "Stalemate", GE_PLAYER);
       break;
@@ -8520,7 +8530,7 @@ Adjudicate (ChessProgramState *cps)
 		Count(boards[forwardMostMove], nr, &nrW, &nrB, &staleW, &staleB, &bishopColor);
 
 		/* Some material-based adjudications that have to be made before stalemate test */
-		if(gameInfo.variant == VariantAtomic && nr[WhiteKing] + nr[BlackKing] < 2) {
+		if((gameInfo.variant == VariantAtomic || gameInfo.variant == VariantDuck) && nr[WhiteKing] + nr[BlackKing] < 2) {
 		    // [HGM] atomic: stm must have lost his King on previous move, as destroying own K is illegal
 		     boards[forwardMostMove][EP_STATUS] = EP_CHECKMATE; // make claimable as if stm is checkmated
 		     if(canAdjudicate && appData.checkMates) {
@@ -8583,7 +8593,7 @@ Adjudicate (ChessProgramState *cps)
 		reason = "Xboard adjudication: Stalemate";
 		if((signed char)boards[forwardMostMove][EP_STATUS] != EP_CHECKMATE) { // [HGM] don't touch win through baring or K-capt
 		    boards[forwardMostMove][EP_STATUS] = EP_STALEMATE;   // default result for stalemate is draw
-		    if(gameInfo.variant == VariantLosers  || gameInfo.variant == VariantGiveaway) // [HGM] losers:
+		    if(gameInfo.variant == VariantLosers  || gameInfo.variant == VariantGiveaway || gameInfo.variant == VariantDuck) // [HGM] losers:
 			boards[forwardMostMove][EP_STATUS] = EP_WINS;    // in these variants stalemated is always a win
 		    else if(gameInfo.variant == VariantSuicide) // in suicide it depends
 			boards[forwardMostMove][EP_STATUS] = nrW == nrB ? EP_STALEMATE :
@@ -9151,8 +9161,10 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 	if(firstLeg[0]) { // there was a previous leg
 	  char buf[20], *p = machineMove+1, *q = buf+1, f;
 	  if(gameInfo.variant == VariantDuck) { // Duck Chess: 1st leg is FIDE move, 2nd is Duck
+	    int l = strlen(firstLeg), promo = machineMove[4];
 	    sscanf(machineMove, "%c%d%c%d", &f, &killY, &f, &killY); killX = f - AAA; killY -= ONE - '0';
-	    safeStrCpy(machineMove, firstLeg, 20); machineMove[strlen(machineMove)-1] = 0;
+	    safeStrCpy(machineMove, firstLeg, 20);
+	    snprintf(machineMove + l - 1, 20 - l, ";%c%d%c", killX + AAA, killY + ONE - '0', promo);
           } else {
 	    // only support case where same piece makes two step
 	    safeStrCpy(buf, machineMove, 20);
@@ -9191,6 +9203,9 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
            ChessMove moveType;
            moveType = LegalityTest(boards[forwardMostMove], PosFlags(forwardMostMove),
                              fromY, fromX, toY, toX, promoChar);
+           if(gameInfo.variant == VariantDuck &&
+              (killX < BOARD_LEFT || killX >= BOARD_RGHT || killY < 0 || killY >= BOARD_HEIGHT ||
+               boards[forwardMostMove][killY][killX] != EmptySquare && (killX != fromX || killY != fromY))) moveType = IllegalMove;
             if(moveType == IllegalMove) {
 	      snprintf(buf1, MSG_SIZ*10, "Xboard: Forfeit due to illegal move: %s (%c%c%c%c)%c",
                         machineMove, fromX+AAA, fromY+ONE, toX+AAA, toY+ONE, 0);
@@ -12745,6 +12760,13 @@ LoadGameOneMove (ChessMove readAhead)
 		GameEnds(WhiteWins, "White mates", GE_FILE);
 	    }
 	    break;
+	  case MT_STEALMATE:
+	    if (WhiteOnMove(currentMove)) {
+	      GameEnds(WhiteWins, "Stalemated", GE_FILE);
+	    } else {
+	      GameEnds(BlackWins, "Stalemated", GE_FILE);
+	    }
+	    break;
 	  case MT_STALEMATE:
 	    GameEnds(GameIsDrawn, "Stalemate", GE_FILE);
 	    break;
@@ -12778,6 +12800,13 @@ LoadGameOneMove (ChessMove readAhead)
 		GameEnds(BlackWins, "Black mates", GE_FILE);
 	    } else {
 		GameEnds(WhiteWins, "White mates", GE_FILE);
+	    }
+	    break;
+	  case MT_STEALMATE:
+	    if (WhiteOnMove(currentMove)) {
+	      GameEnds(WhiteWins, "Stalemated", GE_FILE);
+	    } else {
+	      GameEnds(BlackWins, "Stalemated", GE_FILE);
 	    }
 	    break;
 	  case MT_STALEMATE:
@@ -15882,6 +15911,9 @@ EditPositionDone (Boolean fakeRights)
     ModeHighlight();
     HistorySet(parseList, backwardMostMove, forwardMostMove, currentMove-1);
     ClearHighlights(); /* [AS] */
+    if(!appData.icsActive && !appData.noChessProgram) {
+	if(forwardMostMove) MachineWhiteEvent(); else MachineBlackEvent();
+    }
 }
 
 /* Pause for `ms' milliseconds */
