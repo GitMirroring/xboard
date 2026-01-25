@@ -64,6 +64,7 @@ extern void CopyBoard P((Board to, Board from));
 extern int CompareBoards P((Board board1, Board board2));
 extern unsigned char pieceToChar[(int)EmptySquare+1];
 extern unsigned char pieceNickName[(int)EmptySquare];
+extern unsigned char autoProm[(int)EmptySquare];
 extern int promoPartner[(int)EmptySquare];
 extern char *pieceDesc[(int)EmptySquare];
 extern Board initialPosition;
@@ -140,6 +141,13 @@ extern int CheckTest P((Board board, int flags,
    flags say is on move?  Other arguments as in GenPseudoLegal.
    Returns the type of move made, taking promoChar into account. */
 extern ChessMove LegalityTest P((Board board, int flags,
+				 int rf, int ff, int rt, int ft,
+				 int promoChar));
+
+/* Is a move from (rf, ff) to (rt, ft) en e.p. capture for the player
+   whom the flags say is on move, or does it create e.p. rights?
+   Returns 2 if rights are created (and stored in board as side effect) */
+extern int EnPassantTest P((Board board, int flags,
 				 int rf, int ff, int rt, int ft,
 				 int promoChar));
 

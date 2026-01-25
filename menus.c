@@ -387,6 +387,7 @@ DebugProc ()
 void
 EditEngineProc ()
 {
+    if(*engineListFile) ParseSettingsFile(engineListFile, &engineListFile);
     EditAnyPopUp(firstChessProgramNames, &firstChessProgramNames, _("Registered Engines"));
 }
 

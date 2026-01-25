@@ -235,7 +235,7 @@ SquareColor (int row, int column)
 {
     int square_color;
 
-    if (gameInfo.variant == VariantXiangqi) {
+    if (gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) {
         if (column >= 3 && column <= 5 && row >= 0 && row <= 2) {
             square_color = 1;
         } else if (column >= 3 && column <= 5 && row >= 7 && row <= 9) {
@@ -605,7 +605,7 @@ AnimateMove (Board board, int fromX, int fromY, int toX, int toY)
   if (piece >= EmptySquare) return;
 
   if(x2 >= 0) toX = kill2X, toY = kill2Y; else
-  if(killX >= 0) toX = killX, toY = killY; // [HGM] lion: first to kill square
+  if(killX >= 0 && gameInfo.variant != VariantDuck) toX = killX, toY = killY; // [HGM] lion: first to kill square
 
 again:
 
@@ -814,7 +814,7 @@ DrawSquare (int row, int column, ChessSquare piece, int do_flash)
 	snprintf(tString, 3, "%d", piece);
 	align = 4; // holdings count in upper-left corner
     }
-    if(piece == DarkSquare) square_color = 2;
+    if(piece == DarkSquare) square_color = (gameInfo.variant == VariantDuck ? 3 : 2);
     if(square_color == 2 || appData.blindfold) piece = EmptySquare;
 
     if (do_flash && piece != EmptySquare && appData.flashCount > 0) {
@@ -914,7 +914,7 @@ SquareExpose(int i, int j, int d)
 }
 
 void
-DrawPosition (int repaint, Board board)
+DrawPositionX (int repaint, Board board)
 {
     int i, j, do_flash, exposeAll = False;
     static int lastFlipView = 0;

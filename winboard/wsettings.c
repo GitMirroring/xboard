@@ -57,7 +57,7 @@ int groupNameList[2*MAX_OPTIONS];
 int breaks[MAX_OPTIONS];
 int checks, combos, buttons, layout, groups;
 char title[MSG_SIZ];
-char *engineName, *engineDir, *engineChoice, *engineLine, *nickName, *params;
+char *engineName, *engineDir, *protocolChoice, *engineLine, *nickName, *params;
 Boolean isUCI, hasBook, storeVariant, v1, addToList, useNick, isUCCI;
 extern Option installOptions[], matchOptions[];
 char *engineList[MAXENGINES] = {""}, *engineMnemonic[MAXENGINES] = {""};
@@ -141,6 +141,7 @@ LayoutOptions(int firstOption, int endOption, char *groupName, Option *optionLis
 		case PathName:
 		case Slider:
 		case Label:
+		case GroupBox:
 		case Spin: stop++;
 		default:
 		case Message: ; // cannot happen
@@ -241,6 +242,7 @@ DesignOptionDialog(int nrOpt, Option *optionList)
 	// look if we hit a group of options having names that start with the same word
 	int groupSize = 1, groupNameLength = 50;
 	sscanf(optionList[k].name, "%s", buf); // get first word of option name
+	if(optionList[k].type == GroupBox) groupSize = optionList[k].max, groupNameLength = -strlen(optionList[k].name), groupNameList[groups+1] = k; else
 	while(k + groupSize < nrOpt &&
 	      strstr(optionList[k+groupSize].name, buf) == optionList[k+groupSize].name) {
 		int j;
@@ -255,6 +257,7 @@ DesignOptionDialog(int nrOpt, Option *optionList)
 		LayoutOptions(n, k, "", optionList); // flush all solitary options appearing before the group
 		groupNameList[groups] = groupNameLength;
 		boxList[groups++] = layout; // group start in even entries
+		if(groupNameLength <= 0) n = ++k;
 		LayoutOptions(k, k+groupSize, buf, optionList); // flush the group
 		boxList[groups++] = layout; // group end in odd entries
 		k = n = k + groupSize;
@@ -372,6 +375,7 @@ SetOptionValues(HWND hDlg, ChessProgramState *cps, Option *optionList)
 	if(layoutList[k] < 0) continue;
 	for(p=0; p<groupNameList[i]; p++) buf[p] = optionList[layoutList[k]].name[p];
 	buf[p] = 0;
+	if(groupNameList[i] < 0) safeStrCpy(buf, optionList[groupNameList[i+1]].name, MSG_SIZ);
 	SetDlgItemText( hDlg, 2000+2*(id+MAX_OPTIONS), buf );
     }
 }
@@ -430,7 +434,7 @@ GetOptionValues(HWND hDlg, ChessProgramState *cps, Option *optionList)
 		for(k=0; k<optionList[j].max; k++) {
 		    if(choices[k] && !strcmp(choices[k], newText)) new = k;
 		}
-		if(!cps && new > 0) {
+		if(!cps && new >= 0) {
 		    if(*(char**)optionList[j].target) free(*(char**)optionList[j].target);
 		    *(char**)optionList[j].target = strdup(optionList[j].choice[new]);
 		    break;
@@ -460,7 +464,7 @@ HWND settingsDlg;
 
 LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    char buf[MSG_SIZ];
+    char buf[MSG_SIZ], dir[MSG_SIZ];
     int i, j, ext;
 
     switch( message )
@@ -508,18 +512,23 @@ LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		          ofn.hwndOwner = hDlg;
 		          ofn.hInstance = hInst;
 		          ofn.lpstrFilter = filter;
+		          ofn.lpstrCustomFilter = (LPSTR) NULL;
 			  ofn.nFilterIndex      = 1L + (ext = activeCps ? 0 : activeList[layoutList[(i-2000)/2+1]].max & 31);
+			  ofn.lpstrFileTitle	= NULL;
+			  ofn.lpstrInitialDir   = NULL;
 			  ofn.lpstrDefExt       = defaultExt[ext];
 		          ofn.lpstrFile = buf;
 		          ofn.nMaxFile = sizeof(buf);
 		          ofn.lpstrTitle = _("Choose File");
 		          ofn.Flags = OFN_FILEMUSTEXIST | OFN_LONGNAMES | OFN_HIDEREADONLY;
 
+			  GetCurrentDirectory(MSG_SIZ, dir);
 		          if( activeList[layoutList[(i-2000)/2+1]].max & 32 ?
 		                                       GetOpenFileName( &ofn ) :
 		                                       GetSaveFileName( &ofn ) ) {
 		              SetDlgItemText( hDlg, i+3, buf );
 		          }
+			  SetCurrentDirectory(dir);
 		} else
 		if(j == -3) {
 		    GetDlgItemText( hDlg, i+3, buf, MSG_SIZ );
@@ -541,6 +550,12 @@ LRESULT CALLBACK SettingsProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		     GetOptionValues(hDlg, activeCps, activeList);
 		else if( activeList[j].type  != Button) break;
 		else if( !activeCps ) { (*(ButtonCallback*) activeList[j].target)(hDlg); break; }
+		if(j == 0) { // WinBoard save button
+		    SaveEngineSettings(activeCps == &second);
+	            EndDialog( hDlg, 0 );
+		    comboCallback = NULL; activeCps = NULL; settingsDlg = NULL;
+	            return TRUE;
+		}
 		snprintf(buf, MSG_SIZ, "option %s\n", activeList[j].name);
 		SendToProgram(buf, activeCps);
 	    }
@@ -634,7 +649,7 @@ CreateDialogTemplate(int *layoutList, int nr, Option *optionList)
     template.header.cdit = 0;
     template.header.cx = 307;
     buttonRows = (buttons + 1 + 3)/4; // 4 per row, rounded up
-    if(nr > 50) {
+    if(nr > 48) {
 	breakPoint = (nr+2*buttonRows+1)/2 & ~1;
 	template.header.cx = 625;
     }
@@ -642,10 +657,11 @@ CreateDialogTemplate(int *layoutList, int nr, Option *optionList)
     for(ii=0; ii<nr; ii++) {
 	i = ii^1; if(i == nr) i = ii; // if two on one line, swap order of treatment, to get good (left to right) tabbing order.
 	if(k < groups && ii == boxList[k]) {
+	    int tlen = groupNameList[k]; if(tlen < 0) tlen = -tlen;
 	    y += 10;
 	    AddControl(x+2, y+13*(i>>1)-2, 301, 13*(boxList[k+1]-boxList[k]>>1)+8,
 						0x0082, WS_VISIBLE | WS_CHILD | SS_BLACKFRAME, 2400);
-	    AddControl(x+60, y+13*(i>>1)-6, 10*groupNameList[k]/3, 10,
+	    AddControl(x+60, y+13*(i>>1)-6, 10*tlen/3, 10,
 						0x0082, SS_ENDELLIPSIS | WS_VISIBLE | WS_CHILD, 2*(ii+MAX_OPTIONS));
 	}
 	j = layoutList[i];
@@ -709,11 +725,16 @@ RefreshSettingsDialog (ChessProgramState *cps, int val)
 int EnterGroup P((HWND hDlg));
 
 static int engineNr, selected;
+char *protocols[] = { "autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL };
 
 int InstallOK()
 {
     if(selected >= 0) { ASSIGN(engineLine, engineList[selected]); }
     if(engineLine[0] == '#') { DisplayError(_("Select single engine from the group"), 0); return 0; }
+    if(!strcmp(protocolChoice, protocols[0])) isUCI = 3; else
+    if(!strcmp(protocolChoice, protocols[2])) isUCI = 1; else
+    if(!strcmp(protocolChoice, protocols[3])) isUCCI = 1; else
+    if(!strcmp(protocolChoice, protocols[4])) v1 = 1;
     if(isUCCI) isUCI = 2;
     if(!engineNr) Load(&first, 0); else Load(&second, 1);
     return 1;
@@ -723,19 +744,19 @@ Option installOptions[] = {
 //  {   0,  0,    0, NULL, (void*) &engineLine, (char*) engineMnemonic, engineList, ComboBox, N_("Select engine from list:") },
   { 195, 14,    0, NULL, (void*) &EnterGroup, (char*) &selected, engineMnemonic, ListBox, N_("Select engine from list:") },
   {   0,  0,    0, NULL, NULL, NULL, NULL, Label, N_("or specify one below:") },
-  {   0,  0,    0, NULL, (void*) &nickName, NULL, NULL, TextBox, N_("Nickname (optional):") },
-  {   0,  0,    0, NULL, (void*) &useNick, NULL, NULL, CheckBox, N_("Use nickname in PGN tag") },
   {   0,  0, 32+3, NULL, (void*) &engineName, NULL, NULL, FileName, N_("Engine (.exe or .jar):") },
+  {   0,  0,    5, NULL, (void*) &protocolChoice, (char*) protocols, protocols, ComboBox, N_("Engine protocol") },
+  {   0,  0,    5, NULL, NULL, NULL, NULL, GroupBox, N_("Optional user preferences") },
+  {   0,  0,    0, NULL, (void*) &nickName, NULL, NULL, TextBox, N_("Nickname (optional):") },
+  {   0,  0,    0, NULL, (void*) &addToList, NULL, NULL, CheckBox, N_("Add this engine to the list") },
+  {   0,  0,    0, NULL, (void*) &hasBook, NULL, NULL, CheckBox, N_("Must not use GUI book") },
+  {   0,  0,    0, NULL, (void*) &useNick, NULL, NULL, CheckBox, N_("Use nickname in PGN tag") },
+  {   0,  0,    0, NULL, (void*) &storeVariant, NULL, NULL, CheckBox, N_("Force current variant with this engine") },
+  {   0,  0,    4, NULL, NULL, NULL, NULL, GroupBox, N_("Advanced (special cases only, as per engine README file)") },
   {   0,  0,    0, NULL, (void*) &params, NULL, NULL, TextBox, N_("command-line parameters:") },
   {   0,  0,    0, NULL, (void*) &wbOptions, NULL, NULL, TextBox, N_("Special WinBoard options:") },
   {   0,  0,    0, NULL, (void*) &engineDir, NULL, NULL, PathName, N_("directory:") },
   {  95,  0,    0, NULL, NULL, NULL, NULL, Label, N_("(Directory will be derived from engine path when left empty)") },
-  {   0,  0,    0, NULL, (void*) &addToList, NULL, NULL, CheckBox, N_("Add this engine to the list") },
-  {   0,  0,    0, NULL, (void*) &hasBook, NULL, NULL, CheckBox, N_("Must not use GUI book") },
-  {   0,  0,    0, NULL, (void*) &storeVariant, NULL, NULL, CheckBox, N_("Force current variant with this engine") },
-  {   0,  0,    0, NULL, (void*) &isUCI, NULL, NULL, CheckBox, N_("UCI") },
-  {   0,  0,    0, NULL, (void*) &v1, NULL, NULL, CheckBox, N_("WB protocol v1 (skip waiting for features)") },
-  {   0,  0,    0, NULL, (void*) &isUCCI, NULL, NULL, CheckBox, N_("UCCI/USI/Arena960 (through /uxiAdapter)") },
   {   0,  1,    0, NULL, (void*) &InstallOK, "", NULL, EndMark , "" }
 };
 

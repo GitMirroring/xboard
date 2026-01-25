@@ -112,6 +112,8 @@ char *firstEngineLine;
 char *secondEngineLine;
 char *icsNick;
 char *theme;
+char *replace;
+char *engineListFile;
 
 void EnsureOnScreen(int *x, int *y, int minX, int minY);
 char StringGet(void *getClosure);
@@ -517,6 +519,8 @@ ArgDescriptor argDescriptors[] = {
   { "secondChessProgramNames", ArgString, (void *) &secondChessProgramNames,
     !XBOARD, (ArgIniType) SCP_NAMES },
   { "themeNames", ArgString, (void *) &appData.themeNames, TRUE, (ArgIniType) "native -upf false -ub false -ubt false -pid \"\"\n" },
+  { "engineList", ArgFilename, (void *) &engineListFile, TRUE, (ArgIniType) "" },
+  { "languageDir", ArgFilename, (void *) &appData.languageDir, !XBOARD, (ArgIniType) "" },
   { "addMasterOption", ArgMaster, NULL, FALSE, INVALID },
   { "installEngine", ArgInstall, (void *) &firstChessProgramNames, FALSE, (ArgIniType) "" },
   { "installTheme", ArgInstall, (void *) &appData.themeNames, FALSE, (ArgIniType) "" },
@@ -617,8 +621,12 @@ ArgDescriptor argDescriptors[] = {
   { "epd", ArgTrue, (void *) &appData.epd, FALSE, INVALID },
   { "inscriptions", ArgString, (void *) &appData.inscriptions, FALSE, (ArgIniType) "" },
   { "autoInstall", ArgString, (void *) &appData.autoInstall, XBOARD, (ArgIniType) "" },
+  { "replace", ArgString, (void *) &replace, FALSE, (ArgIniType) NULL },
   { "fixedSize", ArgBoolean, (void *) &appData.fixedSize, TRUE, (ArgIniType) FALSE },
   { "showMoveTime", ArgBoolean, (void *) &appData.moveTime, TRUE, (ArgIniType) FALSE },
+  { "bmpSave", ArgInt, (void *) &appData.bmpSave, FALSE, 0 },
+  { "defaultEngineInstallDir", ArgFilename, (void *) &appData.defEngDir, FALSE, (ArgIniType) "." },
+  { "defaultInstallProtocol", ArgInt, (void *) &appData.defProtocol, TRUE, (ArgIniType) 0 },
 
   // [HGM] tournament options
   { "tourneyFile", ArgFilename, (void *) &appData.tourneyFile, FALSE, (ArgIniType) "" },
@@ -1182,6 +1190,11 @@ ParseArgs(GetFunc get, void *cl)
         ASSIGN(*(char **) ad->argLoc, buf);
         break;
       }
+      if(replace) { // previous -replace option makes this string option conditional
+	int differs = strcmp(*(char**) ad->argLoc, (char*) replace);
+	free(replace); replace = NULL; // but expires in the process
+        if(differs) break; // only use to replace the given string
+      }
       ASSIGN(*(char **) ad->argLoc, argValue);
       break;
 
@@ -1427,6 +1440,14 @@ InitAppData(char *lpCmdLine)
 
   /* Parse command line */
   ParseArgs(StringGet, &lpCmdLine);
+
+  /* if separate engine list is used, parse that too */
+  if(*engineListFile) {
+    char buf[MSG_SIZ];
+    MySearchPath(installDir, engineListFile, buf);
+    if(*buf) { ASSIGN(engineListFile, buf); }
+    ParseSettingsFile(engineListFile, &engineListFile);
+  }
 
   if(appData.viewer && appData.viewerOptions[0]) ParseArgsFromString(appData.viewerOptions);
   if(appData.tourney && appData.tourneyOptions[0]) ParseArgsFromString(appData.tourneyOptions);

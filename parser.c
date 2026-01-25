@@ -172,7 +172,7 @@ unsigned char kanjiTab[] = {
 
 int NextUnit P((char **p));
 
-int kifu = 0;
+int kifu = 0, xqUBB = 0;
 
 char
 GetKanji (char **p, int start)
@@ -426,6 +426,14 @@ NextUnit (char **p)
 	     if(q = strchr(s, **p)) (*p)++, piece += 64*(q - s + 1);
 	     if(**p == '/') slash = *(*p)++;
 	}
+
+	if(xqUBB) { // Xiangqi UBB movelist
+	    while(isdigit(**p)) {
+		type[n] = NUMERIC; coord[n++] = *(*p)++ - '0';
+		if(n >= 4) break;
+	    }
+	    if(n < 4) *p -= n, xqUBB = n = 0; else type[0] = type[2] = ALPHABETIC, coord[1] = 9 - coord[1], coord[3] = 9 - coord[3];
+	}
         while(n < 4) {
 	    if(**p >= 'a' && **p < 'x') coord[n] = *(*p)++ - 'a', type[n++] = ALPHABETIC;
 	    else if((i = Number(p)) != BADNUMBER) coord[n] = i, type[n++] = NUMERIC;
@@ -515,6 +523,13 @@ NextUnit (char **p)
 		fromY = (currentMoveString[1] = coord[1] + '0') - ONE;
 		currentMoveString[4] = cl.promoCharIn = PromoSuffix(p);
 		currentMoveString[5] = NULLCHAR;
+		if(**p == ',' && gameInfo.variant == VariantDuck) { // Duck square follows
+		    currentMoveString[7] = currentMoveString[4];
+		    currentMoveString[4] = ';';
+		    currentMoveString[5] = *++*p; killX = **p - AAA;
+		    currentMoveString[6] = *++*p; killY = *(*p)++ - ONE;
+		    currentMoveString[8] = NULLCHAR;
+		}
 		if(**p == 'x' && !cl.promoCharIn) { // other leg follows
 		    char *q = *p;
 		    int x = *++*p, y;
@@ -545,8 +560,10 @@ NextUnit (char **p)
 			if(!(appData.icsActive && PieceToChar(realPiece) == '+') && // trust ICS if it moves promoted pieces
 			   piece && realPiece != cl.pieceIn) return ImpossibleMove;
 		    } else if(!separator && **p == '+') { // could be a protocol move, where bare '+' suffix means shogi-style promotion
-			if(realPiece < (wom ?  WhiteCannon : BlackCannon) && PieceToChar(PROMOTED(realPiece)) == '+') // seems to be that
+			if(PieceToChar(CHUPROMOTED(realPiece)) == '+') {    // seems to be that
+			   if(!autoProm[realPiece]) **p++; else             // for now ignore promosuffix on auto-promoting pieces' protocol moves
 			   currentMoveString[4] = cl.promoCharIn = *(*p)++; // append promochar after all
+			}
 		    }
 		    result = LegalityTest(boards[yyboardindex], PosFlags(yyboardindex), fromY, fromX, toY, toX, cl.promoCharIn);
 		    if (currentMoveString[4] == NULLCHAR) { // suppy missing mandatory promotion character
@@ -556,6 +573,12 @@ NextUnit (char **p)
 			  case VariantShatranj: currentMoveString[4] = PieceToChar(BlackFerz); break;
 			  case VariantGreat:    currentMoveString[4] = PieceToChar(BlackMan); break;
 			  case VariantShogi:    currentMoveString[4] = '+'; break;
+			  case VariantSChess:   if(!gameInfo.holdingsSize) { // missing auto-gating
+						    ChessSquare p = boards[yyboardindex][fromY^1][fromX];
+						    if(p == DarkSquare) p = boards[yyboardindex][fromY^1][toX<fromX?BOARD_LEFT:BOARD_RGHT-1];
+						    currentMoveString[4] = ToLower(PieceToChar(p));
+						    break;
+						}
 			  default:              currentMoveString[4] = PieceToChar(BlackQueen);
 			}
 		      } else if(result == WhiteNonPromotion  || result == BlackNonPromotion) {
@@ -604,6 +627,13 @@ badMove:// we failed to find algebraic move
 		*p = oldp;
 	    }
 	    SkipWhite(p);
+	    if(Match("DhtmlXQ", p)) { // Xiangqi UBB tags
+		int res = Nothing;
+		if(**p == ']') strcpy(parseStart = yytext, "[Variant \"xiangqi\"]"), res = PGNTag; else
+		if(Match("_movelist", p)) xqUBB = 1; else Scan(']', p);
+		Scan(']', p); // for non-movelist tags this skips to the closing tag (disarming any enclosed kanji)!
+		return res;
+	    } else if(Match("/DhtmlXQ", p)) { Scan(']', p); return Nothing; }
 	    if(isdigit(**p) || isalpha(**p)) {
 		do (*p)++; while(isdigit(**p) || isalpha(**p) || **p == '+' ||
 				**p == '-' || **p == '=' || **p == '_' || **p == '#');
@@ -627,9 +657,12 @@ badMove:// we failed to find algebraic move
 		    Match("OO", p) || Match("oo", p) || Match("00", p)) castlingType = 1;
 	    if(castlingType) { //code from old parser, collapsed for both castling types, and streamlined a bit
 		int rf, ff, rt, ft; ChessSquare king;
-		char promo=NULLCHAR;
+		char promo=NULLCHAR, gate = 0;
 
-		if(gameInfo.variant == VariantSChess) promo = PromoSuffix(p);
+		if(gameInfo.variant == VariantSChess) {
+		    promo = PromoSuffix(p);
+		    if(promo && **p >= 'a' && **p < AAA + BOARD_RGHT) gate = *(*p)++;
+		}
 
 		if (yyskipmoves) return (int) AmbiguousMove; /* not disambiguated */
 
@@ -665,8 +698,19 @@ badMove:// we failed to find algebraic move
 		    if (appData.debugMode) fprintf(debugFP, "Parser FRC (type=%d) %d %d\n", castlingType, ff, ft);
 		    if(ff == NoRights || ft == NoRights) return ImpossibleMove;
 		}
+		if(gate) { // gating disambiguator present
+		    if(gate != ff + AAA) {
+			int h = ft; ft = ff; ff = h; // reverse for gating at Rook square
+			if(gate != AAA + initialRights[castlingType+(wom?-1:2)]) return ImpossibleMove;
+		    }
+		}
 		sprintf(currentMoveString, "%c%c%c%c%c",ff+AAA,rf+ONE,ft+AAA,rt+ONE,promo);
 		if (appData.debugMode) fprintf(debugFP, "(%d-type) castling %d %d\n", castlingType, ff, ft);
+		if(**p == ',' && gameInfo.variant == VariantDuck) {
+		    killX = (*p)[1] - AAA; killY = (*p)[2] - ONE;
+		    sprintf(currentMoveString + 4, ";%c%c", (*p)[1], (*p)[2]);
+		    *p += 3;
+		}
 
 	        return (int) LegalityTest(boards[yyboardindex],
 			      PosFlags(yyboardindex)&~F_MANDATORY_CAPTURE, // [HGM] losers: e.p.!

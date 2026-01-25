@@ -55,6 +55,10 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+#ifndef WINVER
+#define WINVER 0x0500
+#endif
+
 #include "config.h"
 
 #include <windows.h>
@@ -293,7 +297,8 @@ int dialogItems[][42] = {
   OPT_AutoFlipView, OPT_ShowButtonBar, OPT_AutoRaiseBoard, OPT_ShowCoordinates,
   OPT_Blindfold, OPT_ShowThinking, OPT_HighlightDragging, OPT_TestLegality,
   OPT_SaveExtPGN, OPT_HideThinkFromHuman, OPT_ExtraInfoInMoveHistory,
-  OPT_HighlightMoveArrow, OPT_AutoLogo ,OPT_SmartMove }, 
+  OPT_HighlightMoveArrow, OPT_AutoLogo ,OPT_SmartMove, OPT_AutoTags, OPT_AutoComment,
+  OPT_Headers, OPT_Variations, OPT_AutoExtend }, 
 { DLG_IcsOptions, IDOK, IDCANCEL, OPT_AutoComment, OPT_AutoKibitz, OPT_AutoObserve,
   OPT_GetMoveList, OPT_LocalLineEditing, OPT_QuietPlay, OPT_SeekGraph, OPT_AutoRefresh,
   OPT_BgObserve, OPT_DualBoard, OPT_Premove, OPT_PremoveWhite, OPT_PremoveBlack,
@@ -311,14 +316,7 @@ int dialogItems[][42] = {
   OPT_ChooseBlackPieceColor, OPT_ChooseHighlightSquareColor, OPT_ChoosePremoveHighlightColor,
   OPT_Monochrome, OPT_AllWhite, OPT_UpsideDown, OPT_DefaultBoardColors, GPB_Colors,
   IDC_Light, IDC_Dark, IDC_White, IDC_Black, IDC_High, IDC_PreHigh, GPB_Size, OPT_Bitmaps, OPT_PieceFont, OPT_Grid }, 
-{ DLG_NewVariant, IDOK, IDCANCEL, OPT_VariantNormal, OPT_VariantFRC, OPT_VariantWildcastle,
-  OPT_VariantNocastle, OPT_VariantLosers, OPT_VariantGiveaway, OPT_VariantSuicide,
-  OPT_Variant3Check, OPT_VariantTwoKings, OPT_VariantAtomic, OPT_VariantCrazyhouse,
-  OPT_VariantBughouse, OPT_VariantTwilight, OPT_VariantShogi, OPT_VariantSuper,
-  OPT_VariantKnightmate, OPT_VariantBerolina, OPT_VariantCylinder, OPT_VariantFairy,
-  OPT_VariantMakruk, OPT_VariantGothic, OPT_VariantCapablanca, OPT_VariantJanus,
-  OPT_VariantCRC, OPT_VariantFalcon, OPT_VariantCourier, OPT_VariantGreat, OPT_VariantSChess,
-  OPT_VariantShatranj, OPT_VariantXiangqi, GPB_Variant, GPB_Board, IDC_Height,
+{ DLG_NewVariant, IDOK, IDCANCEL, GPB_Variant, GPB_Board, IDC_Height,
   IDC_Width, IDC_Hand, IDC_Pieces, IDC_Def }, 
 { DLG_Fonts, IDOK, IDCANCEL, OPT_ChooseClockFont, OPT_ChooseMessageFont,
   OPT_ChooseCoordFont, OPT_ChooseTagFont, OPT_ChooseCommentsFont,  OPT_ChooseConsoleFont, OPT_ChooseMoveHistoryFont, OPT_DefaultFonts,
@@ -367,7 +365,7 @@ LoadLanguageFile(char *name)
             if(languageBuf[n] == '"' && languageBuf[i-1] == '"') {
                 char *p;
                 if(p = strstr(languageBuf + n + 1, "\" === \"")) {
-                    if(p > languageBuf+n+2 && p+8 < languageBuf+i) {
+                    if(p > languageBuf+n+1 && p+8 < languageBuf+i) {
                         if(j >= sizeof(english)) { DisplayError("Too many translated strings", 0); return; }
                         english[j] = languageBuf + n + 1; *p = 0;
                         foreign[j++] = p + 7; languageBuf[i-1] = 0;
@@ -383,6 +381,8 @@ LoadLanguageFile(char *name)
               case 't': k = '\t'; break;
             }
             languageBuf[--i] = k;
+
+
         }
         i++;
     }
@@ -459,6 +459,7 @@ void
 TranslateMenus(int addLanguage)
 {
     int i;
+    char buf[MSG_SIZ];
     WIN32_FIND_DATA fileData;
     HANDLE hFind;
 #define IDM_English 1970
@@ -474,7 +475,8 @@ TranslateMenus(int addLanguage)
     }
 
     if(!addLanguage) return;
-    if((hFind = FindFirstFile("*.LNG", &fileData)) != INVALID_HANDLE_VALUE) {
+    snprintf(buf, MSG_SIZ, "%s%s*.LNG", appData.languageDir, *appData.languageDir ? "\\" : "");
+    if((hFind = FindFirstFile(buf, &fileData)) != INVALID_HANDLE_VALUE) {
         HMENU mainMenu = GetMenu(hwndMain);
         HMENU subMenu = GetSubMenu(mainMenu, GetMenuItemCount(mainMenu)-1);
         AppendMenu(subMenu, MF_SEPARATOR, (UINT_PTR) 0, NULL);
@@ -483,7 +485,8 @@ TranslateMenus(int addLanguage)
         do {
             char *p, *q = fileData.cFileName;
             int checkFlag = MF_UNCHECKED;
-            languageFile[i] = strdup(q);
+            snprintf(buf, MSG_SIZ, "%s%s%s", appData.languageDir, *appData.languageDir ? "\\" : "", q);
+            languageFile[i] = strdup(buf);
             if(barbaric && !strcmp(oldLanguage, q)) {
                 checkFlag = MF_CHECKED;
                 lastChecked = IDM_English + i + 1;
@@ -660,7 +663,7 @@ typedef struct {
   SOCKET sock2;  /* stderr socket for OpenRcmd */
 } ChildProc;
 
-#define INPUT_SOURCE_BUF_SIZE 4096
+#define INPUT_SOURCE_BUF_SIZE 10240
 
 typedef struct _InputSource {
   CPKind kind;
@@ -2064,6 +2067,11 @@ static int TranslatePieceToFontPiece( int piece )
     case WhiteSilver:
         return PM_WSG;
     case WhiteLance:
+
+
+
+
+
         return PM_WL;
     case WhiteFalcon:
         return PM_WV;
@@ -2193,7 +2201,7 @@ void CreatePiecesFromFont()
 HBITMAP
 DoLoadBitmap(HINSTANCE hinst, char *piece, int squareSize, char *suffix)
 {
-  char name[128], buf[MSG_SIZ];
+  char name[128], buf[MSG_SIZ], *ids = "pnbrqfeicwmohajgdvlsukaacvdklnwpwnwlwswolfgnuzebracameltowersword", *p;
 
     snprintf(name, sizeof(name)/sizeof(name[0]), "%s%d%s", piece, squareSize, suffix);
   if(appData.pieceDirectory[0]) {
@@ -2201,6 +2209,30 @@ DoLoadBitmap(HINSTANCE hinst, char *piece, int squareSize, char *suffix)
     snprintf(buf, MSG_SIZ, "%s\\%s.bmp", appData.pieceDirectory, name);
     res = LoadImage( 0, buf, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
     if(res) return res;
+    p = strstr(ids, piece);
+    if(p) { // if we could reconstruct canonical piece number, try the pieceNNN_ format before falling back on built-ins
+      int n = p - ids;
+      switch(n) {
+	case 21: n = WhiteKing; break;
+	case 22: n = WhiteAngel; break;
+	case 24: n = WhiteSilver; break;
+	case 26: n = WhiteDragon; break;
+	case 28: n = WhiteLion; break;
+	case 30: n = WhiteTokin; break;
+	case 32: n = WhitePKnight; break;
+	case 34: n = WhitePLance; break;
+	case 36: n = WhitePSilver; break;
+	case 38: n = WhiteWolf; break;
+	case 42: n = WhiteGnu; break;
+	case 45: n = WhiteZebra; break;
+	case 50: n = WhiteCamel; break;
+	case 55: n = WhiteTower; break;
+	case 60: n = WhiteSword; break;
+      }
+      snprintf(buf, MSG_SIZ, "%s\\piece%d_%d%s.bmp", appData.pieceDirectory, n, squareSize, suffix);
+      res = LoadImage( 0, buf, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+      if(res) return res;
+    }
   }
   if (gameInfo.event &&
       strcmp(gameInfo.event, "Easter Egg Hunt") == 0 &&
@@ -2312,7 +2344,7 @@ ResizeBoard(int newSizeX, int newSizeY, int flags)
   recurse--;
 }
 
-
+static HBITMAP ducky;
 extern Boolean twoBoards, partnerUp; // [HGM] dual
 
 VOID
@@ -2342,12 +2374,15 @@ InitDrawingSizes(BoardSize boardSize, int flags)
 
   if(boardSize != SizeMiddling && boardSize != SizePetite && boardSize != SizeBulky && !appData.useFont)
   { // correct board size to one where built-in pieces exist
+    int fairies = 0;
+    for(i=WhiteQueen+1; i<WhiteKing; i++) fairies += (PieceToChar(i) != '.' || PieceToChar(WHITE_TO_BLACK i) != '.');
     if((v == VariantCapablanca || v == VariantGothic || v == VariantGrand || v == VariantCapaRandom || v == VariantJanus || v == VariantSuper)
        && (boardSize < SizePetite || boardSize > SizeBulky) // Archbishop and Chancellor available in entire middle range
 
       || (v == VariantShogi && boardSize != SizeModerate)   // Japanese-style Shogi
       ||  v == VariantKnightmate || v == VariantSChess || v == VariantXiangqi || v == VariantSpartan
-      ||  v == VariantShatranj || v == VariantMakruk || v == VariantGreat || v == VariantFairy || v == VariantLion ) {
+      ||  v == VariantShatranj || v == VariantMakruk || v == VariantGreat|| v == VariantLion ||
+          v == VariantJanggi || v == VariantFairy && fairies ) {
       if(boardSize < SizeMediocre) boardSize = SizePetite; else
       if(boardSize > SizeModerate) boardSize = SizeBulky;  else
                                    boardSize = SizeMiddling;
@@ -2727,6 +2762,16 @@ InitDrawingSizes(BoardSize boardSize, int flags)
     pieceBitmap[0][WhiteZebra] = DoLoadBitmap(hInst, "zebra", squareSize, "s");
     pieceBitmap[1][WhiteZebra] = DoLoadBitmap(hInst, "zebra", squareSize, "o");
     pieceBitmap[2][WhiteZebra] = DoLoadBitmap(hInst, "n", squareSize, "w");
+    pieceBitmap[0][WhiteTower] = DoLoadBitmap(hInst, "tower", squareSize, "s");
+    pieceBitmap[1][WhiteTower] = DoLoadBitmap(hInst, "tower", squareSize, "o");
+    pieceBitmap[2][WhiteTower] = DoLoadBitmap(hInst, "tower", squareSize, "w");
+    pieceBitmap[0][WhiteSword] = DoLoadBitmap(hInst, "sword", squareSize, "s");
+    pieceBitmap[1][WhiteSword] = DoLoadBitmap(hInst, "sword", squareSize, "o");
+    pieceBitmap[2][WhiteSword] = DoLoadBitmap(hInst, "sword", squareSize, "w");
+    pieceBitmap[0][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "s");
+    pieceBitmap[1][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "o");
+    pieceBitmap[2][WhiteGnu] = DoLoadBitmap(hInst, "gnu", squareSize, "w");
+    if(gameInfo.variant == VariantDuck) { char name[20]; sprintf(name, "ducky%d", squareSize); ducky = LoadBitmap(hInst, name); }
 
     if(gameInfo.variant == VariantShogi && BOARD_HEIGHT != 7) { /* promoted Gold representations (but not in Tori!)*/
       pieceBitmap[0][WhiteCannon] = DoLoadBitmap(hInst, "wp", squareSize, "s");
@@ -2983,7 +3028,7 @@ VOID
 DrawPieceOnDC(HDC hdc, ChessSquare piece, int color, int sqcolor, int x, int y, HDC tmphdc)
 {
   HBITMAP oldBitmap;
-  HBRUSH oldBrush;
+  HBRUSH oldBrush = NULL;
   int tmpSize;
 
   if (appData.blindfold) return;
@@ -3042,6 +3087,20 @@ DrawPieceOnDC(HDC hdc, ChessSquare piece, int color, int sqcolor, int x, int y, 
       y += squareSize - minorSize - 2;
       tmpSize = minorSize;
     }
+#if WINVER >= 0x0500
+    HBITMAP pbm = PieceBitmap(piece, color ? OUTLINE_PIECE : SOLID_PIECE);
+    BITMAP b;
+    GetObject(pbm, sizeof(BITMAP), &b);
+    if(b.bmBitsPixel == 32) { // for now this is a kludge to indicate bitmaps with alpha channel
+	BLENDFUNCTION bf;
+	bf.BlendOp = AC_SRC_OVER;
+	bf.BlendFlags = 0;
+	bf.SourceConstantAlpha = 0xFF;
+	bf.AlphaFormat = AC_SRC_ALPHA;
+	oldBitmap = SelectObject(tmphdc, pbm);
+	AlphaBlend(hdc, x, y, tmpSize, tmpSize, tmphdc, 0, 0, tmpSize, tmpSize, bf);
+    } else
+#endif
     if (color || appData.allWhite ) {
       oldBitmap = SelectObject(tmphdc, PieceBitmap(piece, WHITE_PIECE));
       if( color )
@@ -3078,7 +3137,7 @@ DrawPieceOnDC(HDC hdc, ChessSquare piece, int color, int sqcolor, int x, int y, 
       else
         BitBlt(hdc, x, y, tmpSize, tmpSize, tmphdc, 0, 0, 0x00B8074A);
     }
-    SelectObject(hdc, oldBrush);
+    if(oldBrush) SelectObject(hdc, oldBrush);
     SelectObject(tmphdc, oldBitmap);
   }
 }
@@ -3522,7 +3581,7 @@ DrawBoardOnDC(HDC hdc, Board board, HDC tmphdc)
       piece = board[row][column];
 
       square_color = ((column + row) % 2) == 1;
-      if( gameInfo.variant == VariantXiangqi ) {
+      if( gameInfo.variant == VariantXiangqi|| gameInfo.variant == VariantJanggi ) {
           square_color = !InPalace(row, column);
           if(BOARD_HEIGHT&1) { if(row==BOARD_HEIGHT/2) square_color ^= 1; }
           else if(row < BOARD_HEIGHT/2) square_color ^= 1;
@@ -3549,10 +3608,15 @@ DrawBoardOnDC(HDC hdc, Board board, HDC tmphdc)
       }
       if(column == BOARD_LEFT-1 ) /* left align */
             DisplayHoldingsCount(hdc, x, y, flipView, (int) board[row][column]);
-      else if( column == BOARD_RGHT) /* right align */
+      else if( column == BOARD_RGHT) /* right align */squareSize, 
             DisplayHoldingsCount(hdc, x, y, !flipView, (int) board[row][column]);
-      else if( piece == DarkSquare) DisplayHoldingsCount(hdc, x, y, 0, 0);
-      else
+      else if( piece == DarkSquare) {
+            if(gameInfo.variant == VariantDuck && ducky) {
+                 HBITMAP oldBitmap = SelectObject(tmphdc, ducky);
+                 BitBlt( hdc, x, y, squareSize, squareSize, tmphdc, 0, 0, SRCPAINT );
+                 SelectObject(tmphdc, oldBitmap);
+            } else DisplayHoldingsCount(hdc, x, y, 0, 0);
+      } else
       if (appData.monoMode) {
         if (piece == EmptySquare) {
           BitBlt(hdc, x, y, squareSize, squareSize, 0, 0, 0,
@@ -3752,6 +3816,7 @@ void DrawSeekOpen()
 void DrawSeekClose()
 {
 }
+
 
 
 
@@ -4179,6 +4244,7 @@ HDCDrawPosition(HDC hdc, BOOLEAN repaint, Board board)
 	if(fac)
 	for(i=0; i<16; i++) fputDW(diagFile, color[i]);
 	// write bitmap data
+
 	for(i=0; i<wb*(b.bmHeight - boardRect.top + OUTER_MARGIN); i++) 
 		fputc(pData[i], diagFile);
 	free(pData);
@@ -4682,11 +4748,13 @@ LoadGameDialog(HWND hwnd, char* title)
 {
   UINT number = 0;
   FILE *f;
-  char fileTitle[MSG_SIZ];
+  char fileTitle[MSG_SIZ], dir[MSG_SIZ];
+  GetCurrentDirectory(MSG_SIZ, dir);
   f = OpenFileDialog(hwnd, "rb", "",
  	             appData.oldSaveStyle ? "gam" : "pgn",
 		     GAME_FILT,
 		     title, &number, fileTitle, NULL);
+  SetCurrentDirectory(dir);
   if (f != NULL) {
     cmailMsgLoaded = FALSE;
     if (number == 0) {
@@ -4814,7 +4882,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
   char *defName;
   FILE *f;
   UINT number;
-  char fileTitle[MSG_SIZ];
+  char fileTitle[MSG_SIZ], dir[MSG_SIZ];
   static SnapData sd;
   static int peek=0;
 
@@ -4951,10 +5019,12 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         Reset(FALSE, TRUE);
       }
       number = 1;
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "rb", "",
 			 appData.oldSaveStyle ? "pos" : "fen",
 			 POSITION_FILT,
 			 _("Load Position from File"), &number, fileTitle, NULL);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	LoadPosition(f, number, fileTitle);
       }
@@ -4974,10 +5044,12 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case IDM_SaveGame:
       defName = DefaultFileName(appData.oldSaveStyle ? "gam" : "pgn");
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "a", defName,
 			 appData.oldSaveStyle ? "gam" : "pgn",
 			 GAME_FILT,
 			 _("Save Game to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SaveGame(f, 0, "");
       }
@@ -4985,10 +5057,12 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case IDM_SavePosition:
       defName = DefaultFileName(appData.oldSaveStyle ? "pos" : "fen");
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "a", defName,
 			 appData.oldSaveStyle ? "pos" : "fen",
 			 POSITION_FILT,
 			 _("Save Position to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SavePosition(f, 0, "");
       }
@@ -4996,20 +5070,24 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case IDM_SaveDiagram:
       defName = "diagram";
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "wb", defName,
 			 "bmp",
 			 DIAGRAM_FILT,
 			 _("Save Diagram to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SaveDiagram(f);
       }
       break;
 
     case IDM_SaveSelected:
+      GetCurrentDirectory(MSG_SIZ, dir);
       f = OpenFileDialog(hwnd, "a", "",
 			 "pgn",
 			 GAME_FILT,
 			 _("Save Game to File"), NULL, fileTitle, NULL);
+      SetCurrentDirectory(dir);
       if (f != NULL) {
 	SaveSelected(f, 0, "");
       }
@@ -5245,6 +5323,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     case IDM_Rematch:
 
       RematchEvent();
+
       break;
 
     case IDM_CallFlag:
@@ -5298,6 +5377,8 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
       ForwardEvent();
       SetFocus(hwndMain);
       break;
+
+
 
     case IDM_ToStart:
       ToStartEvent();
@@ -5597,6 +5678,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case EP_BlackCannon:
       EditPositionMenuEvent(BlackCannon, fromX, fromY);
+
       fromX = fromY = -1;
       break;
 
@@ -6274,6 +6356,7 @@ InitComboStringsFromOption(HANDLE hwndCombo, char *str)
   }
 
 
+
   SendMessage(hwndCombo, CB_RESETCONTENT, 0, 0);
 
   for (;;) {
@@ -6397,11 +6480,12 @@ StartupDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         safeStrCpy(buf, "/fcp=", sizeof(buf)/sizeof(buf[0]) );
 	GetDlgItemText(hDlg, OPT_ChessEngineName, buf + strlen(buf), sizeof(buf) - strlen(buf));
         p = buf;
-	comboLine = strdup(p+5); // [HGM] recent: remember complete line of first combobox
+	currentEngine[0] = strdup(p+5); // [HGM] recent: remember complete line of first combobox
 	ParseArgs(StringGet, &p);
 	safeStrCpy(buf, singleList ? "/fcp=" : "/scp=", sizeof(buf)/sizeof(buf[0]) );
 	GetDlgItemText(hDlg, OPT_SecondChessEngineName, buf + strlen(buf), sizeof(buf) - strlen(buf));
         p = buf;
+	currentEngine[1] = strdup(p+5); // [HGM] also remember engine line of 2nd for saving its settings
 	SwapEngines(singleList); // temporarily swap first and second, to load a second 'first', ...
 	ParseArgs(StringGet, &p);
 	SwapEngines(singleList); // ... and then make it 'second'
@@ -6424,6 +6508,7 @@ StartupDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	appData.icsActive = FALSE;
       } else {
 	MessageBox(hDlg, _("Choose an option, or cancel to exit"),
+
 		   _("Option Error"), MB_OK|MB_ICONEXCLAMATION);
 	return TRUE;
       }
@@ -6715,6 +6800,10 @@ TypeInMoveDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
       shiftKey = GetKeyState(VK_SHIFT) < 0; // [HGM] remember last shift status
       GetDlgItemText(hDlg, OPT_Move, move, sizeof(move));
+
+#ifdef JAWS
+      if(strlen(move) == 1 && !isdigit(*move)) SayPieceType(*move); else
+#endif
       TypeInDoneEvent(move);
       EndDialog(hDlg, TRUE);
       return TRUE;
@@ -6840,8 +6929,10 @@ ErrorPopUp(char *title, char *content)
   if (modal) {
     MessageBox(NULL, errorMessage, errorTitle, MB_OK|MB_ICONEXCLAMATION);
   } else {
+    int i, n = 0;
+    for(i=0; errorMessage[i]; i++) n += (errorMessage[i] == '\n');
     lpProc = MakeProcInstance((FARPROC)ErrorDialog, hInst);
-    CreateDialog(hInst, MAKEINTRESOURCE(DLG_Error),
+    CreateDialog(hInst, MAKEINTRESOURCE(n > 4 ? DLG_Big : DLG_Error),
 		 hwndMain, (DLGPROC)lpProc);
     FreeProcInstance(lpProc);
   }
@@ -7023,6 +7114,7 @@ HMENU
 LoadIcsTextMenu(IcsTextMenuEntry *e)
 {
   HMENU hmenu, h;
+
   int i = 0;
   hmenu = LoadMenu(hInst, "TextMenu");
   h = GetSubMenu(hmenu, 0);
@@ -7703,20 +7795,23 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
               RECT *rect, char *color, char *flagFell)
 {
   char buf[100];
-  char *str;
+  char *str = buf, *p;
   COLORREF oldFg, oldBg;
   HFONT oldFont;
 
   if (twoBoards && partnerUp) return;
-  if (appData.clockMode) {
+  if (appData.clockMode && highlight < 2) { // highlight used as kludge to force printing of message
     if (tinyLayout == 2)
       snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%c %s %s", color[0], TimeString(timeRemaining), flagFell);
     else
-      snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s:%c%s %s", color, (logoHeight>0 ? 0 : ' '), TimeString(timeRemaining), flagFell);
+      snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s:_%s %s", color, TimeString(timeRemaining), flagFell);
     str = buf;
   } else {
-    str = color;
+    highlight &= 1;
+    snprintf(buf, 100, "%s", color);
   }
+  p = strchr(str, '_');
+  if(p) *p = (logoHeight > 0 ? 0 : ' ');
 
   if (highlight) {
     oldFg = SetTextColor(hdc, RGB(255, 255, 255)); /* white */
@@ -7733,9 +7828,9 @@ DisplayAClock(HDC hdc, int timeRemaining, int highlight,
   ExtTextOut(hdc, rect->left + MESSAGE_LINE_LEFTMARGIN,
 	     rect->top, ETO_CLIPPED|ETO_OPAQUE,
 	     rect, str, strlen(str), NULL);
-  if(logoHeight > 0 && appData.clockMode) {
+  if(logoHeight > 0 && p) {
       RECT r;
-      str += strlen(color)+2;
+      str = p + 1;
       r.top = rect->top + logoHeight/2;
       r.left = rect->left;
       r.right = rect->right;
@@ -7806,6 +7901,7 @@ DoWriteFile(HANDLE hFile, char *buf, int count, DWORD *outCount,
 
   }
   return err;
+
 }
 
 /* [AS] If input is line by line and a line exceed the buffer size, force an error */
@@ -7826,6 +7922,7 @@ void CheckForInputBufferFull( InputSource * is )
 
             is->error = ERROR_BROKEN_PIPE; /* [AS] Just any non-successful code! */
             is->count = (DWORD) -1;
+
             is->next = is->buf;
         }
     }
@@ -8110,14 +8207,19 @@ Enables ncpEnables[] = {
   { IDM_Annotate, MF_BYCOMMAND|MF_GRAYED },
   { IDM_MoveNow, MF_BYCOMMAND|MF_GRAYED },
   { IDM_RetractMove, MF_BYCOMMAND|MF_GRAYED },
+#ifdef JAWS
+  { IDM_TimeControl, MF_BYCOMMAND|MF_ENABLED },
+  { IDM_Sounds, MF_BYCOMMAND|MF_ENABLED },
+#else
   { IDM_TimeControl, MF_BYCOMMAND|MF_GRAYED },
+  { IDM_Sounds, MF_BYCOMMAND|MF_GRAYED },
+#endif
   { IDM_Hint, MF_BYCOMMAND|MF_GRAYED },
   { IDM_Book, MF_BYCOMMAND|MF_GRAYED },
   { IDM_MachineBoth, MF_BYCOMMAND|MF_GRAYED },
   { IDM_NewChat, MF_BYCOMMAND|MF_GRAYED },
   { IDM_Engine1Options, MF_BYCOMMAND|MF_GRAYED },
   { IDM_Engine2Options, MF_BYCOMMAND|MF_GRAYED },
-  { IDM_Sounds, MF_BYCOMMAND|MF_GRAYED },
   { -1, -1 }
 };
 
@@ -8708,6 +8810,7 @@ GLT_GetFromList( int index, char *name )
 	    if( SendDlgItemMessage( gameListOptionsDialog, IDC_GameListTags, LB_GETTEXT, index, (LPARAM) name ) != LB_ERR )
 		return TRUE;
     }
+
     return FALSE;
 }
 
@@ -8819,7 +8922,7 @@ DisplayIcsInteractionTitle(char *str)
 }
 
 void
-DrawPosition(int fullRedraw, Board board)
+DrawPositionX(int fullRedraw, Board board)
 {
   HDCDrawPosition(NULL, (BOOLEAN) fullRedraw, board); 
 }
@@ -9007,6 +9110,8 @@ StartClockTimer(long millisec)
 			     (UINT) millisec, NULL);
 }
 
+static char clockMsg[2][MSG_SIZ];
+
 void
 DisplayWhiteClock(long timeRemaining, int highlight)
 {
@@ -9016,8 +9121,9 @@ DisplayWhiteClock(long timeRemaining, int highlight)
   if(appData.noGUI) return;
   hdc = GetDC(hwndMain);
   if (!IsIconic(hwndMain)) {
-    DisplayAClock(hdc, timeRemaining, highlight, 
-			flipClock ? &blackRect : &whiteRect, _("White"), flag);
+    int m = (clockMsg[0][0] != 0); 
+    DisplayAClock(hdc, timeRemaining, highlight + 2*m, 
+			flipClock ? &blackRect : &whiteRect, m ? clockMsg[0] : _("White"), flag);
   }
   if (highlight && iconCurrent == iconBlack) {
     iconCurrent = iconWhite;
@@ -9041,8 +9147,9 @@ DisplayBlackClock(long timeRemaining, int highlight)
   if(appData.noGUI) return;
   hdc = GetDC(hwndMain);
   if (!IsIconic(hwndMain)) {
-    DisplayAClock(hdc, timeRemaining, highlight, 
-			flipClock ? &whiteRect : &blackRect, _("Black"), flag);
+    int m = (clockMsg[1][0] != 0); 
+    DisplayAClock(hdc, timeRemaining, highlight + 2*m, 
+			flipClock ? &whiteRect : &blackRect, m ? clockMsg[1] : _("Black"), flag);
   }
   if (highlight && iconCurrent == iconWhite) {
     iconCurrent = iconBlack;
@@ -9056,6 +9163,11 @@ DisplayBlackClock(long timeRemaining, int highlight)
     PostMessage(hwndConsole, WM_SETICON, (WPARAM) TRUE, (LPARAM) iconCurrent);
 }
 
+void
+SetClockMessage (int color, char *msg)
+{
+  safeStrCpy(clockMsg[color], !msg ? "" : *msg ? msg : clockMsg[!color], MSG_SIZ);
+}
 
 int
 LoadGameTimerRunning()
@@ -9084,13 +9196,15 @@ AutoSaveGame()
 {
   char *defName;
   FILE *f;
-  char fileTitle[MSG_SIZ];
+  char fileTitle[MSG_SIZ], dir[MSG_SIZ];
 
   defName = DefaultFileName(appData.oldSaveStyle ? "gam" : "pgn");
+  GetCurrentDirectory(MSG_SIZ, dir);
   f = OpenFileDialog(hwndMain, "a", defName,
 		     appData.oldSaveStyle ? "gam" : "pgn",
 		     GAME_FILT, 
 		     _("Save Game to File"), NULL, fileTitle, NULL);
+  GetCurrentDirectory(MSG_SIZ, dir);
   if (f != NULL) {
     SaveGame(f, 0, "");
     fclose(f);
@@ -9191,7 +9305,7 @@ void RunCommand(char *cmdLine)
    later.
 */
 int
-StartChildProcess(char *cmdLine, char *dir, ProcRef *pr)
+StartChildProcess(char *cmdLine, char *dir, ProcRef *pr, int priority)
 {
 #define BUFSIZE 4096
 
@@ -9300,7 +9414,7 @@ StartChildProcess(char *cmdLine, char *dir, ProcRef *pr)
 
   if (appData.niceEngines){ // [HGM] nice: adjust engine proc priority
     if(appData.debugMode) fprintf(debugFP, "nice engine proc to %d\n", appData.niceEngines);
-    SetPriorityClass(piProcInfo.hProcess, GetWin32Priority(appData.niceEngines));
+    SetPriorityClass(piProcInfo.hProcess, GetWin32Priority(priority));
   }
 
   /* Close the handles we don't need in the parent */
@@ -9430,7 +9544,7 @@ OpenTelnet(char *host, char *port, ProcRef *pr)
   } else {
     snprintf(cmdLine, MSG_SIZ, "%s %s %s", appData.telnetProgram, host, port);
   }
-  return StartChildProcess(cmdLine, "", pr);
+  return StartChildProcess(cmdLine, "", pr, 0);
 }
 
 
@@ -9625,6 +9739,7 @@ OpenRcmd(char* host, char* user, char* cmd, ProcRef* pr)
       return WSAEADDRINUSE;
     }
     if (s == INVALID_SOCKET) {
+
       if ((s = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
 	err = WSAGetLastError();
 	WSACleanup();
@@ -10198,19 +10313,20 @@ SettingsPopUp(ChessProgramState *cps)
 
 int flock(int fid, int code)
 {
+    int res;
     HANDLE hFile = (HANDLE) _get_osfhandle(fid);
     OVERLAPPED ov;
     ov.hEvent = NULL;
     ov.Offset = 0;
     ov.OffsetHigh = 0;
     switch(code) {
-      case 1: LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_SH
+      case 1: res = LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_SH
+      case 2: res = LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_EX
+      case 3: res = UnlockFileEx(hFile, 0, 1024, 0, &ov); break; // LOCK_UN
 
-      case 2: LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, 1024, 0, &ov); break;   // LOCK_EX
-      case 3: UnlockFileEx(hFile, 0, 1024, 0, &ov); break; // LOCK_UN
       default: return -1;
     }
-    return 0;
+    return -!res;
 }
 
 char *

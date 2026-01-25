@@ -825,7 +825,7 @@ BoardOptionsPopup(HWND hwnd)
   FreeProcInstance(lpProc);
 }
 
-int radioButton[] = {
+int radioButton[] = { // this is a remnant of the radiobuttons, and should be rewritten
     OPT_VariantNormal,
     -1, // Loadable
     OPT_VariantWildcastle,
@@ -871,48 +871,57 @@ int radioButton[] = {
     OPT_VariantXiangqi,
     OPT_VariantASEAN,
     OPT_VariantLion,
+    -1,
+    OPT_VariantJanggi,
+    666,
     -2 // sentinel
 };
+
+VariantClass meaning[1000];
 
 VariantClass
 VariantWhichRadio(HWND hDlg)
 {
   int i=0, j;
   *engineVariant = NULLCHAR;
-  while((j = radioButton[i++]) != -2) {
-	if(j == -1) continue; // no menu button
-	if(IsDlgButtonChecked(hDlg, j) &&
-	   (appData.noChessProgram || strstr(first.variants, VariantName(i-1)))) return (VariantClass) i-1;
+  HWND combo = GetDlgItem(hDlg, OPT_EngineVariant);
+  j = SendMessage(combo, CB_GETCURSEL, (WPARAM) 0, (LPARAM) 0);
+  if(j == CB_ERR) return gameInfo.variant; // nothing selected, keep old
+  i = meaning[j];
+  if(i == VariantUnknown) {
+    GetDlgItemText(hDlg, OPT_EngineVariant, engineVariant, MSG_SIZ);
   }
-  for(i=0; i<15; i++) { // check for engine-defined variants
-    if(IsDlgButtonChecked(hDlg, OPT_EngineVariant+i) ) {
-	GetDlgItemText(hDlg, OPT_EngineVariant+i, engineVariant, MSG_SIZ); // remember name, so we can resolve it later
-	return VariantUnknown;
-    }
-  }
-  return gameInfo.variant; // If no button checked, keep old
+  return i;
 }
 
 void
 VariantShowRadio(HWND hDlg)
 {
   char c = *engineVariant, *v, *p;
-  int i=0, j;
-  CheckDlgButton(hDlg, radioButton[gameInfo.variant], TRUE);
-  *engineVariant = NULLCHAR; // [HGM] kludge to prevent VariantName will always return engineVariant
+  int i=0, j, nr = 0, current = 0;
+  HWND combo = GetDlgItem(hDlg, OPT_EngineVariant);
+  SendMessage(combo, CB_RESETCONTENT, 0, 0);
+  *engineVariant = NULLCHAR;  // [HGM] kludge to prevent VariantName will always return engineVariant
   while((j = radioButton[i++]) != -2) {
 	if(j == -1) continue; // no menu button
 	v = VariantName(i-1); p = strstr(first.variants, v);
-	EnableWindow(GetDlgItem(hDlg, j), appData.noChessProgram || p && (!*v || strlen(v) == strlen(p) || p[strlen(v)] == ','));
+	if(p && p != first.variants && p[-1] != ',') p = NULL;
+	if(appData.noChessProgram || p && (!*v || strlen(v) == strlen(p) || p[strlen(v)] == ',')) {
+	   SendMessage(combo, CB_ADDSTRING, 0, (LPARAM) T_(v));
+           if(gameInfo.variant == i - 1) current = nr;
+	   meaning[nr++] = i - 1;
+        }
   }
   *engineVariant = c;
-  for(i=0; i<15; i++) { // initialize engine-defined variants
+
+  for(i=0; ; i++) {
     char *v = EngineDefinedVariant(&first, i); // get name of #i
-    if(v) { // there is such a variant
-	EnableWindow(GetDlgItem(hDlg, OPT_EngineVariant+i), TRUE);     // and enable the button
-	SetDlgItemText(hDlg, OPT_EngineVariant+i, v);                  // put its name on button
-    } else EnableWindow(GetDlgItem(hDlg, OPT_EngineVariant+i), FALSE); // no such variant; disable button
+    if(!v || !*v) break;
+    SendMessage(combo, CB_ADDSTRING, 0, (LPARAM) v);
+    if(!strcmp(v, engineVariant)) current = nr;
+    meaning[nr++] = VariantUnknown;
   }
+  SendMessage(combo, CB_SETCURSEL, (WPARAM) current, (LPARAM) 0);
 }
 
 LRESULT CALLBACK
@@ -1209,6 +1218,7 @@ IcsOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
   COLORREF *colorref;
 
   switch (message) {
+
   case WM_INITDIALOG: /* message: initialize dialog box */
 
     mca = colorizeAttribs;

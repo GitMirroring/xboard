@@ -495,10 +495,12 @@ static Option variantDescriptors[] = {
 { VariantFairy,         0, 135, NULL, (void*) &Pick, "#BFBFBF", NULL, Button, N_("fairy")},
 { VariantXiangqi, SAME_ROW,135, NULL, (void*) &Pick, "#BFFFFF", NULL, Button, N_("xiangqi (9x10)")},
 { VariantLion,          0, 135, NULL, (void*) &Pick, "#BFBFBF", NULL, Button, N_("mighty lion")},
-{ VariantCourier, SAME_ROW,135, NULL, (void*) &Pick, "#BFFFBF", NULL, Button, N_("courier (12x8)")},
+{ VariantJanggi, SAME_ROW, 135, NULL, (void*) &Pick, "#BFFFFF", NULL, Button, N_("Janggi (9x10)")}, // dummy, to have good alignment
 { VariantChuChess,      0, 135, NULL, (void*) &Pick, "#BFBFBF", NULL, Button, N_("elven chess (10x10)")},
-{ VariantChu,    SAME_ROW, 135, NULL, (void*) &Pick, "#BFFFBF", NULL, Button, N_("chu shogi (12x12)")},
+{ VariantCourier, SAME_ROW,135, NULL, (void*) &Pick, "#BFFFBF", NULL, Button, N_("courier (12x8)")},
+{ VariantDuck,          0, 135, NULL, (void*) &Pick, "#FFFFFF", NULL, Button, N_("Duck Chess")},
 //{ -1,                   0, 135, NULL, (void*) &Pick, "#FFFFFF", NULL, Button, N_(" ")}, // dummy, to have good alignment
+{ VariantChu,    SAME_ROW, 135, NULL, (void*) &Pick, "#BFFFBF", NULL, Button, N_("chu shogi (12x12)")},
 // optional buttons for engine-defined variants
 { 0, NO_OK, 0, NULL, NULL, "", NULL, EndMark , "" },
 { 0, SAME_ROW, 0, NULL, NULL, NULL, NULL, Skip, ""},
@@ -850,7 +852,7 @@ static Option soundOptions[] = {
 { 0, 0, 0, NULL, (void*) &appData.soundIcsAlarm, (char*) soundFiles, soundNames, ComboBox, N_("Alarm:") },
 { 0, 0, 0, NULL, (void*) &appData.soundChallenge, (char*) soundFiles, soundNames, ComboBox, N_("Challenge:") },
 { 0, SAME_ROW, 0, NULL, NULL, NULL, NULL, Break, "" },
-{ 0, 0, 0, NULL, (void*) &appData.soundDirectory, "", NULL, PathName, N_("Sounds Directory:") },
+{ 0, 0, 0, NULL, (void*) &appData.soundDirectory, NULL, NULL, PathName, N_("Sounds Directory:") },
 { 0, 0, 0, NULL, (void*) &appData.soundShout, (char*) soundFiles, soundNames, ComboBox, N_("Shout:") },
 { 0, 0, 0, NULL, (void*) &appData.soundSShout, (char*) soundFiles, soundNames, ComboBox, N_("S-Shout:") },
 { 0, 0, 0, NULL, (void*) &appData.soundChannel, (char*) soundFiles, soundNames, ComboBox, N_("Channel:") },
@@ -947,7 +949,7 @@ static Option boardOptions[] = {
 { 0, 0, 0, NULL, (void*) &appData.darkBackTextureFile, ".png", (char**)(intptr_t) 1, FileName, N_("Dark-Squares Texture File:") },
 { 0, 0, 0, NULL, (void*) &appData.liteBackTextureFile, ".png", (char**)(intptr_t) 2, FileName, N_("Light-Squares Texture File:") },
 { 0, 0, 0, NULL, (void*) &appData.trueColors, "", NULL, CheckBox, N_("Use external piece bitmaps with their own colors") },
-{ 0, 0, 0, NULL, (void*) &appData.pieceDirectory, "",  (char**)(intptr_t) 3, PathName, N_("Directory with Pieces Images:") },
+{ 0, 0, 0, NULL, (void*) &appData.pieceDirectory, NULL,  (char**)(intptr_t) 3, PathName, N_("Directory with Pieces Images:") },
 { 0, 0, 0, NULL, (void*) &BoardOptionsOK, "", NULL, EndMark , "" }
 };
 
@@ -1216,7 +1218,7 @@ static int
 NewTagsCallback (int n)
 {
     if(bookUp) SaveToBook(tagsText), DisplayBook(currentMove); else
-    if(resPtr) { ASSIGN(*resPtr, tagsText); } else
+    if(resPtr) { ASSIGN(*resPtr, tagsText); if(resPtr == &firstChessProgramNames) SaveEngineList(); } else
     ReplaceTags(tagsText, &gameInfo);
     return 1;
 }
@@ -1246,9 +1248,7 @@ static void
 changeTags (int n)
 {
     GenericReadout(tagsOptions, 1);
-    if(bookUp) SaveToBook(tagsText), DisplayBook(currentMove); else
-    if(resPtr) { ASSIGN(*resPtr, tagsText); } else
-    ReplaceTags(tagsText, &gameInfo);
+    NewTagsCallback(0);
 }
 
 void
@@ -1496,28 +1496,33 @@ RefreshSettingsDialog (ChessProgramState *cps, int val)
 
 //----------------------------------------------- Load Engine --------------------------------------
 
-char *engineDir, *engineLine, *nickName, *params;
+char *engineDir, *engineLine, *nickName, *params, *protocolChoice;
 Boolean isUCI, isUSI, hasBook, storeVariant, v1, addToList, useNick, secondEng;
 
 static void EngSel P((int n, int sel));
 static int InstallOK P((int n));
+
+static char *protocols[] = { "autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL };
 
 static Option installOptions[] = {
 {   0,LR|T2T, 0, NULL, NULL, NULL, NULL, Label, N_("Select engine from list:") },
 { 300,LR|TB,200, NULL, (void*) engineMnemonic, (char*) &EngSel, NULL, ListBox, "" },
 { 0,SAME_ROW, 0, NULL, NULL, NULL, NULL, Break, NULL },
 {   0,  LR,   0, NULL, NULL, NULL, NULL, Label, N_("or specify one below:") },
+{   0,  0,    0, NULL, (void*) &engineName, NULL, NULL, FileName, N_("Engine Command:") },
+{   0,  LR,   0, NULL, NULL, NULL, NULL, Label, N_("------------- User preferences (optional) ---------------") },
 {   0,  0,    0, NULL, (void*) &nickName, NULL, NULL, TextBox, N_("Nickname (optional):") },
 {   0,  0,    0, NULL, (void*) &useNick, NULL, NULL, CheckBox, N_("Use nickname in PGN player tags of engine-engine games") },
-{   0,  0,    0, NULL, (void*) &engineDir, NULL, NULL, PathName, N_("Engine Directory:") },
-{   0,  0,    0, NULL, (void*) &engineName, NULL, NULL, FileName, N_("Engine Command:") },
-{   0,  LR,   0, NULL, NULL, NULL, NULL, Label, N_("(Directory will be derived from engine path when empty)") },
-{   0,  0,    0, NULL, (void*) &isUCI, NULL, NULL, CheckBox, N_("UCI") },
-{   0,  0,    0, NULL, (void*) &isUSI, NULL, NULL, CheckBox, N_("USI/UCCI (uses specified -uxiAdapter)") },
-{   0,  0,    0, NULL, (void*) &v1, NULL, NULL, CheckBox, N_("WB protocol v1 (do not wait for engine features)") },
+{   0,  0,    0, NULL, (void*) &storeVariant, NULL, NULL, CheckBox, N_("Force current variant with this engine") },
 {   0,  0,    0, NULL, (void*) &hasBook, NULL, NULL, CheckBox, N_("Must not use GUI book") },
 {   0,  0,    0, NULL, (void*) &addToList, NULL, NULL, CheckBox, N_("Add this engine to the list") },
-{   0,  0,    0, NULL, (void*) &storeVariant, NULL, NULL, CheckBox, N_("Force current variant with this engine") },
+{   0,  LR,   0, NULL, NULL, NULL, NULL, Label, N_("--------- Advanced (only change in exceptional cases) ----------") },
+{   0,  0,    5, NULL, (void*) &protocolChoice, (char*) protocols, protocols, ComboBox, N_("Engine Protocol:") },
+{   0,  0,    0, NULL, (void*) &engineDir, NULL, NULL, PathName, N_("Engine Directory:") },
+{   0,  LR,   0, NULL, NULL, NULL, NULL, Label, N_("(Directory will be derived from engine path when empty)") },
+//{   0,  0,    0, NULL, (void*) &isUCI, NULL, NULL, CheckBox, N_("UCI") },
+//{   0,  0,    0, NULL, (void*) &isUSI, NULL, NULL, CheckBox, N_("USI/UCCI (uses specified -uxiAdapter)") },
+//{   0,  0,    0, NULL, (void*) &v1, NULL, NULL, CheckBox, N_("WB protocol v1 (do not wait for engine features)") },
 {   0,  0,    0, NULL, (void*) &InstallOK, "", NULL, EndMark , "" }
 };
 
@@ -1526,6 +1531,12 @@ InstallOK (int n)
 {
     if(n && (n = SelectedListBoxItem(&installOptions[1])) > 0) { // called by pressing OK, and engine selected
 	ASSIGN(engineLine, engineList[n]);
+    } else switch(values[12]) {
+        case 0: isUCI = 3; break;
+        case 2: isUCI = 1; break;
+        case 3: isUSI = 1; break;
+        case 4: v1 = 1;
+        case 1: break;
     }
     PopDown(TransientDlg); // early popdown, to allow FreezeUI to instate grab
     if(isUSI) {
@@ -1557,10 +1568,13 @@ EngSel (int n, int sel)
 static void
 LoadEngineProc (int engineNr, char *title)
 {
+   int p = appData.defProtocol;
+   if(*engineListFile) ParseSettingsFile(engineListFile, &engineListFile); // contains engine list
+   if(p >= 0 && p < 5) protocolChoice = protocols[p];
    isUCI = isUSI = storeVariant = v1 = useNick = False; addToList = hasBook = True; // defaults
    secondEng = engineNr;
    if(engineLine)   free(engineLine);   engineLine = strdup("");
-   if(engineDir)    free(engineDir);    engineDir = strdup(".");
+   if(engineDir)    free(engineDir);    engineDir = strdup(appData.defEngDir);
    if(nickName)     free(nickName);     nickName = strdup("");
    if(params)       free(params);       params = strdup("");
    ASSIGN(engineMnemonic[0], "");
@@ -2167,8 +2181,10 @@ ChatOK (int n)
 	// from here on it could be back-end
 	if(line[strlen(line)-1] == '\n') line[strlen(line)-1] = NULLCHAR;
 	SaveInHistory(line);
-	if(hidden || !*chatPartner[activePartner]) snprintf(buf, MSG_SIZ, "%s\n", line); else // command for ICS
-	if(!strcmp("whispers", chatPartner[activePartner]))
+	if(hidden || !*chatPartner[activePartner]) { // command for ICS
+		snprintf(buf, MSG_SIZ, "%s\n", line);
+		if(!remoteEchoOption) ConsoleWrite(buf, strlen(buf));
+	} else if(!strcmp("whispers", chatPartner[activePartner]))
 	      snprintf(buf, MSG_SIZ, "whisper %s\n", line); // WHISPER box uses "whisper" to send
 	else if(!strcmp("shouts", chatPartner[activePartner]))
 	      snprintf(buf, MSG_SIZ, "shout %s\n", line); // SHOUT box uses "shout" to send
@@ -3008,30 +3024,39 @@ SlavePopUp ()
     SlaveResize(dualOptions+3);
 }
 
+static char clockMsg[2][MSG_SIZ];
+
 void
 DisplayWhiteClock (long timeRemaining, int highlight)
 {
+    int m = (clockMsg[0][0] != 0); // printing message prevails over printing color:time
     if(appData.noGUI) return;
     if(twoBoards && partnerUp) {
 	DisplayTimerLabel(&dualOptions[0], _("White"), timeRemaining, highlight);
 	return;
     }
-    DisplayTimerLabel(&mainOptions[W_WHITE], _("White"), timeRemaining, highlight);
+    DisplayTimerLabel(&mainOptions[W_WHITE], m ? clockMsg[0] : _("White"), timeRemaining, highlight + 2*m);
     if(highlight) SetClockIcon(0);
 }
 
 void
 DisplayBlackClock (long timeRemaining, int highlight)
 {
+    int m = (clockMsg[1][0] != 0);
     if(appData.noGUI) return;
     if(twoBoards && partnerUp) {
 	DisplayTimerLabel(&dualOptions[1], _("Black"), timeRemaining, highlight);
 	return;
     }
-    DisplayTimerLabel(&mainOptions[W_BLACK], _("Black"), timeRemaining, highlight);
+    DisplayTimerLabel(&mainOptions[W_BLACK], m ? clockMsg[1] : _("Black"), timeRemaining, highlight + 2*m);
     if(highlight) SetClockIcon(1);
 }
 
+void
+SetClockMessage (int n, char *msg)
+{
+    safeStrCpy(clockMsg[n], !msg ? "" : *msg ? msg : clockMsg[!n], MSG_SIZ);
+}
 
 //---------------------------------------------
 

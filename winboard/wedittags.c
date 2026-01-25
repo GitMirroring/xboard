@@ -137,7 +137,7 @@ EditTagsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	    *p++ = *q++;
 	}
 	*p = NULLCHAR; err = 0;
-        if(resPtr) *resPtr = strdup(str); else
+        if(resPtr) { *resPtr = strdup(str); if(resPtr == &firstChessProgramNames) SaveEngineList(); } else
 	if(bookUp) SaveToBook(str), DisplayBook(currentMove); else
 	err = ReplaceTags(str, &gameInfo);
 	if (err) DisplayError(_("Error replacing tags."), err);
@@ -270,6 +270,7 @@ VOID TagsPopUp(char *tags, char *msg)
 
 VOID EditTagsPopUp(char *tags, char **dest)
 {
+  if(resPtr == &firstChessProgramNames && *engineListFile) ParseSettingsFile(engineListFile, &engineListFile); // contains engine list
   resPtr = dest;
   EitherTagsPopUp(tags, "", TRUE);
 }

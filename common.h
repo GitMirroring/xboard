@@ -181,6 +181,8 @@ typedef char *String;
 #define BOARD_RGHT   (gameInfo.boardWidth + gameInfo.holdingsWidth)
 #define CASTLING     (BOARD_RANKS-1)           /* [HGM] hide in upper rank   */
 #define VIRGIN       (BOARD_RANKS-2)           /* [HGM] pieces not moved     */
+#define CHECK_COUNT  CASTLING][(BOARD_FILES-8) /* [HGM] in upper rank        */
+#define LAST_TO      CASTLING][(BOARD_FILES-7) /* [HGM] in upper rank        */
 #define TOUCHED_W    CASTLING][(BOARD_FILES-6) /* [HGM] in upper rank        */
 #define TOUCHED_B    CASTLING][(BOARD_FILES-5) /* [HGM] in upper rank        */
 #define EP_RANK      CASTLING][(BOARD_FILES-4) /* [HGM] in upper rank        */
@@ -226,7 +228,7 @@ typedef char *String;
 #define LOWTIMEWARNING_COLOR    "#FF0000"
 #define BELLCHAR                '\007'
 #define NULLCHAR                '\000'
-#define FEATURE_TIMEOUT         10000 /*ms*/
+#define FEATURE_TIMEOUT         1000 /*ms*/
 #define MATE_SCORE              100000
 
 #define CLOCK_FONT 0
@@ -346,7 +348,7 @@ typedef enum {
     WhitePromotion, WhiteNonPromotion,
     BlackPromotion, BlackNonPromotion,
     WhiteCapturesEnPassant, BlackCapturesEnPassant,
-    WhiteDrop, BlackDrop, FirstLeg,
+    WhiteDrop, BlackDrop, FirstLeg, Swap,
     NormalMove, AmbiguousMove, IllegalMove, ImpossibleMove,
     WhiteWins, BlackWins, GameIsDrawn, GameUnfinished,
     GNUChessGame, XBoardGame, MoveNumberOne, Open, Close, Nothing,
@@ -412,6 +414,8 @@ typedef enum {
     VariantASEAN,
     VariantLion,
     VariantChuChess,
+    VariantJanggi,
+    VariantDuck,
     VariantUnknown       /* Catchall for other unknown variants */
 } VariantClass;
 
@@ -462,6 +466,8 @@ typedef enum {
   "asean",\
   "lion",\
   "elven",\
+  "janggi",\
+  "duck",\
   "unknown" \
 }
 
@@ -746,6 +752,7 @@ typedef struct {
 
     char *serverFileName;
     char *serverMovesName;
+    char *languageDir;
     char *finger;
     Boolean suppressLoadMoves;
     int serverPause;
@@ -800,8 +807,10 @@ typedef struct {
     Boolean scoreWhite;
     Boolean pvSAN[ENGINES];
 
+    int defProtocol;
     int recentEngines;
     char *recentEngineList;
+    char *defEngDir;
     char *message;
     char *suppress;
     char *fen;
@@ -816,6 +825,8 @@ typedef struct {
     int tourneyType;
     int tourneyCycles;
     int seedBase;
+    int bmpSave;
+    char *alarmTimes;
     Boolean roundSync;
     Boolean cycleSync;
     Boolean numberTag;

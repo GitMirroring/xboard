@@ -439,7 +439,7 @@ VOID GameListHighlight(int index)
         res = SendDlgItemMessage( gameListDialog, OPT_GameListText, LB_GETTEXT, i, (LPARAM)buf );
         if(res == LB_ERR || index < atoi( buf )) break;
   }
-  j = i/2;
+  j = (i == 64 ? 0 : i/2);
   while(i-j > 1) {
         n = (i + j) >> 1;
         res = SendDlgItemMessage( gameListDialog, OPT_GameListText, LB_GETTEXT, n, (LPARAM)buf );

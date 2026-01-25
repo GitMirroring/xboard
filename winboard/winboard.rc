@@ -328,6 +328,16 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,84,48,50,14
 END
 
+DLG_Big DIALOG DISCARDABLE  0, 0, 220, 121
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Error"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            32515,IDC_STATIC,4,4,21,20
+    LTEXT           "Sorry Charlie",OPT_ErrorText,28,4,193,96
+    DEFPUSHBUTTON   "OK",IDOK,84,103,50,14
+END
+
 DLG_Colorize DIALOGEX 0, 0, 174, 61
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "I C S Interaction Colors"
@@ -696,105 +706,25 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,140,244,50,14
 END
 
-DLG_NewVariant DIALOG DISCARDABLE  0, 0, 224, 270
+DLG_NewVariant DIALOG DISCARDABLE  0, 0, 224, 110
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Variants"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "&normal",OPT_VariantNormal,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,9,14,70,10
-    CONTROL         "&FRC",OPT_VariantFRC,"Button",BS_AUTORADIOBUTTON,9,
-                    24,70,10
-    CONTROL         "&wildcastle",OPT_VariantWildcastle,"Button",BS_AUTORADIOBUTTON,9,34,
-                    50,10
-    CONTROL         "&nocastle",OPT_VariantNocastle,"Button",BS_AUTORADIOBUTTON,9,
-                    44,70,10
-    CONTROL         "&losers",OPT_VariantLosers,"Button",BS_AUTORADIOBUTTON,
-                    9,54,70,10
-    CONTROL         "&giveaway",OPT_VariantGiveaway,"Button",BS_AUTORADIOBUTTON,
-                    9,64,70,10
-    CONTROL         "s&uicide",OPT_VariantSuicide,"Button",BS_AUTORADIOBUTTON,
-                    9,74,70,10
-    CONTROL         "&3Check",OPT_Variant3Check,"Button",BS_AUTORADIOBUTTON,9,84,
-                    70,10
-    CONTROL         "&twokings",OPT_VariantTwoKings,"Button",BS_AUTORADIOBUTTON,9,94,
-                    70,10
-    CONTROL         "&atomic",OPT_VariantAtomic,"Button",BS_AUTORADIOBUTTON,
-                    9,104,70,10
-    CONTROL         "&Mighty Lion",OPT_VariantLion,"Button",BS_AUTORADIOBUTTON,
-                    9,114,70,10
-    CONTROL         "cra&zyhouse",OPT_VariantCrazyhouse,"Button",BS_AUTORADIOBUTTON,80,14,
-                    70,10
-    CONTROL         "&bughouse",OPT_VariantBughouse,"Button",BS_AUTORADIOBUTTON,80,24,70,
-                    10
-    CONTROL         "Sp&artan",OPT_VariantSpartan,"Button",BS_AUTORADIOBUTTON,80,34,70,
-                    10
-    CONTROL         "&shogi",OPT_VariantShogi,"Button",BS_AUTORADIOBUTTON,80,
-                    44,70,10
-    CONTROL         "su&per",OPT_VariantSuper,"Button",BS_AUTORADIOBUTTON,80,
-                    54,70,10
-    CONTROL         "&knightmate",OPT_VariantKnightmate,"Button",BS_AUTORADIOBUTTON,
-                    80,64,70,10
-    CONTROL         "&Berolina",OPT_VariantBerolina,"Button",BS_AUTORADIOBUTTON,80,74,
-                    70,10
-    CONTROL         "c&ylinder",OPT_VariantCylinder,"Button",BS_AUTORADIOBUTTON,80,
-                    84,70,10
-    CONTROL         "&fairy",OPT_VariantFairy,"Button",BS_AUTORADIOBUTTON,80,
-                    94,70,10
-    CONTROL         "&makruk",OPT_VariantMakruk,"Button",BS_AUTORADIOBUTTON,80,
-                    104,70,10
-    CONTROL         "&ASEAN",OPT_VariantASEAN,"Button",BS_AUTORADIOBUTTON,80,
-                    114,70,10
-    CONTROL         "&gothic",OPT_VariantGothic,"Button",BS_AUTORADIOBUTTON,154,14,
-                    70,10
-    CONTROL         "&capablanca",OPT_VariantCapablanca,"Button",BS_AUTORADIOBUTTON,154,
-                    24,70,10
-    CONTROL         "&Janus",OPT_VariantJanus,"Button",BS_AUTORADIOBUTTON,154,34,
-                    70,10
-    CONTROL         "&CRC",OPT_VariantCRC,"Button",BS_AUTORADIOBUTTON,154,44,
-                    70,10
-    CONTROL         "&Falcon",OPT_VariantFalcon,"Button",BS_AUTORADIOBUTTON,154,
-                    54,70,10
-    CONTROL         "cou&rier",OPT_VariantCourier,"Button",BS_AUTORADIOBUTTON,154,64,
-                    70,10
-    CONTROL         "&Great",OPT_VariantGreat,"Button",BS_AUTORADIOBUTTON,154,74,
-                    70,10
-    CONTROL         "&Shatranj",OPT_VariantShatranj,"Button",BS_AUTORADIOBUTTON,154,
-                    84,70,10
-    CONTROL         "Seira&wan",OPT_VariantSChess,"Button",BS_AUTORADIOBUTTON,154,94,70,
-                    10
-    CONTROL         "&Grand",OPT_VariantGrand,"Button",BS_AUTORADIOBUTTON,154,104,70,
-                    10
-    CONTROL         "&xiangqi",OPT_VariantXiangqi,"Button",BS_AUTORADIOBUTTON,154,114,70,
-                    10
-    CONTROL         "",OPT_EngineVariant+0,"Button",BS_AUTORADIOBUTTON,9,134,70,10
-    CONTROL         "",OPT_EngineVariant+1,"Button",BS_AUTORADIOBUTTON,80,134,70,10
-    CONTROL         "",OPT_EngineVariant+2,"Button",BS_AUTORADIOBUTTON,154,134,70,10
-    CONTROL         "",OPT_EngineVariant+3,"Button",BS_AUTORADIOBUTTON,9,144,70,10
-    CONTROL         "",OPT_EngineVariant+4,"Button",BS_AUTORADIOBUTTON,80,144,70,10
-    CONTROL         "",OPT_EngineVariant+5,"Button",BS_AUTORADIOBUTTON,154,144,70,10
-    CONTROL         "",OPT_EngineVariant+6,"Button",BS_AUTORADIOBUTTON,9,154,70,10
-
-    CONTROL         "",OPT_EngineVariant+7,"Button",BS_AUTORADIOBUTTON,80,154,70,10
-    CONTROL         "",OPT_EngineVariant+8,"Button",BS_AUTORADIOBUTTON,154,154,70,10
-    CONTROL         "",OPT_EngineVariant+9,"Button",BS_AUTORADIOBUTTON,9,164,70,10
-    CONTROL         "",OPT_EngineVariant+10,"Button",BS_AUTORADIOBUTTON,80,164,70,10
-    CONTROL         "",OPT_EngineVariant+11,"Button",BS_AUTORADIOBUTTON,154,164,70,10
-    CONTROL         "",OPT_EngineVariant+12,"Button",BS_AUTORADIOBUTTON,9,174,70,10
-    CONTROL         "",OPT_EngineVariant+13,"Button",BS_AUTORADIOBUTTON,80,174,70,10
-    CONTROL         "",OPT_EngineVariant+14,"Button",BS_AUTORADIOBUTTON,154,174,70,10
-    GROUPBOX        "Variant",GPB_Variant,4,4,215,185
-    LTEXT           "Board size:",GPB_Board,10,203,40,8,WS_TABSTOP
-    LTEXT           "ranks",IDC_Height,77,203,38,8
-    EDITTEXT        IDC_Ranks,60,199,14,14,ES_AUTOHSCROLL
-    LTEXT           "files",IDC_Width,133,203,80,8
-    EDITTEXT        IDC_Files,116,199,14,14,ES_AUTOHSCROLL
-    LTEXT           "Holdings with room for:",IDC_Hand,10,221,90,8
-    EDITTEXT        IDC_Holdings,93,217,14,14,ES_AUTOHSCROLL
-    LTEXT           "pieces",IDC_Pieces,110,221,100,8
-    LTEXT           "('-1' means defaults for selected variant)",IDC_Def,10,237,210,8
-    DEFPUSHBUTTON   "OK",IDOK,114,252,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,170,252,50,14
+    LTEXT           "Variant",GPB_Variant,9,14,50,10
+    COMBOBOX        OPT_EngineVariant,60,14,150,129,CBS_DROPDOWN | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Board size:",GPB_Board,10,43,40,8,WS_TABSTOP
+    LTEXT           "ranks",IDC_Height,77,43,38,8
+    EDITTEXT        IDC_Ranks,60,39,14,14,ES_AUTOHSCROLL
+    LTEXT           "files",IDC_Width,133,43,80,8
+    EDITTEXT        IDC_Files,116,39,14,14,ES_AUTOHSCROLL
+    LTEXT           "Holdings with room for:",IDC_Hand,10,61,90,8
+    EDITTEXT        IDC_Holdings,93,57,14,14,ES_AUTOHSCROLL
+    LTEXT           "pieces",IDC_Pieces,110,61,100,8
+    LTEXT           "('-1' means defaults for selected variant)",IDC_Def,10,77,210,8
+    DEFPUSHBUTTON   "OK",IDOK,114,92,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,170,92,50,14
 END
 
 DLG_Fonts DIALOG DISCARDABLE  0, 0, 266, 274
@@ -1559,6 +1489,7 @@ BEGIN
     VK_PRIOR,       IDM_LoadPrevPosition,   VIRTKEY, SHIFT, ALT, NOINVERT
     VK_LEFT,        IDM_Backward,           VIRTKEY, ALT, NOINVERT
     VK_RIGHT,       IDM_Forward,            VIRTKEY, ALT, NOINVERT
+    VK_UP,          IDM_Pause,              VIRTKEY, ALT, NOINVERT
 END
 
 NO_ALT ACCELERATORS MOVEABLE PURE 
@@ -1940,6 +1871,9 @@ LN72O                   BITMAP  MOVEABLE PURE   "bitmaps/ln72o.bmp"
 WOLF72O                 BITMAP  MOVEABLE PURE   "bitmaps/wolf72o.bmp"
 CAMEL72O                BITMAP  MOVEABLE PURE   "bitmaps/camel72o.bmp"
 ZEBRA72O                BITMAP  MOVEABLE PURE   "bitmaps/zebra72o.bmp"
+TOWER72O                BITMAP  MOVEABLE PURE   "bitmaps/tower72o.bmp"
+SWORD72O                BITMAP  MOVEABLE PURE   "bitmaps/sword72o.bmp"
+GNU72O                  BITMAP  MOVEABLE PURE   "bitmaps/gnu72o.bmp"
 WP72O                   BITMAP  MOVEABLE PURE   "bitmaps/wp72o.bmp"
 WN72O                   BITMAP  MOVEABLE PURE   "bitmaps/wn72o.bmp"
 WL72O                   BITMAP  MOVEABLE PURE   "bitmaps/wl72o.bmp"
@@ -1964,6 +1898,9 @@ LN72S                   BITMAP  MOVEABLE PURE   "bitmaps/ln72s.bmp"
 WOLF72S                 BITMAP  MOVEABLE PURE   "bitmaps/wolf72s.bmp"
 CAMEL72S                BITMAP  MOVEABLE PURE   "bitmaps/camel72s.bmp"
 ZEBRA72S                BITMAP  MOVEABLE PURE   "bitmaps/zebra72s.bmp"
+TOWER72S                BITMAP  MOVEABLE PURE   "bitmaps/tower72s.bmp"
+SWORD72S                BITMAP  MOVEABLE PURE   "bitmaps/sword72s.bmp"
+GNU72S                  BITMAP  MOVEABLE PURE   "bitmaps/gnu72s.bmp"
 WP72S                   BITMAP  MOVEABLE PURE   "bitmaps/wp72s.bmp"
 WN72S                   BITMAP  MOVEABLE PURE   "bitmaps/wn72s.bmp"
 WL72S                   BITMAP  MOVEABLE PURE   "bitmaps/wl72s.bmp"
@@ -1987,6 +1924,9 @@ DK72W                   BITMAP  MOVEABLE PURE   "bitmaps/dk72w.bmp"
 LN72W                   BITMAP  MOVEABLE PURE   "bitmaps/ln72w.bmp"
 WOLF72W                 BITMAP  MOVEABLE PURE   "bitmaps/wolf72w.bmp"
 CAMEL72W                BITMAP  MOVEABLE PURE   "bitmaps/camel72w.bmp"
+TOWER72W                BITMAP  MOVEABLE PURE   "bitmaps/tower72w.bmp"
+SWORD72W                BITMAP  MOVEABLE PURE   "bitmaps/sword72w.bmp"
+GNU72W                  BITMAP  MOVEABLE PURE   "bitmaps/gnu72w.bmp"
 E49O                    BITMAP  MOVEABLE PURE   "bitmaps/e49o.bmp"
 A49O                    BITMAP  MOVEABLE PURE   "bitmaps/a49o.bmp"
 AA49O                   BITMAP  MOVEABLE PURE   "bitmaps/as49o.bmp"
@@ -2003,10 +1943,14 @@ V49O                    BITMAP  MOVEABLE PURE   "bitmaps/v49o.bmp"
 S49O                    BITMAP  MOVEABLE PURE   "bitmaps/s49o.bmp"
 L49O                    BITMAP  MOVEABLE PURE   "bitmaps/l49o.bmp"
 DK49O                   BITMAP  MOVEABLE PURE   "bitmaps/dk49o.bmp"
+
 LN49O                   BITMAP  MOVEABLE PURE   "bitmaps/ln49o.bmp"
 WOLF49O                 BITMAP  MOVEABLE PURE   "bitmaps/wolf49o.bmp"
 CAMEL49O                BITMAP  MOVEABLE PURE   "bitmaps/camel49o.bmp"
 ZEBRA49O                BITMAP  MOVEABLE PURE   "bitmaps/zebra49o.bmp"
+TOWER49O                BITMAP  MOVEABLE PURE   "bitmaps/tower49o.bmp"
+SWORD49O                BITMAP  MOVEABLE PURE   "bitmaps/sword49o.bmp"
+GNU49O                  BITMAP  MOVEABLE PURE   "bitmaps/gnu49o.bmp"
 WP49O                   BITMAP  MOVEABLE PURE   "bitmaps/wp49o.bmp"
 WN49O                   BITMAP  MOVEABLE PURE   "bitmaps/wn49o.bmp"
 WL49O                   BITMAP  MOVEABLE PURE   "bitmaps/wl49o.bmp"
@@ -2032,6 +1976,9 @@ LN49S                   BITMAP  MOVEABLE PURE   "bitmaps/ln49s.bmp"
 WOLF49S                 BITMAP  MOVEABLE PURE   "bitmaps/wolf49s.bmp"
 CAMEL49S                BITMAP  MOVEABLE PURE   "bitmaps/camel49s.bmp"
 ZEBRA49S                BITMAP  MOVEABLE PURE   "bitmaps/zebra49s.bmp"
+TOWER49S                BITMAP  MOVEABLE PURE   "bitmaps/tower49s.bmp"
+SWORD49S                BITMAP  MOVEABLE PURE   "bitmaps/sword49s.bmp"
+GNU49S                  BITMAP  MOVEABLE PURE   "bitmaps/gnu49s.bmp"
 WP49S                   BITMAP  MOVEABLE PURE   "bitmaps/wp49s.bmp"
 WN49S                   BITMAP  MOVEABLE PURE   "bitmaps/wn49s.bmp"
 WL49S                   BITMAP  MOVEABLE PURE   "bitmaps/wl49s.bmp"
@@ -2055,6 +2002,9 @@ DK49W                   BITMAP  MOVEABLE PURE   "bitmaps/dk49w.bmp"
 LN49W                   BITMAP  MOVEABLE PURE   "bitmaps/ln49w.bmp"
 WOLF49W                 BITMAP  MOVEABLE PURE   "bitmaps/wolf49w.bmp"
 CAMEL49W                BITMAP  MOVEABLE PURE   "bitmaps/camel49w.bmp"
+TOWER49W                BITMAP  MOVEABLE PURE   "bitmaps/tower49w.bmp"
+SWORD49W                BITMAP  MOVEABLE PURE   "bitmaps/sword49w.bmp"
+GNU49W                  BITMAP  MOVEABLE PURE   "bitmaps/gnu49w.bmp"
 A33O                    BITMAP  MOVEABLE PURE   "bitmaps/a33o.bmp"
 AA33O                   BITMAP  MOVEABLE PURE   "bitmaps/as33o.bmp"
 C33O                    BITMAP  MOVEABLE PURE   "bitmaps/c33o.bmp"
@@ -2181,6 +2131,9 @@ A64S                    BITMAP  MOVEABLE PURE   "bitmaps/a64s.bmp"
 L64S                    BITMAP  MOVEABLE PURE   "bitmaps/l64s.bmp"
 C64S                    BITMAP  MOVEABLE PURE   "bitmaps/c64s.bmp"
 CV64S                   BITMAP  MOVEABLE PURE   "bitmaps/cv64s.bmp"
+DUCKY33                 BITMAP  MOVEABLE PURE   "bitmaps/ducky33.bmp"
+DUCKY49                 BITMAP  MOVEABLE PURE   "bitmaps/ducky49.bmp"
+DUCKY72                 BITMAP  MOVEABLE PURE   "bitmaps/ducky72.bmp"
 
 SP58O                   BITMAP  MOVEABLE PURE   "shogibitmaps/sp58o.bmp"
 SN58O                   BITMAP  MOVEABLE PURE   "shogibitmaps/sn58o.bmp"

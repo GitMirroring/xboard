@@ -265,6 +265,7 @@ typedef struct XB_ListGame {
     GameInfo gameInfo;      /*  Note that some entries may be NULL. */
 } ListGame;
 
+extern int handSize;
 extern int border;
 extern int doubleClick;
 extern int storedGames;
@@ -296,7 +297,7 @@ int Explode P((Board board, int fromX, int fromY, int toX, int toY));
 
 typedef enum { CheckBox, ComboBox, TextBox, Button, Spin, ResetButton, SaveButton, ListBox, Graph, PopUp,
 		 FileName, PathName, Slider, Message, Fractional, Label, Icon,
-		 BoxBegin, BoxEnd, BarBegin, BarEnd, DropDown, Break, EndMark, Skip } Control;
+		 BoxBegin, BoxEnd, BarBegin, BarEnd, DropDown, Break, GroupBox, EndMark, Skip } Control;
 
 typedef struct XB_OPT {   // [HGM] options: descriptor of UCI-style option
     int value;          // current setting, starts as default
@@ -375,6 +376,7 @@ typedef struct XB_CPS {
     char *egtFormats; /* [HGM] EGT: supported tablebase formats             */
     int bookSuspend;  /* [HGM] book: go was deferred because of book hit    */
     int pause;        /* [HGM] pause: 1=supports it, 2=actually paused      */
+    int dice;         /* [HGM] dice: engine understands pips command        */
     int highlight;    /* [HGM] engine wants to get lift and put commands    */
     int nrOptions;    /* [HGM] options: remembered option="..." features    */
 #define MAX_OPTIONS 200
@@ -410,12 +412,15 @@ typedef struct {
 extern ChessProgramStats_Move pvInfoList[MAX_MOVES];
 extern Boolean shuffleOpenings;
 extern ChessProgramStats programStats;
+extern int remoteEchoOption;
 extern int opponentKibitzes; // used by wengineo.c
 extern int errorExitStatus;
 extern char *recentEngines;
-extern char *comboLine;
+extern char *currentEngine[];
 extern Boolean partnerUp, twoBoards;
 extern char engineVariant[];
+void SaveEngineSettings P((int n));
+void SaveEngineList P((void));
 char *EngineDefinedVariant P((ChessProgramState *cps, int n));
 void SettingsPopUp P((ChessProgramState *cps)); // [HGM] really in front-end, but CPS not known in frontend.h
 int WaitForEngine P((ChessProgramState *cps, DelayedEventCallback x));

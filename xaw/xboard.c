@@ -2328,7 +2328,7 @@ StartClockTimer (long millisec)
 void
 DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
 {
-    char buf[MSG_SIZ];
+    char buf[MSG_SIZ], *p;
     Arg args[16];
     Widget w = (Widget) opt->handle;
 
@@ -2340,13 +2340,16 @@ DisplayTimerLabel (Option *opt, char *color, long timer, int highlight)
         (timer / 1000) < appData.icsAlarmTime)
       foregroundOrWarningColor = lowTimeWarningColor;
 
-    if (appData.clockMode) {
-      snprintf(buf, MSG_SIZ, "%s:%s%s", color, appData.logoSize && !partnerUp ? "\n" : " ", TimeString(timer));
-      XtSetArg(args[0], XtNlabel, buf);
+    if(highlight > 1) {
+      highlight &= 1;
+      snprintf(buf, MSG_SIZ, "%s", color);
+    } else if (appData.clockMode) {
+      snprintf(buf, MSG_SIZ, "%s:_%s", color, TimeString(timer));
     } else {
       snprintf(buf, MSG_SIZ, "%s  ", color);
-      XtSetArg(args[0], XtNlabel, buf);
     }
+    p = strchr(buf, '_'); if(p) *p = (appData.logoSize && !partnerUp ? '\n' : ' ');
+    XtSetArg(args[0], XtNlabel, buf);
 
     if (highlight) {
 

@@ -1097,8 +1097,12 @@ void GenericCallback(GtkWidget *widget, gpointer gdata)
     if(currentCps) {
         name = gtk_button_get_label (GTK_BUTTON(widget));
 	if(currentOption[data].type == SaveButton) GenericReadout(currentOption, -1);
-        snprintf(buf, MSG_SIZ,  "option %s\n", name);
-        SendToProgram(buf, currentCps);
+	if(data == 0) { // XBoard save button
+	    SaveEngineSettings(currentCps == &second); PopDown(dlg);
+	} else {
+            snprintf(buf, MSG_SIZ,  "option %s\n", name);
+            SendToProgram(buf, currentCps);
+	}
     } else ((ButtonCallback*) currentOption[data].target)(data);
 
     shells[dlg] = oldSh; // in case of multiple instances, restore previous (as this one could be popped down now)

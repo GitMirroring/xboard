@@ -106,10 +106,10 @@ extern char *getenv();
 Boolean cairoAnimate;
 Option *currBoard;
 cairo_surface_t *csBoardWindow;
-static cairo_surface_t *pngPieceImages[2][(int)BlackPawn];   // png 256 x 256 images
-static cairo_surface_t *pngPieceBitmaps[2][(int)BlackPawn];  // scaled pieces as used
-static cairo_surface_t *pngPieceBitmaps2[2][(int)BlackPawn]; // scaled pieces in store
-static RsvgHandle *svgPieces[2][(int)BlackPawn]; // vector pieces in store
+static cairo_surface_t *pngPieceImages[2][(int)BlackPawn+1];   // png 256 x 256 images
+static cairo_surface_t *pngPieceBitmaps[2][(int)BlackPawn+1];  // scaled pieces as used
+static cairo_surface_t *pngPieceBitmaps2[2][(int)BlackPawn+1]; // scaled pieces in store
+static RsvgHandle *svgPieces[2][(int)BlackPawn+1]; // vector pieces in store
 static cairo_surface_t *pngBoardBitmap[2], *pngOriginalBoardBitmap[2];
 int useTexture, textureW[2], textureH[2];
 
@@ -165,7 +165,7 @@ SelectPieces(VariantClass v)
     int i;
     for(i=0; i<2; i++) {
 	int p;
-	for(p=0; p<=(int)WhiteKing; p++)
+	for(p=0; p<=(int)WhiteKing+1; p++)
 	   pngPieceBitmaps[i][p] = pngPieceBitmaps2[i][p]; // defaults
 	if(v == VariantShogi && BOARD_HEIGHT != 7) { // no exceptions in Tori Shogi
 	   pngPieceBitmaps[i][(int)WhiteCannon] = pngPieceBitmaps2[i][(int)WhiteTokin];
@@ -311,7 +311,7 @@ char *pngPieceNames[] = // must be in same order as internal piece encoding
   "LShield", "Pegasus", "Wizard", "Copper", "Iron", "Viking", "Flag", "Axe", "Dolphin", "Leopard", "Claw",
   "Left", "Butterfly", "PromoBishop", "PromoRook", "HCrown", "RShield", "Prince", "Phoenix", "Kylin", "Drunk", "Right",
   "GoldPawn", "GoldKnight", "PromoHorse", "PromoDragon", "GoldLance", "GoldSilver", "HSword", "PromoSword", "PromoHSword", "Princess", "King",
-  NULL
+  "Ducky", NULL
 };
 
 char *backupPiece[] = { // pieces that map on other in default theme ("Crown" - "Drunk")
@@ -375,6 +375,40 @@ LoadSVG (char *dir, int color, int piece, int retry)
     return NULL;
 }
 
+static void Wint(FILE *f, int n)
+{   // write 32-bit int, lsb first
+    fprintf(f, "%c%c%c%c", n&255, n>>8&255, n>>16&255, n>>24&255);
+}
+
+static void
+SaveWindowsBitmap(ChessSquare piece, int color, int *data, int stride, int w, int h, int bpp)
+{
+    int i, v, line = (w*bpp + 3)>>2, size = line*4*h;
+    char buf[100];
+    FILE *f;
+    snprintf(buf, 100, "bmaps/piece%d_%d%c.bmp", piece, w, color ? 's': 'o');
+    if(piece >= appData.bmpSave && piece != WhiteKing) return;
+    f = fopen(buf, "wb");
+    if(!f) return;
+    fprintf(f, "BM");
+    Wint(f, size+54); Wint(f, 0); Wint(f, 54); Wint(f, 40); // file size, reserved, image offset, header size
+    Wint(f, w); Wint(f, h); Wint(f, 8*bpp << 16 | 1); // width, height, planes & bits/pix
+    Wint(f, 0); // compression
+    Wint(f, size); Wint(f, 3780); Wint(f, 3780); Wint(f, 0); Wint(f, 0); // image size, pix/m (H and V), color-table size (2x)
+    for(v=h-1; v>=0; v--) {
+	for(i=0; i<w; i++) {
+	    int pix = data[stride*v+i], r=pix>>16&255, g=pix>>8&255, b=pix&255, a=pix>>24&255;
+	    r = r*a/255; b = b*a/255; g = g*a/255;
+	    if(bpp == 4) fprintf(f, "%c%c%c%c", b, g, r, a); else fprintf(f, "%c%c%c", b, g, r);
+	}
+	i *= bpp; while(i++ < line*4) fprintf(f, "%c", 0); // padding
+    }
+    fclose(f);
+    if(appData.bmpSave && piece == WhiteKing && color) exit(0);
+}
+
+void InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y);
+
 static void
 ScaleOnePiece (int color, int piece, char *pieceDir)
 {
@@ -424,6 +458,9 @@ ScaleOnePiece (int color, int piece, char *pieceDir)
   cairo_set_source_surface (cr, img, 0, 0);
   cairo_paint (cr);
   cairo_destroy (cr);
+if(appData.inscriptions[0]) InscribeKanji(cs, piece+BlackPawn*color, 0, 0);
+//sprintf(buf, "%c2%d.png", color ? 'b' : 'w', piece);
+//if(piece < 66) cairo_surface_write_to_png(cs, buf);
 
   if(!appData.trueColors || !*pieceDir) { // operate on bitmap to color it (king-size hack...)
     int stride = cairo_image_surface_get_stride(cs)/4;
@@ -431,6 +468,7 @@ ScaleOnePiece (int color, int piece, char *pieceDir)
     int i, j, p;
     sscanf(color ? appData.blackPieceColor+1 : appData.whitePieceColor+1, "%x", &p); // replacement color
     cairo_surface_flush(cs);
+    SaveWindowsBitmap(piece, color, buf, stride, squareSize, squareSize, 4);
     for(i=0; i<squareSize; i++) for(j=0; j<squareSize; j++) {
 	int r, a;
 	float f;
@@ -456,6 +494,7 @@ CreatePNGPieces (char *pieceDir)
   int p;
   for(p=0; pngPieceNames[p]; p++) {
     ScaleOnePiece(0, p, pieceDir);
+    if(p == BlackPawn) break; // no black Duck
     ScaleOnePiece(1, p, pieceDir);
   }
   SelectPieces(gameInfo.variant);
@@ -741,7 +780,7 @@ DrawLogo (Option *opt, void *logo)
 static void
 BlankSquare (cairo_surface_t *dest, int x, int y, int color, ChessSquare piece, int fac)
 {   // [HGM] extra param 'fac' for forcing destination to (0,0) for copying to animation buffer
-    int x0, y0, texture = (useTexture & color+1) && CutOutSquare(x, y, &x0, &y0, color);
+    int x0, y0, texture = color < 2 && (useTexture & color+1) && CutOutSquare(x, y, &x0, &y0, color);
     cairo_t *cr;
 
     cr = cairo_create (dest);
@@ -753,6 +792,7 @@ BlankSquare (cairo_surface_t *dest, int x, int y, int color, ChessSquare piece, 
 	  case 0: col = appData.darkSquareColor; break;
 	  case 1: col = appData.lightSquareColor; break;
 	  case 2: col = "#000000"; break;
+	  case 3: col = "#6080C0"; break;
 	  default: col = "#808080"; break; // cannot happen
 	}
 	SetPen(cr, 2.0, col, 0);
@@ -783,6 +823,7 @@ pngDrawPiece (cairo_surface_t *dest, ChessSquare piece, int square_color, int x,
     }
     if(piece == WhiteKing && kind == appData.jewelled) piece = WhiteZebra;
     if(appData.upsideDown && flipView) kind = 1 - kind; // swap white and black pieces
+    if(square_color == 3) piece = BlackPawn, kind = 0; // Ducky
     BlankSquare(dest, x, y, square_color, piece, 1); // erase previous contents with background
     cr = cairo_create (dest);
     cairo_set_source_surface (cr, pngPieceBitmaps[kind][piece], x, y);
@@ -884,7 +925,7 @@ DrawText (char *string, int x, int y, int align)
 void
 InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y)
 {
-    char *p, *q, buf[20], nr = 1;
+    char *p, *q, *oldq, buf[20], nr = 1;
     int i, n, size = 40, flip = appData.upsideDown && flipView == (piece < BlackPawn);
     if(piece == EmptySquare) return;
     if(piece >= BlackPawn) piece = BLACK_TO_WHITE piece;
@@ -895,10 +936,10 @@ InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y)
       if(*p == '/') p++, piece = n - WhitePBishop; // secondary series
       if(*p++ == NULLCHAR) {
         if(n != WhiteKing) return;
-        p = q;
+        p = oldq;
         break;
       }
-      q = p - 1;
+      oldq = q; q = p - 1;
       while((*p & 0xC0) == 0x80) p++; // skip UTF-8 continuation bytes
       if(*q != '.' && ++i < nr) continue; // yet more kanji for the current piece
       piece--; i = 0;
@@ -908,8 +949,8 @@ InscribeKanji (cairo_surface_t *canvas, ChessSquare piece, int x, int y)
     if(nr > 1) {
       p = q;
       while((*++p & 0xC0) == 0x80) {} // skip second unicode
-      *p = NULLCHAR; size = 30; i = 16;
-      DrawUnicode(canvas, q, x, y, PieceToChar(n), flip, size, -10);
+      *p = NULLCHAR; size = 30; i = -12;
+      DrawUnicode(canvas, q, x, y, PieceToChar(n), flip, size, 16);
     } else i = 4;
     *q = NULLCHAR;
     DrawUnicode(canvas, buf, x, y, PieceToChar(n), flip, size, i);
@@ -924,7 +965,7 @@ DrawOneSquare (int x, int y, ChessSquare piece, int square_color, int marker, ch
 	BlankSquare(CsBoardWindow(currBoard), x, y, square_color, piece, 1);
     } else {
 	pngDrawPiece(CsBoardWindow(currBoard), piece, square_color, x, y);
-        if(appData.inscriptions[0]) InscribeKanji(CsBoardWindow(currBoard), piece, x, y);
+//        if(appData.inscriptions[0]) InscribeKanji(CsBoardWindow(currBoard), piece, x, y);
     }
 
     if(align) { // square carries inscription (coord or piece count)

@@ -86,40 +86,27 @@ extern long whiteTimeRemaining, blackTimeRemaining, timeControl, timeIncrement;
 
 // from moves.c, added WinBoard_F piece types and ranks / files
 
-char *squareToChar[] = { "ay", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l" };
+char *squareToChar[] = { "ay", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t" };
 
-char *squareToNum[] = {"naught", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+char *squareToNum[] = {"naught", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
 
-char *ordinals[] = {"zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth"};
-
-char *pieceToName[] = {
-		"White Pawn", "White Knight", "White Bishop", "White Rook", "White Queen",
-		"White Guard", "White Elephant", "White Arch Bishop", "White Chancellor",
-		"White General", "White Man", "White Cannon", "White Night Rider",
-		"White Crowned Bishop", "White Crowned Rook", "White Grass Hopper", "White Veteran",
-		"White Falcon", "White Amazon", "White Snake", "White Unicorn",
-		"White King",
-		"Black Pawn", "Black Knight", "Black Bishop", "Black Rook", "Black Queen",
-		"Black Guard", "Black Elephant", "Black Arch Bishop", "Black Chancellor",
-		"Black General", "Black Man", "Black Cannon", "Black Night Rider",
-		"Black Crowned Bishop", "Black Crowned Rook", "Black Grass Hopper", "Black Veteran",
-		"Black Falcon", "Black Amazon", "Black Snake", "Black Unicorn",
-		"Black King",
-		"Empty"
-	};
+char *ordinals[] = {"zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth", "eleventh", "twelfth", "thriteenth", "fourteenth", "fifteenth", "sixteenth" };
 
 char *pieceTypeName[] = {
 		"Pawn", "Knight", "Bishop", "Rook", "Queen",
 		"Guard", "Elephant", "Arch Bishop", "Chancellor",
 		"General", "Man", "Cannon", "Night Rider",
 		"Crowned Bishop", "Crowned Rook", "Grass Hopper", "Veteran",
-		"Falcon", "Amazon", "Snake", "Unicorn",
-		"King",
-		"Pawn", "Knight", "Bishop", "Rook", "Queen",
-		"Guard", "Elephant", "Arch Bishop", "Chancellor",
-		"General", "Man", "Cannon", "Night Rider",
-		"Crowned Bishop", "Crowned Rook", "Grass Hopper", "Veteran",
-		"Falcon", "Amazon", "Snake", "Unicorn",
+		"Falcon", "Lance", "Snake", "Unicorn", "Lion",
+		"Sword", "Zebra", "Camel", "Tower", "Wolf",
+		"Hat", "Duck", "Amazon", "Dragon", "Wildebeest", "Lion",
+		"Shield", "Pegasus", "Wizard", "Champion", "Helmet",
+		"Viking", "Flag", "Axe", "Dolphin", "Leopard", "Tiger",
+		"Wheel", "Butterfly", "Promo Bishop", "Promo Rook",
+		"Sleeping Beauty", "Reverse Shield", "Prince", "Promo Queen",
+		"Promo Lion", "Drunk Elephant", "Reverse Wheel", 
+		"Tokin", "Promo Knight", "Promo Horse", "Promo Dragon", "Promo Lance",
+		"Promo Silver", "Dagger", "Promo Sword", "Promo Dagger", "Princess",
 		"King",
 		"Empty"
 	};
@@ -136,20 +123,24 @@ char* PieceToName(p, i)
 	ChessSquare p;
 	int i;
 {
-	if(i) return pieceToName[(int) p];
-		return pieceTypeName[(int) p];
+	static char buf[MSG_SIZ];
+        int black = (p >= BlackPawn);
+        if(black) p -= BlackPawn;
+        sprintf(buf, i ? black ? "Black " : "White " : "");
+        sprintf(buf + strlen(buf), "%s", pieceTypeName[(int) p]);
+		return T_(buf);
 }
 
 char* SquareToChar(x)
 			int x;
 {
-		return squareToChar[x - BOARD_LEFT];
+		return T_(squareToChar[x - BOARD_LEFT]);
 }
 
 char* SquareToNum(y)
 			int y;
 {
-		return squareToNum[y + (gameInfo.boardHeight < 10)];
+		return T_(squareToNum[y + (gameInfo.boardHeight != 10)]);
 }
 
 
@@ -167,7 +158,7 @@ VOID SayString(char *mess, BOOL flag)
         int l = strlen(buf);
 	if(appData.debugMode) fprintf(debugFP, "SAY '%s'\n", mess);
         if(l) buf[l++] = ' '; // separate by space from previous
-	safeStrCpy(buf+l, _(mess), 8000-1-l); // buffer
+	safeStrCpy(buf+l, T_(mess), 8000-1-l); // buffer
         if(!flag) return; // wait for flush
 	if(p = StrCaseStr(buf, "Xboard adjudication:")) {
 		int i;
@@ -185,6 +176,7 @@ static int timeflag;
 static int suppressClocks = 0;
 static int suppressOneKey = 0;
 static HANDLE hAccelJAWS;
+extern int jawsClock;
 
 typedef struct { char *name; int code; } MenuItemDesc;
 
@@ -249,16 +241,43 @@ AdaptMenu()
 	DrawMenuBar(hwndMain);
 }
 
+#ifdef NVDA
+
+#   define S2(X) #X
+#   define STRINGIFY(X) S2(X)
+#   include STRINGIFY(NVDA/nvdaController.h)
+
+    void
+    SayNVDA(char *text, BOOL interrupt)
+    {
+       static wchar_t buf[8000];
+        if(interrupt) nvdaController_cancelSpeech();
+       MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text, -1, buf, 8000);
+        nvdaController_speakText(buf);
+    }
+
+
+#   undef UNICODE
+
+#endif
+
 BOOL
 InitJAWS()
 {	// to be called at beginning of WinMain, after InitApplication and InitInstance
-	HINSTANCE hApi = LoadLibrary("jfwapi32.dll");
-	if(!hApi) {
+#ifdef NVDA
+       RealSayString = (PSAYSTRING) &SayNVDA; // assume NVDA
+       if(nvdaController_testIfRunning()) {   // no NVDA; try JAWS
+#else
+       {
+#endif
+           HINSTANCE hApi = LoadLibrary("jfwapi32.dll");
+           if(!hApi) { // no interface to JAWS either
 		DisplayInformation("Missing jfwapi32.dll");
 		return (FALSE);
+           }
+           RealSayString = (PSAYSTRING)GetProcAddress(hApi, "JFWSayString");
 	}
 
-	RealSayString = (PSAYSTRING)GetProcAddress(hApi, "JFWSayString");
 	if(!RealSayString) {
 		DisplayInformation("SayString returned a null pointer");
 		return (FALSE);
@@ -303,6 +322,12 @@ KeyboardEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
 	if(fromX == -1 || fromY == -1) {
 		fromX = BOARD_LEFT; fromY = 0;
+        }
+	if(flipView) switch(wParam) {
+	case VK_LEFT:  wParam = VK_RIGHT; break;
+	case VK_RIGHT: wParam = VK_LEFT;  break;
+	case VK_UP:    wParam = VK_DOWN;  break;
+	case VK_DOWN:  wParam = VK_UP;    break;
         }
 	switch(wParam) {
 	case VK_LEFT:
@@ -443,7 +468,7 @@ PossibleAttackMove()
 	swapColor = piece <  (int)BlackPawn && !WhiteOnMove(currentMove) ||
 		    piece >= (int)BlackPawn &&  WhiteOnMove(currentMove);
 	cl.count = 0; cl.rf = fromY; cl.ff = fromX; cl.rt = cl.ft = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove + swapColor), ReadCallback, (VOIDSTAR) &cl);
+	GenLegal(boards[currentMove], PosFlags(currentMove + swapColor), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 	SayString("", TRUE); // flush
 	boards[currentMove][fromY][fromX] = victim; // repair
@@ -471,14 +496,14 @@ PossibleAttacked()
 	victim = boards[currentMove][fromY][fromX]; // put dummy piece on target square, to activate Pawn captures
 	boards[currentMove][fromY][fromX] = WhiteOnMove(currentMove) ? WhiteQueen : BlackQueen;
 	cl.count = 0; cl.rt = fromY; cl.ft = fromX; cl.rf = cl.ff = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove+1), ReadCallback, (VOIDSTAR) &cl);
+	GenLegal(boards[currentMove], PosFlags(currentMove+1), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 
 	SayString("You are defended by", FALSE);
 
 	boards[currentMove][fromY][fromX] = WhiteOnMove(currentMove) ? BlackQueen : WhiteQueen;
 	cl.count = 0; cl.rt = fromY; cl.ft = fromX; cl.rf = cl.ff = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove), ReadCallback, (VOIDSTAR) &cl);
+	GenLegal(boards[currentMove], PosFlags(currentMove), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 	SayString("", TRUE); // flush
 	boards[currentMove][fromY][fromX] = victim; // put back original occupant
@@ -545,20 +570,26 @@ ReadColumn()
 	SayString("", TRUE); // flush
 }
 
+int
+OnBoard(int x, int y)
+{
+	return x >= BOARD_LEFT && x < BOARD_RGHT && y >= 0 && y < BOARD_HEIGHT;
+}
+
 VOID
 SayUpperDiagnols()
 {
 	ChessSquare currentpiece;
 	char *piece, *xchar, *ynum ;
-	int yPos, xPos;
+	int yPos, xPos, dir = (flipView ? -1 : 1);
 
 	if(fromX < 0 || fromY < 0) return;
 
-	if(fromX < BOARD_RGHT-1 && fromY < BOARD_HEIGHT-1) {
+	if(OnBoard(fromX+dir, fromY+dir)) {
 		SayString("The diagnol squares to your upper right contain", FALSE);
-		yPos = fromY+1;
-		xPos = fromX+1;
-		while(yPos<BOARD_HEIGHT && xPos<BOARD_RGHT) {
+		yPos = fromY+dir;
+		xPos = fromX+dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -566,17 +597,17 @@ SayUpperDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos++;
-			xPos++;
+			yPos+=dir;
+			xPos+=dir;
 		}
 	}
 	else SayString("There is no squares to your upper right", FALSE);
 
-	if(fromX > BOARD_LEFT && fromY < BOARD_HEIGHT-1) {
+	if(OnBoard(fromX-dir, fromY+dir)) {
 		SayString("The diagnol squares to your upper left contain", FALSE);
-		yPos = fromY+1;
-		xPos = fromX-1;
-		while(yPos<BOARD_HEIGHT && xPos>=BOARD_LEFT) {
+		yPos = fromY+dir;
+		xPos = fromX-dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -584,8 +615,8 @@ SayUpperDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos++;
-			xPos--;
+			yPos+=dir;
+			xPos-=dir;
 		}
 	}
 	else SayString("There is no squares to your upper left", FALSE);
@@ -597,15 +628,15 @@ SayLowerDiagnols()
 {
 	ChessSquare currentpiece;
 	char *piece, *xchar, *ynum ;
-	int yPos, xPos;
+	int yPos, xPos, dir = (flipView ? -1 : 1);
 
 	if(fromX < 0 || fromY < 0) return;
 
-	if(fromX < BOARD_RGHT-1 && fromY > 0) {
+	if(OnBoard(fromX+dir, fromY-dir)) {
 		SayString("The diagnol squares to your lower right contain", FALSE);
-		yPos = fromY-1;
-		xPos = fromX+1;
-		while(yPos>=0 && xPos<BOARD_RGHT) {
+		yPos = fromY-dir;
+		xPos = fromX+dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -613,17 +644,17 @@ SayLowerDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos--;
-			xPos++;
+			yPos-=dir;
+			xPos+=dir;
 		}
 	}
 	else SayString("There is no squares to your lower right", FALSE);
 
-	if(fromX > BOARD_LEFT && fromY > 0) {
+	if(OnBoard(fromX-dir, fromY-dir)) {
 		SayString("The diagnol squares to your lower left contain", FALSE);
-		yPos = fromY-1;
-		xPos = fromX-1;
-		while(yPos>=0 && xPos>=BOARD_LEFT) {
+		yPos = fromY-dir;
+		xPos = fromX-dir;
+		while(OnBoard(xPos, yPos)) {
 			currentpiece = boards[currentMove][yPos][xPos];
 			piece = PieceToName(currentpiece,1);
 			xchar = SquareToChar(xPos);
@@ -631,8 +662,8 @@ SayLowerDiagnols()
 			SayString(xchar , FALSE);
 			SayString(ynum, FALSE);
 			SayString(piece, FALSE);
-			yPos--;
-			xPos--;
+			yPos-=dir;
+			xPos-=dir;
 		}
 	}
 	else SayString("There is no squares to your lower left", FALSE);
@@ -814,6 +845,36 @@ SayPieces(ChessSquare p)
 }
 
 VOID
+DelayedSpeak()
+{
+#ifdef NVDA
+	nvdaController_cancelSpeech();
+#endif
+	SayString("", TRUE);
+}
+
+VOID
+SayPieceType(char id)
+{
+	int f, r, nr = 0;
+	ChessSquare piece = CharToPiece(id);
+	if(piece == EmptySquare) {
+		SayString("That is not a valid piece", FALSE);
+	} else {
+	    for(r=0; r<BOARD_HEIGHT; r++) for(f=BOARD_LEFT; f<BOARD_RGHT; f++) {
+		if(boards[currentMove][r][f] != piece) continue;
+		if(!nr++) SayString(PieceToName(piece, 1), FALSE), SayString("on ", FALSE);
+		else SayString("and", FALSE);
+		SayString(SquareToChar(f), FALSE);
+		SayString(SquareToNum(r), FALSE);
+	    }
+	    if(!nr) SayString("There is no", FALSE), SayString(PieceToName(piece, 1), FALSE), SayString("on the board", FALSE);
+        }
+	ScheduleDelayedEvent(DelayedSpeak, 50); // immediate flush is interrupted by reading title bar parent window
+//	SayString("", TRUE); // flush
+}
+
+VOID
 SayCurrentPos()
 {
 	ChessSquare currentpiece;
@@ -906,6 +967,7 @@ SayAllBoard()
 				    Xpos--;
 				}
 				SayString("empty", FALSE);
+
 			}
 		}
 	}
@@ -1088,15 +1150,21 @@ SayMachineMove(int evenIfDuplicate)
 }
 
 VOID
-SayClockTime()
+SayClockTime(int warning)
 {
 	char buf1[50], buf2[50];
 	char *str1, *str2;
 	static long int lastWhiteTime, lastBlackTime;
 
-	suppressClocks = 1; // if user is using alt+T command, no reason to display them
+    if(!warning) {
+	suppressClocks = jawsClock = 1; // if user is using alt+T command, no reason to display them
 	if(abs(lastWhiteTime - whiteTimeRemaining) < 1000 && abs(lastBlackTime - blackTimeRemaining) < 1000)
 		suppressClocks = 0; // back on after two requests in rapid succession
+	else if(gameMode == EditGame || gameMode == BeginningOfGame) {
+		appData.clockMode = TRUE;
+		if(!pausing) StartClocks();
+	}
+    }
 	snprintf(buf1, sizeof(buf1)/sizeof(buf1[0]),"%s", TimeString(whiteTimeRemaining));
 	str1 = buf1;
 	SayString("White clock", FALSE);
@@ -1107,6 +1175,7 @@ SayClockTime()
 	SayString(str2, FALSE);
 	lastWhiteTime = whiteTimeRemaining;
 	lastBlackTime = blackTimeRemaining;
+	if(pausing) SayString("neither clock is running", FALSE);
 	SayString("", TRUE); // flush
 }
 
@@ -1151,7 +1220,7 @@ KeyboardMove(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			click-click move is possible */
 			char promoChoice = NULLCHAR;
 
-			if (HasPromotionChoice(oldFromX, oldFromY, fromX, fromY, &promoChoice)) {
+			if (HasPromotionChoice(oldFromX, oldFromY, fromX, fromY, &promoChoice, FALSE)) {
 				if (appData.alwaysPromoteToQueen) {
 					UserMoveEvent(oldFromX, oldFromY, fromX, fromY, 'q');
 				}
@@ -1209,12 +1278,32 @@ NiceTime(int x)
 	return (x%3000 == 0);
 }
 
+VOID
+TimeWarning()
+{
+  int ta, t = (whiteTimeRemaining < blackTimeRemaining ? whiteTimeRemaining: blackTimeRemaining);
+  char *p = appData.alarmTimes;
+  static int last_t;
+  t = (t + 1000)/2000;
+  if(t > last_t) last_t = 0;
+  while((ta = atoi(p))) {
+    if(t == ta/2 && t != last_t) {
+      last_t = t;
+      if(sounds[(int)SoundAlarm].name[0] == NULLCHAR) SayString("time warning", FALSE), SayClockTime(1);
+      else PlayAlarmSound();
+    }
+    p = strchr(p, ','); if(p == NULL) break;
+    p++;
+  }
+}
+
 #define JAWS_ARGS \
   { "beepOffBoard", ArgInt, (LPVOID) beeps, TRUE, (ArgIniType) 1 },\
   { "beepEmpty", ArgInt, (LPVOID) (beeps+1), TRUE, (ArgIniType) 0 },\
   { "beepWhite", ArgInt, (LPVOID) (beeps+2), TRUE, (ArgIniType) 0 },\
   { "beepBlack", ArgInt, (LPVOID) (beeps+3), TRUE, (ArgIniType) 0 },\
   { "beepHoldings", ArgInt, (LPVOID) (beeps+4), TRUE, (ArgIniType) 0 },\
+  { "alarmTimes", ArgString, (LPVOID) &appData.alarmTimes, TRUE, (ArgIniType) "" },\
 
 #define JAWS_ALT_INTERCEPT \
 	    if(suppressOneKey) {\
@@ -1334,7 +1423,7 @@ NiceTime(int x)
 			break;\
 \
 		case IDM_SayClockTime:  /*Say the clock time */\
-			SayClockTime();\
+			SayClockTime(0);\
 			break;\
 \
 		case IDM_SayWhosTurn:   /* Say whos turn it its */\
@@ -1387,7 +1476,7 @@ NiceTime(int x)
 
 #define JAWS_DELETE(X)
 
-#define JAWS_SILENCE if(suppressClocks) return;
+#define JAWS_SILENCE TimeWarning(); if(suppressClocks) return;
 
 #define JAWS_COPYRIGHT \
 	SetDlgItemText(hDlg, OPT_MESS, "Auditory/Keyboard Enhancements  By:  Ed Rodriguez (sort of)");
