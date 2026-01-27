@@ -114,10 +114,8 @@ dnl | add compiler warnings only if compiler understands them
 AC_MSG_CHECKING(whether compiler understands -Wall -Wno-parentheses)
 SAVE_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -Wall -Wno-parentheses"
-AC_TRY_COMPILE([],[],
-  AC_MSG_RESULT(yes),
-  AC_MSG_RESULT(no)
-  CFLAGS="$SAVE_CFLAGS")
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)
+  CFLAGS="$SAVE_CFLAGS"])
 
 dnl | check for pkg-config
 AC_CHECK_PROGS([PKGCONFIG], [pkg-config], pkgconfig_not_found)
