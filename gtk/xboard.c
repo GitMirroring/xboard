@@ -190,9 +190,9 @@
 #endif
 
 int main P((int argc, char **argv));
-RETSIGTYPE CmailSigHandler P((int sig));
-RETSIGTYPE IntSigHandler P((int sig));
-RETSIGTYPE TermSizeSigHandler P((int sig));
+void CmailSigHandler P((int sig));
+void IntSigHandler P((int sig));
+void TermSizeSigHandler P((int sig));
 char *InsertPxlSize P((char *pattern, int targetPxlSize));
 #ifdef TODO_GTK
 #if ENABLE_NLS
@@ -1287,19 +1287,19 @@ DoEvents ()
     while(gtk_events_pending()) gtk_main_iteration();
 }
 
-RETSIGTYPE
+void
 TermSizeSigHandler (int sig)
 {
     update_ics_width();
 }
 
-RETSIGTYPE
+void
 IntSigHandler (int sig)
 {
     ExitEvent(sig);
 }
 
-RETSIGTYPE
+void
 CmailSigHandler (int sig)
 {
     int dummy = 0;
@@ -2301,7 +2301,7 @@ RemoveInputSource(isr)
 
 static Boolean frameWaiting;
 
-static RETSIGTYPE
+static void
 FrameAlarm (int sig)
 {
   frameWaiting = False;

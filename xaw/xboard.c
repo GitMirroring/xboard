@@ -208,9 +208,9 @@
 #endif
 
 int main P((int argc, char **argv));
-RETSIGTYPE CmailSigHandler P((int sig));
-RETSIGTYPE IntSigHandler P((int sig));
-RETSIGTYPE TermSizeSigHandler P((int sig));
+void CmailSigHandler P((int sig));
+void IntSigHandler P((int sig));
+void TermSizeSigHandler P((int sig));
 Widget CreateMenuBar P((Menu *mb, int boardWidth));
 #if ENABLE_NLS
 char *InsertPxlSize P((char *pattern, int targetPxlSize));
@@ -1356,19 +1356,19 @@ DoEvents ()
     while((m = XtAppPending(appContext))) XtAppProcessEvent(appContext, m);
 }
 
-RETSIGTYPE
+void
 TermSizeSigHandler (int sig)
 {
     update_ics_width();
 }
 
-RETSIGTYPE
+void
 IntSigHandler (int sig)
 {
     ExitEvent(sig);
 }
 
-RETSIGTYPE
+void
 CmailSigHandler (int sig)
 {
     int dummy = 0;
@@ -2456,7 +2456,7 @@ RemoveInputSource (InputSourceRef isr)
 
 static Boolean frameWaiting;
 
-static RETSIGTYPE
+static void
 FrameAlarm (int sig)
 {
   frameWaiting = False;

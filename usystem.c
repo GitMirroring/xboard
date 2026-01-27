@@ -472,7 +472,7 @@ StartChildProcess (char *cmdLine, char *dir, ProcRef *pr, int priority)
 // [HGM] kill: implement the 'hard killing' of AS's Winboard_x
 static int pid;
 
-static RETSIGTYPE
+static void
 AlarmCallBack (int n)
 {
     kill(pid, SIGKILL); // kill forcefully
