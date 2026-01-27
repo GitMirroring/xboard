@@ -52,14 +52,17 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <ctype.h>
-#include <signal.h>
 #include <errno.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
-#include <math.h>
 
 #if !OMIT_SOCKETS
 # if HAVE_SYS_SOCKET_H
@@ -76,18 +79,6 @@
 #  endif /* not HAVE_LAN_SOCKET_H */
 # endif /* not HAVE_SYS_SOCKET_H */
 #endif /* !OMIT_SOCKETS */
-
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-extern char *getenv();
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
 
 #if HAVE_SYS_FCNTL_H
 # include <sys/fcntl.h>

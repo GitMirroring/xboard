@@ -29,19 +29,11 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "common.h"
 #include "frontend.h"

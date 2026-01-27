@@ -52,24 +52,15 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <cairo/cairo.h>
 #include <librsvg/rsvg.h>
 #include <librsvg/rsvg-cairo.h>
 #include <pango/pangocairo.h>
-
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-extern char *getenv();
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
 
 #if ENABLE_NLS
 #include <locale.h>

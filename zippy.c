@@ -53,23 +53,14 @@
 
 #include "config.h"
 
-#include <stdio.h>
+#include <ctype.h>
 #include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <ctype.h>
-
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-extern char *getenv();
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
