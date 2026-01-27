@@ -75,7 +75,6 @@ dnl| need this to be able to compile files in a subdir
 AM_PROG_CC_C_O
 
 AC_PROG_CPP
-AC_ISC_POSIX
 AC_PROG_INSTALL
 
 dnl| add gettext support
