@@ -96,7 +96,7 @@ AC_PATH_PROGS(PERLPATH, perl)
 AC_CHECK_HEADERS([sys/time.h])
 AC_HEADER_SYS_WAIT
 AC_HEADER_DIRENT
-AC_CHECK_HEADERS(stropts.h sys/time.h string.h unistd.h sys/systeminfo.h)
+AC_CHECK_HEADERS(stropts.h sys/time.h unistd.h sys/systeminfo.h)
 AC_CHECK_HEADERS(fcntl.h sys/fcntl.h, break)
 AC_CHECK_HEADERS(sys/socket.h lan/socket.h, break)
 AC_CHECK_HEADER(stddef.h, [], AC_DEFINE(X_WCHAR, 1))
