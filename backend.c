@@ -88,25 +88,17 @@
 #include "config.h"
 
 #include <assert.h>
-#include <stdio.h>
 #include <ctype.h>
 #include <errno.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <math.h>
-#include <ctype.h>
-
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-# include <stdarg.h>
-#else /* not STDC_HEADERS */
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
 
 #if HAVE_SYS_FCNTL_H
 # include <sys/fcntl.h>
@@ -116,15 +108,8 @@
 # endif /* HAVE_FCNTL_H */
 #endif /* not HAVE_SYS_FCNTL_H */
 
-#if TIME_WITH_SYS_TIME
+#if HAVE_SYS_TIME_H
 # include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
 #endif
 
 #if defined(_amigados) && !defined(__GNUC__)

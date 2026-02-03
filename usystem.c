@@ -52,14 +52,18 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <ctype.h>
-#include <signal.h>
 #include <errno.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+#include <time.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
-#include <math.h>
 
 #if !OMIT_SOCKETS
 # if HAVE_SYS_SOCKET_H
@@ -77,18 +81,6 @@
 # endif /* not HAVE_SYS_SOCKET_H */
 #endif /* !OMIT_SOCKETS */
 
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-extern char *getenv();
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
-
 #if HAVE_SYS_FCNTL_H
 # include <sys/fcntl.h>
 #else /* not HAVE_SYS_FCNTL_H */
@@ -101,15 +93,8 @@ extern char *getenv();
 # include <sys/systeminfo.h>
 #endif /* HAVE_SYS_SYSTEMINFO_H */
 
-#if TIME_WITH_SYS_TIME
+#if HAVE_SYS_TIME_H
 # include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
 #endif
 
 #if HAVE_UNISTD_H
@@ -487,7 +472,7 @@ StartChildProcess (char *cmdLine, char *dir, ProcRef *pr, int priority)
 // [HGM] kill: implement the 'hard killing' of AS's Winboard_x
 static int pid;
 
-static RETSIGTYPE
+static void
 AlarmCallBack (int n)
 {
     kill(pid, SIGKILL); // kill forcefully

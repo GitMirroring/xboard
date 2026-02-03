@@ -1,4 +1,4 @@
-dnl| configure.in
+dnl| configure.ac (formerly configure.in)
 dnl|
 dnl| Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006, 2007,
 dnl| 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
@@ -22,16 +22,16 @@ dnl| You can process this file with autoconf to produce a configure script.
 dnl| However, normally the supplied configure script will work fine.
 dnl|
 dnl| If you do need to change the configure script, instead of editing
-dnl| it directly, try to edit configure.in (in a way that will keep
+dnl| it directly, try to edit configure.ac (in a way that will keep
 dnl| it portable to sites and systems other than your own), and run autoconf
 dnl| to regenerate configure.  Then submit your changes to be folded into
 dnl| the standard version of xboard.
 
-dnl| define second argument as MAJOR.MINOR.PATCHLEVEL. e.g. 4.4.0
+dnl| define second argument as MAJOR.MINOR.PATCHLEVEL, e.g., 4.4.0
 dnl| MAJOR means large changes
 dnl| MINOR can includes new features and bug fixes
 dnl| PATCHLEVEL is used for bugfixes only
-dnl| pre-release version have a -YYYYMMDD attached, e.g 4.9.0-20160313
+dnl| pre-release version could have a -YYYYMMDD attached, e.g., 4.9.0-20160313
 AC_INIT([xboard],[4.9.1],[bug-xboard@gnu.org])
 
 dnl| need this to be able to compile some files in a subdir (filebrowser)
@@ -75,7 +75,6 @@ dnl| need this to be able to compile files in a subdir
 AM_PROG_CC_C_O
 
 AC_PROG_CPP
-AC_ISC_POSIX
 AC_PROG_INSTALL
 
 dnl| add gettext support
@@ -94,12 +93,10 @@ AC_SUBST(NROFFFLAGS)
 AC_PATH_PROGS(AWKPATH, awk mawk gawk nawk)
 AC_PATH_PROGS(PERLPATH, perl)
 
-AC_HEADER_STDC
-AC_HEADER_TIME
+AC_CHECK_HEADERS([sys/time.h])
 AC_HEADER_SYS_WAIT
 AC_HEADER_DIRENT
-AC_TYPE_SIGNAL
-AC_CHECK_HEADERS(stropts.h sys/time.h string.h unistd.h sys/systeminfo.h)
+AC_CHECK_HEADERS(stropts.h sys/time.h unistd.h sys/systeminfo.h)
 AC_CHECK_HEADERS(fcntl.h sys/fcntl.h, break)
 AC_CHECK_HEADERS(sys/socket.h lan/socket.h, break)
 AC_CHECK_HEADER(stddef.h, [], AC_DEFINE(X_WCHAR, 1))
@@ -117,10 +114,8 @@ dnl | add compiler warnings only if compiler understands them
 AC_MSG_CHECKING(whether compiler understands -Wall -Wno-parentheses)
 SAVE_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -Wall -Wno-parentheses"
-AC_TRY_COMPILE([],[],
-  AC_MSG_RESULT(yes),
-  AC_MSG_RESULT(no)
-  CFLAGS="$SAVE_CFLAGS")
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)
+  CFLAGS="$SAVE_CFLAGS"])
 
 dnl | check for pkg-config
 AC_CHECK_PROGS([PKGCONFIG], [pkg-config], pkgconfig_not_found)

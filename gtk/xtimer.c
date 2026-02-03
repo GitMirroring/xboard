@@ -54,37 +54,22 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include <sys/types.h>
 
 #include <gtk/gtk.h>
-
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-extern char *getenv();
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
 
 #if HAVE_SYS_SYSTEMINFO_H
 # include <sys/systeminfo.h>
 #endif /* HAVE_SYS_SYSTEMINFO_H */
 
-#if TIME_WITH_SYS_TIME
+#if HAVE_SYS_TIME_H
 # include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
 #endif
 
 #if HAVE_UNISTD_H

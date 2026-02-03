@@ -54,14 +54,18 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <ctype.h>
-#include <signal.h>
 #include <errno.h>
+#include <math.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
-#include <math.h>
 #include <cairo/cairo.h>
 #include <gtk/gtk.h>
 
@@ -81,18 +85,6 @@
 # endif /* not HAVE_SYS_SOCKET_H */
 #endif /* !OMIT_SOCKETS */
 
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else /* not STDC_HEADERS */
-extern char *getenv();
-# if HAVE_STRING_H
-#  include <string.h>
-# else /* not HAVE_STRING_H */
-#  include <strings.h>
-# endif /* not HAVE_STRING_H */
-#endif /* not STDC_HEADERS */
-
 #if HAVE_SYS_FCNTL_H
 # include <sys/fcntl.h>
 #else /* not HAVE_SYS_FCNTL_H */
@@ -105,15 +97,8 @@ extern char *getenv();
 # include <sys/systeminfo.h>
 #endif /* HAVE_SYS_SYSTEMINFO_H */
 
-#if TIME_WITH_SYS_TIME
+#if HAVE_SYS_TIME_H
 # include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
 #endif
 
 #if HAVE_UNISTD_H
@@ -205,9 +190,9 @@ extern char *getenv();
 #endif
 
 int main P((int argc, char **argv));
-RETSIGTYPE CmailSigHandler P((int sig));
-RETSIGTYPE IntSigHandler P((int sig));
-RETSIGTYPE TermSizeSigHandler P((int sig));
+void CmailSigHandler P((int sig));
+void IntSigHandler P((int sig));
+void TermSizeSigHandler P((int sig));
 char *InsertPxlSize P((char *pattern, int targetPxlSize));
 #ifdef TODO_GTK
 #if ENABLE_NLS
@@ -1302,19 +1287,19 @@ DoEvents ()
     while(gtk_events_pending()) gtk_main_iteration();
 }
 
-RETSIGTYPE
+void
 TermSizeSigHandler (int sig)
 {
     update_ics_width();
 }
 
-RETSIGTYPE
+void
 IntSigHandler (int sig)
 {
     ExitEvent(sig);
 }
 
-RETSIGTYPE
+void
 CmailSigHandler (int sig)
 {
     int dummy = 0;
@@ -2316,7 +2301,7 @@ RemoveInputSource(isr)
 
 static Boolean frameWaiting;
 
-static RETSIGTYPE
+static void
 FrameAlarm (int sig)
 {
   frameWaiting = False;

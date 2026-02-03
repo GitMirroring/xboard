@@ -54,14 +54,11 @@
 
 #include "config.h"
 
-#include <stdio.h>
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
-#if HAVE_STRING_H
-# include <string.h>
-#else /* not HAVE_STRING_H */
-# include <strings.h>
-#endif /* not HAVE_STRING_H */
+#include <string.h>
+
 #include "common.h"
 #include "backend.h"
 #include "moves.h"

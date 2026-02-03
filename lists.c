@@ -32,9 +32,7 @@
 #include "config.h"
 
 #include <stdio.h>
-#if STDC_HEADERS
-# include <stdlib.h>
-#endif /* not STDC_HEADERS */
+#include <stdlib.h>
 
 #include "common.h"
 #include "lists.h"
