@@ -512,17 +512,17 @@ msgstr "cmail"
 #: backend.c:12311
 #, c-format
 msgid "Waiting for reply from opponent\n"
-msgstr "\n"
+msgstr ""
 
 #: backend.c:12333
 #, c-format
 msgid "Still need to make move for game\n"
-msgstr "\n"
+msgstr ""
 
 #: backend.c:12337
 #, c-format
 msgid "Still need to make moves for both games\n"
-msgstr "\n"
+msgstr ""
 
 #: backend.c:12341
 #, c-format
@@ -537,12 +537,12 @@ msgstr " %s \n"
 #: backend.c:12354
 #, c-format
 msgid "No unfinished games\n"
-msgstr "\n"
+msgstr ""
 
 #: backend.c:12356
 #, c-format
 msgid "Ready to send mail\n"
-msgstr "\n"
+msgstr ""
 
 #: backend.c:12361
 #, c-format
