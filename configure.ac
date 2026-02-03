@@ -1,4 +1,4 @@
-dnl| configure.in
+dnl| configure.ac (formerly configure.in)
 dnl|
 dnl| Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006, 2007,
 dnl| 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
@@ -22,16 +22,16 @@ dnl| You can process this file with autoconf to produce a configure script.
 dnl| However, normally the supplied configure script will work fine.
 dnl|
 dnl| If you do need to change the configure script, instead of editing
-dnl| it directly, try to edit configure.in (in a way that will keep
+dnl| it directly, try to edit configure.ac (in a way that will keep
 dnl| it portable to sites and systems other than your own), and run autoconf
 dnl| to regenerate configure.  Then submit your changes to be folded into
 dnl| the standard version of xboard.
 
-dnl| define second argument as MAJOR.MINOR.PATCHLEVEL. e.g. 4.4.0
+dnl| define second argument as MAJOR.MINOR.PATCHLEVEL, e.g., 4.4.0
 dnl| MAJOR means large changes
 dnl| MINOR can includes new features and bug fixes
 dnl| PATCHLEVEL is used for bugfixes only
-dnl| pre-release version have a -YYYYMMDD attached, e.g 4.9.0-20160313
+dnl| pre-release version could have a -YYYYMMDD attached, e.g., 4.9.0-20160313
 AC_INIT([xboard],[4.9.1],[bug-xboard@gnu.org])
 
 dnl| need this to be able to compile some files in a subdir (filebrowser)
