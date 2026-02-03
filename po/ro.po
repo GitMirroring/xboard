@@ -1,115 +1,121 @@
-# XBoard -- a graphical chessboard for X
-# Copyright (C) 2013, 2014 Free Software Foundation, Inc.
-# This file is distributed under the same license as the XBoard package.
-# Traducción por Óscar Toledo G., 2010
-# Antonio Ceballos <aceballos@gmail.com>, 2014, 2016
+# Romanian translation for xboard.
+# Mesajele în limba română pentru pachetul xboard.
+# Copyright © 2023 Free Software Foundation, Inc.
+# This file is distributed under the same license as the xboard package.
+#
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023.
+#
+# Cronologia traducerii fișierului „xboard”:
+# Traducerea inițială, făcută de R-GC, pentru versiunea xboard 4.9.0-pre2, sep-2023.
+# Actualizare a traducerii pentru versiunea Y, făcută de X, Z(luna-anul).
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU xboard 4.9.0-pre2\n"
 "Report-Msgid-Bugs-To: bug-xboard@gnu.org\n"
 "POT-Creation-Date: 2016-04-03 13:44-0700\n"
-"PO-Revision-Date: 2016-04-10 11:05+0200\n"
-"Last-Translator: Antonio Ceballos <aceballos@gmail.com>\n"
-"Language-Team: Spanish <es@tp.org.es>\n"
-"Language: es\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
+"PO-Revision-Date: 2023-09-24 20:50+0200\n"
+"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && n%100<=19) ? 1 : 2);\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: args.h:851
 #, c-format
 msgid "%s in settings file\n"
-msgstr "%s en el fichero de configuración\n"
+msgstr "%s în fișierul de configurare\n"
 
 #: args.h:885
 #, c-format
 msgid "Bad integer value %s"
-msgstr "Valor entero malo %s"
+msgstr "Valoare întreagă greșită %s"
 
 #: args.h:991 args.h:1252
 #, c-format
 msgid "Unrecognized argument %s"
-msgstr "Argumento no reconocido %s"
+msgstr "Argument nerecunoscut %s"
 
 #: args.h:1022
 #, c-format
 msgid "No value provided for argument %s"
-msgstr "No se ha dado valor al argumento %s"
+msgstr "Nu a fost furnizată nicio valoare pentru argumentul %s"
 
 #: args.h:1082
 #, c-format
 msgid "Incomplete \\ escape in value for %s"
-msgstr "Carácter de escape \\ incompleto en el valor de %s"
+msgstr "Eludare incompletă \\ în valoarea pentru %s"
 
 #: args.h:1193
 #, c-format
 msgid "Failed to open indirection file %s"
-msgstr "Fallo al abrir fichero de indirección %s"
+msgstr "Nu s-a reușit să se deschidă fișierul indirection %s"
 
 #: args.h:1210
 #, c-format
 msgid "Unrecognized boolean argument value %s"
-msgstr "Valor del argumento lógico %s no reconocido"
+msgstr "Valoare de argument boolean nerecunoscută %s"
 
 #. TRANSLATORS: "first" is the first of possible two chess engines. It is inserted into strings
 #. such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing
 #: backend.c:811
 msgid "first"
-msgstr "primer"
+msgstr "primul"
 
 #. TRANSLATORS: "second" is the second of possible two chess engines. It is inserted into strings
 #. such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing
 #: backend.c:814
 msgid "second"
-msgstr "segundo"
+msgstr "al doilea"
 
 #: backend.c:897
 #, c-format
 msgid "protocol version %d not supported"
-msgstr "versión %d del protocolo no es admitida"
+msgstr "versiunea de protocol %d nu este acceptată"
 
 #: backend.c:1004
 msgid "You did not specify the engine executable"
-msgstr "No se especificó el ejecutable del motor"
+msgstr "Nu ați specificat executabilul motorului"
 
 #: backend.c:1062
 #, c-format
 msgid "bad timeControl option %s"
-msgstr "opción timeControl incorrecta %s"
+msgstr "opțiune timeControl greșită %s"
 
 #: backend.c:1077
 #, c-format
 msgid "bad searchTime option %s"
-msgstr "opción searchTime incorrecta %s"
+msgstr "opțiune searchTime greșită %s"
 
 #: backend.c:1183
 #, c-format
 msgid "Variant %s supported only in ICS mode"
-msgstr "La variante %s solo se admite en modo ICS"
+msgstr "Varianta %s este acceptată numai în modul ICS"
 
 #: backend.c:1201
 #, c-format
 msgid "Unknown variant name %s"
-msgstr "Nombre de variante desconocido %s"
+msgstr "Nume de variantă necunoscut %s"
 
 #: backend.c:1456
 msgid "Starting chess program"
-msgstr "Iniciando programa de ajedrez"
+msgstr "Se inițiază programul de șah"
 
 #: backend.c:1479
 msgid "Bad game file"
-msgstr "archivo de partidas incorrecto"
+msgstr "Fișier de partidă incorect"
 
 #: backend.c:1486
 msgid "Bad position file"
-msgstr "archivo de posición incorrecto"
+msgstr "Fișier de poziție incorect"
 
 #: backend.c:1500
 msgid "Pick new game"
-msgstr "Seleccionar una nueva partida"
+msgstr "Alegeți o nouă partidă"
 
 #: backend.c:1569
 msgid ""
@@ -117,126 +123,126 @@ msgid ""
 "One more cycle will now be added to it.\n"
 "Games commence in 10 sec."
 msgstr ""
-"Se ha reiniciado un torneo que ya había concluido.\n"
-"Se le va a añadir un nuevo ciclo.\n"
-"Las partidas comienzan dentro de 10 s."
+"Ați repornit un turneu deja încheiat.\n"
+"Acum i se va adăuga încă un ciclu.\n"
+"Partidele încep în 10 secunde."
 
 #: backend.c:1576
 #, c-format
 msgid "All games in tourney '%s' are already played or playing"
-msgstr "Ya se han disputado o se están disputando todas las partidas del torneo '%s'"
+msgstr "Toate partidele din turneul „%s” sunt deja jucate sau în curs de desfășurare"
 
 #: backend.c:1583
 msgid "Can't have a match with no chess programs"
-msgstr "No se puede tener una partida sin programas de ajedrez"
+msgstr "Nu se poate avea o partidă fără programe de șah"
 
 #: backend.c:1637
 #, c-format
 msgid "Could not open comm port %s"
-msgstr "No se pudo abrir la puerta de comunicaciones %s"
+msgstr "Nu s-a putut deschide portul de comunicare %s"
 
 #: backend.c:1640
 #, c-format
 msgid "Could not connect to host %s, port %s"
-msgstr "No se pudo conectar al servidor %s, puerta %s"
+msgstr "Nu s-a putut conecta la gazda %s, portul %s"
 
 #: backend.c:1696
 #, c-format
 msgid "Unknown initialMode %s"
-msgstr "Modo inicial desconocido %s"
+msgstr "initialMode %s necunoscut"
 
 #: backend.c:1722
 msgid "AnalyzeFile mode requires a game file"
-msgstr "El modo análisis de archivo requiere un archivo de partidas"
+msgstr "Modul AnalyzeFile necesită un fișier de partidă"
 
 #: backend.c:1755
 msgid "Analysis mode requires a chess engine"
-msgstr "El modo de análisis requiere un motor de ajedrez"
+msgstr "Modul de analiză necesită un motor de șah"
 
 #: backend.c:1759
 msgid "Analysis mode does not work with ICS mode"
-msgstr "El modo de análisis no funciona con el modo ICS"
+msgstr "Modul de analiză nu funcționează cu modul ICS"
 
 #: backend.c:1770
 msgid "MachineWhite mode requires a chess engine"
-msgstr "El modo de máquina con blancas requiere un motor de ajedrez"
+msgstr "Modul mașina cu albele necesită un motor de șah"
 
 #: backend.c:1775
 msgid "MachineWhite mode does not work with ICS mode"
-msgstr "El modo de máquina con blancas no funciona con el modo ICS"
+msgstr "Modul mașina cu albele nu funcționează cu modul ICS"
 
 #: backend.c:1782
 msgid "MachineBlack mode requires a chess engine"
-msgstr "El modo de máquina con negras requiere un motor de ajedrez"
+msgstr "Modul mașina cu negrele necesită un motor de șah"
 
 #: backend.c:1787
 msgid "MachineBlack mode does not work with ICS mode"
-msgstr "El modo de máquina con negras no funciona con el modo ICS"
+msgstr "Modul mașina cu negrele nu funcționează cu modul ICS"
 
 #: backend.c:1794
 msgid "TwoMachines mode requires a chess engine"
-msgstr "El modo de dos máquinas requiere un motor de ajedrez"
+msgstr "Modul două-mașini necesită un motor de șah"
 
 #: backend.c:1799
 msgid "TwoMachines mode does not work with ICS mode"
-msgstr "El modo de dos máquinas no funciona con el modo ICS"
+msgstr "Modul două-mașini nu funcționează cu modul ICS"
 
 #: backend.c:1810
 msgid "Training mode requires a game file"
-msgstr "El modo de entrenamiento requiere un archivo de partidas"
+msgstr "Modul de antrenament necesită un fișier de partidă"
 
 #: backend.c:1973 backend.c:2028 backend.c:2051 backend.c:2453
 msgid "Error writing to ICS"
-msgstr "Error al escribir a ICS"
+msgstr "Eroare la scrierea în ICS"
 
 #: backend.c:1988
 msgid "Error reading from keyboard"
-msgstr "Error al leer el teclado"
+msgstr "Eroare la citirea de la tastatură"
 
 #: backend.c:1991
 msgid "Got end of file from keyboard"
-msgstr "Se obtuvo del teclado un fin de archivo"
+msgstr "S-a primit sfârșitul fișierului (EOF) de la tastatură"
 
 #: backend.c:2299
 #, c-format
 msgid "Unknown wild type %d"
-msgstr "Tipo «wild» %d desconocido"
+msgstr "Tip de metacaracter (caracter Jocker) necunoscut %d"
 
 #: backend.c:2370 usystem.c:317
 msgid "Error writing to display"
-msgstr "Error al escribir en la pantalla"
+msgstr "Eroare la scrierea pe ecran"
 
 #. TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers
 #: backend.c:3138
 #, c-format
 msgid "your opponent kibitzes: %s"
-msgstr "información kibitz de su oponente: %s"
+msgstr "adversarul dvs. chibițează: %s"
 
 #: backend.c:3677
 msgid "Error gathering move list: two headers"
-msgstr "Error al recolectar lista de jugadas: dos encabezados"
+msgstr "Eroare la colectarea listei de mutări: două antete"
 
 #: backend.c:3724
 msgid "Error gathering move list: nested"
-msgstr "Error al recolectar lista de jugadas: anidado"
+msgstr "Eroare la colectarea listei de mutări: înâlceală"
 
 #: backend.c:3828 backend.c:4254 backend.c:4458 backend.c:5017 backend.c:5021
 #: backend.c:7292 backend.c:13054 backend.c:14805 backend.c:14882
 #: backend.c:14928 backend.c:14934 backend.c:14939 backend.c:14944
 msgid "vs."
-msgstr "contra"
+msgstr "vs."
 
 #: backend.c:3956
 msgid "Illegal move (rejected by ICS)"
-msgstr "La jugada no es válida (la ha rechazado ICS)"
+msgstr "Mutare ilegală (respinsă de ICS)"
 
 #: backend.c:4302
 msgid "Connection closed by ICS"
-msgstr "Conexión cerrada por ICS"
+msgstr "Conexiune închisă de ICS"
 
 #: backend.c:4304
 msgid "Error reading from ICS"
-msgstr "Error al leer de ICS"
+msgstr "Eroare la citirea de la ICS"
 
 #: backend.c:4381
 #, c-format
@@ -244,134 +250,137 @@ msgid ""
 "Failed to parse board string:\n"
 "\"%s\""
 msgstr ""
-"Fallo al analizar texto del tablero:\n"
-"\"%s\""
+"Nu s-a reușit să se analizeze șirul tablei de joc:\n"
+"„%s”"
 
 #: backend.c:4390 backend.c:10628
 msgid "Game too long; increase MAX_MOVES and recompile"
-msgstr "Partida demasiado larga; incremente MAX_MOVES y recompile"
+msgstr "Partidă prea lungă; creșteți valoarea lui MAX_MOVES și recompilați jocul"
 
 #: backend.c:4509
 msgid "Error gathering move list: extra board"
-msgstr "Error al recolectar lista de jugadas: tablero extra"
+msgstr "Eroare la colectarea listei de mutări: tablă de joc în plus"
 
 #: backend.c:4941 backend.c:4963
 #, c-format
 msgid "Couldn't parse move \"%s\" from ICS"
-msgstr "No se pudo analizar la jugada \"%s\" de ICS"
+msgstr "Nu s-a putut analiza mutarea „%s” din ICS"
 
 #: backend.c:5228
 #, c-format
 msgid "say Internal error; bad moveType %d (%d,%d-%d,%d)"
-msgstr "say Error interno; moveType incorrecto %d (%d,%d-%d,%d)"
+msgstr "Eroare internă; moveType %d greșit (%d,%d-%d,%d)"
 
 #: backend.c:5299
 msgid "You cannot do this while you are playing or observing"
-msgstr "No se puede hacer esto mientras se está jugando u observando"
+msgstr "Nu puteți face acest lucru în timp ce jucați sau observați"
 
-#  TRANSLATORS: BOARDS_RANKS, BOARD_FILES translatable?
 #: backend.c:6359
 msgid "Recompile to support this BOARD_RANKS or BOARD_FILES!"
-msgstr "¡Hace falta recompilar para disponer de BOARD_RANKS o BOARD_FILES!"
+msgstr "Recompilați pentru a asigura suportul pentru BOARD_RANKS sau BOARD_FILES!"
 
 #: backend.c:6851
 msgid "You are playing Black"
-msgstr "Usted juega negras"
+msgstr "Jucați cu negrele"
 
 #: backend.c:6860 backend.c:6888
 msgid "You are playing White"
-msgstr "Usted juega blancas"
+msgstr "Jucați cu albele"
 
 #: backend.c:6870 backend.c:6896 backend.c:7018 backend.c:7043 backend.c:7059
 #: backend.c:15645
 msgid "It is White's turn"
-msgstr "Turno de las blancas"
+msgstr "Este rândul albelor"
 
 #: backend.c:6874 backend.c:6900 backend.c:7026 backend.c:7049 backend.c:7081
 #: backend.c:15637
 msgid "It is Black's turn"
-msgstr "Turno de las negras"
+msgstr "Este rândul negrelor"
 
 #: backend.c:6913
 msgid "Displayed position is not current"
-msgstr "La posición mostrada no es la actual"
+msgstr "Poziția afișată nu este cea curentă"
 
 #: backend.c:7116
 msgid "rights granted"
-msgstr "derechos otorgados"
+msgstr "drepturi acordate"
 
 #: backend.c:7116
 msgid "rights revoked"
-msgstr "derechos revocados"
+msgstr "drepturi revocate"
 
 #: backend.c:7169
 msgid "Illegal move"
-msgstr "Jugada ilegal"
+msgstr "Mutare ilegală"
 
 #: backend.c:7249
 msgid "End of game"
-msgstr "Fin del juego"
+msgstr "Sfârșitul jocului"
 
 #: backend.c:7252
 msgid "Incorrect move"
-msgstr "Jugada incorrecta"
+msgstr "Mutare incorectă"
 
 #: backend.c:7655 backend.c:7811
 msgid "Pull pawn backwards to under-promote"
-msgstr "Retrasar el peón a la posición previa a la coronación"
+msgstr "Trageți pionul înapoi pentru a sub-promova"
 
 #: backend.c:7772
 msgid "only marked squares are legal"
-msgstr "solo son legales los escaques señalados"
+msgstr "numai pătrățelele marcate sunt legale"
 
 #: backend.c:8093
 msgid "Swiss tourney finished"
-msgstr "Torneo suizo terminado"
+msgstr "Turneul în sistemul elvețian s-a încheiat"
 
 #: backend.c:8609
 msgid "could not load EGBB library"
-msgstr "no se ha podido cargar la biblioteca de base de datos de finales de partida"
+msgstr "nu s-a putut încărca biblioteca EGBB"
 
 #: backend.c:8612
 msgid "wrong EGBB version"
-msgstr "versión incorrecta de base de datos de finales de partida"
+msgstr "versiune greșită a EGBB"
 
 #: backend.c:8725
 msgid "Invalid pairing from pairing engine"
-msgstr "El bando del otro motor no es válido"
+msgstr "Împerechere nevalidă de la motorul de împerechere"
 
 #: backend.c:8892
 #, c-format
 msgid "Illegal move \"%s\" from %s machine"
-msgstr "Jugada ilegal \"%s\" del %s motor"
+msgstr "Mutare ilegală „%s” de la mașina %s"
 
+# R-GC, scrie:
+# „Forsyth–Edwards Notation (FEN) is a standard notation for describing a particular board position of a chess game. The purpose of FEN is to provide all the necessary information to restart a game from a particular position.”
+# Mai multe informații în pagina:
+# <https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation>
 #: backend.c:9179
 msgid "Bad FEN received from engine"
-msgstr "El FEN recibido del motor es incorrecto"
+msgstr "FEN incorect primit de la motor"
 
 #: backend.c:9280
 msgid "Engine did not send setup for non-standard variant"
-msgstr "El motor no ha enviado la configuración para la variante no estándar"
+msgstr "Motorul nu a trimis configurația pentru varianta non-standard"
 
 #: backend.c:9358 backend.c:14667 backend.c:14735
 #, c-format
 msgid "%s does not support analysis"
-msgstr "%s no admite análisis"
+msgstr "%s nu are suport pentru analiză"
 
 #: backend.c:9424
 #, c-format
 msgid "Illegal move \"%s\" (rejected by %s chess program)"
-msgstr "Jugada ilegal \"%s\" (rechazada por el programa de ajedrez %s)"
+msgstr "Mutare ilegală „%s” (respinsă de programul de șah %s)"
 
 #: backend.c:9455
 #, c-format
 msgid "Failed to start %s chess program %s on %s: %s\n"
-msgstr "Fallo al iniciar el programa de ajedrez %s %s en %s: %s\n"
+msgstr "Nu s-a putut porni %s programul de șah %s pe %s: %s\n"
 
 #: backend.c:9476
 #, c-format
 msgid "Hint: %s"
-msgstr "Sugerencia: %s"
+msgstr "Sugestie: %s"
 
 #: backend.c:9481
 #, c-format
@@ -379,267 +388,266 @@ msgid ""
 "Illegal hint move \"%s\"\n"
 "from %s chess program"
 msgstr ""
-"La jugada sugerida \"%s\"\n"
-"por el programa de ajedrez %s no es válida"
+"Mutarea sugerată \"%s\" de către\n"
+"programul de șah %s nu este validă"
 
 #: backend.c:9656
 msgid "Machine accepts your draw offer"
-msgstr "La máquina acepta su oferta de tablas"
+msgstr "Mașina acceptă oferta dvs. de remiză"
 
-# TRANSLATORS: Action / Draw translatable?
 #: backend.c:9659
 msgid ""
 "Machine offers a draw.\n"
 "Select Action / Draw to accept."
 msgstr ""
-"La máquina ofrece tablas.\n"
-"Seleccione Action / Draw si está de acuerdo."
+"Mașina oferă o remiză.\n"
+"Selectați Acțiune / Remiză pentru a accepta."
 
 #. TRANSLATORS: PV = principal variation, the variation the chess engine thinks is the best for everyone
 #: backend.c:9777
 msgid "failed writing PV"
-msgstr "fallo al escribir la PV"
+msgstr "scrierea variantei principale a eșuat"
 
 #: backend.c:10083
 #, c-format
 msgid "Ambiguous move in ICS output: \"%s\""
-msgstr "Jugada ambigua en la salida ICS: \"%s\""
+msgstr "Mutare ambiguă în ieșirea ICS: „%s”"
 
 #: backend.c:10093
 #, c-format
 msgid "Illegal move in ICS output: \"%s\""
-msgstr "Jugada ilegal en la salida ICS: \"%s\""
+msgstr "Mutare ilegală în ieșirea ICS: \"%s\""
 
 #: backend.c:10104
 msgid "Gap in move list"
-msgstr "Hueco en la lista de jugadas"
+msgstr "Lacună în lista de mutări"
 
 #: backend.c:10782
 #, c-format
 msgid "Variant %s not supported by %s"
-msgstr "La variante %s no es admitida por %s"
+msgstr "Varianta %s nu este acceptată de %s"
 
 #: backend.c:10789
 #, c-format
 msgid ", but %s is"
-msgstr ", pero %s es"
+msgstr ", dar %s este"
 
 #: backend.c:10945
 #, c-format
 msgid "Startup failure on '%s'"
-msgstr "Fallo al iniciar '%s'"
+msgstr "Eșec la pornire pe „%s”"
 
 #: backend.c:10976
 msgid "Waiting for first chess program"
-msgstr "Esperando al primer programa de ajedrez"
+msgstr "Se așteaptă primul program de șah"
 
 #: backend.c:10981 backend.c:14953
 msgid "Waiting for second chess program"
-msgstr "Esperando al segundo programa de ajedrez"
+msgstr "Se așteaptă al doilea program de șah"
 
 #: backend.c:11030
 msgid "Could not write on tourney file"
-msgstr "No se ha podido escribir en el fichero de torneos"
+msgstr "Nu s-a putut scrie în fișierul turneului"
 
 #: backend.c:11104
 msgid ""
 "You cannot replace an engine while it is engaged!\n"
 "Terminate its game first."
 msgstr ""
-"¡No se puede reemplazar un motor mientras está ocupado!\n"
-"Termine primero la partida del motor."
+"Nu puteți înlocui un motor în timp ce acesta este angrenat în joc!\n"
+"Încheiați mai întâi jocul acestuia."
 
 #: backend.c:11118
 msgid "No engine with the name you gave is installed"
-msgstr "No hay ningún motor instalado con el nombre indicado"
+msgstr "Nu este instalat niciun motor cu numele pe care l-ați indicat"
 
 #: backend.c:11120
 msgid ""
 "First change an engine by editing the participants list\n"
 "of the Tournament Options dialog"
 msgstr ""
-"Cambie primero un motor editando la lista de participantes\n"
-"en el diálogo de las Opciones de Torneo"
+"Mai întâi schimbați un motor prin editarea listei de participanți\n"
+"din fereastra de dialog «Opțiuni de turneu»"
 
 #: backend.c:11121
 msgid "You can only change one engine at the time"
-msgstr "Solo se puede cambiar un motor a la vez"
+msgstr "Puteți schimba doar un singur motor odată"
 
 #: backend.c:11136 backend.c:11285
 #, c-format
 msgid "No engine %s is installed"
-msgstr "No hay ningún motor %s instalado"
+msgstr "Nu este instalat niciun motor %s"
 
 #: backend.c:11156
 msgid ""
 "You must supply a tournament file,\n"
 "for storing the tourney progress"
 msgstr ""
-"Hay que proporcionar un fichero de torneos,\n"
-"para almacenar el progreso del torneo"
+"Trebuie să furnizați un fișier de turneu,\n"
+"pentru a stoca progresul turneului."
 
 #: backend.c:11166
 msgid "Not enough participants"
-msgstr "No hay suficientes participantes"
+msgstr "Nu sunt suficienți participanți"
 
 #: backend.c:11369
 msgid "Bad tournament file"
-msgstr "Archivo de torneos incorrecto"
+msgstr "Fișier de turneu incorect"
 
 #: backend.c:11381
 msgid "Waiting for other game(s)"
-msgstr "Esperando por otra(s) partida(s)"
+msgstr "În așteptare pentru altă(e) partidă(e)"
 
 #: backend.c:11394
 msgid "No pairing engine specified"
-msgstr "iNo se ha especificado el otro motor"
+msgstr "Nu este specificat niciun motor de împerechere"
 
 #: backend.c:11879
 #, c-format
 msgid "Average solving time %4.2f sec (total time %4.2f sec) "
-msgstr "Tiempo medio de resolución %4.2f s (tiempo total %4.2f s) "
+msgstr "Timpul mediu de rezolvare %4.2f sec (timpul total %4.2f sec) "
 
 #: backend.c:11881
 #, c-format
 msgid "%d avoid-moves played "
-msgstr "%d movimientos de evasión jugados "
+msgstr "%d mutări de evitare jucate "
 
 #: backend.c:11883
 #, c-format
 msgid "Solved %d out of %d (%3.1f%%) "
-msgstr "Resueltos %d de %d (%3.1f%%) "
+msgstr "Rezolvate %d din %d (%3.1f%%) "
 
 #: backend.c:11886
 #, c-format
 msgid "Match %s vs. %s: final score %d-%d-%d"
-msgstr "Encuentro %s - %s: puntuación final %d-%d-%d"
+msgstr "Turneul %s vs. %s: scor final %d-%d-%d"
 
 #: backend.c:12363 backend.c:12399
 #, c-format
 msgid "Illegal move: %d.%s%s"
-msgstr "Jugada ilegal: %d.%s%s"
+msgstr "Mutare ilegală: %d.%s%s"
 
 #: backend.c:12388
 #, c-format
 msgid "Ambiguous move: %d.%s%s"
-msgstr "Jugada ambigua: %d.%s%s"
+msgstr "Mutare ambiguă: %d.%s%s"
 
 #: backend.c:12442 backend.c:13495 backend.c:13695 backend.c:14065
 #, c-format
 msgid "Can't open \"%s\""
-msgstr "No se puede abrir \"%s\""
+msgstr "Nu se poate deschide „%s”"
 
 #: backend.c:12454 menus.c:118
 msgid "Cannot build game list"
-msgstr "No se pudo construir la lista de partidas"
+msgstr "Nu se poate construi lista de partide"
 
 #: backend.c:12539
 msgid "No more games in this message"
-msgstr "No hay más partidas en este mensaje"
+msgstr "Nu mai sunt partide în acest mesaj"
 
 #: backend.c:12579
 msgid "No game has been loaded yet"
-msgstr "Ninguna partida se ha cargado aún"
+msgstr "Nicio partidă nu a fost încărcată încă"
 
 #: backend.c:12583 backend.c:13476 ngamelist.c:129
 msgid "Can't back up any further"
-msgstr "Ya no se puede ir más atrás"
+msgstr "Nu se poate merge mai mult înapoi"
 
 #: backend.c:13030
 msgid "Game number out of range"
-msgstr "Número de partida fuera de rango"
+msgstr "Număr de partidă în afara intervalului"
 
 #: backend.c:13041
 msgid "Can't seek on game file"
-msgstr "No se puede buscar en archivo de partidas"
+msgstr "Nu se poate explora fișierul jocului"
 
 #: backend.c:13099
 msgid "Game not found in file"
-msgstr "Partida no hallada en archivo"
+msgstr "Partida nu a fost găsită în fișier"
 
 #: backend.c:13230 backend.c:13573
 msgid "Bad FEN position in file"
-msgstr "Posición FEN incorrecta en archivo"
+msgstr "Poziție FEN greșită în fișier"
 
 #: backend.c:13388
 msgid "No moves in game"
-msgstr "Ninguna jugada en la partida"
+msgstr "Nu există mutări în partidă"
 
 #: backend.c:13472
 msgid "No position has been loaded yet"
-msgstr "Ninguna posición se ha cargado aún"
+msgstr "Nicio poziție nu a fost încărcată încă"
 
 #: backend.c:13533 backend.c:13544
 msgid "Can't seek on position file"
-msgstr "No se puede buscar en archivo de aperturas"
+msgstr "Nu se poate explora fișierul de poziții"
 
 #: backend.c:13551 backend.c:13563
 msgid "Position not found in file"
-msgstr "No se halló la posición en el archivo"
+msgstr "Poziția nu a fost găsită în fișier"
 
 #: backend.c:13610
 msgid "Black to play"
-msgstr "Negras juegan"
+msgstr "Negrele joacă"
 
 #: backend.c:13613
 msgid "White to play"
-msgstr "Blancas juegan"
+msgstr "Albele joacă"
 
 #: backend.c:13700 backend.c:14070
 msgid "Waiting for access to save file"
-msgstr "Esperando a tener acceso para guardar el fichero"
+msgstr "Se așteaptă accesul pentru a salva fișierul"
 
 #: backend.c:13702
 msgid "Saving game"
-msgstr "Guardando partida"
+msgstr "Se salvează partida"
 
 #: backend.c:13703
 msgid "Bad Seek"
-msgstr "Búsqueda incorrecta"
+msgstr "Examinare defectuoasă"
 
 #: backend.c:14072
 msgid "Saving position"
-msgstr "Guardando posición"
+msgstr "Se salvează poziția"
 
 #: backend.c:14198
 msgid ""
 "You have edited the game history.\n"
 "Use Reload Same Game and make your move again."
 msgstr ""
-"Usted ha editado el historial de la partida.\n"
-"Use «Reload Same Game» y vuelva a realizar un movimiento."
+"Ați editat istoricul jocului.\n"
+"Folosiți «Reîncărcați același joc» și faceți din nou mutarea."
 
 #: backend.c:14203
 msgid ""
 "You have entered too many moves.\n"
 "Back up to the correct position and try again."
 msgstr ""
-"Usted ha introducido demasiadas jugadas.\n"
-"Retroceda hasta la posición correcta e inténtelo de nuevo."
+"Ați introdus prea multe mutări.\n"
+"Reveniți la poziția corectă și încercați din nou."
 
 #: backend.c:14208
 msgid ""
 "Displayed position is not current.\n"
 "Step forward to the correct position and try again."
 msgstr ""
-"La posición que se está mostrando no es la actual.\n"
-"Avance hasta la posición correcta e inténtelo de nuevo."
+"Poziția afișată nu este cea actuală.\n"
+"Înaintați până la poziția corectă și încercați din nou."
 
 #: backend.c:14255
 msgid "You have not made a move yet"
-msgstr "Usted no ha realizado todavía ninguna jugada"
+msgstr "Nu ați făcut încă nicio mutare"
 
 #: backend.c:14276
 msgid ""
 "The cmail message is not loaded.\n"
 "Use Reload CMail Message and make your move again."
 msgstr ""
-"El mensaje «cmail» no está cargado.\n"
-"Use «Reload CMail Message» y vuelva a realizar un movimiento."
+"Mesajul cmail nu este încărcat.\n"
+"Folosiți «Reîncărcare mesaj CMail» și faceți din nou mutarea."
 
 #: backend.c:14281
 msgid "No unfinished games"
-msgstr "No hay partidas sin terminar"
+msgstr "Nu există partide neterminate"
 
 #: backend.c:14287
 #, c-format
@@ -650,464 +658,470 @@ msgid ""
 "\"cmail -remail -game %s\"\n"
 "on the command line."
 msgstr ""
-"Ya ha enviado una jugada por correo.\n"
-"Espere hasta recibir una jugada de su adversario.\n"
-"Para volver a enviar la misma jugada, teclee\n"
-"\"cmail -remail -game %s\"\n"
-"en la línea de órdenes."
+"Ați trimis deja o mutare prin poștă.\n"
+"Așteptați până când ajunge o mutare de la adversar.\n"
+"Pentru a retrimite aceeași mutare, tastați\n"
+"«cmail -remail -game %s»\n"
+"în linia de comandă."
 
 #: backend.c:14302
 msgid "Failed to invoke cmail"
-msgstr "Fallo al invocar cmail"
+msgstr "Nu s-a putut invoca cmail"
 
 #: backend.c:14364
 #, c-format
 msgid "Waiting for reply from opponent\n"
-msgstr "Esperando respuesta del oponente\n"
+msgstr "În așteptarea răspunsului din partea adversarului\n"
 
 #: backend.c:14386
 #, c-format
 msgid "Still need to make move for game\n"
-msgstr "Todavía necesita hacer una jugada para la partida\n"
+msgstr "Încă mai trebuie să facă o mutare pentru partidă\n"
 
 #: backend.c:14390
 #, c-format
 msgid "Still need to make moves for both games\n"
-msgstr "Todavía necesita hacer jugadas para ambas partidas\n"
+msgstr "Încă mai trebuie să facă mutări pentru ambele partide\n"
 
 #: backend.c:14394
 #, c-format
 msgid "Still need to make moves for all %d games\n"
-msgstr "Todavía necesita hacer jugadas para las %d partidas\n"
+msgstr "Încă mai trebuie să facă mutări pentru toate partidele %d\n"
 
 #: backend.c:14401
 #, c-format
 msgid "Still need to make a move for game %s\n"
-msgstr "Todavía necesita hacer una jugada para la partida %s\n"
+msgstr "Încă mai trebuie să facă o mutare pentru partida %s\n"
 
 #: backend.c:14407
 #, c-format
 msgid "No unfinished games\n"
-msgstr "No hay juegos sin terminar\n"
+msgstr "Nu există partide neterminate\n"
 
 #: backend.c:14409
 #, c-format
 msgid "Ready to send mail\n"
-msgstr "Listo para enviar correo\n"
+msgstr "Gata pentru a trimite mesajul de poștă electronică\n"
 
 #: backend.c:14414
 #, c-format
 msgid "Still need to make moves for games %s\n"
-msgstr "Todavía necesita hacer jugadas para las partidas %s\n"
+msgstr "Încă mai trebuie să facă mutări pentru partidele %s\n"
 
 #: backend.c:14617
 msgid "Edit comment"
-msgstr "Editar comentario"
+msgstr "Editează comentariul"
 
 #: backend.c:14619
 #, c-format
 msgid "Edit comment on %d.%s%s"
-msgstr "Editar comentario en %d.%s%s"
+msgstr "Editează comentariul la %d.%s%s"
 
 #: backend.c:14674
 #, c-format
 msgid "You are not observing a game"
-msgstr "Usted no está observando una partida"
+msgstr "Dvs. nu observați nicio partidă"
 
 #: backend.c:14785
 msgid "It is not White's turn"
-msgstr "No es turno de las blancas"
+msgstr "Nu este rândul Albelor"
 
 #: backend.c:14866
 msgid "It is not Black's turn"
-msgstr "No es turno de las negras"
+msgstr "Nu este rândul Negrelor"
 
 #: backend.c:14974
 #, c-format
 msgid "Starting %s chess program"
-msgstr "Iniciando el programa de ajedrez %s"
+msgstr "Se inițiază programul de șah %s"
 
 #: backend.c:15002 backend.c:16189
 msgid ""
 "Wait until your turn,\n"
 "or select 'Move Now'."
 msgstr ""
-"Espere su turno.\n"
-"o seleccione 'Move Now'."
+"Așteptați până când vă vine rândul,\n"
+"sau selectați «Mută acum»."
 
 #: backend.c:15145
 msgid "Training mode off"
-msgstr "Modo de entrenamiento apagado"
+msgstr "Modul de antrenament oprit"
 
 #: backend.c:15153
 msgid "Training mode on"
-msgstr "Modo de entrenamiento activo"
+msgstr "Modul de antrenament pornit"
 
 #: backend.c:15156
 msgid "Already at end of game"
-msgstr "Ya se encuentra al final de la partida"
+msgstr "Deja la sfârșitul partidei"
 
 #: backend.c:15246
 msgid "Warning: You are still playing a game"
-msgstr "Advertencia: Usted todavía está jugando una partida"
+msgstr "Avertisment: Sunteți încă jucând o partidă"
 
 #: backend.c:15249
 msgid "Warning: You are still observing a game"
-msgstr "Advertencia: Usted todavía está observando una partida"
+msgstr "Avertisment: Sunteți încă observând o partidă"
 
 #: backend.c:15252
 msgid "Warning: You are still examining a game"
-msgstr "Advertencia: Usted todavía está examinando una partida"
+msgstr "Avertisment: Sunteți încă examinând o partidă"
 
 #: backend.c:15322
 msgid "Click clock to clear board"
-msgstr "Pinche el reloj para limpiar el tablero"
+msgstr "Faceți clic pe ceas pentru a șterge tabla"
 
 #: backend.c:15332
 msgid "Close ICS engine analyze..."
-msgstr "Cerrar el modo de análisis del motor ICS..."
+msgstr "Închideți analizarea motorului ICS..."
 
 #: backend.c:15662
 msgid "That square is occupied"
-msgstr "Ese cuadro está ocupado"
+msgstr "Acest pătrățel este ocupat"
 
 #: backend.c:15686 backend.c:15712
 msgid "There is no pending offer on this move"
-msgstr "No hay oferta pendiente para esta jugada"
+msgstr "Nu există nicio ofertă în așteptare pentru această mutare"
 
 #: backend.c:15748 backend.c:15759
 msgid "Your opponent is not out of time"
-msgstr "Su oponente no está fuera de tiempo"
+msgstr "Adversarul dvs. nu este în afara timpului"
 
 #: backend.c:15827
 msgid "You must make your move before offering a draw"
-msgstr "Debe hacer su jugada antes de ofrecer tablas"
+msgstr "Trebuie să vă faceți mutarea înainte de a oferi o remiză"
 
 #: backend.c:16171
 msgid "You are not examining a game"
-msgstr "Usted no está examinando una partida"
+msgstr "Dvs. nu examinați o partidă în acest moment"
 
 #: backend.c:16175
 msgid "You can't revert while pausing"
-msgstr "No puede revertir si está en pausa"
+msgstr "Nu este posibil să anulați mutările în timpul unei pauze"
 
 #: backend.c:16229 backend.c:16236
 msgid "It is your turn"
-msgstr "Es su turno"
+msgstr "Este rândul dvs."
 
 #: backend.c:16287 backend.c:16294 backend.c:16380 backend.c:16387
 msgid "Wait until your turn."
-msgstr "Espero su turno."
+msgstr "Așteptați până când vă vine rândul."
 
 #: backend.c:16299
 msgid "No hint available"
-msgstr "No hay sugerencia disponible"
+msgstr "Nici o sugestie disponibilă"
 
 #: backend.c:16314 backend.c:16345 ngamelist.c:365
 msgid "Game list not loaded or empty"
-msgstr "La lista de partidas no se ha cargado o está vacía"
+msgstr "Lista de partide nu este încărcată sau este goală"
 
 #: backend.c:16352
 msgid "Book file exists! Try again for overwrite."
-msgstr "¡Ya existe el fichero del libro! Inténtelo de nuevo si quiere sobreescribirlo."
+msgstr "Fișierul cărții există! Încercați din nou pentru a-l suprascrie."
 
 #: backend.c:16833
 #, c-format
 msgid "Error writing to %s chess program"
-msgstr "Error al escribir al %s programa de ajedrez"
+msgstr "Eroare la scrierea în programul de șah %s"
 
 #: backend.c:16836 backend.c:16867
 #, c-format
 msgid "%s program exits in draw position (%s)"
-msgstr "El programa %s termina en posición de tablas (%s)"
+msgstr "Programul %s se încheie în poziția de remiză (%s)"
 
 #: backend.c:16862
 #, c-format
 msgid "Error: %s chess program (%s) exited unexpectedly"
-msgstr "Error: el %s programa de ajedrez (%s) terminó inesperadamente"
+msgstr "Eroare: programul de șah %s (%s) a ieșit în mod neașteptat"
 
 #: backend.c:16880
 #, c-format
 msgid "Error reading from %s chess program (%s)"
-msgstr "Error al leer del %s programa de ajedrez (%s)"
+msgstr "Eroare la citirea din programul de șah %s (%s)"
 
 #: backend.c:17312
 #, c-format
 msgid "%s engine has too many options\n"
-msgstr "El motor %s tiene demasiadas opciones\n"
+msgstr "motorul %s are prea multe opțiuni\n"
 
 #: backend.c:17468
 msgid "Displayed move is not current"
-msgstr "La jugada ilustrada no es la actual"
+msgstr "Mutarea afișată nu este cea curentă"
 
 #: backend.c:17477
 msgid "Could not parse move"
-msgstr "No se pudo analizar la jugada"
+msgstr "Nu s-a putut analiza mutarea"
 
 #: backend.c:17602 backend.c:17624
 msgid "Both flags fell"
-msgstr "Ambas banderas cayeron"
+msgstr "Ambele steaguri au căzut"
 
 #: backend.c:17604
 msgid "White's flag fell"
-msgstr "La bandera blanca cayó"
+msgstr "Steagul Albelor a căzut"
 
 #: backend.c:17626
 msgid "Black's flag fell"
-msgstr "La bandera negra cayó"
+msgstr "Steagul Negrelor a căzut"
 
 #: backend.c:17757
 msgid "Clock adjustment not allowed in auto-flag mode"
-msgstr "El ajuste del reloj no está permitido en el modo de advertencia de tiempo automático"
+msgstr "Reglarea ceasului nu este permisă în modul de semnalizare automată a timpului"
 
 #: backend.c:18719
 msgid "Bad FEN position in clipboard"
-msgstr "Posición FEN incorrecta en portapapeles"
+msgstr "Poziție FEN incorectă în clipboard"
 
 #: book.c:598 book.c:874
 msgid "Polyglot book not valid"
-msgstr "El libro de Polyglot no es válido"
+msgstr "Cartea poliglotă nu este validă"
 
 #: book.c:722
 msgid "Book Fault"
-msgstr "Error en el libro"
+msgstr "Eroare în carte"
 
 #: book.c:877
 msgid "Hash keys are different"
-msgstr "Las claves «hash» son diferentes"
+msgstr "Sumele de control ale cheilor sunt diferite"
 
 #: book.c:1053
 msgid "Could not create book"
-msgstr "No se ha podido crear el libro"
+msgstr "Nu s-a putut crea cartea"
 
 #: dialogs.c:286
 msgid "Tournament file:          "
-msgstr "Fichero de torneos:       "
+msgstr "Fișierul turneului:       "
 
 #: dialogs.c:287
 msgid "For concurrent playing of tourney with multiple XBoards:"
-msgstr "Para jugar en torneos de forma concurrente con múltiples XBoards:"
+msgstr "Pentru desfășurarea simultană a turneului cu mai multe calculatoare cu XBoard: "
 
 #: dialogs.c:288
 msgid "Sync after round"
-msgstr "Sincronizar después de la ronda"
+msgstr "Sincronizare după rundă"
 
 #: dialogs.c:289
 msgid "Sync after cycle"
-msgstr "Sincronizar después de una vuelta"
+msgstr "Sincronizare după ciclu"
 
 #: dialogs.c:290
 msgid "Tourney participants:"
-msgstr "Participantes del torneo:"
+msgstr "Participanții la turneu:"
 
 #: dialogs.c:291
 msgid "Select Engine:"
-msgstr "Seleccione Motor:"
+msgstr "Selectați motorul:"
 
 #: dialogs.c:299
 msgid "Tourney type (0 = round-robin, 1 = gauntlet):"
-msgstr "Tipo de torneo (0 = liga, 1 = uno contra todos):"
+msgstr "Tipul de turneu (0 = fiecare cu fiecare/tur-retur, 1 = unul contra toți):"
 
 #: dialogs.c:300
 msgid "Number of tourney cycles (or Swiss rounds):"
-msgstr "Número de vueltas del torneo (o rondas de torneo suizo)"
+msgstr "Numărul de cicluri de turnee (sau runde elvețiene):"
 
 #: dialogs.c:301
 msgid "Default Number of Games in Match (or Pairing):"
-msgstr "Número predeterminado de partidas del encuentro (o emparejamiento):"
+msgstr "Numărul implicit de jocuri în meci (sau în pereche):"
 
 #: dialogs.c:302
 msgid "Pause between Match Games (msec):"
-msgstr "Pausa entre partidas del encuentro (ms):"
+msgstr "Pauză între partidele meciului (msec):"
 
 #: dialogs.c:303
 msgid "Save Tourney Games on:"
-msgstr "Guardar partidas del torneo en:"
+msgstr "Salvează partidele turneului în:"
 
 #: dialogs.c:304
 msgid "Game File with Opening Lines:"
-msgstr "Fichero de partidas con líneas de apertura:"
+msgstr "Fișierul de partide cu liniile de deschidere:"
 
 #: dialogs.c:305
 msgid "Game Number (-1 or -2 = Auto-Increment):"
-msgstr "Número de la partida (-1 o -2 = incremento automático):"
+msgstr "Numărul partidei (-1 sau -2 = creștere automată):"
 
 #: dialogs.c:306
 msgid "File with Start Positions:"
-msgstr "Fichero con posiciones iniciales:"
+msgstr "Fișierul cu pozițiile inițiale:"
 
 #: dialogs.c:307
 msgid "Position Number (-1 or -2 = Auto-Increment):"
-msgstr "Número de la posición (-1 o -2 = incremento automático):"
+msgstr "Numărul poziției (-1 sau -2 = creștere automată):"
 
 #: dialogs.c:308
 msgid "Rewind Index after this many Games (0 = never):"
-msgstr "Rebobinar Índice después de este número de Partidas (0 = nunca)"
+msgstr "Readuce indexul la zero după acest număr de jocuri (0 = niciodată):"
 
 #: dialogs.c:309
 msgid "Disable own engine books by default"
-msgstr "Inicialmente, desactivar los libros propios del motor"
+msgstr "Dezactivează în mod implicit cărțile motorului propriu"
 
 #: dialogs.c:310 dialogs.c:1840
 msgid "Time Control"
-msgstr "Control de tiempo"
+msgstr "Controlul timpului"
 
 #: dialogs.c:311
 msgid "Common Engine"
-msgstr "General de los motores"
+msgstr "Motor comun"
 
 #: dialogs.c:312 dialogs.c:446
 msgid "General Options"
-msgstr "Opciones generales"
+msgstr "Opțiuni generale"
 
 #: dialogs.c:313
 msgid "Continue Later"
-msgstr "Seguir más tarde"
+msgstr "Continuați mai târziu"
 
 #: dialogs.c:314
 msgid "Replace Engine"
-msgstr "Reemplazar motor"
+msgstr "Înlocuiți motorul"
 
 #: dialogs.c:315
 msgid "Upgrade Engine"
-msgstr "Actualizar motor"
+msgstr "Actualizați motorul"
 
 #: dialogs.c:316
 msgid "Clone Tourney"
-msgstr "Clonar torneo"
+msgstr "Clonare turneu"
 
 #: dialogs.c:356
 msgid "First you must specify an existing tourney file to clone"
-msgstr "En primer lugar, debe usted especificar un fichero de torneos que exista, para ser clonado"
+msgstr "Mai întâi trebuie să specificați un fișier de turneu existent pentru a-l clona"
 
 #: dialogs.c:372 dialogs.c:1549
 msgid "# no engines are installed"
-msgstr "# no hay ningún motor instalado"
+msgstr "# nu este instalat niciun motor"
 
 #: dialogs.c:380
 msgid "Internal error: PARTICIPANTS set wrong"
-msgstr "Error interno: PARTICIPANTS incorrecto"
+msgstr "Eroare internă: variabila PARTICIPANTS definită greșit"
 
 #: dialogs.c:388
 msgid "Tournament Options"
-msgstr "Opciones de Torneo"
+msgstr "Opțiuni de turneu"
 
 #: dialogs.c:407
 msgid "Absolute Analysis Scores"
-msgstr "Puntuaciones absolutas del análisis"
+msgstr "Punctaje absolute de analiză"
 
+# R-GC, scrie:
+# pentru o descriere a acestei concepții,
+# a se vedea pagina:
+# https://ro.wikipedia.org/wiki/Promovare_(%C8%99ah),
+# sau în limba engleză:
+# https://en.wikipedia.org/wiki/Promotion_(chess)
 #: dialogs.c:408
 msgid "Almost Always Queen (Detour Under-Promote)"
-msgstr "Casi siempre dama (rodeo para subcoronar)"
+msgstr "Aproape întotdeauna Dama (ocolește sub-promovarea)"
 
 #: dialogs.c:409 menus.c:729
 msgid "Animate Dragging"
-msgstr "Animar arrastre"
+msgstr "Animează tragerea"
 
 #: dialogs.c:410 menus.c:730
 msgid "Animate Moving"
-msgstr "Animar movimiento"
+msgstr "Animează mutarea"
 
 #: dialogs.c:411 menus.c:731
 msgid "Auto Flag"
-msgstr "Bandera automática"
+msgstr "Fanion automat"
 
 #: dialogs.c:412 menus.c:732
 msgid "Auto Flip View"
-msgstr "Cambio de lado automático"
+msgstr "Vizualizare cu rotire automată"
 
 #: dialogs.c:413 menus.c:733
 msgid "Blindfold"
-msgstr "A ciegas"
+msgstr "Orbeşte"
 
 #. TRANSLATORS: the drop menu is used to drop a piece, e.g. during bughouse or editing a position
 #: dialogs.c:415
 msgid "Drop Menu"
-msgstr "Menú «drop»"
+msgstr "Meniul de plasare"
 
 #: dialogs.c:416
 msgid "Enable Variation Trees"
-msgstr "Activar árboles de variaciones"
+msgstr "Activează arborii de variație"
 
 #: dialogs.c:417
 msgid "Headers in Engine Output Window"
-msgstr "Cabeceras en la ventana de salida del motor"
+msgstr "Titlurile din fereastra de ieșire a motorului"
 
 #: dialogs.c:418
 msgid "Hide Thinking from Human"
-msgstr "Ocultar cogitaciones al jugar contra humano"
+msgstr "Ascunde gândirea față de jucătorul uman"
 
 #: dialogs.c:419 menus.c:738
 msgid "Highlight Last Move"
-msgstr "Iluminar última jugada"
+msgstr "Evidențiază ultima mutare"
 
 #: dialogs.c:420
 msgid "Highlight with Arrow"
-msgstr "Iluminar con flecha"
+msgstr "Evidențiază cu săgeată"
 
 #: dialogs.c:421 menus.c:741
 msgid "One-Click Moving"
-msgstr "Moviemento de un click"
+msgstr "Mutarea cu un singur clic"
 
 #: dialogs.c:422
 msgid "Periodic Updates (in Analysis Mode)"
-msgstr "Actualización periódica (en análisis)"
+msgstr "Actualizări periodice (în modul de analiză)"
 
 #: dialogs.c:424
 msgid "Play Move(s) of Clicked PV (Analysis)"
-msgstr "Realizar la(s) jugada(s) de la PV escogida (análisis)"
+msgstr "Realizează mutarea (mutările) PV-ului selectat (analiză)"
 
 #: dialogs.c:425 dialogs.c:626 menus.c:743
 msgid "Ponder Next Move"
-msgstr "Prever siguente jugada"
+msgstr "Gândiți-vă la următoarea mutare"
 
 #: dialogs.c:426
 msgid "Popup Exit Messages"
-msgstr "Ventana emergente al salir"
+msgstr "Mesaje emergente la ieșire"
 
 #: dialogs.c:427 menus.c:745
 msgid "Popup Move Errors"
-msgstr "Ventana emergente si error en jugada"
+msgstr "Mesaje emergente de eroare de mutare"
 
 #: dialogs.c:428
 msgid "Scores in Move List"
-msgstr "Puntuaciones de la lista de jugadas"
+msgstr "Punctajele din lista de mutări"
 
 #: dialogs.c:429
 msgid "Show Coordinates"
-msgstr "Mostrar coordenadas"
+msgstr "Afișează coordonatele"
 
 #: dialogs.c:430
 msgid "Show Target Squares"
-msgstr "Mostrar casillas objetivo"
+msgstr "Afișează pătrățelele țintă"
 
 #: dialogs.c:431
 msgid "Sticky Windows"
-msgstr "Ventanas adhesivas"
+msgstr "Ferestre lipicioase"
 
 #: dialogs.c:432 menus.c:748
 msgid "Test Legality"
-msgstr "Verificar legalidad"
+msgstr "Testează legalitatea"
 
 #: dialogs.c:433
 msgid "Top-Level Dialogs"
-msgstr "Diálogos de alto nivel"
+msgstr "Dialoguri de înalt nivel"
 
 #: dialogs.c:434
 msgid "Flash Moves (0 = no flashing):"
-msgstr "Destello en las jugadas (0 = sin destello):"
+msgstr "Clipire la mutări (0 = fără clipire):"
 
 #: dialogs.c:435
 msgid "Flash Rate (high = fast):"
-msgstr "Velocidad de destello (high = rápido):"
+msgstr "Viteza de clipire (mare = rapidă):"
 
 #: dialogs.c:436
 msgid "Animation Speed (high = slow):"
-msgstr "Velocidad de animación (high = lenta):"
+msgstr "Viteza animației (rapidă = lentă):"
 
 #: dialogs.c:437
 msgid "Zoom factor in Evaluation Graph:"
-msgstr "Factor de «zoom» en el grafo de evaluación:"
+msgstr "Factorul de zoom în graficul de evaluare:"
 
 #: dialogs.c:457
 msgid "Normal"
@@ -1115,47 +1129,47 @@ msgstr "Normal"
 
 #: dialogs.c:458
 msgid "Makruk"
-msgstr "«Makruk» (tailandés)"
+msgstr "Makruk"
 
 #: dialogs.c:459
 msgid "FRC"
-msgstr "FRC (ajedrez aleatorio de Fischer)"
+msgstr "FRC (șah aleatoriu de Fischer)"
 
 #: dialogs.c:460
 msgid "Shatranj"
-msgstr "«Shatranj»"
+msgstr "Shatranj"
 
 #: dialogs.c:461
 msgid "Wild castle"
-msgstr "Enroque salvaje"
+msgstr "Turn sălbatic"
 
 #: dialogs.c:462
 msgid "Knightmate"
-msgstr "Mate al caballo"
+msgstr "Mat cu calul"
 
 #: dialogs.c:463
 msgid "No castle"
-msgstr "Sin enroque"
+msgstr "Fără turn"
 
 #: dialogs.c:464
 msgid "Cylinder *"
-msgstr "Cilíndrico *"
+msgstr "Cilindru *"
 
 #: dialogs.c:465
 msgid "3-checks"
-msgstr "tres jaques"
+msgstr "3 șahuri"
 
 #: dialogs.c:466
 msgid "berolina *"
-msgstr "belorina *"
+msgstr "berolina *"
 
 #: dialogs.c:467
 msgid "atomic"
-msgstr "atómico"
+msgstr "atomic"
 
 #: dialogs.c:468
 msgid "two kings"
-msgstr "dos reyes"
+msgstr "doi regi"
 
 #: dialogs.c:469
 msgid " "
@@ -1163,40 +1177,39 @@ msgstr " "
 
 #: dialogs.c:470
 msgid "Spartan"
-msgstr "espartano"
+msgstr "Spartan"
 
 #: dialogs.c:471
 msgid "Board size ( -1 = default for selected variant):"
-msgstr "Tamaño del tablero ( -1 = el predeterminado para la variante seleccionada):"
+msgstr "Dimensiunea tablei ( -1 = implicit pentru varianta selectată):"
 
 #: dialogs.c:472
 msgid "Number of Board Ranks:"
-msgstr "Número de filas del tablero:"
+msgstr "Numărul de rânduri ale tablei de șah:"
 
 #: dialogs.c:473
 msgid "Number of Board Files:"
-msgstr "Número de columnas del tablero:"
+msgstr "Numărul de coloane ale tablei de șah:"
 
 #: dialogs.c:474
 msgid "Holdings Size:"
-msgstr "Tamaño tenencias:"
+msgstr "Dimensiunea zonei de stocare:"
 
 #: dialogs.c:476
 msgid ""
 "Variants marked with * can only be played\n"
 "with legality testing off."
 msgstr ""
-"Las variantes señaladas con * solo pueden jugarse\n"
-"con la comprobación de legalidad desactivada."
+"Variantele marcate cu * pot fi jucate doar\n"
+"cu testarea legalității dezactivată."
 
-# What's this?
 #: dialogs.c:478
 msgid "ASEAN"
 msgstr "ASEAN"
 
 #: dialogs.c:479
 msgid "Great Shatranj (10x8)"
-msgstr "Gran shatranj (10x8)"
+msgstr "Marele Shatranj (10x8)"
 
 #: dialogs.c:480
 msgid "Seirawan"
@@ -1204,11 +1217,11 @@ msgstr "Seirawan"
 
 #: dialogs.c:481
 msgid "Falcon (10x8)"
-msgstr "Halcón (10x8)"
+msgstr "Șoim (10x8)"
 
 #: dialogs.c:482
 msgid "Superchess"
-msgstr "Superajedrez"
+msgstr "Superșah"
 
 #: dialogs.c:483
 msgid "Capablanca (10x8)"
@@ -1216,15 +1229,15 @@ msgstr "Capablanca (10x8)"
 
 #: dialogs.c:484
 msgid "Crazyhouse"
-msgstr "«Crazyhouse»"
+msgstr "Casa de nebuni (Crazyhouse)"
 
 #: dialogs.c:485
 msgid "Gothic (10x8)"
-msgstr "Gótico (10x8)"
+msgstr "Gotic (10x8)"
 
 #: dialogs.c:486
 msgid "Bughouse"
-msgstr "Pasapiezas"
+msgstr "Bughouse (șah la dublu)"
 
 #: dialogs.c:487
 msgid "Janus (10x8)"
@@ -1232,63 +1245,61 @@ msgstr "Janus (10x8)"
 
 #: dialogs.c:488
 msgid "Suicide"
-msgstr "Suicida"
+msgstr "Sinucidere"
 
 #: dialogs.c:489
 msgid "CRC (10x8)"
 msgstr "CRC (10x8)"
 
-# TRANSLATORS: give-away = losers?
 #: dialogs.c:490
 msgid "give-away"
-msgstr "pierde gana"
+msgstr "capitulare"
 
 #: dialogs.c:491
 msgid "grand (10x10)"
-msgstr "gran ajedrez (10x10)"
+msgstr "marele șah (10x10)"
 
-# TRANSLATORS: give-away = losers?
 #: dialogs.c:492
 msgid "losers"
-msgstr "pierde gana"
+msgstr "învinși"
 
 #: dialogs.c:493
 msgid "shogi (9x9)"
-msgstr "japonés (9x9)"
+msgstr "shogi (9x9)"
 
 #: dialogs.c:494
 msgid "fairy"
-msgstr "mágico"
+msgstr "feeric"
 
 #: dialogs.c:495
 msgid "xiangqi (9x10)"
-msgstr "chino"
+msgstr "xiangqi (9x10)"
 
 #: dialogs.c:496
 msgid "mighty lion"
-msgstr "león poderoso"
+msgstr "leul puternic"
 
 #: dialogs.c:497
 msgid "courier (12x8)"
-msgstr "ajedrez del mensajero (12x8)"
+msgstr "curier (12x8)"
 
 #: dialogs.c:498
 msgid "elven chess (10x10)"
-msgstr "ajedrez élfico (10x10)"
+msgstr "șah elfic (10x10)"
 
 #: dialogs.c:499
 msgid "chu shogi (12x12)"
-msgstr "japonés (12x12)"
+msgstr "chu shogi (12x12)"
 
 #: dialogs.c:543
 #, c-format
 msgid "Warning: second engine (%s) does not support this!"
-msgstr "Advertencia: ¡el segundo motor (%s) no admite esto!"
+msgstr "Avertisment: al doilea motor (%s) nu acceptă acest lucru!"
 
 #: dialogs.c:572
 #, c-format
 msgid "Only bughouse is not available in viewer mode."
-msgstr "Solo pasapiezas no está disponible en el modo visor."
+msgstr "Numai varianta „bughouse” nu este disponibilă în modul vizualizare."
 
 #: dialogs.c:573
 #, c-format
@@ -1296,276 +1307,276 @@ msgid ""
 "All variants not supported by the first engine\n"
 "(currently %s) are disabled."
 msgstr ""
-"Todas las variantes no disponibles en el primer motor\n"
-"(actualmente %s) están desactivas."
+"Toate variantele care nu sunt acceptate de primul motor\n"
+"(în prezent %s) sunt dezactivate"
 
 #: dialogs.c:595
 msgid "New Variant"
-msgstr "Nueva variante"
+msgstr "Variantă nouă"
 
 #: dialogs.c:627
 msgid "Maximum Number of CPUs per Engine:"
-msgstr "Número max. CPUs por motor:"
+msgstr "Numărul maxim de CPU-uri pe motor:"
 
 #: dialogs.c:628
 msgid "Polygot Directory:"
-msgstr "Directorio de Ployglot:"
+msgstr "Directorul de poliglot:"
 
 #: dialogs.c:629
 msgid "Hash-Table Size (MB):"
-msgstr "Tamaño de la tabla de transposición (MB):"
+msgstr "Dimensiunea tabelului de hash-uri (Mo):"
 
 #: dialogs.c:630
 msgid "EGTB Path:"
-msgstr "Carpeta de la EGTB:"
+msgstr "Ruta EGTB:"
 
 #: dialogs.c:631
 msgid "EGTB Cache Size (MB):"
-msgstr "Tamaño de la caché de la EGTB (MB):"
+msgstr "Dimensiunea cache-ului EGTB (Mo):"
 
 #: dialogs.c:632
 msgid "Use GUI Book"
-msgstr "Usar el libro de la GUI"
+msgstr "Utilizați cartea cu interfață grafică"
 
 #: dialogs.c:633
 msgid "Opening-Book Filename:"
-msgstr "Fichero del libro de aperturas:"
+msgstr "Numele fișierului al cărții de deschidere:"
 
 #: dialogs.c:634
 msgid "Book Depth (moves):"
-msgstr "Profundidad del libro (jugadas):"
+msgstr "Profunzimea cărții (mutări):"
 
 #: dialogs.c:635
 msgid "Book Variety (0) vs. Strength (100):"
-msgstr "Variedad del libro (0) frente a fuerza (100):"
+msgstr "Varietatea cărții (0) versus nivelul de calificare (100):"
 
 #: dialogs.c:636
 msgid "Engine #1 Has Own Book"
-msgstr "El motor 1 tiene libro propio"
+msgstr "Motorul nr. 1 are propria carte"
 
 #: dialogs.c:637
 msgid "Engine #2 Has Own Book          "
-msgstr "El motor 2 tiene libro propio"
+msgstr "Motorul nr. 2 are propria carte "
 
 #: dialogs.c:648
 msgid "Common Engine Settings"
-msgstr "Configuración general de los motores"
+msgstr "Configurări comune ale motoarelor"
 
 #: dialogs.c:654
 msgid "Detect all Mates"
-msgstr "Detectar todos los mates"
+msgstr "Detectează toți partenerii"
 
 #: dialogs.c:655
 msgid "Verify Engine Result Claims"
-msgstr "Verificar avisos del motor"
+msgstr "Verifică afirmațiile privind rezultatele motorului"
 
 #: dialogs.c:656
 msgid "Draw if Insufficient Mating Material"
-msgstr "Tablas si el material es insuficiente"
+msgstr "Remiză dacă nu sunt suficiente piese pentru șah-mat"
 
 #: dialogs.c:657
 msgid "Adjudicate Trivial Draws (3-Move Delay)"
-msgstr "Adjudicar tablas triviales (regla de las tres jugadas)"
+msgstr "Adjudecarea remizelor triviale (întârziere de 3 mutări)"
 
 #: dialogs.c:658
 msgid "N-Move Rule:"
-msgstr "Regla de las N jugadas:"
+msgstr "Regula de N mutări:"
 
 #: dialogs.c:659
 msgid "N-fold Repeats:"
-msgstr "N repeticiones:"
+msgstr "Repetări de N ori:"
 
 #: dialogs.c:660
 msgid "Draw after N Moves Total:"
-msgstr "Adjudicar mate después de:"
+msgstr "Remiză după un total de N mutări:"
 
 #: dialogs.c:661
 msgid "Win / Loss Threshold:"
-msgstr "Límite para adjudicar juego:"
+msgstr "Pragul de victorie / pierdere:"
 
 #: dialogs.c:662
 msgid "Negate Score of Engine #1"
-msgstr "Negar puntuación del motor #1"
+msgstr "Scor negativ al motorului nr. 1"
 
 #: dialogs.c:663
 msgid "Negate Score of Engine #2"
-msgstr "Negar puntuación del motor #2"
+msgstr "Scor negativ al motorului nr. 2"
 
 #: dialogs.c:670
 msgid "Adjudicate non-ICS Games"
-msgstr "Adjudicar partidas no ICS"
+msgstr "Adjudecarea jocurilor non-ICS"
 
 #: dialogs.c:683
 msgid "Auto-Kibitz"
-msgstr "Auto Kibitz"
+msgstr "Auto-Chibiț"
 
 #: dialogs.c:684
 msgid "Auto-Comment"
-msgstr "Auto-comentario"
+msgstr "Comentariu automat"
 
 #: dialogs.c:685
 msgid "Auto-Observe"
-msgstr "Auto-Observar"
+msgstr "Observare automată"
 
 #: dialogs.c:686
 msgid "Auto-Raise Board"
-msgstr "Tablero al frente (automático)"
+msgstr "Tablă pusă în primplan automat"
 
 #: dialogs.c:687
 msgid "Auto-Create Logon Script"
-msgstr "Creación de fichero de registro automática"
+msgstr "Crearea automată a scriptului de conectare"
 
 #: dialogs.c:688
 msgid "Background Observe while Playing"
-msgstr "Seguir observando mientras se juega"
+msgstr "Observare din fundal în timpul jocului"
 
 #: dialogs.c:689
 msgid "Dual Board for Background-Observed Game"
-msgstr "Tablero dual para partidas observadas"
+msgstr "Tablă dublă pentru jocul cu observare din fundal"
 
 #: dialogs.c:690
 msgid "Get Move List"
-msgstr "Leer lista de jugadas"
+msgstr "Obține lista de mutări"
 
 #: dialogs.c:691
 msgid "Quiet Play"
-msgstr "Jugar en silencio"
+msgstr "Joc liniștit"
 
 #: dialogs.c:692
 msgid "Seek Graph"
-msgstr "Buscar gráfica"
+msgstr "Grafic de căutare"
 
 #: dialogs.c:693
 msgid "Auto-Refresh Seek Graph"
-msgstr "Grafo de búsqueda con refresco automático"
+msgstr "Actualizare automată a graficului de căutare"
 
 #: dialogs.c:694
 msgid "Auto-InputBox PopUp"
-msgstr "Ventana emergente de buzón automática"
+msgstr "Casetă de dialog automată emergentă"
 
 #: dialogs.c:695
 msgid "Quit after game"
-msgstr "Después de la partida salir"
+msgstr "Ieșire din joc după partidă"
 
 #: dialogs.c:696
 msgid "Premove"
-msgstr "Pre-jugada"
+msgstr "Pre-mutare"
 
 #: dialogs.c:697
 msgid "Premove for White"
-msgstr "Prejugada de las blancas"
+msgstr "Pre-mutare pentru albe"
 
 #: dialogs.c:698
 msgid "First White Move:"
-msgstr "1er. mov. blancas"
+msgstr "Prima mutare a albelor:"
 
 #: dialogs.c:699
 msgid "Premove for Black"
-msgstr "Prejugada de las negras"
+msgstr "Pre-mutare pentru negre"
 
 #: dialogs.c:700
 msgid "First Black Move:"
-msgstr "1er. mov. negras"
+msgstr "Prima mutare a negrelor:"
 
 #: dialogs.c:702
 msgid "Alarm"
-msgstr "Alarma"
+msgstr "Alarmă"
 
 #: dialogs.c:703
 msgid "Alarm Time (msec):"
-msgstr "Tiempo de la alarma (ms):"
+msgstr "Durata alarmei (msec):"
 
 #: dialogs.c:705
 msgid "Colorize Messages"
-msgstr "Mensajes coloreados"
+msgstr "Colorează mesajele"
 
 #: dialogs.c:706
 msgid "Shout Text Colors:"
-msgstr "Colores del texto que se expresa en voz alta:"
+msgstr "Culori de text pentru strigătul de exclamare:"
 
 #: dialogs.c:707
 msgid "S-Shout Text Colors:"
-msgstr "Colores «S» del texto que se expresa en voz alta:"
+msgstr "Culori de text pentru strigătul-S de exclamare:"
 
 #: dialogs.c:708
 msgid "Channel #1 Text Colors:"
-msgstr "Colores del texto del canal 1:"
+msgstr "Culorile textului pentru canalul nr. 1:"
 
 #: dialogs.c:709
 msgid "Other Channel Text Colors:"
-msgstr "Colores del texto del otro canal:"
+msgstr "Culorile de text ale celuilalt canal:"
 
 #: dialogs.c:710
 msgid "Kibitz Text Colors:"
-msgstr "Colores del texto kibitz:"
+msgstr "Culorile de text ale chibițului:"
 
 #: dialogs.c:711
 msgid "Tell Text Colors:"
-msgstr "Colores del texto de hablar con otros:"
+msgstr "Culorile textului enunțurilor:"
 
 #: dialogs.c:712
 msgid "Challenge Text Colors:"
-msgstr "Colores del texto de desafíos:"
+msgstr "Culorile textului de provocare:"
 
 #: dialogs.c:713
 msgid "Request Text Colors:"
-msgstr "Colores del texto de peticiones:"
+msgstr "Culorile textului de cerere:"
 
 #: dialogs.c:714
 msgid "Seek Text Colors:"
-msgstr "Colores del texto de búsqueda:"
+msgstr "Culorile textului de căutare:"
 
 #: dialogs.c:715
 msgid "Other Text Colors:"
-msgstr "Colores del otro texto:"
+msgstr "Alte culori pentru text:"
 
 #: dialogs.c:722
 msgid "ICS Options"
-msgstr "Opciones ICS"
+msgstr "Opțiuni ICS"
 
 #: dialogs.c:727
 msgid "Exact position match"
-msgstr "Coincidencia exacta de la posición"
+msgstr "Potrivire exactă a poziției"
 
 #: dialogs.c:727
 msgid "Shown position is subset"
-msgstr "La posición mostrada es un subconjunto"
+msgstr "Poziția afișată este un subset"
 
 #: dialogs.c:727
 msgid "Same material with exactly same Pawn chain"
-msgstr "Mismo material con exactamente la misma cadena de peones"
+msgstr "Același material cu exact același lanț de pioni"
 
 #: dialogs.c:728
 msgid "Same material"
-msgstr "Mismo material"
+msgstr "Același material"
 
 #: dialogs.c:728
 msgid "Material range (top board half optional)"
-msgstr "Rango de material (mitad superior del tablero opcional)"
+msgstr "Gama de materiale (jumătate de tablă superioară opțională)"
 
 #: dialogs.c:728
 msgid "Material difference (optional stuff balanced)"
-msgstr "Diferencia de material (situación equilibrada opcional)"
+msgstr "Diferență materială (material opțional echilibrat)"
 
 #: dialogs.c:743
 msgid "Auto-Display Tags"
-msgstr "Etiquetas de visualización automática"
+msgstr "Afișare automată a etichetelor"
 
 #: dialogs.c:744
 msgid "Auto-Display Comment"
-msgstr "Comentario de visualización automática"
+msgstr "Afișare automată a comentariilor"
 
 #: dialogs.c:745
 msgid ""
 "Auto-Play speed of loaded games\n"
 "(0 = instant, -1 = off):"
 msgstr ""
-"Velocidad de juego automático de las partidas cargadas\n"
-"(0 = instantánea, -1 = desactivada):"
+"Viteza de redare automată a jocurilor încărcate\n"
+"(0 = instantaneu, -1 = dezactivat):"
 
 #: dialogs.c:746
 msgid "Seconds per Move:"
-msgstr "Segundos por jugadas:"
+msgstr "Secunde pe mutare:"
 
 #: dialogs.c:747
 msgid ""
@@ -1573,7 +1584,7 @@ msgid ""
 "options to use in game-viewer mode:"
 msgstr ""
 "\n"
-"opciones para el modo de visualización de partidas:"
+"opțiuni de utilizat în modul de vizualizare a partidei:"
 
 #: dialogs.c:749
 msgid ""
@@ -1581,199 +1592,195 @@ msgid ""
 "Thresholds for position filtering in game list:"
 msgstr ""
 "\n"
-"Umbral para filtrar posiciones en la lista de partidas:"
+"Praguri pentru filtrarea poziției în lista de partide:"
 
 #: dialogs.c:750
 msgid "Elo of strongest player at least:"
-msgstr "Elo del mejor jugador como mínimo:"
+msgstr "Elo al celui mai puternic jucător, cel puțin:"
 
 #: dialogs.c:751
 msgid "Elo of weakest player at least:"
-msgstr "Elo del peor jugador como mínimo:"
+msgstr "Elo al celui mai slab jucător, cel puțin:"
 
 #: dialogs.c:752
 msgid "No games before year:"
-msgstr "Número de partidas antes del año:"
+msgstr "Fără partide înainte de anul:"
 
 #: dialogs.c:753
 msgid "Minimum nr consecutive positions:"
-msgstr "Número mínimo de posiciones consecutivas:"
+msgstr "Numărul minim de poziții consecutive:"
 
 #: dialogs.c:755
 msgid "Search mode:"
-msgstr "Modo de búsqueda:"
+msgstr "Modul de căutare:"
 
 #: dialogs.c:756
 msgid "Also match reversed colors"
-msgstr "También colores invertidos"
+msgstr "De asemenea, se potrivesc culorile inversate"
 
 #: dialogs.c:757
 msgid "Also match left-right flipped position"
-msgstr "También posición volteada izquierda-derecha"
+msgstr "De asemenea, se potrivește cu poziția stânga-dreapta răsturnată"
 
 #: dialogs.c:766
 msgid "Load Game Options"
-msgstr "Opciones al leer partida"
+msgstr "Încarcă opțiunile partidei"
 
 #: dialogs.c:778
 msgid "Auto-Save Games"
-msgstr "Guardar partidas automáticamente"
+msgstr "Salvează automat partidele"
 
 #: dialogs.c:779
 msgid "Own Games Only"
-msgstr "Solo partidas propias"
+msgstr "Numai partide proprii"
 
 #: dialogs.c:780
 msgid "Save Games on File:"
-msgstr "Guardar partidas en fichero"
+msgstr "Salvează jocurile în fișierul:"
 
 #: dialogs.c:781
 msgid "Save Final Positions on File:"
-msgstr "Guardar en fichero posiciones finales:"
+msgstr "Salvează pozițiile finale în fișierul:"
 
 #: dialogs.c:782
 msgid "PGN Event Header:"
-msgstr "Cabecera PGN del evento:"
+msgstr "Titlul evenimentului PGN:"
 
 #: dialogs.c:783
 msgid "Old Save Style (as opposed to PGN)"
-msgstr "Estilo de guardado antiguo (en contraposición a PGN)"
+msgstr "Vechiul stil de salvare (în comparație cu PGN)"
 
 #: dialogs.c:784
 msgid "Include Number Tag in tourney PGN"
-msgstr "Incluir etiqueta de número en el PGN del torneo"
+msgstr "Include eticheta numerică în turneul PGN"
 
 #: dialogs.c:785
 msgid "Save Score/Depth Info in PGN"
-msgstr "Guardar la información de puntuación/profundidad en el PGN"
+msgstr "Salvează informații despre punctaj/profunditate în PGN"
 
 #: dialogs.c:786
 msgid "Save Out-of-Book Info in PGN           "
-msgstr "Guardar información fuera-de-libro en PGN "
+msgstr "Salvează informațiile din afara cărții în PGN  "
 
 #: dialogs.c:793
 msgid "Save Game Options"
-msgstr "Opciones al salvar partida"
+msgstr "Salvează opțiunile partidei"
 
 #: dialogs.c:802
 msgid "No Sound"
-msgstr "Sin sonido"
+msgstr "Fără sunet"
 
 #: dialogs.c:803
 msgid "Default Beep"
-msgstr "Bip predeterminado"
+msgstr "Bip implicit"
 
 #: dialogs.c:804
 msgid "Above WAV File"
-msgstr "Fichero WAV de arriba"
+msgstr "Fișierul WAV de mai sus"
 
 #: dialogs.c:805
 msgid "Car Horn"
-msgstr "Bocina de coche"
+msgstr "Claxon de mașină"
 
 #: dialogs.c:806
 msgid "Cymbal"
-msgstr "Platillos"
+msgstr "Cinel"
 
 #: dialogs.c:807
 msgid "Ding"
-msgstr "Timbre"
+msgstr "Ding"
 
 #: dialogs.c:808
 msgid "Gong"
-msgstr "«Gong»"
+msgstr "Gong"
 
 #: dialogs.c:809
 msgid "Laser"
-msgstr "Láser"
+msgstr "Laser"
 
-# TRANSLATORS
 #: dialogs.c:810
 msgid "Penalty"
-msgstr "Penalización"
+msgstr "Penalizare"
 
 #: dialogs.c:811
 msgid "Phone"
-msgstr "Teléfono"
+msgstr "Telefon"
 
 #: dialogs.c:812
 msgid "Pop"
-msgstr "«Pop»"
+msgstr "Pop"
 
 #: dialogs.c:813
 msgid "Roar"
-msgstr "Rugido"
+msgstr "Răgnet"
 
 #: dialogs.c:814
 msgid "Slap"
-msgstr "Palmada"
+msgstr "Pălmuială"
 
-# TRANSLATORS
 #: dialogs.c:815
 msgid "Wood Thunk"
-msgstr "«Wood thunk»"
+msgstr "Lovitură în lemn"
 
 #: dialogs.c:817
 msgid "User File"
-msgstr "Fichero del usuario"
+msgstr "Fișierul utilizatorului"
 
 #: dialogs.c:840
 msgid "User WAV File:"
-msgstr "Fichero WAV del usuario:"
+msgstr "Fișier WAV al utilizatorului:"
 
 #: dialogs.c:841
 msgid "Sound Program:"
-msgstr "Programa de sonido:"
+msgstr "Programul de sunet:"
 
 #: dialogs.c:842
 msgid "Try-Out Sound:"
-msgstr "Sonido de prueba"
+msgstr "Sunet de probă:"
 
 #: dialogs.c:843
 msgid "Play"
-msgstr "Reproducir"
+msgstr "Redare"
 
 #: dialogs.c:844
 msgid "Move:"
-msgstr "Jugada:"
+msgstr "Mutare:"
 
-# TRANSLATORS
 #: dialogs.c:845
 msgid "Win:"
-msgstr "Victorias:"
+msgstr "Câștigare:"
 
 #: dialogs.c:846
 msgid "Lose:"
-msgstr "Derrotas:"
+msgstr "Pierdere:"
 
 #: dialogs.c:847
 msgid "Draw:"
-msgstr "Tablas"
+msgstr "Remiză:"
 
 #: dialogs.c:848
 msgid "Unfinished:"
-msgstr "No terminadas:"
+msgstr "Neterminată:"
 
 #: dialogs.c:849
 msgid "Alarm:"
-msgstr "Alarma:"
+msgstr "Alarmă:"
 
 #: dialogs.c:850
 msgid "Challenge:"
-msgstr "Desafío:"
+msgstr "Provocare:"
 
 #: dialogs.c:852
 msgid "Sounds Directory:"
-msgstr "Carpeta de sonidos:"
+msgstr "Directorul de sunete:"
 
 #: dialogs.c:853
 msgid "Shout:"
-msgstr "En voz alta:"
+msgstr "Strigăt de exclamare:"
 
-# TRANSLATORS
 #: dialogs.c:854
 msgid "S-Shout:"
-msgstr "En voz alta S"
+msgstr "Strigăt-S de exclamare:"
 
 #: dialogs.c:855
 msgid "Channel:"
@@ -1781,43 +1788,43 @@ msgstr "Canal:"
 
 #: dialogs.c:856
 msgid "Channel 1:"
-msgstr "Canal 1:"
+msgstr "Canalul 1:"
 
 #: dialogs.c:857
 msgid "Tell:"
-msgstr "Decir:"
+msgstr "Spune:"
 
 #: dialogs.c:858
 msgid "Kibitz:"
-msgstr "Kibitz:"
+msgstr "Chibiț:"
 
 #: dialogs.c:859
 msgid "Request:"
-msgstr "Pedir:"
+msgstr "Cerere:"
 
 #: dialogs.c:860
 msgid "Lion roar:"
-msgstr "Rugido de león:"
+msgstr "Răget de leu:"
 
 #: dialogs.c:861
 msgid "Seek:"
-msgstr "Buscar:"
+msgstr "Căutare:"
 
 #: dialogs.c:877
 msgid "Sound Options"
-msgstr "Opciones de sonido"
+msgstr "Opțiuni de sunet"
 
 #: dialogs.c:893
 msgid "Selectable themes:"
-msgstr "Temas seleccionables:"
+msgstr "Temele ce pot fi selectate:"
 
 #: dialogs.c:895
 msgid "New name for current theme:"
-msgstr "Nuevo nombre para el tema actual:"
+msgstr "Noul nume pentru tema curentă:"
 
 #: dialogs.c:898
 msgid "White Piece Color:"
-msgstr "Color de las piezas blancas:"
+msgstr "Culoarea pieselor „albe”:"
 
 #. TRANSLATORS: R = single letter for the color red
 #: dialogs.c:901 dialogs.c:910 dialogs.c:916 dialogs.c:922 dialogs.c:928
@@ -1829,160 +1836,160 @@ msgstr "R"
 #: dialogs.c:903 dialogs.c:911 dialogs.c:917 dialogs.c:923 dialogs.c:929
 #: dialogs.c:935
 msgid "G"
-msgstr "V"
+msgstr "G"
 
 #. TRANSLATORS: B = single letter for the color blue
 #: dialogs.c:905 dialogs.c:912 dialogs.c:918 dialogs.c:924 dialogs.c:930
 #: dialogs.c:936 dialogs.c:1650 dialogs.c:1656 dialogs.c:1662 dialogs.c:1668
 #: dialogs.c:1674 dialogs.c:1680 dialogs.c:1686
 msgid "B"
-msgstr "A"
+msgstr "B"
 
 #. TRANSLATORS: D = single letter to make a color darker
 #: dialogs.c:907 dialogs.c:913 dialogs.c:919 dialogs.c:925 dialogs.c:931
 #: dialogs.c:937
 msgid "D"
-msgstr "O"
+msgstr "D"
 
 #: dialogs.c:908
 msgid "Black Piece Color:"
-msgstr "Color de las piezas negras:"
+msgstr "Culoarea pieselor „negre”:"
 
 #: dialogs.c:914
 msgid "Light Square Color:"
-msgstr "Color de los escaques claros"
+msgstr "Culoarea pătrățelelor deschise:"
 
 #: dialogs.c:920
 msgid "Dark Square Color:"
-msgstr "Color de los escaques oscuros"
+msgstr "Culoarea pătrățelelor închise:"
 
 #: dialogs.c:926
 msgid "Highlight Color:"
-msgstr "Color de escaque iluminado"
+msgstr "Culoare de evidențiere:"
 
 #: dialogs.c:932
 msgid "Premove Highlight Color:"
-msgstr "Color de iluminación de prejugada:"
+msgstr "Culoare de evidențiere pre-mutare:"
 
 #: dialogs.c:938
 msgid "Flip Pieces Shogi Style        (Colored buttons restore default)"
-msgstr "Voltear piezas estilo Shogi    (Botones de colores predefinidos)"
+msgstr "Rotește piesele în stilul Shogi (butoanele colorate restaurează valorile implicite)"
 
 #: dialogs.c:940
 msgid "Mono Mode"
-msgstr "Modo mono"
+msgstr "Modul monocromatic"
 
 #: dialogs.c:941
 msgid "Logo Size (0=off, requires restart):"
-msgstr "Tamaño del logo (0=desactivado, requiere reiniciar):"
+msgstr "Logo Size (0=off, requires restart):"
 
 #: dialogs.c:942
 msgid "Line Gap (-1 = default for board size):"
-msgstr "Hueco de la línea (-1 = el predeterminado para el tamaño del tablero):"
+msgstr "Spațiul dintre linii (-1 = implicit pentru dimensiunea plăcii):"
 
 #: dialogs.c:943
 msgid "Use Board Textures"
-msgstr "Utilizar tablero con texturas"
+msgstr "Utilizați texturi pentru tabla de șah"
 
 #: dialogs.c:944
 msgid "Light-Squares Texture File:"
-msgstr "Fichero de texturas para escaques claros:"
+msgstr "Fișier de textură cu pătrățele-deschise:"
 
 #: dialogs.c:945
 msgid "Dark-Squares Texture File:"
-msgstr "Fichero de texturas para escaques oscuros:"
+msgstr "Fișier de textură cu pătrățele-închise:"
 
 #: dialogs.c:946
 msgid "Use external piece bitmaps with their own colors"
-msgstr "Utilizar «bitmaps» externos para las piezas con sus propios colores"
+msgstr "Utilizați hărți de biți externe pentru piese cu propriile culori"
 
 #: dialogs.c:947
 msgid "Directory with Pieces Images:"
-msgstr "Carpeta con imágenes de piezas:"
+msgstr "Directorul cu imaginile pieselor:"
 
 #: dialogs.c:1018
 msgid "# no themes are defined"
-msgstr "# no hay ningún tema definido"
+msgstr "# nicio temă nu este definită"
 
 #: dialogs.c:1030
 msgid "Board Options"
-msgstr "Opciones de tablero"
+msgstr "Opțiuni pentru tabla de joc"
 
 #: dialogs.c:1101 menus.c:646
 msgid "ICS text menu"
-msgstr "Menú de texto ICS"
+msgstr "Meniul de text ICS"
 
 #: dialogs.c:1130
 msgid "clear"
-msgstr "borrar"
+msgstr "șterge"
 
 #: dialogs.c:1131
 msgid "save changes"
-msgstr "guardar cambios"
+msgstr "salvează modificările"
 
 #: dialogs.c:1229
 msgid "add next move"
-msgstr "añadir siguente jugada"
+msgstr "adaugă următoarea mutare"
 
 #: dialogs.c:1230
 msgid "commit changes"
-msgstr "hacer cambios"
+msgstr "trimite modificările"
 
 #: dialogs.c:1253
 msgid "Edit book"
-msgstr "Editar libro"
+msgstr "Editare carte"
 
 #: dialogs.c:1270 dialogs.c:1277 menus.c:648
 msgid "Tags"
-msgstr "Etiquetas"
+msgstr "Etichete"
 
 #: dialogs.c:1285
 msgid "Registered Engines"
-msgstr "Motores registrados"
+msgstr "Motoare înregistrate"
 
 #: dialogs.c:1401
 msgid "ICS input box"
-msgstr "Cuadro de entrada ICS"
+msgstr "Caseta de dialog ICS"
 
 #: dialogs.c:1433
 msgid "Type a move"
-msgstr "Teclear una jugada"
+msgstr "Introduceți o mutare"
 
 #: dialogs.c:1459
 msgid "Engine has no options"
-msgstr "El motor no tiene opciones"
+msgstr "Motorul nu are opțiuni"
 
 #: dialogs.c:1461
 msgid "Engine Settings"
-msgstr "Configuración del motor"
+msgstr "Configurarea motorului"
 
 #: dialogs.c:1502
 msgid "Select engine from list:"
-msgstr "Seleccionar un motor de la lista:"
+msgstr "Selectați motorul din listă:"
 
 #: dialogs.c:1505
 msgid "or specify one below:"
-msgstr "o especificar uno debajo:"
+msgstr "sau specificați unul mai jos:"
 
 #: dialogs.c:1506
 msgid "Nickname (optional):"
-msgstr "Sobrenombre (opcional):"
+msgstr "Pseudonim (opțional):"
 
 #: dialogs.c:1507
 msgid "Use nickname in PGN player tags of engine-engine games"
-msgstr "Usar el sobrenombre de las etiquetas de jugadores del PGN en las partidas motor-motor"
+msgstr "Utilizați pseudonimul din etichetele PGN ale jucătorilor în partidele motor-motor"
 
 #: dialogs.c:1508
 msgid "Engine Directory:"
-msgstr "Carpeta del motor:"
+msgstr "Directorul motorului:"
 
 #: dialogs.c:1509
 msgid "Engine Command:"
-msgstr "Instrucción para el motor:"
+msgstr "Comanda motorului:"
 
 #: dialogs.c:1510
 msgid "(Directory will be derived from engine path when empty)"
-msgstr "(La carpeta se derivará de la del motor cuando esté vacía)"
+msgstr "(Directorul va fi derivat din ruta motorului atunci când este gol)"
 
 #: dialogs.c:1511
 msgid "UCI"
@@ -1990,59 +1997,59 @@ msgstr "UCI"
 
 #: dialogs.c:1512
 msgid "USI/UCCI (uses specified -uxiAdapter)"
-msgstr "USI/UCCI (utiliza el -uxiAdapter especificado)"
+msgstr "USI/UCCI (utilizează -uxiAdapter specificat)"
 
 #: dialogs.c:1513
 msgid "WB protocol v1 (do not wait for engine features)"
-msgstr "Protocolo WB v1 (no esperar por las características del motor)"
+msgstr "Protocolul WB v1 (nu așteaptă să primească caracteristicile motorului)"
 
 #: dialogs.c:1514
 msgid "Must not use GUI book"
-msgstr "No debe utilizar el libro de la GUI"
+msgstr "Nu trebuie să utilizați cartea cu interfață grafică"
 
 #: dialogs.c:1515
 msgid "Add this engine to the list"
-msgstr "Añadir este motor a la lista"
+msgstr "Adaugă acest motor la listă"
 
 #: dialogs.c:1516
 msgid "Force current variant with this engine"
-msgstr "Forzar la variante actual con este motor"
+msgstr "Forțează varianta curentă cu acest motor"
 
 #: dialogs.c:1570
 msgid "Load first engine"
-msgstr "Cargar el primer motor"
+msgstr "Încarcă primul motor"
 
 #: dialogs.c:1576
 msgid "Load second engine"
-msgstr "Cargar el segundo motor"
+msgstr "Încarcă al doilea motor"
 
 #: dialogs.c:1599
 msgid "shuffle"
-msgstr "barajar"
+msgstr "amestecare"
 
 #: dialogs.c:1600
 msgid "Fischer castling"
-msgstr "Enroque de Fischer"
+msgstr "Rocada Fischer"
 
 #: dialogs.c:1601
 msgid "Start-position number:"
-msgstr "Núm. de pos. inicial:"
+msgstr "Numărul poziției de start:"
 
 #: dialogs.c:1602
 msgid "randomize"
-msgstr "aleatorizar"
+msgstr "aleatoriu"
 
 #: dialogs.c:1603
 msgid "pick fixed"
-msgstr "selección fijada"
+msgstr "alegere fixată"
 
 #: dialogs.c:1620
 msgid "New Shuffle Game"
-msgstr "Nueva partida revuelta..."
+msgstr "Nouă partidă aleatorie"
 
 #: dialogs.c:1647
 msgid "Clocks (requires restart):"
-msgstr "Relojes (requiere reiniciar):"
+msgstr "Ceasuri (necesită repornire):"
 
 #: dialogs.c:1648 dialogs.c:1654 dialogs.c:1660 dialogs.c:1666 dialogs.c:1672
 #: dialogs.c:1678 dialogs.c:1684
@@ -2057,7 +2064,7 @@ msgstr "-"
 #: dialogs.c:1651 dialogs.c:1657 dialogs.c:1663 dialogs.c:1669 dialogs.c:1675
 #: dialogs.c:1681 dialogs.c:1687
 msgid "I"
-msgstr "C"
+msgstr "I"
 
 #: dialogs.c:1652 dialogs.c:1658 dialogs.c:1664 dialogs.c:1670 dialogs.c:1676
 #: dialogs.c:1682 dialogs.c:1688
@@ -2066,27 +2073,27 @@ msgstr "*"
 
 #: dialogs.c:1653
 msgid "Message (above board):"
-msgstr "Mensaje (encima del tablero):"
+msgstr "Mesaj (deasupra tablei):"
 
 #: dialogs.c:1659
 msgid "ICS Chat/Console:"
-msgstr "Consola de ICS/Charla:"
+msgstr "Conversație/Consolă ICS:"
 
 #: dialogs.c:1665
 msgid "Edit tags / book / engine list:"
-msgstr "Editar etiquetas / libro / lista de motores:"
+msgstr "Editează etichetele / cartea / lista de motoare:"
 
 #: dialogs.c:1671
 msgid "Edit comments:"
-msgstr "Editar comentarios:"
+msgstr "Editează comentariile:"
 
 #: dialogs.c:1677
 msgid "Move history / Engine Output:"
-msgstr "Historial de movimientos / Salida del motor:"
+msgstr "Istoricul de mutări / Ieșirea motorului:"
 
 #: dialogs.c:1683
 msgid "Game list:"
-msgstr "Lista de partidas:"
+msgstr "Lista partidelor:"
 
 #: dialogs.c:1689
 msgid ""
@@ -2094,19 +2101,19 @@ msgid ""
 "The * buttons will set the font to the one selected below:"
 msgstr ""
 "\n"
-"Los botones * seleccionarán la fuente abajo indicada:"
+"Butoanele * vor fixa fontul la cel selectat mai jos:"
 
 #: dialogs.c:1743
 msgid "This only works in the GTK build"
-msgstr "Esto solo funciona en el «build» de GTK"
+msgstr "Acest lucru funcționează numai în construcția cu GTK"
 
 #: dialogs.c:1744
 msgid "Fonts"
-msgstr "Fuentes"
+msgstr "Tipuri de litere"
 
 #: dialogs.c:1764
 msgid "classical"
-msgstr "clásica"
+msgstr "clasic"
 
 #: dialogs.c:1765
 msgid "incremental"
@@ -2114,64 +2121,64 @@ msgstr "incremental"
 
 #: dialogs.c:1766
 msgid "fixed max"
-msgstr "máximo fijado"
+msgstr "maximul fixat"
 
 #: dialogs.c:1767
 msgid "Divide entered times by 60"
-msgstr "Divide por 60 los tiempos introducidos"
+msgstr "Împarte timpii introduși la 60"
 
 #: dialogs.c:1768
 msgid "Moves per session:"
-msgstr "Jugadas por sesión:"
+msgstr "Mutări pe sesiune:"
 
 #: dialogs.c:1769
 msgid "Initial time (min):"
-msgstr "Tiempo inicial (min):"
+msgstr "Timpul inițial (min.):"
 
 #: dialogs.c:1770
 msgid "Increment or max (sec/move):"
-msgstr "Incremento o máximo (s(jugada):"
+msgstr "Incrementare sau maxim (sec/mutare):"
 
 #: dialogs.c:1771
 msgid "Time-Odds factors:"
-msgstr "Factores de tiempo extra:"
+msgstr "Factori de corectare a timpului:"
 
 #: dialogs.c:1772
 msgid "Engine #1"
-msgstr "Motor 1"
+msgstr "Motorul nr. 1"
 
 #: dialogs.c:1773
 msgid "Engine #2 / Human"
-msgstr "Motor 2 / Humano"
+msgstr "Motorul nr. 2 / Uman"
 
 #: dialogs.c:1814 dialogs.c:1817 dialogs.c:1822 dialogs.c:1823
 #: gtk/xoptions.c:183
 msgid "Unused"
-msgstr "No se usa"
+msgstr "Nefolosit"
 
 #: dialogs.c:1832
 msgid "Changing time control during a game is not implemented"
-msgstr "No se puede cambiar el control de tiempo en medio de una partida"
+msgstr "Modificarea controlului timpului în timpul unei partide nu este implementată"
 
 #: dialogs.c:1869
 msgid "Error writing to chess program"
-msgstr "Error al escribir al programa de ajedrez"
+msgstr "Eroare la scrierea în programul de șah"
 
 #: dialogs.c:1937 gtk/xoptions.c:1775 xaw/xoptions.c:1341
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Anulare"
 
 #: dialogs.c:1942 dialogs.c:2695 dialogs.c:2699
 msgid "King"
-msgstr "Rey"
+msgstr "Rege"
 
 #: dialogs.c:1945
 msgid "Captain"
-msgstr "Capitán"
+msgstr "Căpitan"
 
 #: dialogs.c:1946
 msgid "Lieutenant"
-msgstr "Teniente"
+msgstr "Locotenent"
 
 #: dialogs.c:1947
 msgid "General"
@@ -2179,27 +2186,27 @@ msgstr "General"
 
 #: dialogs.c:1948
 msgid "Warlord"
-msgstr "Caudillo"
+msgstr "Conducător războinic"
 
 #: dialogs.c:1950 dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
 msgid "Knight"
-msgstr "Caballo"
+msgstr "Cal"
 
 #: dialogs.c:1951 dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
 msgid "Bishop"
-msgstr "Alfil"
+msgstr "Nebun"
 
 #: dialogs.c:1952 dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
 msgid "Rook"
-msgstr "Torre"
+msgstr "Turn"
 
 #: dialogs.c:1956 dialogs.c:2696 dialogs.c:2700
 msgid "Archbishop"
-msgstr "Arzobispo"
+msgstr "Arhiepiscop"
 
 #: dialogs.c:1957 dialogs.c:2696 dialogs.c:2700
 msgid "Chancellor"
-msgstr "Canciller"
+msgstr "Cancelar"
 
 #: dialogs.c:1959 dialogs.c:2695 dialogs.c:2699 dialogs.c:2717
 msgid "Queen"
@@ -2207,132 +2214,132 @@ msgstr "Dama"
 
 #: dialogs.c:1961
 msgid "Lion"
-msgstr "León"
+msgstr "Leu"
 
 #: dialogs.c:1965
 msgid "Defer"
-msgstr "Diferir"
+msgstr "Amânare"
 
 #: dialogs.c:1966 dialogs.c:2696 dialogs.c:2700
 msgid "Promote"
-msgstr "Coronar"
+msgstr "Promovare"
 
 #: dialogs.c:2023
 msgid "Chats:"
-msgstr "Charlas:"
+msgstr "Conversații:"
 
 #: dialogs.c:2024 dialogs.c:2025 dialogs.c:2026 dialogs.c:2027 dialogs.c:2028
 #: dialogs.c:2134 dialogs.c:2199 dialogs.c:2231
 msgid "New Chat"
-msgstr "Nueva Charla"
+msgstr "Conversație nouă"
 
 #: dialogs.c:2031
 msgid "Chat partner:"
-msgstr "Charlar con compañero:"
+msgstr "Partener de conversație:"
 
 #: dialogs.c:2032
 msgid "End Chat"
-msgstr "Fin de la charla"
+msgstr "Sfârșitul conversației"
 
 #: dialogs.c:2033
 msgid "Hide"
-msgstr "Ocultar"
+msgstr "Ascunde"
 
 #: dialogs.c:2260
 msgid "ICS Interaction"
-msgstr "Interacciones ICS"
+msgstr "Interacțiune ICS"
 
 #: dialogs.c:2345
 msgid "factory"
-msgstr "De fábrica"
+msgstr "de fabrică"
 
 #: dialogs.c:2346
 msgid "up"
-msgstr "arriba"
+msgstr "sus"
 
 #: dialogs.c:2347
 msgid "down"
-msgstr "abajo"
+msgstr "jos"
 
 #: dialogs.c:2366
 msgid "No tag selected"
-msgstr "Número de la etiqueta seleccionada"
+msgstr "Nu a fost selectată nicio etichetă"
 
 #: dialogs.c:2397
 msgid "Game-list options"
-msgstr "Opciones de la lista de partidas"
+msgstr "Opțiuni ale listei de partide"
 
 #: dialogs.c:2475 dialogs.c:2489
 msgid "Error"
-msgstr "Error"
+msgstr "Eroare"
 
 #: dialogs.c:2518
 msgid "Fatal Error"
-msgstr "Error fatal"
+msgstr "Eroare fatală"
 
 #: dialogs.c:2518
 msgid "Exiting"
-msgstr "Saliendo"
+msgstr "Ieșind"
 
 #: dialogs.c:2529
 msgid "Information"
-msgstr "Información"
+msgstr "Informaţii"
 
 #: dialogs.c:2536
 msgid "Note"
-msgstr "Nota"
+msgstr "Notă"
 
 #: dialogs.c:2694 dialogs.c:2987 dialogs.c:2990
 msgid "White"
-msgstr "Blancas"
+msgstr "Albe"
 
 #: dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
 msgid "Pawn"
-msgstr "Peón"
+msgstr "Pion"
 
 #: dialogs.c:2695 dialogs.c:2699
 msgid "Elephant"
-msgstr "Elefante"
+msgstr "Elefant"
 
 #: dialogs.c:2695 dialogs.c:2699
 msgid "Cannon"
-msgstr "Cañón"
+msgstr "Canon"
 
 #: dialogs.c:2696 dialogs.c:2700
 msgid "Demote"
-msgstr "Degradar"
+msgstr "Retrogradare"
 
 #: dialogs.c:2697 dialogs.c:2701
 msgid "Empty square"
-msgstr "Vaciar el escaque"
+msgstr "Pătrățel gol"
 
 #: dialogs.c:2697 dialogs.c:2701
 msgid "Clear board"
-msgstr "Limpiar el tablero"
+msgstr "Curăță tabla"
 
 #: dialogs.c:2698 dialogs.c:2999 dialogs.c:3002
 msgid "Black"
-msgstr "Negras"
+msgstr "Negre"
 
 #: dialogs.c:2798
 msgid "_File"
-msgstr "_Archivo"
+msgstr "_Fișier"
 
 #: dialogs.c:2799
 msgid "_Edit"
-msgstr "_Editar"
+msgstr "_Editare"
 
 #: dialogs.c:2800
 msgid "_View"
-msgstr "_Ver"
+msgstr "_Vizualizare"
 
 #: dialogs.c:2801
 msgid "_Mode"
-msgstr "_Modo"
+msgstr "_Mod"
 
 #: dialogs.c:2802
 msgid "_Action"
-msgstr "A_cción"
+msgstr "_Acțiune"
 
 #: dialogs.c:2803
 msgid "E_ngine"
@@ -2340,11 +2347,11 @@ msgstr "Mo_tor"
 
 #: dialogs.c:2804
 msgid "_Options"
-msgstr "_Opciones"
+msgstr "_Opțiuni"
 
 #: dialogs.c:2805
 msgid "_Help"
-msgstr "A_yuda"
+msgstr "_Ajutor"
 
 #: dialogs.c:2815
 msgid "<<"
@@ -2364,67 +2371,68 @@ msgstr ">>"
 
 #: dialogs.c:3107
 msgid "Directories:"
-msgstr "Carpetas:"
+msgstr "Directoare:"
 
 #: dialogs.c:3108
 msgid "Files:"
-msgstr "Archivos:"
+msgstr "Fișiere:"
 
 #: dialogs.c:3109
 msgid "by name"
-msgstr "por nombre"
+msgstr "după nume"
 
 #: dialogs.c:3110
 msgid "by type"
-msgstr "por tipo"
+msgstr "după tip"
 
 #: dialogs.c:3113
 msgid "Filename:"
-msgstr "Nombre del fichero:"
+msgstr "Numele fișierului:"
 
 #: dialogs.c:3114
 msgid "New directory"
-msgstr "Nueva carpeta"
+msgstr "Director nou"
 
 #: dialogs.c:3115
 msgid "File type:"
-msgstr "Tipo de fichero:"
+msgstr "Tipul de fișier:"
 
 #: dialogs.c:3190
 msgid "Contents of"
-msgstr "Contenido de"
+msgstr "Conținutul"
 
 #: dialogs.c:3216
 msgid "  next page"
-msgstr "  siguiente página"
+msgstr "  pagina următoare"
 
 #: dialogs.c:3233
 msgid "FIRST TYPE DIRECTORY NAME HERE"
-msgstr "NOMBRE DEL DIRECTORIO PRIMERO AQUÍ"
+msgstr "MAI ÎNTÂI INTRODUCEȚI AICI NUMELE DIRECTORULUI"
 
 #: dialogs.c:3234
 msgid "TRY ANOTHER NAME"
-msgstr "INTENTAR OTRO NOMBRE"
+msgstr "ÎNCERCAȚI UN ALT NUME"
 
 #: draw.c:405
 msgid ""
 "No default pieces installed!\n"
 "Select your own using '-pieceImageDirectory'."
 msgstr ""
-"No hay piezas predeterminadas instaladas\n"
-"Seleccione su propio '-pieceImageDirectory'."
+"Nu sunt instalate piese implicite!\n"
+"Selectați-le pe ale dvs. folosind „-pieceImageDirectory”."
 
 #: engineoutput.c:112 menus.c:642
 #, c-format
 msgid "Engine Output"
-msgstr "Salida del motor"
+msgstr "Ieșirea motorului"
 
 #: engineoutput.c:122
 #, c-format
 msgid "%s (%d reversible ply)"
 msgid_plural "%s (%d reversible plies)"
-msgstr[0] "%s (%d media-jugada reversible)"
-msgstr[1] "%s (%d medias-jugadas reversibles)"
+msgstr[0] "%s (se poate anula %d mutare)"
+msgstr[1] "%s (se pot anula %d mutări)"
+msgstr[2] "%s (se pot anula %d de mutări)"
 
 #: engineoutput.c:565 engineoutput.c:568 nengineoutput.c:83 nengineoutput.c:91
 msgid "NPS"
@@ -2433,83 +2441,82 @@ msgstr "NPS"
 #: gamelist.c:379
 #, c-format
 msgid "Reading game file (%d)"
-msgstr "Leyendo fichero de partidas (%d)"
+msgstr "Se citește fișierul partidelor (%d)"
 
 #: gtk/xboard.c:979 xaw/xboard.c:1074
 #, c-format
 msgid "%s: can't cd to CHESSDIR: "
-msgstr "%s: no se puede ir a la carpeta CHESSDIR: "
+msgstr "%s: nu se poate schimba directorul la CHESSDIR: "
 
 #: gtk/xboard.c:988 xaw/xboard.c:1083
 #, c-format
 msgid "Failed to open file '%s'\n"
-msgstr "Fallo al abrir el fichero '%s'\n"
+msgstr "Nu s-a putut deschide fișierul „%s”\n"
 
-#  TRANSLATORS: BOARDS_RANKS, BOARD_FILES translatable?
 #: gtk/xboard.c:1003 xaw/xboard.c:1092
 msgid "Recompile with larger BOARD_RANKS or BOARD_FILES to support this size"
-msgstr "Recompilar con BOARD_RANKS o BOARD_FILES mayor para admitir este tamaño"
+msgstr "Recompilați cu o valoare mai mare de BOARD_RANKS sau BOARD_FILES pentru a permite această dimensiune"
 
 #: gtk/xboard.c:1022 xaw/xboard.c:1124
 #, c-format
 msgid "%s: bad boardSize syntax %s\n"
-msgstr "%s: sintaxis de boardSize incorrecta %s\n"
+msgstr "%s: sintaxă boardSize incorectă %s\n"
 
 #: gtk/xboard.c:1063 xaw/xboard.c:1163
 #, c-format
 msgid "%s: unrecognized boardSize name %s\n"
-msgstr "%s: nombre de boardSize no reconocido %s\n"
+msgstr "%s: nume boardSize nerecunoscut %s\n"
 
 #: gtk/xboard.c:1107 xaw/xboard.c:1200
 #, c-format
 msgid "%s: too few colors available; trying monochrome mode\n"
-msgstr "%s: insuficientes colores disponibles: probando modo monocromo\n"
+msgstr "%s: prea puține culori disponibile; încercați modul monocrom\n"
 
 #: gtk/xboard.c:1421 xaw/xboard.c:1492
 #, c-format
 msgid "Unable to create font set for %s.\n"
-msgstr "No se ha podido crear conjunto de fuentes para %s.\n"
+msgstr "Nu se poate crea setul de fonturi pentru %s.\n"
 
 #: gtk/xboard.c:1446 xaw/xboard.c:1515
 #, c-format
 msgid "%s: no fonts match pattern %s\n"
-msgstr "%s: ninguna fuente concuerda con el patrón %s\n"
+msgstr "%s: niciun font nu se potrivește cu modelul %s\n"
 
 #: gtk/xboard.c:1914 xaw/xboard.c:2007
 msgid "Can't open temp file"
-msgstr "No se puede abrir el fichero temporal"
+msgstr "Nu se poate deschide fișierul temporar"
 
 #: gtk/xboard.c:2422
 msgid "Failed to open file"
-msgstr "Fallo al abrir fichero"
+msgstr "Nu s-a putut deschide fișierul"
 
 #: gtk/xoptions.c:1498
 msgid "Browse"
-msgstr "Navegar"
+msgstr "Răsfoire"
 
 #: gtk/xoptions.c:1772 xaw/xoptions.c:1337
 msgid "OK"
-msgstr "Aceptar"
+msgstr "OK"
 
 #: menus.c:136
 msgid "Load game file name?"
-msgstr "¿Nombre del fichero de partidas para cargar?"
+msgstr "Numele fișierului de încărcare a jocului?"
 
 #: menus.c:183
 msgid "Load position file name?"
-msgstr "¿Nombre del fichero de posiciones para cargar?"
+msgstr "Numele fișierului de încărcare a poziției?"
 
 #: menus.c:189 menus.c:582
 msgid "Save game file name?"
-msgstr "¿Nombre del fichero de partidas para guardar?"
+msgstr "Numele fișierului de salvare a jocului?"
 
 #: menus.c:198
 msgid "Save position file name?"
-msgstr "¿Nombre del fichero de posiciones para guardar?"
+msgstr "Numele fișierului de salvare a poziției?"
 
 #: menus.c:355
 msgid " (with Zippy code)"
-msgstr " (con el código de Zippy)"
+msgstr " (cu codul poștal)"
 
 #: menus.c:360
 #, c-format
@@ -2530,317 +2537,316 @@ msgid ""
 msgstr ""
 "%s%s\n"
 "\n"
-"Copyright 1991 Digital Equipment Corporation\n"
-"Copyright de las mejoras 1992-2014 Free Software Foundation\n"
-"Copyright de las mejoras 2005 Alessandro Scotti\n"
+"Drepturi de autor 1991 Digital Equipment Corporation\n"
+"Drepturi de autor pentru îmbunătățiri 1992-2016 Free Software Foundation\n"
+"Drepturi de autor pentru îmbunătățiri 2005 Alessandro Scotti\n"
 "\n"
-"%s es software libre SIN NINGUNA GARANTÍA; ver el fichero COPYING para más información.\n"
+"%s este software liber și NU oferă NICI O GARANȚIE; consultați fișierul COPYING pentru mai multe informații.\n"
 "\n"
-"Visite XBoard en la web en: http://www.gnu.org/software/xboard/\n"
-"Obtenga las características más recientes en: http://www.gnu.org/software/xboard/whats_new.html\n"
+"Vizitați XBoard pe Internet la: http://www.gnu.org/software/xboard/\n"
+"Consultați cele mai noi caracteristici la: http://www.gnu.org/software/xboard/whats_new.html\n"
 "\n"
-"Informe de errores por correo a: <bug-xboard@gnu.org>\n"
-"\n"
+"Raportați erorile prin mesaj electronic la: <bug-xboard@gnu.org>\n"
 
 #: menus.c:371 menus.c:765
 msgid "About XBoard"
-msgstr "Acerca de XBoard"
+msgstr "Despre XBoard"
 
 #: menus.c:593
 msgid "New Game"
-msgstr "Nueva partida"
+msgstr "Partidă nouă"
 
 #: menus.c:594
 msgid "New Shuffle Game..."
-msgstr "Nueva partida revuelta..."
+msgstr "Partidă nouă aleatorie..."
 
 #: menus.c:595
 msgid "New Variant..."
-msgstr "Nueva variante..."
+msgstr "Noua variantă..."
 
 #: menus.c:597
 msgid "Load Game"
-msgstr "Cargar partida"
+msgstr "Încarcă partida"
 
 #: menus.c:598
 msgid "Load Position"
-msgstr "Cargar posición"
+msgstr "Încarcă poziția"
 
 #: menus.c:599
 msgid "Next Position"
-msgstr "Siguiente posición"
+msgstr "Poziția următoare"
 
 #: menus.c:600
 msgid "Prev Position"
-msgstr "Posición previa"
+msgstr "Poziția anterioară"
 
 #: menus.c:602
 msgid "Save Game"
-msgstr "Guardar partida"
+msgstr "Salvează partida"
 
 #: menus.c:603
 msgid "Save Position"
-msgstr "Guardar posición"
+msgstr "Salvează poziția"
 
 #: menus.c:604
 msgid "Save Selected Games"
-msgstr "Guardar partidas seleccionadas"
+msgstr "Salvează partidele selectate"
 
 #: menus.c:605
 msgid "Save Games as Book"
-msgstr "Guardar partidas como libro"
+msgstr "Salvează partidele drept carte"
 
 #: menus.c:607
 msgid "Mail Move"
-msgstr "Jugada por correo"
+msgstr "Trimite mutarea prin poșta electronică"
 
 #: menus.c:608
 msgid "Reload CMail Message"
-msgstr "Volver a cargar mensaje CMail"
+msgstr "Reîncărcare mesaj CMail"
 
 #: menus.c:610
 msgid "Quit "
-msgstr "Salir "
+msgstr "Ieșire"
 
 #: menus.c:615
 msgid "Copy Game"
-msgstr "Copiar partida"
+msgstr "Copiază partida"
 
 #: menus.c:616
 msgid "Copy Position"
-msgstr "Copiar posición"
+msgstr "Copiază poziția"
 
 #: menus.c:617
 msgid "Copy Game List"
-msgstr "Copiar lista de partidas"
+msgstr "Copiază lista de partide"
 
 #: menus.c:619
 msgid "Paste Game"
-msgstr "Pegar partida"
+msgstr "Lipește partida"
 
 #: menus.c:620
 msgid "Paste Position"
-msgstr "Pegar posición"
+msgstr "Lipește poziția"
 
 #: menus.c:622 menus.c:665
 msgid "Edit Game"
-msgstr "Editar partida"
+msgstr "Editează partida"
 
 #: menus.c:623 menus.c:666
 msgid "Edit Position"
-msgstr "Editar posición"
+msgstr "Editează poziția"
 
 #: menus.c:624
 msgid "Edit Tags"
-msgstr "Editar etiquetas"
+msgstr "Editează etichetele"
 
 #: menus.c:625
 msgid "Edit Comment"
-msgstr "Editar comentario"
+msgstr "Editează comentariul"
 
 #: menus.c:626
 msgid "Edit Book"
-msgstr "Editar libro"
+msgstr "Editare carte"
 
 #: menus.c:628
 msgid "Revert"
-msgstr "Revertir"
+msgstr "Revenire (la valorile dinainte)"
 
 #: menus.c:629
 msgid "Annotate"
-msgstr "Anotar"
+msgstr "Adnotează"
 
 #: menus.c:630
 msgid "Truncate Game"
-msgstr "Truncar partida"
+msgstr "Trunchiază partida"
 
 #: menus.c:632
 msgid "Backward"
-msgstr "Hacia atrás"
+msgstr "Înapoi"
 
 #: menus.c:633
 msgid "Forward"
-msgstr "Hacia delante"
+msgstr "Înainte"
 
 #: menus.c:634
 msgid "Back to Start"
-msgstr "Volver a empezar"
+msgstr "Înapoi la început"
 
 #: menus.c:635
 msgid "Forward to End"
-msgstr "Avanzar hasta el final"
+msgstr "Înainte până la final"
 
 #: menus.c:640
 msgid "Flip View"
-msgstr "Voltear vista"
+msgstr "Rotește vizualizarea"
 
 #: menus.c:643
 msgid "Move History"
-msgstr "Historial de jugadas"
+msgstr "Istoric de mutări"
 
 #: menus.c:644
 msgid "Evaluation Graph"
-msgstr "Gráfica de evaluación"
+msgstr "Grafic de evaluare"
 
 #: menus.c:645
 msgid "Game List"
-msgstr "Lista de partidas"
+msgstr "Lista de partide"
 
 #: menus.c:649
 msgid "Comments"
-msgstr "Comentarios"
+msgstr "Comentarii"
 
 #: menus.c:650
 msgid "ICS Input Box"
-msgstr "Cuatro de entrada ICS"
+msgstr "Caseta de dialog ICS"
 
 #: menus.c:651
 msgid "ICS/Chat Console"
-msgstr "Consola de ICS/Charla"
+msgstr "ICS/Consola de conversație"
 
 #: menus.c:653
 msgid "Board..."
-msgstr "Tablero..."
+msgstr "Tabla..."
 
 #: menus.c:654
 msgid "Fonts..."
-msgstr "Fuentes..."
+msgstr "Tipuri de litere..."
 
 #: menus.c:655
 msgid "Game List Tags..."
-msgstr "Etiquetas de la lista de partidas..."
+msgstr "Etichete din lista de partide..."
 
 #: menus.c:660
 msgid "Machine White"
-msgstr "El programa con blancas"
+msgstr "Mașina cu albele"
 
 #: menus.c:661
 msgid "Machine Black"
-msgstr "El programa con negras"
+msgstr "Mașina cu negrele"
 
 #: menus.c:662
 msgid "Two Machines"
-msgstr "Dos programas"
+msgstr "Două mașini"
 
 #: menus.c:663
 msgid "Analysis Mode"
-msgstr "Modo de análisis"
+msgstr "Modul de analiză"
 
 #: menus.c:664
 msgid "Analyze Game"
-msgstr "Analizar partida"
+msgstr "Analizează partida"
 
 #: menus.c:667
 msgid "Training"
-msgstr "Entrenamiento"
+msgstr "Antrenament"
 
 #: menus.c:668
 msgid "ICS Client"
-msgstr "Cliente ICS"
+msgstr "Clientul ICS"
 
 #: menus.c:670
 msgid "Machine Match"
-msgstr "Torneo de dos programas"
+msgstr "Partidă de mașini"
 
 #: menus.c:671
 msgid "Pause"
-msgstr "Pausa"
+msgstr "Pauză"
 
 #: menus.c:676
 msgid "Accept"
-msgstr "Aceptar"
+msgstr "Acceptare"
 
 #: menus.c:677
 msgid "Decline"
-msgstr "Declinar"
+msgstr "Declinare"
 
 #: menus.c:678
 msgid "Rematch"
-msgstr "Revancha"
+msgstr "Revanșa"
 
 #: menus.c:680
 msgid "Call Flag"
-msgstr "Pedir la bandera"
+msgstr "Reclamă depășirea timpului"
 
 #: menus.c:681
 msgid "Draw"
-msgstr "Tablas"
+msgstr "Remiză"
 
 #: menus.c:682
 msgid "Adjourn"
-msgstr "Aplazar"
+msgstr "Amânare"
 
 #: menus.c:683
 msgid "Abort"
-msgstr "Abortar"
+msgstr "Anulare"
 
 #: menus.c:684
 msgid "Resign"
-msgstr "Rendirse"
+msgstr "Resemnare"
 
 #: menus.c:686
 msgid "Stop Observing"
-msgstr "Dejar de observar"
+msgstr "Opriți observarea"
 
 #: menus.c:687
 msgid "Stop Examining"
-msgstr "Dejar de examinar"
+msgstr "Opriți examinarea"
 
 #: menus.c:688
 msgid "Upload to Examine"
-msgstr "Enviar para examinar"
+msgstr "Încărcați pentru examinare"
 
 #: menus.c:690
 msgid "Adjudicate to White"
-msgstr "Adjudicar a blancas"
+msgstr "Adjudecare pentru Albe"
 
 #: menus.c:691
 msgid "Adjudicate to Black"
-msgstr "Adjudicar a negras"
+msgstr "Adjudecare pentru Negre"
 
 #: menus.c:692
 msgid "Adjudicate Draw"
-msgstr "Adjudicar tablas"
+msgstr "Adjudecare Remiză"
 
 #: menus.c:697
 msgid "Edit Engine List..."
-msgstr "Editar lista de motores..."
+msgstr "Editează lista motoarelor..."
 
 #: menus.c:699
 msgid "Load New 1st Engine..."
-msgstr "Cargar un nuevo primer motor..."
+msgstr "Încărcați primul motor nou..."
 
 #: menus.c:700
 msgid "Load New 2nd Engine..."
-msgstr "Cargar un nuevo segundo motor..."
+msgstr "Încărcați al doilea motor nou..."
 
 #: menus.c:702
 msgid "Engine #1 Settings..."
-msgstr "Configuración del motor #1..."
+msgstr "Configurarea motorului nr.1..."
 
 #: menus.c:703
 msgid "Engine #2 Settings..."
-msgstr "Configuración del motor #2..."
+msgstr "Configurarea motorului nr.2..."
 
 #: menus.c:704
 msgid "Common Settings..."
-msgstr "Configuración general..."
+msgstr "Configurări comune..."
 
 #: menus.c:706
 msgid "Hint"
-msgstr "Pista"
+msgstr "Sugestie"
 
 #: menus.c:707
 msgid "Book"
-msgstr "Repertorio de aperturas"
+msgstr "Carte"
 
 #: menus.c:709
 msgid "Move Now"
-msgstr "Mover ahora"
+msgstr "Mută acum"
 
 #: menus.c:710
 msgid "Retract Move"
-msgstr "Revocar jugada"
+msgstr "Retragerea mutării"
 
 #: menus.c:716
 msgid "General..."
@@ -2848,11 +2854,11 @@ msgstr "General..."
 
 #: menus.c:718
 msgid "Time Control..."
-msgstr "Controles de tiempo..."
+msgstr "Controlul timpului..."
 
 #: menus.c:719
 msgid "Adjudications..."
-msgstr "Adjudicaciones..."
+msgstr "Adjudecări..."
 
 #: menus.c:720
 msgid "ICS..."
@@ -2860,111 +2866,111 @@ msgstr "ICS..."
 
 #: menus.c:721
 msgid "Tournament..."
-msgstr "Torneo..."
+msgstr "Turneul..."
 
 #: menus.c:722
 msgid "Load Game..."
-msgstr "Cargar partida..."
+msgstr "Încarcă partida..."
 
 #: menus.c:723
 msgid "Save Game..."
-msgstr "Guardar partida..."
+msgstr "Salvează partida..."
 
 #: menus.c:724
 msgid "Game List..."
-msgstr "Lista de partidas..."
+msgstr "Lista de partide..."
 
 #: menus.c:725
 msgid "Sounds..."
-msgstr "Sonidos..."
+msgstr "Sunete..."
 
 #: menus.c:728
 msgid "Always Queen"
-msgstr "Siempre dama"
+msgstr "Întotdeauna Damă"
 
 #: menus.c:734
 msgid "Flash Moves"
-msgstr "Destello en las jugadas"
+msgstr "Clipire la mutări"
 
 #: menus.c:736
 msgid "Highlight Dragging"
-msgstr "Iluminar arrastre"
+msgstr "Evidențiază tragerea"
 
 #: menus.c:739
 msgid "Highlight With Arrow"
-msgstr "Iluminar con flecha"
+msgstr "Evidențiază cu săgeată"
 
 #: menus.c:740
 msgid "Move Sound"
-msgstr "Sonido en jugadas"
+msgstr "Sunet la mutare"
 
 #: menus.c:742
 msgid "Periodic Updates"
-msgstr "Actualización periódica"
+msgstr "Actualizări periodice"
 
 #: menus.c:744
 msgid "Popup Exit Message"
-msgstr "Mensaje de salida en venta emergente"
+msgstr "Mesaj de ieșire emergent"
 
 #: menus.c:746
 msgid "Show Coords"
-msgstr "Mostrar coordenadas"
+msgstr "Afișează coordonatele"
 
 #: menus.c:747
 msgid "Hide Thinking"
-msgstr "Ocultar cogitaciones"
+msgstr "Ascunde gândirea"
 
 #: menus.c:751
 msgid "Save Settings Now"
-msgstr "Guardar config. ahora"
+msgstr "Salvează configurările acum"
 
 #: menus.c:752
 msgid "Save Settings on Exit"
-msgstr "Guardar config. al salir del programa"
+msgstr "Salvează configurările la ieșire"
 
 #: menus.c:757
 msgid "Info XBoard"
-msgstr "Información XBoard"
+msgstr "Informații despre XBoard"
 
 #: menus.c:758
 msgid "Man XBoard"
-msgstr "Manual de XBoard"
+msgstr "Pagina de manual XBoard"
 
 #: menus.c:760
 msgid "XBoard Home Page"
-msgstr "Página web de XBoard"
+msgstr "Pagina principală a XBoard"
 
 #: menus.c:761
 msgid "On-line User Guide"
-msgstr "Guía del usuario en línea"
+msgstr "Ghidul utilizatorului disponibil în Internet"
 
 #: menus.c:762
 msgid "Development News"
-msgstr "Noticias sobre el desarrollo"
+msgstr "Știri despre dezvoltarea XBoard"
 
 #: menus.c:763
 msgid "e-Mail Bug Report"
-msgstr "correo-e para informar de errores"
+msgstr "Raport de eroare prin mesaj electronic"
 
 #: menus.c:802
 msgid "File"
-msgstr "Archivo"
+msgstr "Fișier"
 
 #: menus.c:803
 msgid "Edit"
-msgstr "Editar"
+msgstr "Editare"
 
 #: menus.c:804
 msgid "View"
-msgstr "Ver"
+msgstr "Vizualizare"
 
 #: menus.c:805
 msgid "Mode"
-msgstr "Modo"
+msgstr "Mod"
 
 #: menus.c:806
 msgid "Action"
-msgstr "Acción"
+msgstr "Acțiune"
 
 #: menus.c:807
 msgid "Engine"
@@ -2972,147 +2978,147 @@ msgstr "Motor"
 
 #: menus.c:808
 msgid "Options"
-msgstr "Opciones"
+msgstr "Opțiuni"
 
 #: menus.c:809
 msgid "Help"
-msgstr "Ayuda"
+msgstr "Ajutor"
 
 #: nengineoutput.c:79 nengineoutput.c:87
 msgid "engine name"
-msgstr "nombre del motor"
+msgstr "numele motorului"
 
 #. TRANSLATORS: noun, as in "the move Nf3"
 #: nengineoutput.c:82 nengineoutput.c:90
 msgid "move"
-msgstr "jugada"
+msgstr "mutare"
 
 #: nengineoutput.c:156
 msgid "Engine output"
-msgstr "Salida del motor"
+msgstr "Ieșirea motorului"
 
 #: nengineoutput.c:160
 msgid ""
 "Mismatch of STRIDE in nengineoutput.c\n"
 "Change and recompile!"
 msgstr ""
-"STRIDE desajustado en nengineoutput.c\n"
-"¡Cambiar y recompilar!"
+"Nepotrivire de «STRIDE» în „nengineoutput.c”\n"
+"Modificați și recompilați!"
 
 #: nevalgraph.c:69
 msgid "Evaluation graph"
-msgstr "Gráfica de evaluación"
+msgstr "Grafic de evaluare"
 
 #: nevalgraph.c:69
 msgid "Blunder graph"
-msgstr "Gráfica de fallos garrafales"
+msgstr "Graficul de greșeli"
 
 #: nevalgraph.c:107
 msgid "Blunder"
-msgstr "Fallo garrafal"
+msgstr "Greșeală"
 
 #: nevalgraph.c:107
 msgid "Eval"
-msgstr "Evaluación"
+msgstr "Evaluare"
 
 #: ngamelist.c:87
 msgid "find position"
-msgstr "encontrar posición"
+msgstr "găsește poziția"
 
 #: ngamelist.c:88
 msgid "narrow"
-msgstr "estrecho"
+msgstr "îngust"
 
 #: ngamelist.c:89
 msgid "thresholds"
-msgstr "umbrales"
+msgstr "praguri"
 
 #: ngamelist.c:90
 msgid "tags"
-msgstr "etiquetas"
+msgstr "etichete"
 
 #: ngamelist.c:91
 msgid "next"
-msgstr "siguiente"
+msgstr "următoarea"
 
 #: ngamelist.c:92
 msgid "close"
-msgstr "cerrar"
+msgstr "închide"
 
 #: ngamelist.c:116
 msgid "No game selected"
-msgstr "Ninguna partida seleccionada"
+msgstr "Nicio partidă selectată"
 
 #: ngamelist.c:122
 msgid "Can't go forward any further"
-msgstr "Ya no se puede ir más adelante"
+msgstr "Nu se poate merge mai înainte"
 
 #: ngamelist.c:192
 #, c-format
 msgid "Scanning through games (%d)"
-msgstr "Explorando partidas (%d)"
+msgstr "Scanare după partide (%d)"
 
 #: ngamelist.c:211
 msgid "previous page"
-msgstr "página anterior"
+msgstr "pagina anterioară"
 
 #: ngamelist.c:214
 msgid "next page"
-msgstr "página siguiente"
+msgstr "pagina următoare"
 
 #: ngamelist.c:217
 msgid "no games matched your request"
-msgstr "ninguna partida responde a su búsqueda"
+msgstr "nu există partide care să corespundă cererii dumneavoastră"
 
 #: ngamelist.c:219
 #, c-format
 msgid "%s - %d/%d games (%d-%d-%d)"
-msgstr "%s - %d/%d partidas (%d-%d-%d)"
+msgstr "%s - %d/%d partide (%d-%d-%d)"
 
 #: ngamelist.c:284
 msgid "There is no game list"
-msgstr "No hay lista de partidas"
+msgstr "Nu există o listă de partide"
 
 #: nhistory.c:109
 msgid "Move list"
-msgstr "Lista de jugadas"
+msgstr "Lista de mutări"
 
 #: usystem.c:223
 #, c-format
 msgid "%s: unrecognized color %s\n"
-msgstr "%s: color no reconocido %s\n"
+msgstr "%s: culoare nerecunoscută %s\n"
 
 #: usystem.c:231
 #, c-format
 msgid "%s: can't parse foreground color in '%s'\n"
-msgstr "%s: no se puede analizar el color de primer plano en '%s'\n"
+msgstr "%s: nu se poate analiza culoarea prim-planului în „%s”\n"
 
 #: usystem.c:260
 #, c-format
 msgid "%s: can't parse color names; disabling colorization\n"
-msgstr "%s: no se puede analizar los nombres de los colores; desactivando colorido\n"
+msgstr "%s: nu se pot analiza numele culorilor; se dezactivează colorarea\n"
 
 #: usystem.c:362
 #, c-format
 msgid "ERROR: Unknown user %s (in path %s)\n"
-msgstr "ERROR: usuario desconocido %s (en carpeta %s)\n"
+msgstr "EROARE: Utilizator necunoscut %s (în ruta %s)\n"
 
 #: usystem.c:564
 msgid "Socket support is not configured in"
-msgstr "La capacidad de «socket» no está configurada en"
+msgstr "Suportul pentru socluri nu este configurat în"
 
 #: usystem.c:653
 msgid "internal rcmd not implemented for Unix"
-msgstr "rcmd interno no implementado para Unix"
+msgstr "«rcmd» intern nu este implementat pentru Unix"
 
 #: xaw/xboard.c:1206
 #, c-format
 msgid "white pixel = 0x%lx, black pixel = 0x%lx\n"
-msgstr "pixel blanco = 0x%lx, pixel negro = 0x%lx\n"
+msgstr "pixel alb = 0x%lx, pixel negru = 0x%lx\n"
 
 #: xaw/xoptions.c:378 xaw/xoptions.c:1082
 msgid "browse"
-msgstr "navegar"
+msgstr "răsfoire"
 
 #: xaw/xoptions.c:444 xaw/xoptions.c:445
 msgid "Ctrl"
@@ -3124,51 +3130,4 @@ msgstr "Alt"
 
 #: xaw/xoptions.c:456 xaw/xoptions.c:457
 msgid "Shift"
-msgstr "Mayús"
-
-#~ msgid "Common Engine..."
-#~ msgstr "General de los motores..."
-
-#~ msgid "    (for concurrent playing of a single"
-#~ msgstr "    (para jugar simultáneamente en un solo"
-
-#~ msgid "Match Options"
-#~ msgstr "Opciones del encuentro"
-
-#~ msgid "Chat box"
-#~ msgstr "Cuadro de charla"
-
-#~ msgid "Open Chat Window"
-#~ msgstr "Abrir ventana de conversación"
-
-#~ msgid "ICS ..."
-#~ msgstr "ICS ..."
-
-#~ msgid "Match ..."
-#~ msgstr "Encuentro ..."
-
-#~ msgid "%s: Can't access XPM directory %s\n"
-#~ msgstr "%s: No se puede acceder a la carpeta XPM %s\n"
-
-#~ msgid "Available `%s' sizes:\n"
-#~ msgstr "Disponibles `%s' tamaños:\n"
-
-#~ msgid "Error: No `%s' files!\n"
-#~ msgstr "¡Error: no hay ficheros `%s'!\n"
-
-#~ msgid ""
-#~ "Warning: No DIR structure found on this system --\n"
-#~ "         Unable to autosize for XPM/XIM pieces.\n"
-#~ "   Please report this error to %s.\n"
-#~ "   Include system type & operating system in message.\n"
-#~ msgstr ""
-#~ "ATENCIÓN: No se ha encontrado estructura DIR en este sistema --\n"
-#~ "          No se puede asignar tamaño automáticamente a las piezas XPM/XIM.\n"
-#~ "   Por favor, informe de este error a %s.\n"
-#~ "   Incluya en su mensaje el tipo de sistema y de sistema operativo.\n"
-
-#~ msgid "Error %d loading icon image\n"
-#~ msgstr "Error %d cargando imagen de icono\n"
-
-#~ msgid "cancel"
-#~ msgstr "Cancelar"
+msgstr "Majus"
