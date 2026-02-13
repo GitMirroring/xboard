@@ -609,25 +609,27 @@ PopUpStartupDialog ()
 {  // start menu not implemented in XBoard
 }
 
+// TODO: Properly handle individual arguments that exceed 1023 characters.
+// TODO: Deduplicate with other implementation in xaw/xboard.c.
 char *
 ConvertToLine (int argc, char **argv)
 {
-  static char line[128*1024], buf[1024];
-  int i;
+    static char line[128*1024];
+    char buf[1024];
 
-  line[0] = NULLCHAR;
-  for(i=1; i<argc; i++)
-    {
-      if( (strchr(argv[i], ' ') || strchr(argv[i], '\n') ||strchr(argv[i], '\t') || argv[i][0] == NULLCHAR)
-	  && argv[i][0] != '{' )
-	snprintf(buf, sizeof(buf)/sizeof(buf[0]), "{%s} ", argv[i]);
-      else
-	snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s ", argv[i]);
-      strncat(line, buf, 128*1024 - strlen(line) - 1 );
+    memset(line, 0, sizeof(line));
+    for (int i = 1; i != argc; ++i) {
+        if ( (strchr(argv[i], ' ') || strchr(argv[i], '\n')
+         || strchr(argv[i], '\t') || argv[i][0] == NULLCHAR)
+         && argv[i][0] != '{' ) {
+            snprintf(buf, sizeof(buf), "{%s} ", argv[i]);
+        } else {
+            snprintf(buf, sizeof(buf), "%s ", argv[i]);
+        }
+        strncat(line, buf, sizeof(line) - strlen(line) - 1);
     }
 
-  line[strlen(line)-1] = NULLCHAR;
-  return line;
+    return line;
 }
 
 //--------------------------------------------------------------------------------------------
