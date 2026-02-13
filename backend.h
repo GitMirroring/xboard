@@ -299,6 +299,8 @@ typedef enum { CheckBox, ComboBox, TextBox, Button, Spin, ResetButton, SaveButto
 		 FileName, PathName, Slider, Message, Fractional, Label, Icon,
 		 BoxBegin, BoxEnd, BarBegin, BarEnd, DropDown, Break, GroupBox, EndMark, Skip } Control;
 
+// TODO: Avoid stashing arbitrary additional information within name.
+// To find some examples, look for name + MSG_SIZ - 100 and name + MSG_SIZ - 104.
 typedef struct XB_OPT {   // [HGM] options: descriptor of UCI-style option
     int value;          // current setting, starts as default
     int min;		// Also used for flags

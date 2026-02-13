@@ -17845,7 +17845,12 @@ ParseFeatures (char *args, ChessProgramState *cps)
     if (StringFeature(&p, "egt", &cps->egtFormats, cps)) continue;
     if (StringFeature(&p, "option", &q, cps)) { // read to freshly allocated temp buffer first
 	if(cps->reload) { FREE(q); q = NULL; continue; } // we are reloading because of xreuse
-	if(cps->nrOptions == 0) { ASSIGN(cps->option[0].name, _("Make Persistent -save")); ParseOption(&(cps->option[cps->nrOptions++]), cps); }
+	if(cps->nrOptions == 0) {
+		FREE(cps->option[0].name);
+		cps->option[0].name = calloc(1, MSG_SIZ);
+		snprintf(cps->option[0].name, MSG_SIZ - 1, "%s", _("Make Persistent -save"));
+		ParseOption(&(cps->option[cps->nrOptions++]), cps);
+	}
 	FREE(cps->option[cps->nrOptions].name);
 	cps->option[cps->nrOptions].name = q; q = NULL;
 	if(!ParseOption(&(cps->option[cps->nrOptions++]), cps)) { // [HGM] options: add option feature
