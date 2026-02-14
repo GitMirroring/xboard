@@ -6242,7 +6242,7 @@ InitPosition (int redraw)
     initialPosition[EP_STATUS] = EP_NONE;
     initialPosition[TOUCHED_W] = initialPosition[TOUCHED_B] = 0;
     SetCharTableEsc(pieceToChar, "PNBRQ...........Kpnbrq...........k", SUFFIXES);
-    for(i=0; i<EmptySquare; i++) autoProm[i] = 0;
+    for(i=0; i<=EmptySquare; i++) autoProm[i] = 0;
     if(startVariant == gameInfo.variant) // [HGM] nicks: enable nicknames in original variant
          SetCharTable(pieceNickName, appData.pieceNickNames);
     else SetCharTable(pieceNickName, "............");

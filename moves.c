@@ -119,7 +119,7 @@ unsigned char pieceToChar[EmptySquare+1] = {
                         'x' };
 unsigned char pieceNickName[EmptySquare];
 int promoPartner[EmptySquare];
-unsigned char autoProm[EmptySquare];
+unsigned char autoProm[EmptySquare+1];
 
 char
 PieceToChar (ChessSquare p)
