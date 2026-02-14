@@ -1166,11 +1166,33 @@ ParseArgs(GetFunc get, void *cl)
       break;
 
     case ArgX:
-      *(int *) ad->argLoc = ValidateInt(argValue) + wpMain.x; // [HGM] placement: translate stored relative to absolute
+      {
+          // [HGM] placement: translate stored relative to absolute
+          // (this is really kludgey, it should be done where used...)
+          int value = ValidateInt(argValue);
+          // Values that were previously stored can include
+          // unreasonable coordinate values (e.g., 2147483539).
+          // Therefore, we temporarily force using a lower precision
+          // so that we obtain a coordinate that is actually plausible.
+          value = (int)((int16_t)value);
+          value += wpMain.x;
+          *(int *) ad->argLoc = (int)value;
+      }
       break;
 
     case ArgY:
-      *(int *) ad->argLoc = ValidateInt(argValue) + wpMain.y; // (this is really kludgey, it should be done where used...)
+      {
+          // [HGM] placement: translate stored relative to absolute
+          // (this is really kludgey, it should be done where used...)
+          int value = ValidateInt(argValue);
+          // Values that were previously stored can include
+          // unreasonable coordinate values (e.g., 2147483539).
+          // Therefore, we temporarily force using a lower precision
+          // so that we obtain a coordinate that is actually plausible.
+          value = (int)((int16_t)value);
+          value += wpMain.y;
+          *(int *) ad->argLoc = (int)value;
+      }
       break;
 
     case ArgZ:
@@ -1649,9 +1671,11 @@ SaveSettings(char* name)
       fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc);
       break;
     case ArgX:
-      fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.x); // [HGM] placement: store relative value
+      // [HGM] placement: store relative value
+      fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.x);
       break;
     case ArgY:
+      // [HGM] placement: store relative value
       fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.y);
       break;
     case ArgFloat:

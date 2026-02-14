@@ -55,6 +55,10 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+// TODO: Normalize the line endings within the GNU XBoard repository to be
+// consistently LF only.  Currently, at least some Winboard-specific source
+// files are using CR+LF instead.
+
 #ifndef WINVER
 #define WINVER 0x0500
 #endif
@@ -66,6 +70,7 @@
 #include <winsock.h>
 #include <commctrl.h>
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
