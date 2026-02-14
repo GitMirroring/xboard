@@ -7471,7 +7471,9 @@ FinishMove (ChessMove moveType, int fromX, int fromY, int toX, int toY, int prom
 	if(second.analyzing) SendMoveToProgram(forwardMostMove-1, &second);
     }
     if (currentMove == cmailOldMove + 1) {
-      cmailMoveType[lastLoadGameNumber - 1] = CMAIL_MOVE;
+      if (lastLoadGameNumber > 0) {
+        cmailMoveType[lastLoadGameNumber - 1] = CMAIL_MOVE;
+      }
     }
   }
 
