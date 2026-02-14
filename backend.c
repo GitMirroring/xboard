@@ -1096,13 +1096,21 @@ void
 InitBackEnd1 ()
 {
 
-    ShowThinkingEvent(); // [HGM] thinking: make sure post/nopost state is set according to options
-    startVariant = StringToVariant(appData.variant); // [HGM] nicks: remember original variant
+    // [HGM] thinking: make sure post/nopost state is set according to options
+    ShowThinkingEvent();
 
+    // [HGM] nicks: remember original variant
+    startVariant = StringToVariant(appData.variant);
+
+    // [HGM] book: makes sure random is unpredictabe to msec level
     GetTimeMark(&programStartTime);
-    srandom((programStartTime.ms + 1000*programStartTime.sec)*0x1001001); // [HGM] book: makes sure random is unpredictabe to msec level
+    unsigned long long seed = 1000ull * programStartTime.sec + programStartTime.ms;
+    seed *= 0x1001001;
+    srandom((unsigned int)seed);
     appData.seedBase = random() + (random()<<15);
-    pauseStart = programStartTime; pauseStart.sec -= 100; // [HGM] matchpause: fake a pause that has long since ended
+
+    // [HGM] matchpause: fake a pause that has long since ended
+    pauseStart = programStartTime; pauseStart.sec -= 100;
 
     ClearProgramStats();
     programStats.ok_to_send = 1;

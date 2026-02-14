@@ -441,6 +441,7 @@ int PosFlags P((int n));
 
 
 /* A point in time */
+// TODO: Modernize how this structure is defined and used.
 typedef struct {
     long sec;  /* Assuming this is >= 32 bits */
     int ms;    /* Assuming this is >= 16 bits */
