@@ -90,6 +90,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -17681,8 +17682,13 @@ ParseOption (Option *opt, ChessProgramState *cps)
 // [HGM] options: process the string that defines an engine option, and determine
 // name, type, default value, and allowed value range
 {
-	char *p, *q, buf[MSG_SIZ];
-	int n, min = (-1)<<31, max = 1<<31, def;
+	char *p;
+	char *q;
+	char buf[MSG_SIZ];
+	int n;
+	int min = INT_MIN;
+	int max = INT_MAX;
+	int def;
 
 	opt->target = &opt->value;   // OK for spin/slider and checkbox
 	if(p = strstr(opt->name, " -spin ")) {
