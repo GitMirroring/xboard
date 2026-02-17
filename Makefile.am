@@ -67,10 +67,18 @@ EXTRA_DIST = pixmaps themes png sounds winboard \
 
 DISTCLEANFILES = stamp-h
 
-GITVERSION=$(shell sh -c 'git describe --dirty --always 2>/dev/null')
-AM_CPPFLAGS=-DINFODIR='"$(infodir)"' @X_CFLAGS@ @CAIRO_CFLAGS@ @FRONTEND_CFLAGS@  -DSYSCONFDIR='"$(sysconfdir)"' \
-	    -DLOCALEDIR='"$(localedir)"' -DSVGDIR='"$(svgdir)"' -D__GIT_VERSION='"$(GITVERSION)"' \
-            -DCONFIGURE_OPTIONS='"@CONFIGURE_OPTIONS@"' -DDATADIR='"$(datadir)/games/xboard"' -DMANDIR='"$(mandir)"' $(headers)
+GIT_REVISION=$(shell sh -c 'git describe --dirty --always 2>/dev/null')
+
+AM_CPPFLAGS = @X_CFLAGS@ @CAIRO_CFLAGS@ @FRONTEND_CFLAGS@ \
+    -DCONFIGURE_OPTIONS='"@CONFIGURE_OPTIONS@"' \
+    -DDATADIR='"$(datadir)/games/xboard"' \
+    -DGIT_REVISION='"$(GIT_REVISION)"' \
+    -DINFODIR='"$(infodir)"' \
+    -DLOCALEDIR='"$(localedir)"' \
+    -DMANDIR='"$(mandir)"' \
+    -DSVGDIR='"$(svgdir)"' \
+    -DSYSCONFDIR='"$(sysconfdir)"' \
+    $(headers)
 
 ACLOCAL_AMFLAGS = -I m4
 

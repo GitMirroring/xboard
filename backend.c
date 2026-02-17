@@ -1450,8 +1450,8 @@ void
 InitBackEnd2 ()
 {
     if (appData.debugMode) {
-#    ifdef __GIT_VERSION
-      fprintf(debugFP, "Version: %s (%s)\n", programVersion, __GIT_VERSION);
+#    ifdef GIT_REVISION
+      fprintf(debugFP, "Version: %s (%s)\n", programVersion, GIT_REVISION);
 #    else
       fprintf(debugFP, "Version: %s\n", programVersion);
 #    endif
