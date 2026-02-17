@@ -60,8 +60,14 @@
 
 #include "config.h"
 
-#include <stdio.h>
+#if USE_PTYS
+#define _XOPEN_SOURCE 500
+#endif
+
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -98,7 +104,8 @@ SetUpChildIO (int to_prog[2], int from_prog[2])
 # endif /* HAVE_FCNTL_H */
 #endif /* not HAVE_SYS_FCNTL_H */
 
-int PseudoTTY P((char pty_name[]));
+int
+PseudoTTY (char pty_name[]);
 
 int
 SetUpChildIO (int to_prog[2], int from_prog[2])
@@ -131,7 +138,6 @@ SetUpChildIO (int to_prog[2], int from_prog[2])
 int
 PseudoTTY (char pty_name[])
 {
-    extern char *ptsname();
     char *ptss;
     int fd;
 
