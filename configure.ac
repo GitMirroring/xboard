@@ -63,12 +63,6 @@ AH_TEMPLATE([DEFINED_SYS_ERRLIST],[template])
 AH_TEMPLATE([USE_XAW3D],[template])
 AH_TEMPLATE([X_LOCALE],[template])
 
-
-
-if test -z "$CFLAGS" ; then
-dnl| Prevent the next macro from setting CFLAGS to -g
-  CFLAGS=" "
-fi
 AC_PROG_CC
 
 dnl| need this to be able to compile files in a subdir
@@ -109,13 +103,6 @@ AC_CHECK_FUNC(setlocale, [],
   AC_CHECK_LIB(i, setlocale, [], AC_DEFINE(X_LOCALE, 1)))
 
 AC_CHECK_LIB(seq, getpseudotty)
-
-dnl | add compiler warnings only if compiler understands them
-AC_MSG_CHECKING(whether compiler understands -Wall -Wno-parentheses)
-SAVE_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wall -Wno-parentheses"
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)
-  CFLAGS="$SAVE_CFLAGS"])
 
 dnl | check for pkg-config
 AC_CHECK_PROGS([PKGCONFIG], [pkg-config], pkgconfig_not_found)
