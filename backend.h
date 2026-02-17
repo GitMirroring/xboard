@@ -229,14 +229,9 @@ char *StrSavePtr P((char *s, char **savePtr));
 char *SavePart P((char *));
 char* safeStrCpy P(( char *dst, const char *src, size_t count ));
 
-#ifndef _amigados
 int StrCaseCmp P((char *s1, char *s2));
 int ToLower P((int c));
 int ToUpper P((int c));
-#else
-#define StrCaseCmp Stricmp  /*  Use utility.library functions   */
-#include <proto/utility.h>
-#endif
 
 extern GameInfo gameInfo;
 

@@ -113,14 +113,6 @@
 # include <sys/time.h>
 #endif
 
-#if defined(_amigados) && !defined(__GNUC__)
-struct timezone {
-    int tz_minuteswest;
-    int tz_dsttime;
-};
-extern int gettimeofday(struct timeval *, struct timezone *);
-#endif
-
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -18654,7 +18646,6 @@ StrCaseStr (char *string, char *match)
     return NULL;
 }
 
-#ifndef _amigados
 int
 StrCaseCmp (char *s1, char *s2)
 {
@@ -18682,7 +18673,6 @@ ToUpper (int c)
 {
     return islower(c) ? toupper(c) : c;
 }
-#endif /* !_amigados	*/
 
 char *
 StrSave (char *s)
