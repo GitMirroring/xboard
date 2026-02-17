@@ -174,10 +174,10 @@ extern int shiftKey, controlKey;
 extern char dataDir[], manDir[];
 
 /* in xgamelist.c or winboard.c */
-void GLT_ClearList();
-void GLT_DeSelectList();
-void GLT_AddToList( char *name );
-Boolean GLT_GetFromList( int index, char *name );
+void GLT_ClearList (void);
+void GLT_DeSelectList (void);
+void GLT_AddToList (char *name);
+Boolean GLT_GetFromList (int index, char *name);
 
 extern char lpUserGLT[];
 extern char *homeDir;

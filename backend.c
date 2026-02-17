@@ -210,34 +210,45 @@ void ParseFeatures (char* args, ChessProgramState *cps);
 void InitBackEnd3 (void);
 void FeatureDone (ChessProgramState* cps, int val);
 void InitChessProgram (ChessProgramState *cps, int setup);
-void OutputKibitz(int window, char *text);
-int PerpetualChase(int first, int last);
-int EngineOutputIsUp();
-void InitDrawingSizes(int x, int y);
+void OutputKibitz (int window, char *text);
+int PerpetualChase (int first, int last);
+int EngineOutputIsUp (void);
+void InitDrawingSizes (int x, int y);
 void NextMatchGame (void);
 int NextTourneyGame (int nr, int *swap);
 int Pairing (int nr, int nPlayers, int *w, int *b, int *sync);
 FILE *WriteTourneyFile (char *results, FILE *f);
-void DisplayTwoMachinesTitle ();
+void DisplayTwoMachinesTitle (void);
 static void ExcludeClick (int index);
 void ToggleSecond (void);
 void PauseEngine (ChessProgramState *cps);
 static int NonStandardBoardSize (VariantClass v, int w, int h, int s);
 
 #ifdef WIN32
-       extern void ConsoleCreate();
+       extern void ConsoleCreate (void);
 #endif
 
-ChessProgramState *WhitePlayer();
-int VerifyDisplayMode ();
+ChessProgramState *WhitePlayer (void);
+int VerifyDisplayMode (void);
 
-char *GetInfoFromComment( int, char * ); // [HGM] PV time: returns stripped comment
-void InitEngineUCI( const char * iniDir, ChessProgramState * cps ); // [HGM] moved here from winboard.c
-char *ProbeBook (int moveNr, char *book); // [HGM] book: returns a book move
-char *SendMoveToBookUser (int nr, ChessProgramState *cps, int initial); // [HGM] book
+/* [HGM] PV time: returns stripped comment */
+char *GetInfoFromComment (int, char *);
+
+/* [HGM] moved here from winboard.c */
+void InitEngineUCI (const char * iniDir, ChessProgramState * cps);
+
+/* [HGM] book: returns a book move */
+char *ProbeBook (int moveNr, char *book);
+
+/* [HGM] book */
+char *SendMoveToBookUser (int nr, ChessProgramState *cps, int initial);
+
 void ics_update_width (int new_width);
 extern char installDir[MSG_SIZ];
-VariantClass startVariant; /* [HGM] nicks: initial variant */
+
+/* [HGM] nicks: initial variant */
+VariantClass startVariant;
+
 Boolean abortMatch;
 int deadRanks, handSize, handOffsets;
 

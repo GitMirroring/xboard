@@ -68,7 +68,7 @@ void DoSetWindowText (int which, int field, char *s_label);
 void InsertIntoMemo (int which, char * text, int where);
 void DoClearMemo (int which);
 void ResizeWindowControls (int mode);
-int  EngineOutputDialogExists ();
+int  EngineOutputDialogExists (void);
 void SetEngineOutputTitle (char *title);
 void Collapse (int colNr);
 

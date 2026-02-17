@@ -242,8 +242,8 @@ void TempForwardProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
 Boolean TempBackwardActive = False;
 void ManInner (Widget w, XEvent *event, String *prms, Cardinal *nprms);
 void DisplayMove (int moveNumber);
-void update_ics_width ();
-int CopyMemoProc ();
+void update_ics_width (void);
+int CopyMemoProc (void);
 static int FindLogo (char *place, char *name, char *buf);
 
 /*

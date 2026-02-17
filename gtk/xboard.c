@@ -208,8 +208,8 @@ void MoveTypeInProc (GdkEventKey *eventkey);
 gboolean KeyPressProc (GtkWindow *window, GdkEventKey *eventkey, gpointer data);
 Boolean TempBackwardActive = False;
 void DisplayMove (int moveNumber);
-void update_ics_width ();
-int CopyMemoProc ();
+void update_ics_width (void);
+int CopyMemoProc (void);
 static gboolean EventProc (GtkWidget *widget, GdkEvent *event, gpointer g);
 static int FindLogo (char *place, char *name, char *buf);
 
