@@ -38,14 +38,14 @@
 #include "backend.h"
 
 /* templates for low-level front-end tasks (requiring platform-dependent implementation) */
-void ClearHistoryMemo P((void));                                   // essential
-int AppendToHistoryMemo P(( char * text, int bold, int colorNr )); // essential (coloring / styling optional)
-void HighlightMove P(( int from, int to, Boolean highlight ));     // optional (can be dummy)
-void ScrollToCurrent P((int caretPos));                            // optional (can be dummy)
+void ClearHistoryMemo (void);                                   // essential
+int AppendToHistoryMemo ( char * text, int bold, int colorNr ); // essential (coloring / styling optional)
+void HighlightMove ( int from, int to, Boolean highlight );     // optional (can be dummy)
+void ScrollToCurrent (int caretPos);                            // optional (can be dummy)
 
 /* templates for front-end entry point to allow inquiring about front-end state */
-Boolean MoveHistoryDialogExists P((void));
-Boolean MoveHistoryIsUp P((void));
+Boolean MoveHistoryDialogExists (void);
+Boolean MoveHistoryIsUp (void);
 
 /* Module globals */
 typedef char MoveHistoryString[ MOVE_LEN*2 ];

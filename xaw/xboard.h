@@ -131,27 +131,29 @@ typedef struct {
 #define SETTINGS_FILE           SYSCONFDIR"/xboard.conf"
 #define COLOR_BKGD              "white"
 
-void NewTagsPopup P((char *text, char *msg));
-int AppendText P((Option *opt, char *s));
-void NewCommentPopup P((char *title, char *text, int index));
-void CatchDeleteWindow(Widget w, String procname);
-void GenericPopDown P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void InitDrawingSizes P((int i, int j));
-void SendToICS P((char *buf));
-void SendToProgram P((char *message, ChessProgramState *cps));
-void SetFocus(Widget w, XtPointer data, XEvent *event, Boolean *b); // from xoptions.c
-void TypeInProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-Widget CreateMenuItem P((Widget menu, char *msg, XtCallbackProc CB, int n));
-void WheelProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void TabProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void GenericMenu P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
+void NewTagsPopup (char *text, char *msg);
+int AppendText (Option *opt, char *s);
+void NewCommentPopup (char *title, char *text, int index);
+void CatchDeleteWindow (Widget w, String procname);
+void GenericPopDown (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void InitDrawingSizes (int i, int j);
+void SendToICS (char *buf);
+void SendToProgram (char *message, ChessProgramState *cps);
+
+// from xoptions.c
+void SetFocus (Widget w, XtPointer data, XEvent *event, Boolean *b);
+void TypeInProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+Widget CreateMenuItem (Widget menu, char *msg, XtCallbackProc CB, int n);
+void WheelProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void TabProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+
+void GenericMenu (Widget w, XEvent *event, String *prms, Cardinal *nprms);
 
 // from xengineoutput.c
-void SelectPV P((Widget w, XEvent * event, String * params, Cardinal * nParams));
-void StopPV P((Widget w, XEvent * event, String * params, Cardinal * nParams));
+void SelectPV (Widget w, XEvent * event, String * params, Cardinal * nParams);
+void StopPV (Widget w, XEvent * event, String * params, Cardinal * nParams);
 
 extern char memoTranslations[];
-
 
 extern Widget shells[];
 extern int dialogError;

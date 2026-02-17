@@ -105,10 +105,10 @@ int damage[2][BOARD_RANKS][BOARD_FILES];
 
 AnimState anims[NrOfAnims];
 
-static void DrawSquare P((int row, int column, ChessSquare piece, int do_flash));
-static Boolean IsDrawArrowEnabled P((void));
-static void DrawArrowHighlight P((int fromX, int fromY, int toX,int toY));
-static void ArrowDamage P((int s_col, int s_row, int d_col, int d_row));
+static void DrawSquare (int row, int column, ChessSquare piece, int do_flash);
+static Boolean IsDrawArrowEnabled (void);
+static void DrawArrowHighlight (int fromX, int fromY, int toX,int toY);
+static void ArrowDamage (int s_col, int s_row, int d_col, int d_row);
 
 static void
 drawHighlight (int file, int rank, int type)

@@ -58,12 +58,6 @@
 
 /* Begin compatibility grunge  */
 
-#if defined(__STDC__) || defined(WIN32)
-#    define P(args) args
-#else
-#    define P(args) ()
-#endif
-
 #ifdef WIN32
 typedef char Boolean;
 typedef char *String;
@@ -263,7 +257,7 @@ typedef void *ProcRef;
 #define NoProc ((ProcRef) 0)
 typedef void *InputSourceRef;
 
-typedef void (*DelayedEventCallback) P((void));
+typedef void (*DelayedEventCallback) (void);
 
 typedef enum { Press, Release } ClickType;
 
@@ -891,8 +885,8 @@ extern char chatPartner[MAX_CHAT][MSG_SIZ];
 
 // Some prototypes of routines so general they should be available everywhere
 /* If status == 0, we are exiting with a benign message, not an error */
-void DisplayFatalError P((String message, int error, int status));
-void DisplayError P((String message, int error));
+void DisplayFatalError (String message, int error, int status);
+void DisplayError (String message, int error);
 
 // [HGM] generally useful macros; there are way too many memory leaks...
 #define FREE(x) if(x) free(x)

@@ -62,7 +62,7 @@ Option *disp;
 
 /* Module variables */
 
-static Option *EvalCallback P((int button, int x, int y));
+static Option *EvalCallback (int button, int x, int y);
 
 static int initDone = FALSE;
 

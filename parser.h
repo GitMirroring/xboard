@@ -52,17 +52,22 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-extern void yynewfile P((FILE *f));
-extern void yynewstr P((char *s));
-extern int Myylex P((void)); // [HGM] yylex now globally invisible, all calls must use wrapper
-extern ChessMove yylexstr P((int boardIndex, char *s, char *buf, int buflen));
+extern void yynewfile (FILE *f);
+extern void yynewstr (char *s);
+
+// [HGM] yylex now globally invisible, all calls must use wrapper
+extern int Myylex (void);
+extern ChessMove yylexstr (int boardIndex, char *s, char *buf, int buflen);
 extern char currentMoveString[];
 extern int yyboardindex;
-extern int yyskipmoves;  /* If TRUE, all moves are reported as AmbiguousMove
-			    instead of being disambiguated. */
-extern char *yy_text;  /* Needed because yytext can be either a char[]
-			  or a (non-constant) char* */
-extern int yyoffset P((void));
+
+/* If TRUE, all moves are reported as AmbiguousMove instead of being disambiguated. */
+extern int yyskipmoves;
+
+/* Needed because yytext can be either a char[] or a (non-constant) char *. */
+extern char *yy_text;
+
+extern int yyoffset (void);
 extern unsigned char initialRights[BOARD_FILES];
 extern signed char  castlingRank[BOARD_FILES];
 

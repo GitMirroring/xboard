@@ -238,11 +238,11 @@ GenericReadout (Option *opts, int selected)
 char *engineName, *engineChoice, *tfName;
 char *engineList[MAXENGINES] = {" "}, *engineMnemonic[MAXENGINES];
 
-static void AddToTourney P((int n, int sel));
-static void CloneTourney P((void));
-static void ReplaceParticipant P((void));
-static void UpgradeParticipant P((void));
-static void PseudoOK P((void));
+static void AddToTourney (int n, int sel);
+static void CloneTourney (void);
+static void ReplaceParticipant (void);
+static void UpgradeParticipant (void);
+static void PseudoOK (void);
 
 static int
 MatchOK (int n)
@@ -440,7 +440,7 @@ OptionsProc ()
 
 //---------------------------------------------- New Variant ------------------------------------------------
 
-static void Pick P((int n));
+static void Pick (int n);
 
 static char warning[MSG_SIZ];
 static int ranksTmp, filesTmp, sizeTmp;
@@ -789,7 +789,7 @@ SaveOptionsProc ()
 
 //----------------------------------------------- Sound Options ---------------------------------------------
 
-static void Test P((int n));
+static void Test (int n);
 static char *trialSound;
 
 static char *soundNames[] = {
@@ -875,10 +875,10 @@ SoundOptionsProc ()
 
 //--------------------------------------------- Board Options --------------------------------------
 
-static void DefColor P((int n));
-static void AdjustColor P((int i));
-static void ThemeSel P((int n, int sel));
-static int BoardOptionsOK P((int n));
+static void DefColor (int n);
+static void AdjustColor (int i);
+static void ThemeSel (int n, int sel);
+static int BoardOptionsOK (int n);
 
 static char oldPieceDir[MSG_SIZ];
 extern char *engineLine, *nickName; // defined later on
@@ -1029,8 +1029,8 @@ BoardOptionsProc ()
 //-------------------------------------------- ICS Text Menu Options ------------------------------
 
 Option textOptions[100];
-static void PutText P((char *text, int pos));
-static void NewChat P((char *name));
+static void PutText (char *text, int pos);
+static void NewChat (char *name);
 static char clickedWord[MSG_SIZ], click;
 
 void
@@ -1109,11 +1109,11 @@ IcsTextProc ()
 
 static char *commentText;
 static int commentIndex;
-static void ClearComment P((int n));
-static void SaveChanges P((int n));
+static void ClearComment (int n);
+static void SaveChanges (int n);
 int savedIndex;  /* gross that this is global (and even across files...) */
 
-static int CommentClick P((Option *opt, int n, int x, int y, char *val, int index));
+static int CommentClick (Option *opt, int n, int x, int y, char *val, int index);
 
 static int
 NewComCallback (int n)
@@ -1200,10 +1200,10 @@ EditCommentProc ()
 
 //------------------------------------------------------ Edit Tags ----------------------------------
 
-static void changeTags P((int n));
+static void changeTags (int n);
 static char *tagsText, **resPtr;
 
-static int TagsClick P((Option *opt, int n, int x, int y, char *val, int index));
+static int TagsClick (Option *opt, int n, int x, int y, char *val, int index);
 
 static int
 NewTagsCallback (int n)
@@ -1406,7 +1406,7 @@ IcsInputBoxProc ()
 
 //--------------------------------------------- Move Type In ------------------------------------------
 
-static int TypeInOK P((int n));
+static int TypeInOK (int n);
 
 Option typeOptions[] = {
 { 30, T_TOP, 400, NULL, (void*) &icsText, NULL, NULL, TextBox, "" },
@@ -1490,8 +1490,8 @@ RefreshSettingsDialog (ChessProgramState *cps, int val)
 char *engineDir, *engineLine, *nickName, *params, *protocolChoice;
 Boolean isUCI, isUSI, hasBook, storeVariant, v1, addToList, useNick, secondEng;
 
-static void EngSel P((int n, int sel));
-static int InstallOK P((int n));
+static void EngSel (int n, int sel);
+static int InstallOK (int n);
 
 static char *protocols[] = { "autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL };
 
@@ -1595,7 +1595,7 @@ EditBookProc ()
 
 //--------------------------------------------------- New Shuffle Game ------------------------------
 
-static void SetRandom P((int n));
+static void SetRandom (int n);
 
 static int
 ShuffleOK (int n)
@@ -1631,7 +1631,7 @@ ShuffleMenuProc ()
 
 //--------------------------------------------------- Fonts ------------------------------
 
-static void AdjustFont P((int n));
+static void AdjustFont (int n);
 
 static char *oldFont[7];
 
@@ -1779,10 +1779,10 @@ FontsProc ()
 
 //------------------------------------------------------ Time Control -----------------------------------
 
-static int TcOK P((int n));
+static int TcOK (int n);
 int tmpMoves, tmpTc, tmpInc, tmpOdds1, tmpOdds2, tcType, by60;
 
-static void SetTcType P((int n));
+static void SetTcType (int n);
 
 static char *
 Value (int n)
@@ -1875,7 +1875,7 @@ TimeControlProc ()
 
 //------------------------------- Ask Question -----------------------------------------
 
-int SendReply P((int n));
+int SendReply (int n);
 char pendingReplyPrefix[MSG_SIZ];
 ProcRef pendingReplyPR;
 char *answer;
@@ -1917,7 +1917,7 @@ AskQuestion (char *title, char *question, char *replyPrefix, ProcRef pr)
 
 static int count;
 
-static void PromoPick P((int n));
+static void PromoPick (int n);
 
 static Option promoOptions[] = {
 {   0,         0,    0, NULL, (void*) &PromoPick, NULL, NULL, Button, NULL },
@@ -2007,8 +2007,8 @@ static char *line, *memo, *chatMemo, *partner, *texts[MAX_CHAT], dirty[MAX_CHAT]
 static int activePartner;
 int hidden = 1;
 
-void ChatSwitch P((int n));
-int  ChatOK P((int n));
+void ChatSwitch (int n);
+int  ChatOK (int n);
 
 #define CHAT_ICS     6
 #define CHAT_PARTNER 8
@@ -2016,8 +2016,8 @@ int  ChatOK P((int n));
 #define CHAT_PANE   12
 #define CHAT_IN     13
 
-void PaneSwitch P((void));
-void ClearChat P((void));
+void PaneSwitch (void);
+void ClearChat (void);
 
 WindowPlacement wpTextMenu;
 
@@ -2371,8 +2371,8 @@ GLT_DeSelectList ()
 {
 }
 
-static void GLT_Button P((int n));
-static int GLT_OK P((int n));
+static void GLT_Button (int n);
+static int GLT_OK (int n);
 
 static Option listOptions[] = {
 {300, LR|TB, 200, NULL, (void*) strings, NULL, NULL, ListBox, "" }, // For GTK we need to specify a height, as default would just show 3 lines
@@ -2760,11 +2760,11 @@ static ChessSquare dropMenuTranslation[DROP_MENU_SIZE] = {
 
 // [HGM] experimental code to pop up window just like the main window, using GenercicPopUp
 
-static Option *Exp P((int n, int x, int y));
-void MenuCallback P((int n));
-void SizeKludge P((int n));
-static Option *LogoW P((int n, int x, int y));
-static Option *LogoB P((int n, int x, int y));
+static Option *Exp (int n, int x, int y);
+void MenuCallback (int n);
+void SizeKludge (int n);
+static Option *LogoW (int n, int x, int y);
+static Option *LogoB (int n, int x, int y);
 
 static int pmFromX = -1, pmFromY = -1;
 void *userLogo;
@@ -3140,12 +3140,12 @@ NULL,
 ""
 };
 
-void DirSelProc P((int n, int sel));
-void FileSelProc P((int n, int sel));
-void SetTypeFilter P((int n));
-int BrowseOK P((int n));
-void Switch P((int n));
-void CreateDir P((int n));
+void DirSelProc (int n, int sel);
+void FileSelProc (int n, int sel);
+void SetTypeFilter (int n);
+int BrowseOK (int n);
+void Switch (int n);
+void CreateDir (int n);
 
 Option browseOptions[] = {
 {   0,    LR|T2T,      500, NULL, NULL, NULL, NULL, Label, title },

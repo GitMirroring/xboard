@@ -56,10 +56,10 @@ extern int movePtr;
 
 /* Local function prototypes
  */
-static void GameListDeleteGame P((ListGame *));
-static ListGame *GameListCreate P((void));
-static void GameListFree P((List *));
-static int GameListNewGame P((ListGame **));
+static void GameListDeleteGame (ListGame *);
+static ListGame *GameListCreate (void);
+static void GameListFree (List *);
+static int GameListNewGame (ListGame **);
 
 /* [AS] Wildcard pattern matching */
 Boolean

@@ -40,8 +40,8 @@
 #endif
 
 // templates for calls into back-end (= history.c; should be moved to history.h header shared with it!)
-void RefreshMemoContent P((void));
-void MemoContentUpdated P((void));
+void RefreshMemoContent (void);
+void MemoContentUpdated (void);
 
 // variables in xoptions.c
 extern Option historyOptions[];

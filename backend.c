@@ -146,96 +146,96 @@
 #endif
 
 
-int establish P((void));
-void read_from_player P((InputSourceRef isr, void *closure,
-			 char *buf, int count, int error));
-void read_from_ics P((InputSourceRef isr, void *closure,
-		      char *buf, int count, int error));
-void SendToICS P((char *s));
-void SendToICSDelayed P((char *s, long msdelay));
-void SendMoveToICS P((ChessMove moveType, int fromX, int fromY, int toX, int toY, char promoChar));
-void HandleMachineMove P((char *message, ChessProgramState *cps));
-int AutoPlayOneMove P((void));
-int LoadGameOneMove P((ChessMove readAhead));
-int LoadGameFromFile P((char *filename, int n, char *title, int useList));
-int LoadPositionFromFile P((char *filename, int n, char *title));
-int SavePositionToFile P((char *filename));
-void MakeMove P((int fromX, int fromY, int toX, int toY, int promoChar));
-void ShowMove P((int fromX, int fromY, int toX, int toY));
-int FinishMove P((ChessMove moveType, int fromX, int fromY, int toX, int toY,
-		   /*char*/int promoChar));
-void BackwardInner P((int target));
-void ForwardInner P((int target));
-int Adjudicate P((ChessProgramState *cps));
-void GameEnds P((ChessMove result, char *resultDetails, int whosays));
-void EditPositionDone P((Boolean fakeRights));
-void PrintOpponents P((FILE *fp));
-void PrintPosition P((FILE *fp, int move));
-void SendToProgram P((char *message, ChessProgramState *cps));
-void SendMoveToProgram P((int moveNum, ChessProgramState *cps));
-void ReceiveFromProgram P((InputSourceRef isr, void *closure,
-			   char *buf, int count, int error));
-void SendTimeControl P((ChessProgramState *cps,
-			int mps, long tc, int inc, int sd, int st));
-char *TimeControlTagValue P((void));
-void Attention P((ChessProgramState *cps));
-void FeedMovesToProgram P((ChessProgramState *cps, int upto));
-int ResurrectChessProgram P((void));
-void DisplayComment P((int moveNumber, char *text));
-void DisplayMove P((int moveNumber));
+int establish (void);
+void read_from_player (InputSourceRef isr, void *closure,
+			 char *buf, int count, int error);
+void read_from_ics (InputSourceRef isr, void *closure,
+		      char *buf, int count, int error);
+void SendToICS (char *s);
+void SendToICSDelayed (char *s, long msdelay);
+void SendMoveToICS (ChessMove moveType, int fromX, int fromY, int toX, int toY, char promoChar);
+void HandleMachineMove (char *message, ChessProgramState *cps);
+int AutoPlayOneMove (void);
+int LoadGameOneMove (ChessMove readAhead);
+int LoadGameFromFile (char *filename, int n, char *title, int useList);
+int LoadPositionFromFile (char *filename, int n, char *title);
+int SavePositionToFile (char *filename);
+void MakeMove (int fromX, int fromY, int toX, int toY, int promoChar);
+void ShowMove (int fromX, int fromY, int toX, int toY);
+int FinishMove (ChessMove moveType, int fromX, int fromY, int toX, int toY,
+		   /*char*/int promoChar);
+void BackwardInner (int target);
+void ForwardInner (int target);
+int Adjudicate (ChessProgramState *cps);
+void GameEnds (ChessMove result, char *resultDetails, int whosays);
+void EditPositionDone (Boolean fakeRights);
+void PrintOpponents (FILE *fp);
+void PrintPosition (FILE *fp, int move);
+void SendToProgram (char *message, ChessProgramState *cps);
+void SendMoveToProgram (int moveNum, ChessProgramState *cps);
+void ReceiveFromProgram (InputSourceRef isr, void *closure,
+			   char *buf, int count, int error);
+void SendTimeControl (ChessProgramState *cps,
+			int mps, long tc, int inc, int sd, int st);
+char *TimeControlTagValue (void);
+void Attention (ChessProgramState *cps);
+void FeedMovesToProgram (ChessProgramState *cps, int upto);
+int ResurrectChessProgram (void);
+void DisplayComment (int moveNumber, char *text);
+void DisplayMove (int moveNumber);
 
-void ParseGameHistory P((char *game));
-void ParseBoard12 P((char *string));
-void KeepAlive P((void));
-void StartClocks P((void));
-void SwitchClocks P((int nr));
-void StopClocks P((void));
-void ResetClocks P((void));
-char *PGNDate P((void));
-void SetGameInfo P((void));
-int RegisterMove P((void));
-void MakeRegisteredMove P((void));
-void TruncateGame P((void));
-int looking_at P((char *, int *, char *));
-void CopyPlayerNameIntoFileName P((char **, char *));
-char *SavePart P((char *));
-int SaveGameOldStyle P((FILE *));
-int SaveGamePGN P((FILE *));
-int CheckFlags P((void));
-long NextTickLength P((long));
-void CheckTimeControl P((void));
-void show_bytes P((FILE *, char *, int));
-int string_to_rating P((char *str));
-void ParseFeatures P((char* args, ChessProgramState *cps));
-void InitBackEnd3 P((void));
-void FeatureDone P((ChessProgramState* cps, int val));
-void InitChessProgram P((ChessProgramState *cps, int setup));
+void ParseGameHistory (char *game);
+void ParseBoard12 (char *string);
+void KeepAlive (void);
+void StartClocks (void);
+void SwitchClocks (int nr);
+void StopClocks (void);
+void ResetClocks (void);
+char *PGNDate (void);
+void SetGameInfo (void);
+int RegisterMove (void);
+void MakeRegisteredMove (void);
+void TruncateGame (void);
+int looking_at (char *, int *, char *);
+void CopyPlayerNameIntoFileName (char **, char *);
+char *SavePart (char *);
+int SaveGameOldStyle (FILE *);
+int SaveGamePGN (FILE *);
+int CheckFlags (void);
+long NextTickLength (long);
+void CheckTimeControl (void);
+void show_bytes (FILE *, char *, int);
+int string_to_rating (char *str);
+void ParseFeatures (char* args, ChessProgramState *cps);
+void InitBackEnd3 (void);
+void FeatureDone (ChessProgramState* cps, int val);
+void InitChessProgram (ChessProgramState *cps, int setup);
 void OutputKibitz(int window, char *text);
 int PerpetualChase(int first, int last);
 int EngineOutputIsUp();
 void InitDrawingSizes(int x, int y);
-void NextMatchGame P((void));
-int NextTourneyGame P((int nr, int *swap));
-int Pairing P((int nr, int nPlayers, int *w, int *b, int *sync));
-FILE *WriteTourneyFile P((char *results, FILE *f));
-void DisplayTwoMachinesTitle P(());
-static void ExcludeClick P((int index));
-void ToggleSecond P((void));
-void PauseEngine P((ChessProgramState *cps));
-static int NonStandardBoardSize P((VariantClass v, int w, int h, int s));
+void NextMatchGame (void);
+int NextTourneyGame (int nr, int *swap);
+int Pairing (int nr, int nPlayers, int *w, int *b, int *sync);
+FILE *WriteTourneyFile (char *results, FILE *f);
+void DisplayTwoMachinesTitle ();
+static void ExcludeClick (int index);
+void ToggleSecond (void);
+void PauseEngine (ChessProgramState *cps);
+static int NonStandardBoardSize (VariantClass v, int w, int h, int s);
 
 #ifdef WIN32
        extern void ConsoleCreate();
 #endif
 
 ChessProgramState *WhitePlayer();
-int VerifyDisplayMode P(());
+int VerifyDisplayMode ();
 
 char *GetInfoFromComment( int, char * ); // [HGM] PV time: returns stripped comment
 void InitEngineUCI( const char * iniDir, ChessProgramState * cps ); // [HGM] moved here from winboard.c
-char *ProbeBook P((int moveNr, char *book)); // [HGM] book: returns a book move
-char *SendMoveToBookUser P((int nr, ChessProgramState *cps, int initial)); // [HGM] book
-void ics_update_width P((int new_width));
+char *ProbeBook (int moveNr, char *book); // [HGM] book: returns a book move
+char *SendMoveToBookUser (int nr, ChessProgramState *cps, int initial); // [HGM] book
+void ics_update_width (int new_width);
 extern char installDir[MSG_SIZ];
 VariantClass startVariant; /* [HGM] nicks: initial variant */
 Boolean abortMatch;
@@ -516,11 +516,11 @@ int savedFramePtr[MAX_VARIATIONS];
 char *savedDetails[MAX_VARIATIONS];
 ChessMove savedResult[MAX_VARIATIONS];
 
-void PushTail P((int firstMove, int lastMove));
-Boolean PopTail P((Boolean annotate));
-void PushInner P((int firstMove, int lastMove));
-void PopInner P((Boolean annotate));
-void CleanupTail P((void));
+void PushTail (int firstMove, int lastMove);
+Boolean PopTail (Boolean annotate);
+void PushInner (int firstMove, int lastMove);
+void PopInner (Boolean annotate);
+void CleanupTail (void);
 
 ChessSquare  FIDEArray[2][BOARD_FILES] = {
     { WhiteRook, WhiteKnight, WhiteBishop, WhiteQueen,
@@ -1609,7 +1609,7 @@ MatchEvent (int mode)
 }
 
 void
-InitBackEnd3 P((void))
+InitBackEnd3 (void)
 {
     GameMode initialMode;
     char buf[MSG_SIZ];
@@ -11372,7 +11372,7 @@ StartChessProgram (ChessProgramState *cps)
 }
 
 void
-TwoMachinesEventIfReady P((void))
+TwoMachinesEventIfReady (void)
 {
   static int curMess = 0;
   if (first.lastPing != first.lastPong) {
@@ -15478,7 +15478,7 @@ WaitForEngine (ChessProgramState *cps, DelayedEventCallback retry)
 }
 
 void
-TwoMachinesEvent P((void))
+TwoMachinesEvent (void)
 {
     int i, move = forwardMostMove;
     char buf[MSG_SIZ];

@@ -64,9 +64,9 @@
 #include "moves.h"
 #include "parser.h"
 
-int WhitePiece P((ChessSquare));
-int BlackPiece P((ChessSquare));
-int SameColor P((ChessSquare, ChessSquare));
+int WhitePiece (ChessSquare);
+int BlackPiece (ChessSquare);
+int SameColor (ChessSquare, ChessSquare);
 int PosFlags(int index);
 
 int quickFlag;
@@ -1527,9 +1527,9 @@ typedef struct {
 int rFilter, fFilter; // [HGM] speed: sorry, but I get a bit tired of this closure madness
 Board xqCheckers, nullBoard;
 
-extern void GenLegalCallback P((Board board, int flags, ChessMove kind,
+extern void GenLegalCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				void *closure));
+				void *closure);
 
 void
 GenLegalCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -1783,9 +1783,9 @@ typedef struct {
 } CheckTestClosure;
 
 
-extern void CheckTestCallback P((Board board, int flags, ChessMove kind,
+extern void CheckTestCallback (Board board, int flags, ChessMove kind,
 				 int rf, int ff, int rt, int ft,
-				 void *closure));
+				 void *closure);
 
 
 void
@@ -1975,9 +1975,9 @@ if(appData.debugMode) fprintf(debugFP, "LegalDrop: %d @ %d,%d)\n", piece, ft, rt
     return flags & F_WHITE_ON_MOVE ? WhiteDrop : BlackDrop;
 }
 
-extern void LegalityTestCallback P((Board board, int flags, ChessMove kind,
+extern void LegalityTestCallback (Board board, int flags, ChessMove kind,
 				    int rf, int ff, int rt, int ft,
-				    void *closure));
+				    void *closure);
 
 void
 LegalityTestCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -2139,9 +2139,9 @@ typedef struct {
     int count;
 } MateTestClosure;
 
-extern void MateTestCallback P((Board board, int flags, ChessMove kind,
+extern void MateTestCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				void *closure));
+				void *closure);
 
 void
 MateTestCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -2209,9 +2209,9 @@ MateTest (Board board, int flags)
 }
 
 
-extern void DisambiguateCallback P((Board board, int flags, ChessMove kind,
+extern void DisambiguateCallback (Board board, int flags, ChessMove kind,
 				    int rf, int ff, int rt, int ft,
-				    void *closure));
+				    void *closure);
 
 void
 DisambiguateCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -2427,9 +2427,9 @@ typedef struct {
     int either;
 } CoordsToAlgebraicClosure;
 
-extern void CoordsToAlgebraicCallback P((Board board, int flags,
+extern void CoordsToAlgebraicCallback (Board board, int flags,
 					 ChessMove kind, int rf, int ff,
-					 int rt, int ft, void *closure));
+					 int rt, int ft, void *closure);
 
 void
 CoordsToAlgebraicCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -2722,9 +2722,9 @@ unsigned char rank, file;
 
 // there are three new callbacks for use with GenLegal: for adding captures, deleting them, and finding a recapture
 
-extern void AtacksCallback P((Board board, int flags, ChessMove kind,
+extern void AtacksCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				void *closure));
+				void *closure);
 
 void
 AttacksCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -2742,9 +2742,9 @@ AttacksCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt,
     chaseStackPointer++;
 }
 
-extern void ExistingAtacksCallback P((Board board, int flags, ChessMove kind,
+extern void ExistingAtacksCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				void *closure));
+				void *closure);
 
 void
 ExistingAttacksCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
@@ -2767,9 +2767,9 @@ ExistingAttacksCallback (Board board, int flags, ChessMove kind, int rf, int ff,
     }
 }
 
-extern void ProtectedCallback P((Board board, int flags, ChessMove kind,
+extern void ProtectedCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				void *closure));
+				void *closure);
 
 void
 ProtectedCallback (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)

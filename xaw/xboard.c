@@ -208,43 +208,43 @@
 # define N_(s)  s
 #endif
 
-int main P((int argc, char **argv));
-void CmailSigHandler P((int sig));
-void IntSigHandler P((int sig));
-void TermSizeSigHandler P((int sig));
-Widget CreateMenuBar P((Menu *mb, int boardWidth));
+int main (int argc, char **argv);
+void CmailSigHandler (int sig);
+void IntSigHandler (int sig);
+void TermSizeSigHandler (int sig);
+Widget CreateMenuBar (Menu *mb, int boardWidth);
 #if ENABLE_NLS
-char *InsertPxlSize P((char *pattern, int targetPxlSize));
-XFontSet CreateFontSet P((char *base_fnt_lst));
+char *InsertPxlSize (char *pattern, int targetPxlSize);
+XFontSet CreateFontSet (char *base_fnt_lst);
 #else
-char *FindFont P((char *pattern, int targetPxlSize));
+char *FindFont (char *pattern, int targetPxlSize);
 #endif
-void ReadBitmap P((Pixmap *pm, String name, unsigned char bits[],
-		   u_int wreq, u_int hreq));
-void EventProc P((Widget widget, caddr_t unused, XEvent *event));
-void DelayedDrag P((void));
-static void MoveTypeInProc P((Widget widget, caddr_t unused, XEvent *event));
-void HandlePV P((Widget w, XEvent * event,
-		     String * params, Cardinal * nParams));
-void DrawPositionProc P((Widget w, XEvent *event,
-		     String *prms, Cardinal *nprms));
-void CommentClick P((Widget w, XEvent * event,
-		   String * params, Cardinal * nParams));
-void ICSInputBoxPopUp P((void));
-void SelectCommand P((Widget w, XtPointer client_data, XtPointer call_data));
-void KeyBindingProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void QuitWrapper P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-static void EnterKeyProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-static void UpKeyProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-static void DownKeyProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void TempBackwardProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void TempForwardProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
+void ReadBitmap (Pixmap *pm, String name, unsigned char bits[],
+		   u_int wreq, u_int hreq);
+void EventProc (Widget widget, caddr_t unused, XEvent *event);
+void DelayedDrag (void);
+static void MoveTypeInProc (Widget widget, caddr_t unused, XEvent *event);
+void HandlePV (Widget w, XEvent * event,
+		     String * params, Cardinal * nParams);
+void DrawPositionProc (Widget w, XEvent *event,
+		     String *prms, Cardinal *nprms);
+void CommentClick (Widget w, XEvent * event,
+		   String * params, Cardinal * nParams);
+void ICSInputBoxPopUp (void);
+void SelectCommand (Widget w, XtPointer client_data, XtPointer call_data);
+void KeyBindingProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void QuitWrapper (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+static void EnterKeyProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+static void UpKeyProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+static void DownKeyProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void TempBackwardProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void TempForwardProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
 Boolean TempBackwardActive = False;
-void ManInner P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void DisplayMove P((int moveNumber));
-void update_ics_width P(());
-int CopyMemoProc P(());
-static int FindLogo P((char *place, char *name, char *buf));
+void ManInner (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void DisplayMove (int moveNumber);
+void update_ics_width ();
+int CopyMemoProc ();
+static int FindLogo (char *place, char *name, char *buf);
 
 /*
 * XBoard depends on Xt R4 or higher

@@ -167,10 +167,9 @@ unsigned char kanjiTab[] = {
   'l', 0211, 0105, 0,
   'v', 0222, 0274, 0,
    0,
-     
 };
 
-int NextUnit P((char **p));
+int NextUnit (char **p);
 
 int kifu = 0, xqUBB = 0;
 
@@ -881,7 +880,7 @@ yynewfile (FILE *f)
 }
 
 void
-yynewstr P((char *s))
+yynewstr (char *s)
 {
     parsePtr = s;
     inputFile = NULL;

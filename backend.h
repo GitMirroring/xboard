@@ -57,7 +57,7 @@
 
 #include "lists.h"
 
-typedef int (*FileProc) P((FILE *f, int n, char *title));
+typedef int (*FileProc) (FILE *f, int n, char *title);
 
 extern char *wbOptions;
 extern int gotPremove;
@@ -82,156 +82,156 @@ extern char variantError[];
 extern char lastTalker[];
 extern int transparency[];
 
-void MarkMenuItem P((char *menuRef, int state));
-char *CmailMsg P((void));
+void MarkMenuItem (char *menuRef, int state);
+char *CmailMsg (void);
 /* Tord: Added the useFEN960 parameter in PositionToFEN() below */
-char *PositionToFEN P((int move, char* useFEN960, int moveCounts));
-void AlphaRank P((char *s, int n)); /* [HGM] Shogi move preprocessor */
-void EditPositionPasteFEN P((char *fen));
-void TimeDelay P((long ms));
-void SendMultiLineToICS P(( char *text ));
-void AnalysisPeriodicEvent P((int force));
-void SetWhiteToPlayEvent P((void));
-void SetBlackToPlayEvent P((void));
-void UploadGameEvent P((void));
-void InitBackEnd1 P((void));
-void InitBackEnd2 P((void));
-int HasPromotionChoice P((int fromX, int fromY, int toX, int toY, char *choice, int sweep));
-int InPalace P((int row, int column));
-int PieceForSquare P((int x, int y));
-int OKToStartUserMove P((int x, int y));
-void Reset P((int redraw, int init));
-void ResetGameEvent P((void));
-Boolean HasPattern P(( const char * text, const char * pattern ));
-Boolean SearchPattern P(( const char * text, const char * pattern ));
-int LoadGame P((FILE *f, int n, char *title, int useList));
-int LoadGameFromFile P((char *filename, int n, char *title, int useList));
-int CmailLoadGame P((FILE *f, int n, char *title, int useList));
-int ReloadGame P((int offset));
-int SaveSelected P((FILE *f, int dummy, char *dummy2));
-int SaveGame P((FILE *f, int dummy, char *dummy2));
-int SaveGameToFile P((char *filename, int append));
-int LoadPosition P((FILE *f, int n, char *title));
-int ReloadPosition P((int offset));
-int SavePosition P((FILE *f, int dummy, char *dummy2));
-int DrawSeekGraph P(());
-int SeekGraphClick P((ClickType click, int x, int y, int moving));
-void EditPositionEvent P((void));
-void FlipViewEvent P((void));
-void MachineWhiteEvent P((void));
-void MachineBlackEvent P((void));
-void TwoMachinesEvent P((void));
-void EditGameEvent P((void));
-void TrainingEvent P((void));
-void IcsClientEvent P((void));
-void ForwardEvent P((void));
-void BackwardEvent P((void));
-void ToEndEvent P((void));
-void ToStartEvent P((void));
-void ToNrEvent P((int to));
-void RevertEvent P((Boolean annotate));
-void RetractMoveEvent P((void));
-void MoveNowEvent P((void));
-void TruncateGameEvent P((void));
-void PauseEvent P((void));
-void CallFlagEvent P((void));
-void ClockClick P((int which));
-void AcceptEvent P((void));
-void DeclineEvent P((void));
-void RematchEvent P((void));
-void DrawEvent P((void));
-void AbortEvent P((void));
-void AdjournEvent P((void));
-void ResignEvent P((void));
-void UserAdjudicationEvent P((int result));
-void StopObservingEvent P((void));
-void StopExaminingEvent P((void));
-void PonderNextMoveEvent P((int newState));
-void ShowThinkingEvent P(());
-void PeriodicUpdatesEvent P((int newState));
-void HintEvent P((void));
-void BookEvent P((void));
-void AboutGameEvent P((void));
-void ExitEvent P((int status));
-char *DefaultFileName P((char *));
-ChessMove UserMoveTest P((int fromX, int fromY, int toX, int toY, int promoChar, Boolean captureOwn));
-void UserMoveEvent P((int fromX, int fromY, int toX, int toY, int promoChar));
-void DecrementClocks P((void));
-char *TimeString P((long millisec));
-void AutoPlayGameLoop P((void));
-void AdjustClock P((Boolean which, int dir));
-void DisplayBothClocks P((void));
-void EditPositionMenuEvent P((ChessSquare selection, int x, int y));
-void DropMenuEvent P((ChessSquare selection, int x, int y));
-int ParseTimeControl P((char *tc, float ti, int mps));
-void EscapeExpand(char *p, char *q);
-void ProcessICSInitScript P((FILE * f));
-void EditCommentEvent P((void));
-void ReplaceComment P((int index, char *text));
-int ReplaceTags P((char *tags, GameInfo *gi));/* returns nonzero on error */
-void AppendComment P((int index, char *text, Boolean addBraces));
-void LoadVariation P((int index, char *text));
-void ReloadCmailMsgEvent P((int unregister));
-void MailMoveEvent P((void));
-void EditTagsEvent P((void));
-void GetMoveListEvent P((void));
-void ExitAnalyzeMode P((void));
-int  AnalyzeModeEvent P((void));
-void AnalyzeFileEvent P((void));
-void MatchEvent P((int mode));
-void RecentEngineEvent P((int nr));
-void TypeInEvent P((char first));
-void TypeInDoneEvent P((char *move));
-void InitPosition P((int redraw));
-void NewSettingEvent P((int option, int *feature, char *command, int value));
-void SettingsMenuIfReady P((void));
-void DoEcho P((void));
-void DontEcho P((void));
-void TidyProgramName P((char *prog, char *host, char *buf));
-void SetGameInfo P((void));
-void AskQuestionEvent P((char *title, char *question,
-			 char *replyPrefix, char *which));
-Boolean ParseOneMove P((char *move, int moveNum,
+char *PositionToFEN (int move, char* useFEN960, int moveCounts);
+void AlphaRank (char *s, int n); /* [HGM] Shogi move preprocessor */
+void EditPositionPasteFEN (char *fen);
+void TimeDelay (long ms);
+void SendMultiLineToICS ( char *text );
+void AnalysisPeriodicEvent (int force);
+void SetWhiteToPlayEvent (void);
+void SetBlackToPlayEvent (void);
+void UploadGameEvent (void);
+void InitBackEnd1 (void);
+void InitBackEnd2 (void);
+int HasPromotionChoice (int fromX, int fromY, int toX, int toY, char *choice, int sweep);
+int InPalace (int row, int column);
+int PieceForSquare (int x, int y);
+int OKToStartUserMove (int x, int y);
+void Reset (int redraw, int init);
+void ResetGameEvent (void);
+Boolean HasPattern (const char * text, const char * pattern);
+Boolean SearchPattern (const char * text, const char * pattern);
+int LoadGame (FILE *f, int n, char *title, int useList);
+int LoadGameFromFile (char *filename, int n, char *title, int useList);
+int CmailLoadGame (FILE *f, int n, char *title, int useList);
+int ReloadGame (int offset);
+int SaveSelected (FILE *f, int dummy, char *dummy2);
+int SaveGame (FILE *f, int dummy, char *dummy2);
+int SaveGameToFile (char *filename, int append);
+int LoadPosition (FILE *f, int n, char *title);
+int ReloadPosition (int offset);
+int SavePosition (FILE *f, int dummy, char *dummy2);
+int DrawSeekGraph ();
+int SeekGraphClick (ClickType click, int x, int y, int moving);
+void EditPositionEvent (void);
+void FlipViewEvent (void);
+void MachineWhiteEvent (void);
+void MachineBlackEvent (void);
+void TwoMachinesEvent (void);
+void EditGameEvent (void);
+void TrainingEvent (void);
+void IcsClientEvent (void);
+void ForwardEvent (void);
+void BackwardEvent (void);
+void ToEndEvent (void);
+void ToStartEvent (void);
+void ToNrEvent (int to);
+void RevertEvent (Boolean annotate);
+void RetractMoveEvent (void);
+void MoveNowEvent (void);
+void TruncateGameEvent (void);
+void PauseEvent (void);
+void CallFlagEvent (void);
+void ClockClick (int which);
+void AcceptEvent (void);
+void DeclineEvent (void);
+void RematchEvent (void);
+void DrawEvent (void);
+void AbortEvent (void);
+void AdjournEvent (void);
+void ResignEvent (void);
+void UserAdjudicationEvent (int result);
+void StopObservingEvent (void);
+void StopExaminingEvent (void);
+void PonderNextMoveEvent (int newState);
+void ShowThinkingEvent ();
+void PeriodicUpdatesEvent (int newState);
+void HintEvent (void);
+void BookEvent (void);
+void AboutGameEvent (void);
+void ExitEvent (int status);
+char *DefaultFileName (char *);
+ChessMove UserMoveTest (int fromX, int fromY, int toX, int toY, int promoChar, Boolean captureOwn);
+void UserMoveEvent (int fromX, int fromY, int toX, int toY, int promoChar);
+void DecrementClocks (void);
+char *TimeString (long millisec);
+void AutoPlayGameLoop (void);
+void AdjustClock (Boolean which, int dir);
+void DisplayBothClocks (void);
+void EditPositionMenuEvent (ChessSquare selection, int x, int y);
+void DropMenuEvent (ChessSquare selection, int x, int y);
+int ParseTimeControl (char *tc, float ti, int mps);
+void EscapeExpand (char *p, char *q);
+void ProcessICSInitScript (FILE * f);
+void EditCommentEvent (void);
+void ReplaceComment (int index, char *text);
+int ReplaceTags (char *tags, GameInfo *gi);/* returns nonzero on error */
+void AppendComment (int index, char *text, Boolean addBraces);
+void LoadVariation (int index, char *text);
+void ReloadCmailMsgEvent (int unregister);
+void MailMoveEvent (void);
+void EditTagsEvent (void);
+void GetMoveListEvent (void);
+void ExitAnalyzeMode (void);
+int  AnalyzeModeEvent (void);
+void AnalyzeFileEvent (void);
+void MatchEvent (int mode);
+void RecentEngineEvent (int nr);
+void TypeInEvent (char first);
+void TypeInDoneEvent (char *move);
+void InitPosition (int redraw);
+void NewSettingEvent (int option, int *feature, char *command, int value);
+void SettingsMenuIfReady (void);
+void DoEcho (void);
+void DontEcho (void);
+void TidyProgramName (char *prog, char *host, char *buf);
+void SetGameInfo (void);
+void AskQuestionEvent (char *title, char *question,
+			 char *replyPrefix, char *which);
+Boolean ParseOneMove (char *move, int moveNum,
 			ChessMove *moveType, int *fromX, int *fromY,
-			int *toX, int *toY, char *promoChar));
-char *VariantName P((VariantClass v));
-VariantClass StringToVariant P((char *e));
-double u64ToDouble P((u64 value));
-void OutputChatMessage P((int partner, char *mess));
-void EditPositionDone P((Boolean fakeRights));
-Boolean GetArgValue P((char *name));
-Boolean LoadPV P((int x, int y));
-Boolean LoadMultiPV P((int x, int y, char *buf, int index, int *start, int *end, int pane));
-void UnLoadPV P(());
-void MovePV P((int x, int y, int h));
-int PromoScroll P((int x, int y));
-void EditBookEvent P((void));
-Boolean DisplayBook P((int moveNr));
-void SaveToBook P((char *text));
-void AddBookMove P((char *text));
-void PlayBookMove P((char *text, int index));
-void HoverEvent P((int hiX, int hiY, int x, int y));
-int PackGame P((Board board));
-Boolean ParseFEN P((Board board, int *blackPlaysFirst, char *fen, Boolean autoSize));
-void ApplyMove P((int fromX, int fromY, int toX, int toY, int promoChar, Board board));
-void PackMove P((int fromX, int fromY, int toX, int toY, ChessSquare promoPiece));
-void ics_printf P((char *format, ...));
-int GetEngineLine P((char *nick, int engine));
-void AddGameToBook P((int always));
-void FlushBook P((void));
-char PieceToChar P((ChessSquare p));
-int LoadPieceDesc P((char *s));
+			int *toX, int *toY, char *promoChar);
+char *VariantName (VariantClass v);
+VariantClass StringToVariant (char *e);
+double u64ToDouble (u64 value);
+void OutputChatMessage (int partner, char *mess);
+void EditPositionDone (Boolean fakeRights);
+Boolean GetArgValue (char *name);
+Boolean LoadPV (int x, int y);
+Boolean LoadMultiPV (int x, int y, char *buf, int index, int *start, int *end, int pane);
+void UnLoadPV ();
+void MovePV (int x, int y, int h);
+int PromoScroll (int x, int y);
+void EditBookEvent (void);
+Boolean DisplayBook (int moveNr);
+void SaveToBook (char *text);
+void AddBookMove (char *text);
+void PlayBookMove (char *text, int index);
+void HoverEvent (int hiX, int hiY, int x, int y);
+int PackGame (Board board);
+Boolean ParseFEN (Board board, int *blackPlaysFirst, char *fen, Boolean autoSize);
+void ApplyMove (int fromX, int fromY, int toX, int toY, int promoChar, Board board);
+void PackMove (int fromX, int fromY, int toX, int toY, ChessSquare promoPiece);
+void ics_printf (char *format, ...);
+int GetEngineLine (char *nick, int engine);
+void AddGameToBook (int always);
+void FlushBook (void);
+char PieceToChar (ChessSquare p);
+int LoadPieceDesc (char *s);
 
-char *StrStr P((char *string, char *match));
-char *StrCaseStr P((char *string, char *match));
-char *StrSave P((char *s));
-char *StrSavePtr P((char *s, char **savePtr));
-char *SavePart P((char *));
-char* safeStrCpy P(( char *dst, const char *src, size_t count ));
+char *StrStr (char *string, char *match);
+char *StrCaseStr (char *string, char *match);
+char *StrSave (char *s);
+char *StrSavePtr (char *s, char **savePtr);
+char *SavePart (char *);
+char *safeStrCpy (char *dst, const char *src, size_t count);
 
-int StrCaseCmp P((char *s1, char *s2));
-int ToLower P((int c));
-int ToUpper P((int c));
+int StrCaseCmp (char *s1, char *s2);
+int ToLower (int c);
+int ToUpper (int c);
 
 extern GameInfo gameInfo;
 
@@ -241,10 +241,10 @@ extern enum ICS_TYPE ics_type;
 
 /* pgntags.c prototypes
  */
-char *PGNTags P((GameInfo *));
-void PrintPGNTags P((FILE *f, GameInfo *));
-int ParsePGNTag P((char *, GameInfo *));
-char *PGNResult P((ChessMove result));
+char *PGNTags (GameInfo *);
+void PrintPGNTags (FILE *f, GameInfo *);
+int ParsePGNTag (char *, GameInfo *);
+char *PGNResult (ChessMove result);
 
 
 /* gamelist.c prototypes
@@ -268,27 +268,30 @@ extern int opponentKibitzes;
 extern ChessSquare gatingPiece;
 extern List gameList;
 extern int lastLoadGameNumber;
-void ClearGameInfo P((GameInfo *));
-int GameListBuild P((FILE *));
-void GameListInitGameInfo P((GameInfo *));
-char *GameListLine P((int, GameInfo *));
-char * GameListLineFull P(( int, GameInfo *));
-void InitSearch P((void));
-int GameContainsPosition P((FILE *f, ListGame *lg));
-void GLT_TagsToList P(( char * tags ));
-void GLT_ParseList P((void));
-int NamesToList P((char *name, char **engines, char **mnemonics, char *group));
-int CreateTourney P((char *name));
-char *MakeName P((char *templ));
-void SwapEngines P((int n));
-void Substitute P((char *participants, int expunge));
+void ClearGameInfo (GameInfo *);
+int GameListBuild (FILE *);
+void GameListInitGameInfo (GameInfo *);
+char *GameListLine (int, GameInfo *);
+char * GameListLineFull ( int, GameInfo *);
+void InitSearch (void);
+int GameContainsPosition (FILE *f, ListGame *lg);
+void GLT_TagsToList ( char * tags );
+void GLT_ParseList (void);
+int NamesToList (char *name, char **engines, char **mnemonics, char *group);
+int CreateTourney (char *name);
+char *MakeName (char *templ);
+void SwapEngines (int n);
+void Substitute (char *participants, int expunge);
 
-extern char* StripHighlight P((char *));  /* returns static data */
-extern char* StripHighlightAndTitle P((char *));  /* returns static data */
-extern void ics_update_width P((int new_width));
-extern Boolean set_cont_sequence P((char *new_seq));
-extern int wrap P((char *dest, char *src, int count, int width, int *lp));
-int Explode P((Board board, int fromX, int fromY, int toX, int toY));
+/* returns static data */
+extern char* StripHighlight (char *);
+/* returns static data */
+extern char* StripHighlightAndTitle (char *);
+
+extern void ics_update_width (int new_width);
+extern Boolean set_cont_sequence (char *new_seq);
+extern int wrap (char *dest, char *src, int count, int width, int *lp);
+int Explode (Board board, int fromX, int fromY, int toX, int toY);
 
 typedef enum { CheckBox, ComboBox, TextBox, Button, Spin, ResetButton, SaveButton, ListBox, Graph, PopUp,
 		 FileName, PathName, Slider, Message, Fractional, Label, Icon,
@@ -416,23 +419,24 @@ extern char *recentEngines;
 extern char *currentEngine[];
 extern Boolean partnerUp, twoBoards;
 extern char engineVariant[];
-void SaveEngineSettings P((int n));
-void SaveEngineList P((void));
-char *EngineDefinedVariant P((ChessProgramState *cps, int n));
-void SettingsPopUp P((ChessProgramState *cps)); // [HGM] really in front-end, but CPS not known in frontend.h
-int WaitForEngine P((ChessProgramState *cps, DelayedEventCallback x));
-void Load P((ChessProgramState *cps, int n));
-int MultiPV P((ChessProgramState *cps, int kind));
-void MoveHistorySet P(( char movelist[][2*MOVE_LEN], int first, int last, int current, ChessProgramStats_Move * pvInfo ));
-void MakeEngineOutputTitle P((void));
-void LoadTheme P((void));
-void CreateBookEvent P((void));
-char *SupportedVariant P((char *list, VariantClass v, int w, int h, int s, int proto, char *engine));
-char *CollectPieceDescriptors P((void));
-void RefreshSettingsDialog P((ChessProgramState *cps, int val));
-void StartChessProgram P((ChessProgramState *cps));
-void SendToICS P((char *s));
-int PosFlags P((int n));
+void SaveEngineSettings (int n);
+void SaveEngineList (void);
+char *EngineDefinedVariant (ChessProgramState *cps, int n);
+// [HGM] really in front-end, but CPS not known in frontend.h
+void SettingsPopUp (ChessProgramState *cps);
+int WaitForEngine (ChessProgramState *cps, DelayedEventCallback x);
+void Load (ChessProgramState *cps, int n);
+int MultiPV (ChessProgramState *cps, int kind);
+void MoveHistorySet (char movelist[][2*MOVE_LEN], int first, int last, int current, ChessProgramStats_Move * pvInfo);
+void MakeEngineOutputTitle (void);
+void LoadTheme (void);
+void CreateBookEvent (void);
+char *SupportedVariant (char *list, VariantClass v, int w, int h, int s, int proto, char *engine);
+char *CollectPieceDescriptors (void);
+void RefreshSettingsDialog (ChessProgramState *cps, int val);
+void StartChessProgram (ChessProgramState *cps);
+void SendToICS (char *s);
+int PosFlags (int n);
 
 
 /* A point in time */
@@ -444,7 +448,7 @@ typedef struct {
 
 extern TimeMark programStartTime;
 
-void GetTimeMark P((TimeMark *));
-long SubtractTimeMarks P((TimeMark *, TimeMark *));
+void GetTimeMark (TimeMark *);
+long SubtractTimeMarks (TimeMark *, TimeMark *);
 
 #endif /* XB_BACKEND */

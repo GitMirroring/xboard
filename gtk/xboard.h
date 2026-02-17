@@ -121,25 +121,28 @@ typedef struct {
 #define SETTINGS_FILE           SYSCONFDIR"/xboard.conf"
 #define COLOR_BKGD              "white"
 
-GdkPixbuf *LoadIconFile P((char *name));
-void NewTagsPopup P((char *text, char *msg));
-int AppendText P((Option *opt, char *s));
-void NewCommentPopup P((char *title, char *text, int index));
-void GetActualPlacement P((GtkWidget *shell, WindowPlacement *wp));
-void DelayedDrag P((void));
+GdkPixbuf *LoadIconFile (char *name);
+void NewTagsPopup (char *text, char *msg);
+int AppendText (Option *opt, char *s);
+void NewCommentPopup (char *title, char *text, int index);
+void GetActualPlacement (GtkWidget *shell, WindowPlacement *wp);
+void DelayedDrag (void);
 #ifdef TODO_GTK
-void CatchDeleteWindow(Widget w, String procname);
-void GenericPopDown P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void SetFocus(Widget w, XtPointer data, XEvent *event, Boolean *b); // from xoptions.c
-void TypeInProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-Widget CreateMenuItem P((Widget menu, char *msg, XtCallbackProc CB, int n));
-void WheelProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void TabProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void GenericMenu P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
+void CatchDeleteWindow (Widget w, String procname);
+void GenericPopDown (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+
+// from xoptions.c
+void SetFocus (Widget w, XtPointer data, XEvent *event, Boolean *b);
+void TypeInProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+Widget CreateMenuItem (Widget menu, char *msg, XtCallbackProc CB, int n);
+void WheelProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void TabProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+
+void GenericMenu (Widget w, XEvent *event, String *prms, Cardinal *nprms);
 
 // from xengineoutput.c
-void SelectPV P((Widget w, XEvent * event, String * params, Cardinal * nParams));
-void StopPV P((Widget w, XEvent * event, String * params, Cardinal * nParams));
+void SelectPV (Widget w, XEvent * event, String * params, Cardinal * nParams);
+void StopPV (Widget w, XEvent * event, String * params, Cardinal * nParams);
 #endif
 
 extern char memoTranslations[];

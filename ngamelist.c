@@ -68,9 +68,9 @@ static char *filterPtr;
 static char *list[1003];
 static int listEnd;
 
-static int GameListPrepare P((int byPos, int narrow));
-static void GameListReplace P((int page));
-static void GL_Button P((int n));
+static int GameListPrepare (int byPos, int narrow);
+static void GameListReplace (int page);
+static void GL_Button (int n);
 
 Option gamesOptions[] = {
 { 200,  LR|TB,     400, NULL, (void*) list,       NULL, NULL, ListBox, "", &appData.gameListFont },

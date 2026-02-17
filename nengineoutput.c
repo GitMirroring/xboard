@@ -63,7 +63,7 @@ int  windowMode = 1;
 char *mem1, *mem2; // dummies, as this dialog can never be OK'ed
 int highTextStart[2], highTextEnd[2];
 
-int MemoProc P((Option *opt, int n, int x, int y, char *text, int index));
+int MemoProc (Option *opt, int n, int x, int y, char *text, int index);
 
 Option engoutOptions[] = {
 {  0,  LL|T2T,           18, NULL, NULL, NULL, NULL, Icon, " " },

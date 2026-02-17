@@ -48,12 +48,12 @@ extern int MarginW;
 extern int MarginH;
 
 // calls from back-end part into front-end part
-void DrawSegment( int x, int y, int *lastX, int *lastY, int p );
-void DrawRectangle( int left, int top, int right, int bottom, int side, int style );
-void DrawEvalText(char *buf, int cbBuf, int y);
-void EvalGraphSet P(( int first, int last, int current, ChessProgramStats_Move * pvInfo ));
+void DrawSegment (int x, int y, int *lastX, int *lastY, int p);
+void DrawRectangle (int left, int top, int right, int bottom, int side, int style);
+void DrawEvalText (char *buf, int cbBuf, int y);
+void EvalGraphSet (int first, int last, int current, ChessProgramStats_Move * pvInfo);
 
 // calls of front-end part into back-end part
-extern int GetMoveIndexFromPoint( int x, int y );
-extern void PaintEvalGraph( void );
-extern char *MakeEvalTitle( char *title );
+extern int GetMoveIndexFromPoint (int x, int y);
+extern void PaintEvalGraph (void);
+extern char *MakeEvalTitle (char *title);

@@ -156,7 +156,7 @@
 # define N_(s)  s
 #endif
 
-static int get_term_width P(());
+static int get_term_width ();
 
 static char *cnames[9] = { "black", "red", "green", "yellow", "blue",
 			     "magenta", "cyan", "white" };

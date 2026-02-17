@@ -59,17 +59,21 @@ extern char exclusionHeader[];
 extern int highTextStart[2], highTextEnd[2], endPV;
 
 // back-end called by front-end
-void SetEngineState( int which, enum ENGINE_STATE state, char * state_data );
+void SetEngineState (int which, enum ENGINE_STATE state, char * state_data);
 
 // front-end called by back-end
-void SetEngineColorIcon( int which );
-void SetIcon( int which, int field, int nIcon );
-void DoSetWindowText(int which, int field, char *s_label);
-void InsertIntoMemo( int which, char * text, int where );
-void DoClearMemo(int which);
-void ResizeWindowControls( int mode );
-int  EngineOutputDialogExists();
-void SetEngineOutputTitle( char *title );
-void Collapse P((int colNr));
-void InitEngineOutput P((Option *opt, Option *memo2)); // XB only
-void DrawWidgetIcon P((Option *opt, int nIcon)); // XB only
+void SetEngineColorIcon (int which);
+void SetIcon (int which, int field, int nIcon);
+void DoSetWindowText (int which, int field, char *s_label);
+void InsertIntoMemo (int which, char * text, int where);
+void DoClearMemo (int which);
+void ResizeWindowControls (int mode);
+int  EngineOutputDialogExists ();
+void SetEngineOutputTitle (char *title);
+void Collapse (int colNr);
+
+// XB only
+void InitEngineOutput (Option *opt, Option *memo2);
+
+// XB only
+void DrawWidgetIcon (Option *opt, int nIcon);

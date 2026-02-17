@@ -190,28 +190,28 @@
 # define N_(s)  s
 #endif
 
-int main P((int argc, char **argv));
-void CmailSigHandler P((int sig));
-void IntSigHandler P((int sig));
-void TermSizeSigHandler P((int sig));
-char *InsertPxlSize P((char *pattern, int targetPxlSize));
+int main (int argc, char **argv);
+void CmailSigHandler (int sig);
+void IntSigHandler (int sig);
+void TermSizeSigHandler (int sig);
+char *InsertPxlSize (char *pattern, int targetPxlSize);
 #ifdef TODO_GTK
 #if ENABLE_NLS
-XFontSet CreateFontSet P((char *base_fnt_lst));
+XFontSet CreateFontSet (char *base_fnt_lst);
 #else
-char *FindFont P((char *pattern, int targetPxlSize));
+char *FindFont (char *pattern, int targetPxlSize);
 #endif
 #endif
-void DelayedDrag P((void));
-void ICSInputBoxPopUp P((void));
-void MoveTypeInProc P((GdkEventKey *eventkey));
-gboolean KeyPressProc P((GtkWindow *window, GdkEventKey *eventkey, gpointer data));
+void DelayedDrag (void);
+void ICSInputBoxPopUp (void);
+void MoveTypeInProc (GdkEventKey *eventkey);
+gboolean KeyPressProc (GtkWindow *window, GdkEventKey *eventkey, gpointer data);
 Boolean TempBackwardActive = False;
-void DisplayMove P((int moveNumber));
-void update_ics_width P(());
-int CopyMemoProc P(());
-static gboolean EventProc P((GtkWidget *widget, GdkEvent *event, gpointer g));
-static int FindLogo P((char *place, char *name, char *buf));
+void DisplayMove (int moveNumber);
+void update_ics_width ();
+int CopyMemoProc ();
+static gboolean EventProc (GtkWidget *widget, GdkEvent *event, gpointer g);
+static int FindLogo (char *place, char *name, char *buf);
 
 #ifdef TODO_GTK
 #if ENABLE_NLS
