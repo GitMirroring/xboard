@@ -682,9 +682,10 @@ ConvertToLine (int argc, char **argv)
 {
     static char line[128*1024];
     char buf[1024];
+    int i;
 
     memset(line, 0, sizeof(line));
-    for (int i = 1; i != argc; ++i) {
+    for (i = 1; i != argc; ++i) {
         if ( (strchr(argv[i], ' ') || strchr(argv[i], '\n')
          || strchr(argv[i], '\t') || argv[i][0] == NULLCHAR)
          && argv[i][0] != '{' ) {
@@ -2159,7 +2160,7 @@ DisplayIcsInteractionTitle (String message)
       Window win = (Window) atoi(wina);
       Window root, parent, *children;
       unsigned int nchildren;
-      int (*oldHandler)() = XSetErrorHandler(NullXErrorCheck);
+      int (*oldHandler)(Display *, XErrorEvent *) = XSetErrorHandler(NullXErrorCheck);
       for (;;) {
 	if (XFetchName(xDisplay, win, &oldICSInteractionTitle)) break;
 	if (!XQueryTree(xDisplay, win, &root, &parent,

@@ -96,7 +96,6 @@ ScrollToCursor (Option *opt, int caretPos)
 
 // ------------------------------ callbacks --------------------------
 
-char *historyText;
 char historyTranslations[] =
 "<Btn3Down>: select-start() \n \
 <Btn3Up>: extend-end(PRIMARY) SelectMove() \n";

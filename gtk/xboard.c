@@ -617,9 +617,10 @@ ConvertToLine (int argc, char **argv)
 {
     static char line[128*1024];
     char buf[1024];
+    int i;
 
     memset(line, 0, sizeof(line));
-    for (int i = 1; i != argc; ++i) {
+    for (i = 1; i != argc; ++i) {
         if ( (strchr(argv[i], ' ') || strchr(argv[i], '\n')
          || strchr(argv[i], '\t') || argv[i][0] == NULLCHAR)
          && argv[i][0] != '{' ) {
