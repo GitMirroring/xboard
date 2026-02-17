@@ -154,11 +154,11 @@ int OpenCommPort P((char *name, ProcRef *pr));
 int OpenLoopback P((ProcRef *pr));
 int OpenRcmd P((char *host, char *user, char *cmd, ProcRef *pr));
 
-typedef void (*InputCallback) P((InputSourceRef isr, VOIDSTAR closure,
+typedef void (*InputCallback) P((InputSourceRef isr, void *closure,
 				 char *buf, int count, int error));
 /* pr == NoProc means the local keyboard */
 InputSourceRef AddInputSource P((ProcRef pr, int lineByLine,
-				 InputCallback func, VOIDSTAR closure));
+				 InputCallback func, void *closure));
 void RemoveInputSource P((InputSourceRef isr));
 
 /* pr == NoProc means the local display */
@@ -166,7 +166,7 @@ int OutputToProcess P((ProcRef pr, char *message, int count, int *outError));
 int OutputToProcessDelayed P((ProcRef pr, char *message, int count,
 			      int *outError, long msdelay));
 
-void CmailSigHandlerCallBack P((InputSourceRef isr, VOIDSTAR closure,
+void CmailSigHandlerCallBack P((InputSourceRef isr, void *closure,
 				char *buf, int count, int error));
 
 extern ProcRef cmailPR;

@@ -60,10 +60,8 @@
 
 #if defined(__STDC__) || defined(WIN32)
 #    define P(args) args
-typedef void *VOIDSTAR;
 #else
 #    define P(args) ()
-typedef char *VOIDSTAR;
 #endif
 
 #ifdef WIN32
@@ -261,9 +259,9 @@ typedef char *String;
 #define ZIPPY_MAX_GAMES 0
 #define ZIPPY_REPLAY_TIMEOUT 120
 
-typedef VOIDSTAR ProcRef;
+typedef void *ProcRef;
 #define NoProc ((ProcRef) 0)
-typedef VOIDSTAR InputSourceRef;
+typedef void *InputSourceRef;
 
 typedef void (*DelayedEventCallback) P((void));
 

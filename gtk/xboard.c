@@ -1318,7 +1318,7 @@ CmailSigHandler (int sig)
 }
 
 void
-CmailSigHandlerCallBack (InputSourceRef isr, VOIDSTAR closure, char *message, int count, int error)
+CmailSigHandlerCallBack (InputSourceRef isr, void *closure, char *message, int count, int error)
 {
     BoardToTop();
     ReloadCmailMsgEvent(TRUE);	/* Reload cmail msg  */
@@ -2187,7 +2187,7 @@ typedef struct {
     InputCallback func;
     guint sid;
     char buf[INPUT_SOURCE_BUF_SIZE];
-    VOIDSTAR closure;
+    void *closure;
 } InputSource;
 
 gboolean
@@ -2257,7 +2257,7 @@ InputSourceRef AddInputSource(pr, lineByLine, func, closure)
      ProcRef pr;
      int lineByLine;
      InputCallback func;
-     VOIDSTAR closure;
+     void *closure;
 {
     InputSource *is;
     GIOChannel *channel;

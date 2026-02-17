@@ -1387,7 +1387,7 @@ CmailSigHandler (int sig)
 }
 
 void
-CmailSigHandlerCallBack (InputSourceRef isr, VOIDSTAR closure, char *message, int count, int error)
+CmailSigHandlerCallBack (InputSourceRef isr, void *closure, char *message, int count, int error)
 {
     BoardToTop();
     ReloadCmailMsgEvent(TRUE);	/* Reload cmail msg  */
@@ -2376,7 +2376,7 @@ typedef struct {
     InputCallback func;
     XtInputId xid;
     char buf[INPUT_SOURCE_BUF_SIZE];
-    VOIDSTAR closure;
+    void *closure;
 } InputSource;
 
 void
@@ -2419,7 +2419,7 @@ DoInputCallback (caddr_t closure, int *source, XtInputId *xid)
 }
 
 InputSourceRef
-AddInputSource (ProcRef pr, int lineByLine, InputCallback func, VOIDSTAR closure)
+AddInputSource (ProcRef pr, int lineByLine, InputCallback func, void *closure)
 {
     InputSource *is;
     ChildProc *cp = (ChildProc *) pr;

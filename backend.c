@@ -147,9 +147,9 @@
 
 
 int establish P((void));
-void read_from_player P((InputSourceRef isr, VOIDSTAR closure,
+void read_from_player P((InputSourceRef isr, void *closure,
 			 char *buf, int count, int error));
-void read_from_ics P((InputSourceRef isr, VOIDSTAR closure,
+void read_from_ics P((InputSourceRef isr, void *closure,
 		      char *buf, int count, int error));
 void SendToICS P((char *s));
 void SendToICSDelayed P((char *s, long msdelay));
@@ -173,7 +173,7 @@ void PrintOpponents P((FILE *fp));
 void PrintPosition P((FILE *fp, int move));
 void SendToProgram P((char *message, ChessProgramState *cps));
 void SendMoveToProgram P((int moveNum, ChessProgramState *cps));
-void ReceiveFromProgram P((InputSourceRef isr, VOIDSTAR closure,
+void ReceiveFromProgram P((InputSourceRef isr, void *closure,
 			   char *buf, int count, int error));
 void SendTimeControl P((ChessProgramState *cps,
 			int mps, long tc, int inc, int sd, int st));
@@ -1976,7 +1976,7 @@ OutputMaybeTelnet (ProcRef pr, char *message, int count, int *outError)
 }
 
 void
-read_from_player (InputSourceRef isr, VOIDSTAR closure, char *message, int count, int error)
+read_from_player (InputSourceRef isr, void *closure, char *message, int count, int error)
 {
     int outError, outCount;
     static int gotEof = 0;
@@ -2841,7 +2841,7 @@ SeekGraphClick (ClickType click, int x, int y, int moving)
 int remoteEchoOption = FALSE; /* telnet ECHO option */
 
 void
-read_from_ics (InputSourceRef isr, VOIDSTAR closure, char *data, int count, int error)
+read_from_ics (InputSourceRef isr, void *closure, char *data, int count, int error)
 {
 #define BUF_SIZE (16*1024) /* overflowed at 8K with "inchannel 1" on FICS? */
 #define STARTED_NONE 0
@@ -7562,7 +7562,7 @@ MarkByFEN(char *fen)
 static char baseMarker[BOARD_RANKS][BOARD_FILES], baseLegal[BOARD_RANKS][BOARD_FILES];
 
 void
-Mark (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, VOIDSTAR closure)
+Mark (Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
 {
     typedef char Markers[BOARD_RANKS][BOARD_FILES];
     Markers *m = (Markers *) closure;
@@ -17390,7 +17390,7 @@ SendToProgram (char *message, ChessProgramState *cps)
 }
 
 void
-ReceiveFromProgram (InputSourceRef isr, VOIDSTAR closure, char *message, int count, int error)
+ReceiveFromProgram (InputSourceRef isr, void *closure, char *message, int count, int error)
 {
     char *end_str;
     char buf[MSG_SIZ];

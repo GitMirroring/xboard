@@ -70,9 +70,9 @@ extern char *pieceDesc[(int)EmptySquare];
 extern Board initialPosition;
 extern Boolean pieceDefs;
 
-typedef void (*MoveCallback) P((Board board, int flags, ChessMove kind,
-				int rf, int ff, int rt, int ft,
-				VOIDSTAR closure));
+typedef void (*MoveCallback) P((
+    Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft,
+    void *closure));
 
 /* Values for flags arguments */
 #define F_WHITE_ON_MOVE 1
@@ -81,12 +81,12 @@ typedef void (*MoveCallback) P((Board board, int flags, ChessMove kind,
 #define F_BLACK_KCASTLE_OK 8
 #define F_BLACK_QCASTLE_OK 16
 #define F_ALL_CASTLE_OK (F_WHITE_KCASTLE_OK | F_WHITE_QCASTLE_OK | \
-			 F_BLACK_KCASTLE_OK | F_BLACK_QCASTLE_OK)
+                         F_BLACK_KCASTLE_OK | F_BLACK_QCASTLE_OK)
 #define F_IGNORE_CHECK 32
 #define F_KRIEGSPIEL_CAPTURE 64 /* pawns can try to capture invisible pieces */
 #define F_ATOMIC_CAPTURE 128    /* capturing piece explodes, destroying itself
-				   and all non-pawns on adjacent squares;
-				   destroying your own king is illegal */
+                                   and all non-pawns on adjacent squares;
+                                   destroying your own king is illegal */
 #define F_FRC_TYPE_CASTLING 256 /* generate castlings as captures of own Rook */
 #define F_MANDATORY_CAPTURE 0x200
 #define F_NULL_MOVE         0x400
@@ -115,8 +115,9 @@ typedef void (*MoveCallback) P((Board board, int flags, ChessMove kind,
    EP_UNKNOWN if we don't know and want to allow all e.p. captures.
    Promotion moves generated are to Queen only.
 */
-extern void GenPseudoLegal P((Board board, int flags,
-			      MoveCallback callback, VOIDSTAR closure, ChessSquare filter));
+extern void GenPseudoLegal P((
+    Board board, int flags, MoveCallback callback, void *closure,
+    ChessSquare filter));
 
 /* Like GenPseudoLegal, but include castling moves and (unless
    F_IGNORE_CHECK is set in the flags) omit moves that would leave the
@@ -124,8 +125,9 @@ extern void GenPseudoLegal P((Board board, int flags,
    ruled out by a move of the king or rook.  Return TRUE if the player
    on move is currently in check and F_IGNORE_CHECK is not set.
 */
-extern int GenLegal P((Board board, int flags,
-			MoveCallback callback, VOIDSTAR closure, ChessSquare filter));
+extern int GenLegal P((
+    Board board, int flags, MoveCallback callback, void *closure,
+    ChessSquare filter));
 
 /* If the player on move were to move from (rf, ff) to (rt, ft), would
    he leave himself in check?  Or if rf == -1, is the player on move
@@ -134,22 +136,20 @@ extern int GenLegal P((Board board, int flags,
    back rank is not accounted for (i.e., we still return nonzero), as
    this is illegal anyway.  Return value is the number of times the
    king is in check. */
-extern int CheckTest P((Board board, int flags,
-			int rf, int ff, int rt, int ft, int enPassant));
+extern int CheckTest P((
+    Board board, int flags, int rf, int ff, int rt, int ft, int enPassant));
 
 /* Is a move from (rf, ff) to (rt, ft) legal for the player whom the
    flags say is on move?  Other arguments as in GenPseudoLegal.
    Returns the type of move made, taking promoChar into account. */
-extern ChessMove LegalityTest P((Board board, int flags,
-				 int rf, int ff, int rt, int ft,
-				 int promoChar));
+extern ChessMove LegalityTest P((
+    Board board, int flags, int rf, int ff, int rt, int ft, int promoChar));
 
 /* Is a move from (rf, ff) to (rt, ft) en e.p. capture for the player
    whom the flags say is on move, or does it create e.p. rights?
    Returns 2 if rights are created (and stored in board as side effect) */
-extern int EnPassantTest P((Board board, int flags,
-				 int rf, int ff, int rt, int ft,
-				 int promoChar));
+extern int EnPassantTest P((
+    Board board, int flags, int rf, int ff, int rt, int ft, int promoChar));
 
 #define MT_NONE 0
 #define MT_CHECK 1
@@ -186,8 +186,8 @@ void Disambiguate P((Board board, int flags, DisambiguateClosure *closure));
 /* Convert coordinates to normal algebraic notation.
    promoChar must be NULLCHAR or '.' if not a promotion.
 */
-ChessMove CoordsToAlgebraic P((Board board, int flags,
-			       int rf, int ff, int rt, int ft,
-			       int promoChar, char out[MOVE_LEN]));
+ChessMove CoordsToAlgebraic P((
+    Board board, int flags, int rf, int ff, int rt, int ft, int promoChar,
+    char out[MOVE_LEN]));
 
 extern int quickFlag, killX, killY, kill2X, kill2Y, legNr;
