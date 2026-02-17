@@ -310,21 +310,21 @@ static Option matchOptions[] = {
 };
 
 static void
-ReplaceParticipant ()
+ReplaceParticipant (void)
 {
     GenericReadout(matchOptions, PARTICIPANTS);
     Substitute(strdup(engineName), True);
 }
 
 static void
-UpgradeParticipant ()
+UpgradeParticipant (void)
 {
     GenericReadout(matchOptions, PARTICIPANTS);
     Substitute(strdup(engineName), False);
 }
 
 static void
-PseudoOK ()
+PseudoOK (void)
 {
     if(matchMode) return;
     GenericReadout(matchOptions, -2); // read all, but suppress calling of MatchOK
@@ -334,7 +334,7 @@ PseudoOK ()
 }
 
 static void
-CloneTourney ()
+CloneTourney (void)
 {
     FILE *f;
     char *name;
@@ -366,7 +366,7 @@ AddToTourney (int n, int sel)
 }
 
 void
-MatchOptionsProc ()
+MatchOptionsProc (void)
 {
    if(matchOptions[PARTICIPANTS+1].type != ListBox) {
 	DisplayError(_("Internal error: PARTICIPANTS set wrong"), 0);
@@ -431,7 +431,7 @@ static Option generalOptions[] = {
 };
 
 void
-OptionsProc ()
+OptionsProc (void)
 {
    oldPonder = appData.ponderNextMove;
    oldShow = appData.showCoords; oldBlind = appData.blindfold;
@@ -558,7 +558,7 @@ Pick (int n)
 }
 
 void
-NewVariantProc ()
+NewVariantProc (void)
 {
    static int start;
    int i, last;
@@ -633,7 +633,7 @@ static Option commonEngineOptions[] = {
 };
 
 void
-UciMenuProc ()
+UciMenuProc (void)
 {
    oldCores = appData.smpCores;
    oldPonder = appData.ponderNextMove;
@@ -659,7 +659,7 @@ static Option adjudicationOptions[] = {
 };
 
 void
-EngineMenuProc ()
+EngineMenuProc (void)
 {
    GenericPopUp(adjudicationOptions, _("Adjudicate non-ICS Games"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -711,7 +711,7 @@ Option icsOptions[] = {
 };
 
 void
-IcsOptionsProc ()
+IcsOptionsProc (void)
 {
    GenericPopUp(icsOptions, _("ICS Options"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -724,7 +724,7 @@ static char *modeValues[] = { "1", "2", "3", "4", "5", "6" };
 static char *searchMode, *countRange;
 
 static int
-LoadOptionsOK ()
+LoadOptionsOK (void)
 {
     appData.minPieces = appData.maxPieces = 0;
     sscanf(countRange, "%d-%d", &appData.minPieces, &appData.maxPieces);
@@ -761,7 +761,7 @@ LoadOptionsPopUp (DialogClass parent)
 }
 
 void
-LoadOptionsProc ()
+LoadOptionsProc (void)
 {   // called from menu
     LoadOptionsPopUp(BoardWindow);
 }
@@ -782,7 +782,7 @@ static Option saveOptions[] = {
 };
 
 void
-SaveOptionsProc ()
+SaveOptionsProc (void)
 {
    GenericPopUp(saveOptions, _("Save Game Options"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -866,7 +866,7 @@ Test (int n)
 }
 
 void
-SoundOptionsProc ()
+SoundOptionsProc (void)
 {
    free(soundFiles[2]);
    soundFiles[2] = strdup("*");
@@ -1016,7 +1016,7 @@ ThemeSel (int n, int sel)
 }
 
 void
-BoardOptionsProc ()
+BoardOptionsProc (void)
 {
    strncpy(oldPieceDir, appData.pieceDirectory, MSG_SIZ-1); // to see if it changed
    ASSIGN(engineLine, "");
@@ -1066,7 +1066,7 @@ SendString (char *p)
 }
 
 void
-IcsTextPopUp ()
+IcsTextPopUp (void)
 {
    int i=0, j;
    char *p, *q, *r;
@@ -1099,7 +1099,7 @@ IcsTextPopUp ()
 }
 
 void
-IcsTextProc ()
+IcsTextProc (void)
 {
     if(shellUp[TextMenuDlg]) PopDown(TextMenuDlg);
     else IcsTextPopUp();
@@ -1182,14 +1182,14 @@ CommentPopUp (char *title, char *text)
 }
 
 void
-CommentPopDown ()
+CommentPopDown (void)
 {
     PopDown(CommentDlg);
 }
 
 
 void
-EditCommentProc ()
+EditCommentProc (void)
 {
     if (PopDown(CommentDlg)) { // popdown succesful
 //	MarkMenuItem("Edit.EditComment", False);
@@ -1215,7 +1215,7 @@ NewTagsCallback (int n)
 }
 
 static void
-NewMove ()
+NewMove (void)
 {
     addToBookFlag = !addToBookFlag;
 }
@@ -1281,14 +1281,14 @@ EditAnyPopUp (char *tags, char **dest, char *title)
 }
 
 void
-TagsPopDown()
+TagsPopDown (void)
 {
     PopDown(TagsDlg);
     bookUp = False;
 }
 
 void
-EditTagsProc ()
+EditTagsProc (void)
 {
   if (bookUp || !PopDown(TagsDlg)) EditTagsEvent();
 }
@@ -1342,7 +1342,7 @@ PrevInHistory (char *cmd)
 }
 
 static char *
-NextInHistory ()
+NextInHistory (void)
 {
   if (histP == histIn) return NULL;
   histP = (histP + 1) % HISTORY_SIZE;
@@ -1358,7 +1358,7 @@ Option boxOptions[] = {
 };
 
 void
-ICSInputSendText ()
+ICSInputSendText (void)
 {
     char *val;
 
@@ -1390,7 +1390,7 @@ IcsKey (int n)
 }
 
 void
-ICSInputBoxPopUp ()
+ICSInputBoxPopUp (void)
 {
     MarkMenu("View.ICSInputBox", InputBoxDlg);
     if(GenericPopUp(boxOptions, _("ICS input box"), InputBoxDlg, BoardWindow, NONMODAL, 0))
@@ -1399,7 +1399,7 @@ ICSInputBoxPopUp ()
 }
 
 void
-IcsInputBoxProc ()
+IcsInputBoxProc (void)
 {
     if (!PopDown(InputBoxDlg)) ICSInputBoxPopUp();
 }
@@ -1457,13 +1457,13 @@ SettingsPopUp (ChessProgramState *cps)
 }
 
 void
-FirstSettingsProc ()
+FirstSettingsProc (void)
 {
     SettingsPopUp(&first);
 }
 
 void
-SecondSettingsProc ()
+SecondSettingsProc (void)
 {
    if(WaitForEngine(&second, SettingsMenuIfReady)) return;
    SettingsPopUp(&second);
@@ -1574,13 +1574,13 @@ LoadEngineProc (int engineNr, char *title)
 }
 
 void
-LoadEngine1Proc ()
+LoadEngine1Proc (void)
 {
     LoadEngineProc (0, _("Load first engine"));
 }
 
 void
-LoadEngine2Proc ()
+LoadEngine2Proc (void)
 {
     LoadEngineProc (1, _("Load second engine"));
 }
@@ -1588,7 +1588,7 @@ LoadEngine2Proc ()
 //----------------------------------------------------- Edit Book -----------------------------------------
 
 void
-EditBookProc ()
+EditBookProc (void)
 {
     EditBookEvent();
 }
@@ -1624,7 +1624,7 @@ SetRandom (int n)
 }
 
 void
-ShuffleMenuProc ()
+ShuffleMenuProc (void)
 {
     GenericPopUp(shuffleOptions, _("New Shuffle Game"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -1739,7 +1739,7 @@ BreakUp (char *font)
 }
 
 static void
-Collect ()
+Collect (void)
 {
     if(bold) strcat(name, "Bold ");
     if(ital) strcat(name, "Italic ");
@@ -1766,7 +1766,7 @@ AdjustFont (int n)
 }
 
 void
-FontsProc ()
+FontsProc (void)
 {
     int i;
     if(strstr(appData.font, "-*-")) { DisplayNote(_("This only works in the GTK build")); return; }
@@ -1858,7 +1858,7 @@ SetTcType (int n)
 }
 
 void
-TimeControlProc ()
+TimeControlProc (void)
 {
    if(gameMode != BeginningOfGame) {
 	DisplayError(_("Changing time control during a game is not implemented"), 0);
@@ -2197,14 +2197,14 @@ ChatOK (int n)
 }
 
 void
-DelayedSetText ()
+DelayedSetText (void)
 {
     SetWidgetText(&chatOptions[CHAT_IN], tmpLine, -1); // leave focus on chat-partner field!
     SetInsertPos(&chatOptions[CHAT_IN], strlen(tmpLine));
 }
 
 void
-DelayedScroll ()
+DelayedScroll (void)
 {   // If we do this immediately it does it before shrinking the memo, so the lower half remains hidden (Ughh!)
     SetInsertPos(&chatOptions[CHAT_ICS], 999999);
     SetWidgetText(&chatOptions[CHAT_IN], tmpLine, ChatDlg);
@@ -2241,7 +2241,7 @@ ChatSwitch (int n)
 }
 
 void
-PaneSwitch ()
+PaneSwitch (void)
 {
     char *v;
     Show(&chatOptions[CHAT_PANE], hidden = 1); // hide
@@ -2254,7 +2254,7 @@ PaneSwitch ()
 }
 
 void
-ClearChat ()
+ClearChat (void)
 {   // clear the chat to make it free for other use
     chatPartner[activePartner][0] = NULLCHAR;
     ASSIGN(texts[activePartner], "");
@@ -2289,7 +2289,7 @@ ConsoleWrite(char *message, int count)
 }
 
 void
-ChatPopUp ()
+ChatPopUp (void)
 {
     if(GenericPopUp(chatOptions, _("ICS Interaction"), ChatDlg, BoardWindow, NONMODAL, appData.topLevel))
 	AddHandler(&chatOptions[CHAT_PARTNER], ChatDlg, 2), AddHandler(&chatOptions[CHAT_IN], ChatDlg, 2); // treats return as OK
@@ -2300,7 +2300,7 @@ ChatPopUp ()
 }
 
 void
-ChatProc ()
+ChatProc (void)
 {
     if(shellUp[ChatDlg]) PopDown(ChatDlg);
     else ChatPopUp();
@@ -2324,7 +2324,7 @@ ConsoleAutoPopUp (char *buf)
 }
 
 void
-EchoOn ()
+EchoOn (void)
 {
     if(!noEcho) return;
     system("stty echo");
@@ -2333,7 +2333,7 @@ EchoOn ()
 }
 
 void
-EchoOff ()
+EchoOff (void)
 {
     system("stty -echo");
     WidgetEcho(&chatOptions[CHAT_IN], 0);
@@ -2346,7 +2346,7 @@ char *strings[LPUSERGLT_SIZE];
 int stringPtr;
 
 void
-GLT_ClearList ()
+GLT_ClearList (void)
 {
     strings[0] = NULL;
     stringPtr = 0;
@@ -2367,7 +2367,7 @@ GLT_GetFromList (int index, char *name)
 }
 
 void
-GLT_DeSelectList ()
+GLT_DeSelectList (void)
 {
 }
 
@@ -2432,7 +2432,7 @@ GameListOptionsPopUp (DialogClass parent)
 }
 
 void
-GameListOptionsProc ()
+GameListOptionsProc (void)
 {
     GameListOptionsPopUp(BoardWindow);
 }
@@ -2453,7 +2453,7 @@ GameListOptionsProc ()
 int errorUp = False;
 
 void
-ErrorPopDown ()
+ErrorPopDown (void)
 {
     if (!errorUp) return;
     dialogError = errorUp = False;
@@ -3002,7 +3002,7 @@ Option dualOptions[] = { // auxiliary board window
 };
 
 void
-SlavePopUp ()
+SlavePopUp (void)
 {
     int size = BOARD_WIDTH*(squareSize + lineGap) + lineGap;
     // copy params from main board
@@ -3390,7 +3390,7 @@ char *fileOpenMode;
 FILE *openFP;
 
 void
-DelayedLoad ()
+DelayedLoad (void)
 {
   (void) (*fileProc)(openFP, 0, openName);
 }

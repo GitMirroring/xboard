@@ -93,7 +93,7 @@ static char fail[MAX_VAR];
 extern int initialRulePlies;
 
 void
-MakeEngineOutputTitle ()
+MakeEngineOutputTitle (void)
 {
 	static char buf[MSG_SIZ];
 	static char oldTitle[MSG_SIZ];
@@ -295,7 +295,7 @@ GetEngineColor (int which)
 
 // pure back end
 static char
-GetActiveEngineColor ()
+GetActiveEngineColor (void)
 {
     char result = ENGINE_COLOR_UNKNOWN;
 
@@ -345,7 +345,7 @@ SetDisplayMode (int mode)
 
 // pure back end
 static void
-VerifyDisplayMode ()
+VerifyDisplayMode (void)
 {
     int mode;
 

@@ -184,7 +184,7 @@ GameListInitGameInfo (GameInfo *gameInfo)
  * Note, that the ListGame is *not* added to any list
  */
 static ListGame *
-GameListCreate ()
+GameListCreate (void)
 {
     ListGame *listGame;
 
@@ -661,7 +661,7 @@ GLT_ListItemToTag (int index)
 
 // back-end: add items id-chars one-by-one to temp tags string
 void
-GLT_ParseList ()
+GLT_ParseList (void)
 {
     char * pc = lpUserGLT;
     int idx = 0;

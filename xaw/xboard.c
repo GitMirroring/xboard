@@ -424,7 +424,7 @@ CatchDeleteWindow (Widget w, String procname)
 }
 
 void
-BoardToTop ()
+BoardToTop (void)
 {
   Arg args[16];
   XtSetArg(args[0], XtNiconic, False);
@@ -509,7 +509,7 @@ ParseFont (char *name, int number)
 }
 
 void
-SetFontDefaults ()
+SetFontDefaults (void)
 { // only 2 fonts currently
   appData.clockFont = CLOCK_FONT_NAME;
   appData.coordFont = COORD_FONT_NAME;
@@ -517,7 +517,7 @@ SetFontDefaults ()
 }
 
 void
-CreateFonts ()
+CreateFonts (void)
 { // no-op, until we identify the code for this already in XBoard and move it here
 }
 
@@ -546,12 +546,12 @@ ParseBoardSize (void *addr, char *name)
 }
 
 void
-LoadAllSounds ()
+LoadAllSounds (void)
 { // In XBoard the sound-playing program takes care of obtaining the actual sound
 }
 
 void
-SetCommPortDefaults ()
+SetCommPortDefaults (void)
 { // for now, this is a no-op, as the corresponding option does not exist in XBoard
 }
 
@@ -585,7 +585,7 @@ SaveFontArg (FILE *f, ArgDescriptor *ad)
 }
 
 void
-ExportSounds ()
+ExportSounds (void)
 { // nothing to do, as the sounds are at all times represented by their text-string names already
 }
 
@@ -641,7 +641,7 @@ GetPlacement (DialogClass dlg, WindowPlacement *wp)
 }
 
 void
-GetWindowCoords ()
+GetWindowCoords (void)
 { // wrapper to shield use of window handles from back-end (make addressible by number?)
   // In XBoard this will have to wait until awareness of window parameters is implemented
   GetActualPlacement(shellWidget, &wpMain);
@@ -665,13 +665,13 @@ EnsureOnScreen (int *x, int *y, int minX, int minY)
 }
 
 int
-MainWindowUp ()
+MainWindowUp (void)
 { // [HGM] args: allows testing if main window is realized from back-end
   return xBoardWindow != 0;
 }
 
 void
-PopUpStartupDialog ()
+PopUpStartupDialog (void)
 {  // start menu not implemented in XBoard
 }
 
@@ -734,7 +734,7 @@ MakeOneColor (char *name, Pixel *color)
 }
 
 int
-MakeColors ()
+MakeColors (void)
 {   // [HGM] taken out of main(), so it can be called from BoardOptions dialog
     int forceMono = False;
 
@@ -939,7 +939,7 @@ GenerateGlobalTranslationTable (void)
 
 
 void
-PrintOptions ()
+PrintOptions (void)
 {
   char buf[MSG_SIZ];
   int len=0;
@@ -1354,7 +1354,7 @@ main (int argc, char **argv)
 }
 
 void
-DoEvents ()
+DoEvents (void)
 {
     XtInputMask m;
     while((m = XtAppPending(appContext))) XtAppProcessEvent(appContext, m);
@@ -1606,7 +1606,7 @@ KeyBindingProc (Widget w, XEvent *event, String *prms, Cardinal *nprms)
 }
 
 void
-SetupDropMenu ()
+SetupDropMenu (void)
 {
     int i, j, count;
     char label[32];
@@ -1710,7 +1710,7 @@ ReSize (WindowPlacement *wp)
 static XtIntervalId delayedDragID = 0;
 
 void
-DragProc ()
+DragProc (void)
 {
 	static int busy;
 	if(busy) return;
@@ -1734,7 +1734,7 @@ DragProc ()
 
 
 void
-DelayedDrag ()
+DelayedDrag (void)
 {
     if(delayedDragID) XtRemoveTimeOut(delayedDragID); // cancel pending
     delayedDragID =
@@ -1786,7 +1786,7 @@ CommentClick (Widget w, XEvent * event, String * params, Cardinal * nParams)
 static int frozen = 0;
 
 void
-FreezeUI ()
+FreezeUI (void)
 {
   if (frozen) return;
   /* Grab by a widget that doesn't accept input */
@@ -1796,7 +1796,7 @@ FreezeUI ()
 
 /* Undo a FreezeUI */
 void
-ThawUI ()
+ThawUI (void)
 {
   if (!frozen) return;
   XtRemoveGrab(optList[W_MESSG].handle);
@@ -1804,7 +1804,7 @@ ThawUI ()
 }
 
 void
-ModeHighlight ()
+ModeHighlight (void)
 {
     Arg args[16];
     static int oldPausing = FALSE;
@@ -1963,7 +1963,7 @@ PastePositionCB (Widget w, XtPointer client_data, Atom *selection,
 /* called when Paste Position button is pressed,
  * all parameters will be NULL */
 void
-PastePositionProc ()
+PastePositionProc (void)
 {
     XtGetSelectionValue(menuBarWidget,
       appData.pasteSelection ? XA_PRIMARY: XA_CLIPBOARD(xDisplay), XA_STRING,
@@ -2007,7 +2007,7 @@ PasteGameCB (Widget w, XtPointer client_data, Atom *selection,
 /* called when Paste Game button is pressed,
  * all parameters will be NULL */
 void
-PasteGameProc ()
+PasteGameProc (void)
 {
     XtGetSelectionValue(menuBarWidget,
       appData.pasteSelection ? XA_PRIMARY: XA_CLIPBOARD(xDisplay), XA_STRING,
@@ -2030,7 +2030,7 @@ QuitWrapper (Widget w, XEvent *event, String *prms, Cardinal *nprms)
 }
 
 int
-ShiftKeys ()
+ShiftKeys (void)
 {   // bassic primitive for determining if modifier keys are pressed
     long int codes[] = { XK_Meta_L, XK_Meta_R, XK_Control_L, XK_Control_R, XK_Shift_L, XK_Shift_R };
     char keys[32];
@@ -2112,13 +2112,13 @@ ManInner (Widget w, XEvent *event, String *prms, Cardinal *nprms)
 }
 
 void
-ManProc ()
+ManProc (void)
 {   // called from menu
     ManInner(NULL, NULL, NULL, NULL);
 }
 
 void
-InfoProc ()
+InfoProc (void)
 {
     char buf[MSG_SIZ];
     snprintf(buf, sizeof(buf), "xterm -e info --directory %s --directory . -f %s &",
@@ -2184,7 +2184,7 @@ XtIntervalId delayedEventTimerXID = 0;
 DelayedEventCallback delayedEventCallback = 0;
 
 void
-FireDelayedEvent ()
+FireDelayedEvent (void)
 {
     delayedEventTimerXID = 0;
     delayedEventCallback();
@@ -2203,7 +2203,7 @@ ScheduleDelayedEvent (DelayedEventCallback cb, long millisec)
 }
 
 DelayedEventCallback
-GetDelayedEvent ()
+GetDelayedEvent (void)
 {
   if (delayedEventTimerXID) {
     return delayedEventCallback;
@@ -2213,7 +2213,7 @@ GetDelayedEvent ()
 }
 
 void
-CancelDelayedEvent ()
+CancelDelayedEvent (void)
 {
   if (delayedEventTimerXID) {
     XtRemoveTimeOut(delayedEventTimerXID);
@@ -2224,13 +2224,13 @@ CancelDelayedEvent ()
 XtIntervalId loadGameTimerXID = 0;
 
 int
-LoadGameTimerRunning ()
+LoadGameTimerRunning (void)
 {
     return loadGameTimerXID != 0;
 }
 
 int
-StopLoadGameTimer ()
+StopLoadGameTimer (void)
 {
     if (loadGameTimerXID != 0) {
 	XtRemoveTimeOut(loadGameTimerXID);
@@ -2270,7 +2270,7 @@ AnalysisClockCallback (XtPointer arg, XtIntervalId *id)
 }
 
 void
-StartAnalysisClock ()
+StartAnalysisClock (void)
 {
     analysisClockXID =
       XtAppAddTimeOut(appContext, 2000,
@@ -2281,13 +2281,13 @@ StartAnalysisClock ()
 XtIntervalId clockTimerXID = 0;
 
 int
-ClockTimerRunning ()
+ClockTimerRunning (void)
 {
     return clockTimerXID != 0;
 }
 
 int
-StopClockTimer ()
+StopClockTimer (void)
 {
     if (clockTimerXID != 0) {
 	XtRemoveTimeOut(clockTimerXID);

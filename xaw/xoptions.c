@@ -83,7 +83,7 @@ static Widget previous = NULL;
 static Option *currentOption;
 
 void
-UnCaret ()
+UnCaret (void)
 {
     Arg args[2];
 
@@ -113,7 +113,7 @@ SetFocus (Widget w, XtPointer data, XEvent *event, Boolean *b)
 }
 
 void
-BoardFocus ()
+BoardFocus (void)
 {
     XtSetKeyboardFocus(shellWidget, formWidget);
 }

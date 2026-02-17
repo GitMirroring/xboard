@@ -87,49 +87,49 @@ PlaySoundFile (char *name)
 }
 
 void
-RingBell ()
+RingBell (void)
 {
   PlaySoundFile(appData.soundMove);
 }
 
 void
-PlayIcsWinSound ()
+PlayIcsWinSound (void)
 {
   PlaySoundFile(appData.soundIcsWin);
 }
 
 void
-PlayIcsLossSound ()
+PlayIcsLossSound (void)
 {
   PlaySoundFile(appData.soundIcsLoss);
 }
 
 void
-PlayIcsDrawSound ()
+PlayIcsDrawSound (void)
 {
   PlaySoundFile(appData.soundIcsDraw);
 }
 
 void
-PlayIcsUnfinishedSound ()
+PlayIcsUnfinishedSound (void)
 {
   PlaySoundFile(appData.soundIcsUnfinished);
 }
 
 void
-PlayAlarmSound ()
+PlayAlarmSound (void)
 {
   PlaySoundFile(appData.soundIcsAlarm);
 }
 
 void
-PlayTellSound ()
+PlayTellSound (void)
 {
   PlaySoundFile(appData.soundTell);
 }
 
 int
-Roar ()
+Roar (void)
 {
   return PlaySoundFile(appData.soundRoar);
 }

@@ -163,7 +163,7 @@ SetHighlights (int fromX, int fromY, int toX, int toY)
 }
 
 void
-ClearHighlights ()
+ClearHighlights (void)
 {
     SetHighlights(-1, -1, -1, -1);
 }
@@ -189,7 +189,7 @@ SetPremoveHighlights (int fromX, int fromY, int toX, int toY)
 }
 
 void
-ClearPremoveHighlights ()
+ClearPremoveHighlights (void)
 {
   SetPremoveHighlights(-1, -1, -1, -1);
 }
@@ -743,7 +743,7 @@ DragPieceBegin (int x, int y, Boolean instantly)
 /* Handle expose event while piece being dragged */
 
 static void
-DrawDragPiece ()
+DrawDragPiece (void)
 {
   if (!anims[Player].dragActive || appData.blindfold)
     return;
@@ -1258,7 +1258,7 @@ DrawArrowBetweenSquares (int s_col, int s_row, int d_col, int d_row)
 }
 
 static Boolean
-IsDrawArrowEnabled ()
+IsDrawArrowEnabled (void)
 {
     return (appData.highlightMoveWithArrow || twoBoards && partnerUp) && squareSize >= 32;
 }

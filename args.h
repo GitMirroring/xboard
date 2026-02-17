@@ -1388,7 +1388,7 @@ ParseIcsTextMenu(char *icsTextMenuString)
 }
 
 void
-SetDefaultTextAttribs()
+SetDefaultTextAttribs (void)
 {
   ColorClass cc;
   for (cc = (ColorClass)0; cc < ColorNone; cc++) {
@@ -1397,7 +1397,7 @@ SetDefaultTextAttribs()
 }
 
 void
-SetDefaultsFromList()
+SetDefaultsFromList (void)
 { // [HGM] ini: take defaults from argDescriptor list
   int i;
 

@@ -141,7 +141,7 @@ DoClearMemo (int which)
 }
 
 void
-EngineOutputPopUp ()
+EngineOutputPopUp (void)
 {
     static int  needInit = TRUE;
     static char *title = N_("Engine output");
@@ -170,19 +170,19 @@ EngineOutputPopUp ()
 }
 
 int
-EngineOutputIsUp ()
+EngineOutputIsUp (void)
 {
     return shellUp[EngOutDlg];
 }
 
 int
-EngineOutputDialogExists ()
+EngineOutputDialogExists (void)
 {
     return DialogExists(EngOutDlg);
 }
 
 void
-EngineOutputProc ()
+EngineOutputProc (void)
 {
   if (!PopDown(EngOutDlg)) EngineOutputPopUp();
 }

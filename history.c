@@ -74,7 +74,7 @@ static HistoryMove histMoves[ MAX_MOVES ];
 
 // back-end after replacing Windows data-types by equivalents
 static Boolean
-OnlyCurrentPositionChanged ()
+OnlyCurrentPositionChanged (void)
 {
     Boolean result = FALSE;
 
@@ -101,7 +101,7 @@ OnlyCurrentPositionChanged ()
 
 // back-end, after replacing Windows data types
 static Boolean
-OneMoveAppended ()
+OneMoveAppended (void)
 {
     Boolean result = FALSE;
 
@@ -157,7 +157,7 @@ AppendMoveToMemo (int index)
 
 // back-end
 void
-RefreshMemoContent ()
+RefreshMemoContent (void)
 {
     int i;
 
@@ -180,7 +180,7 @@ DoHighlight (int index, int onoff)
 
 // back-end, now that a wrapper is provided for the front-end code to do the actual scrolling
 void
-MemoContentUpdated ()
+MemoContentUpdated (void)
 {
     int caretPos;
 
@@ -225,7 +225,7 @@ FindMoveByCharIndex (int char_index)
 
 // back-end. In WinBoard called by call-back, but could be called directly by SetIfExists?
 void
-UpdateMoveHistory ()
+UpdateMoveHistory (void)
 {
         /* Update the GUI */
         if( OnlyCurrentPositionChanged() ) {

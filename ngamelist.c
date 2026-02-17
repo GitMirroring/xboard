@@ -212,7 +212,7 @@ GameListReplace (int page)
 }
 
 void
-GameListUpdate ()
+GameListUpdate (void)
 {
     if(!DialogExists(GameListDlg)) return;
     GameListPrepare(False, False);
@@ -245,13 +245,13 @@ GameListPopUp (FILE *fp, char *filename)
 }
 
 FILE *
-GameFile ()
+GameFile (void)
 {
   return glc ? glc->fp : NULL;
 }
 
 void
-GameListDestroy ()
+GameListDestroy (void)
 {
     if (glc == NULL) return;
     EnableNamedMenuItem("File.SaveSelected", FALSE);
@@ -269,7 +269,7 @@ GameListDestroy ()
 }
 
 void
-ShowGameListProc ()
+ShowGameListProc (void)
 {
     if (glc == NULL) {
 	DisplayError(_("There is no game list"), 0);
@@ -326,7 +326,7 @@ GameListClicks (int direction)
 }
 
 void
-SetFilter ()
+SetFilter (void)
 {
         char *name;
 	GetWidgetText(&gamesOptions[1], &name);

@@ -198,7 +198,7 @@ char xqName[]      = "PH.R.AE..K.C................................"  // white
                      "ph.r.ae..k.c................................"; // black
 
 char *
-CollectPieceDescriptors ()
+CollectPieceDescriptors (void)
 {   // make a line of piece descriptions for use in the PGN Piece tag:
     // dump all engine defined pieces, and pieces with non-standard names,
     // but suppress black pieces that are the same as their white counterpart

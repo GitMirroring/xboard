@@ -669,7 +669,7 @@ entry_t *memBook, *hashTab, *mergeBuf;
 int bookSize=1, mergeSize=1, mask = HASHSIZE-1;
 
 void
-InitMemBook ()
+InitMemBook (void)
 {
     static int initDone = FALSE;
     if(initDone) return;
@@ -875,7 +875,7 @@ DisplayBook (int moveNr)
 }
 
 void
-EditBookEvent()
+EditBookEvent (void)
 {
       bookUp = TRUE;
 	bookUp = DisplayBook(currentMove);
@@ -952,7 +952,7 @@ NewEntry (entry_t *e, uint64 key, int move, int result)
 }
 
 void
-Merge ()
+Merge (void)
 {
     int i;
 
@@ -1076,7 +1076,7 @@ PlayBookMove(char *text, int index)
 }
 
 void
-FlushBook ()
+FlushBook (void)
 {
     FILE *f;
     int i;

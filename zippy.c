@@ -94,7 +94,7 @@ extern void mysrandom(unsigned int seed);
 extern int myrandom(void);
 
 void
-ZippyInit ()
+ZippyInit (void)
 {
     char *p;
 

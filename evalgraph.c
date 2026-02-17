@@ -143,7 +143,7 @@ DrawAxisSegmentHoriz (int value, Boolean drawValue)
 // The DrawLines again must select their own brush.
 // the initial brush selection is useless? BkMode needed for dotted line and text
 static void
-DrawAxis ()
+DrawAxis (void)
 {
     int cy = nHeightPB / 2, space = nHeightPB/(6 + appData.zoom);
 
@@ -303,7 +303,7 @@ InitVisualization (VisualizationData *vd)
 
 // back-end
 static void
-DrawHistograms ()
+DrawHistograms (void)
 {
     VisualizationData vd;
     int i; double step = 1;
