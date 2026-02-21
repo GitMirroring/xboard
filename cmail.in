@@ -1,4 +1,4 @@
-#! @PERLPATH@
+#! @PERL@
 ## (configure will change the top line to the location of perl on your system)
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 ## cmail: a tool to aid playing chess by email

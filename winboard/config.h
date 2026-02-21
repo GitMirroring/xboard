@@ -72,8 +72,6 @@
 
 #define USE_PTYS 0
 
-/*#undef X_WCHAR*/
-
 #ifndef __BORLANDC__
 #define WIN32 1
 #else
