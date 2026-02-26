@@ -1,4 +1,4 @@
-# Source, object, and executable files produced.
+# Source, object, executable files, and scripts produced.
 *.o
 cmail
 config.h
@@ -6,16 +6,19 @@ parser.c
 xboard
 
 # Files related to the GNU build system (autoconf, etc.)
+**/.dirstamp
 ABOUT-NLS
 INSTALL
 Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
+build-aux/
 compile
 config.guess
 config.h.in
 config.rpath
+config.status
 config.sub
 configure
 depcomp
@@ -25,15 +28,14 @@ mdate-sh
 missing
 mkinstalldirs
 po/
+stamp-h
+stamp-h[0-9]
+stamp-vti
 
 # Miscellaneous files
 *~
 .deps/
 config.log
-config.status
-stamp-h
-stamp-h1
-stamp-vti
 texinfo.tex
 version.texi
 xboard.info
