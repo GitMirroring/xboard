@@ -167,8 +167,8 @@ AC_ARG_WITH(
         [--with-gtk],
         [use GTK 2 front-end (default, and preferred)]
     )],
-    [with_GTK=$withval],
-    [with_GTK="yes"]
+    [with_GTK="$withval"],
+    [with_GTK=yes]
 )
 
 AC_ARG_WITH(
@@ -178,7 +178,7 @@ AC_ARG_WITH(
         [use Xaw3d front-end]
     )],
     [with_Xaw3d="$withval"],
-    [with_Xaw3d="no"]
+    [with_Xaw3d=no]
 )
 dnl| If Xaw3d is selected, then deselect GTK.
 AS_IF([test "x$with_Xaw3d" = xyes], [with_GTK="no"])
@@ -400,178 +400,206 @@ dnl| fixed by doing "configure --enable-ptys".  Apparently, this didn't happen.
 dnl| TODO: Consider removing all of the pseudo-tty (pty) code from GNU XBoard.
 
 USE_PTYS=0
+
 AC_DEFINE([PTY_ITERATION], [DEFAULT_PTY_ITERATION])
 AC_DEFINE([PTY_NAME_C_STR], [DEFAULT_PTY_NAME_C_STR])
 AC_DEFINE([PTY_TTY_NAME_C_STR], [DEFAULT_PTY_TTY_NAME_C_STR])
-case "$host" in
-  *-*-hpux* )
-    AC_DEFINE([PTY_NAME_C_STR], [HPUX_PTY_NAME_C_STR])
-    AC_DEFINE([PTY_TTY_NAME_C_STR], [HPUX_PTY_TTY_NAME_C_STR])
+
+AS_CASE(
+    ["$host"],
+    ["*-*-hpux*"],
+    [
+        AC_DEFINE([PTY_NAME_C_STR], [HPUX_PTY_NAME_C_STR])
+        AC_DEFINE([PTY_TTY_NAME_C_STR], [HPUX_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
-    if test "$GCC" = yes; then
-        CONF_CFLAGS="-fwritable-strings"
-    else
+        AS_IF(
+            [test "x$GCC" = xyes],
+            [CONF_CFLAGS="-fwritable-strings"],
 dnl| Note: You might be able to build older versions of GNU XBoard even if your
 dnl| compiler does not support ANSI C89/ISO C90 (-Aa), because GNU XBoard itself
 dnl| used to not require ANSI/ISO C.  Tim didn't know whether the X header files
 dnl| on HP-UX required it.
-        CONF_CFLAGS="-Aa -D_HPUX_SOURCE"
-    fi
+            [CONF_CFLAGS="-Aa -D_HPUX_SOURCE"]
+        )
 
-dnl| HP didn't supply a full set of X header files and libraries. People often
+dnl| HP didn't supply a full set of X header files and libraries.  People often
 dnl| had some things installed in one place and some in another.  AC_PATH_XTRA
 dnl| will find only one place, so he tried to add all the likely ones that might
 dnl| have been missing here.  It might be better to change AC_PATH_XTRA to try
 dnl| to extract this information from imake (and/or xmkmf?), because folks who
 dnl| install the missing bits often configured their imake to find them, but Tim
 dnl| didn't want to delve into autoconf and hack on its internals.
-    if test -d /opt/hppd/include/X11; then
-      X_CFLAGS="$X_CFLAGS -I/opt/hppd/include"
-      X_LIBS="$X_LIBS -L/opt/hppd/lib"
-    elif test -d /usr/contrib/X11R5/include; then
-      X_CFLAGS="$X_CFLAGS -I/usr/contrib/X11R5/include"
-      X_LIBS="$X_LIBS -L/usr/contrib/X11R5/lib"
-    elif test -d /usr/contrib/mitX11R5/include; then
-      X_CFLAGS="$X_CFLAGS -I/usr/contrib/mitX11R5/include"
-      X_LIBS="$X_LIBS -L/usr/contrib/mitX11R5/lib"
-    elif test -d /MIT/X11R5/include; then
-      X_CFLAGS="$X_CFLAGS -I/MIT/X11R5/include"
-      X_LIBS="$X_LIBS -L/MIT/X11R5/lib"
-    elif test -d /usr/local/include/X11R5; then
-      X_CFLAGS="$X_CFLAGS -I/usr/local/include/X11R5"
-      X_LIBS="$X_LIBS -L/usr/local/lib/X11R5"
-    fi
-    if test -d /usr/include/X11R5; then
-      X_CFLAGS="$X_CFLAGS -I/usr/include/X11R5"
-      X_LIBS="$X_LIBS -L/usr/lib/X11R5 -L/usr/lib/X11R4"
-    elif test -d /usr/include/X11R4; then
-      X_CFLAGS="$X_CFLAGS -I/usr/include/X11R4"
-      X_LIBS="$X_LIBS -L/usr/lib/X11R4"
-    fi
-  ;;
-
-  romp-ibm-aix* )
-    AC_DEFINE([IBM_RT_PC_AIX], [1])
+        AS_IF(
+            [test -d /opt/hppd/include/X11],
+            [
+                X_CFLAGS="$X_CFLAGS -I/opt/hppd/include"
+                X_LIBS="$X_LIBS -L/opt/hppd/lib"
+            ],
+            [test -d /usr/contrib/X11R5/include],
+            [
+                X_CFLAGS="$X_CFLAGS -I/usr/contrib/X11R5/include"
+                X_LIBS="$X_LIBS -L/usr/contrib/X11R5/lib"
+            ],
+            [test -d /usr/contrib/mitX11R5/include],
+            [
+                X_CFLAGS="$X_CFLAGS -I/usr/contrib/mitX11R5/include"
+                X_LIBS="$X_LIBS -L/usr/contrib/mitX11R5/lib"
+            ],
+            [test -d /MIT/X11R5/include],
+            [
+                X_CFLAGS="$X_CFLAGS -I/MIT/X11R5/include"
+                X_LIBS="$X_LIBS -L/MIT/X11R5/lib"
+            ],
+            [test -d /usr/local/include/X11R5],
+            [
+                X_CFLAGS="$X_CFLAGS -I/usr/local/include/X11R5"
+                X_LIBS="$X_LIBS -L/usr/local/lib/X11R5"
+            ],
+        )
+        AS_IF(
+            [test -d /usr/include/X11R5],
+            [
+                X_CFLAGS="$X_CFLAGS -I/usr/include/X11R5"
+                X_LIBS="$X_LIBS -L/usr/lib/X11R5"
+            ],
+            [test -d /usr/include/X11R4],
+            [
+                X_CFLAGS="$X_CFLAGS -I/usr/include/X11R4"
+                X_LIBS="$X_LIBS -L/usr/lib/X11R4"
+            ]
+        )
+    ],
+    ["romp-ibm-aix*"],
+    [
+        AC_DEFINE([IBM_RT_PC_AIX], [1])
 dnl| USE_PTYS=1
-  ;;
-
-  i386-ibm-aix )
+    ],
+    ["i386-ibm-aix"],
+    [
 dnl| USE_PTYS=1
-    if test "$GCC" = yes; then
-      CONF_CFLAGS="-fwritable-strings"
-    fi
-  ;;
-
-  *-*-aix3* | *-*-bosx* )
-    AC_DEFINE([PTY_ITERATION], [AIX3_BOSX_PTY_ITERATION])
-    AC_DEFINE([PTY_NAME_C_STR], [AIX3_BOSX_PTY_NAME_C_STR])
-    AC_DEFINE([PTY_TTY_NAME_C_STR], [AIX3_BOSX_PTY_NAME_C_STR])
+        AS_IF(
+            [test "x$GCC" = xyes],
+            [CONF_CFLAGS="-fwritable-strings"]
+        )
+    ],
+    ["*-*-aix3*" | "*-*-bosx*"],
+    [
+        AC_DEFINE([PTY_ITERATION], [AIX3_BOSX_PTY_ITERATION])
+        AC_DEFINE([PTY_NAME_C_STR], [AIX3_BOSX_PTY_NAME_C_STR])
+        AC_DEFINE([PTY_TTY_NAME_C_STR], [AIX3_BOSX_PTY_NAME_C_STR])
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-cxux* )
-    AC_DEFINE([FIRST_PTY_LETTER], ['A'])
-    AC_DEFINE([LAST_PTY_LETTER], ['P'])
+    ],
+    ["*-*-cxux*"],
+    [
+        AC_DEFINE([FIRST_PTY_LETTER], ['A'])
+        AC_DEFINE([LAST_PTY_LETTER], ['P'])
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-uniplus* )
-    AC_DEFINE([UNIPLUS], [1])
+    ],
+    ["*-*-uniplus*"],
+    [
+        AC_DEFINE([UNIPLUS], [1])
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-rtu* )
-    AC_DEFINE([FIRST_PTY_LETTER], ['z'])
-    AC_DEFINE([PTY_NAME_C_STR], [RT_PTY_NAME_C_STR])
-    AC_DEFINE([PTY_TTY_NAME_C_STR], [RTU_PTY_TTY_NAME_C_STR])
+    ],
+    ["*-*-rtu*"],
+    [
+        AC_DEFINE([FIRST_PTY_LETTER], ['z'])
+        AC_DEFINE([PTY_NAME_C_STR], [RT_PTY_NAME_C_STR])
+        AC_DEFINE([PTY_TTY_NAME_C_STR], [RTU_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-iris* | *-*-irix3* )
-    AC_DEFINE([PTY_ITERATION], [IRIS_IRIX3_PTY_ITERATION])
-    AC_DEFINE([PTY_NAME_C_STR], [IRIS_IRIX3_PTY_NAME_C_STR])
-    AC_DEFINE([PTY_TTY_NAME_C_STR], [IRIS_IRIX3_PTY_TTY_NAME_C_STR])
+    ],
+    ["*-*-iris*" | "*-*-irix3*"],
+    [
+        AC_DEFINE([PTY_ITERATION], [IRIS_IRIX3_PTY_ITERATION])
+        AC_DEFINE([PTY_NAME_C_STR], [IRIS_IRIX3_PTY_NAME_C_STR])
+        AC_DEFINE([PTY_TTY_NAME_C_STR], [IRIS_IRIX3_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-irix* )
+    ],
+    ["*-*-irix*"],
+    [
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-sunos4* | *-*-solaris1* )
-
+    ],
+    ["*-*-sunos4*" | "*-*-solaris1*"],
+    [
 dnl| Work around a bug in the SunOS 4.x linker.  Not needed if you have patches
 dnl| 100512-02 and 100573-03 from Sun.  The X FAQ says that the following is
 dnl| "overkill," but doesn't explain what should be done instead.
-
-    if test "$GCC" = yes; then
-      PRE_XMULIB="-static"
-      POST_XMULIB="-dynamic"
-    else
-      PRE_XMULIB="-Bstatic"
-      POST_XMULIB="-Bdynamic"
-    fi
-  ;;
-
-  *-*-sunos5* | *-*-solaris2* )
+        AS_IF(
+            [test "x$GCC" = xyes],
+            [
+                PRE_XMULIB="-static"
+                POST_XMULIB="-dynamic"
+            ],
+            [
+                PRE_XMULIB="-Bstatic"
+                POST_XMULIB="-Bdynamic"
+            ]
+        )
+    ],
+    ["*-*-sunos5*" | "*-*-solaris2*"],
+    [
 dnl| USE_PTYS=1
 
-dnl| I'm not sure -lelf is needed, but it was in the old Imakefile.
-dnl| The other libraries should all be found by AC_PATH_XTRA or other
-dnl| code above.
-
-    X_LIBS="$X_LIBS -lelf"
-  ;;
-
-  *-*-sco* )
-    AC_DEFINE([PTY_ITERATION], [SCO_PTY_ITERATION])
-    AC_DEFINE([PTY_NAME_C_STR], [SCO_PTY_NAME_C_STR])
-    AC_DEFINE([PTY_TTY_NAME_C_STR], [SCO_PTY_TTY_NAME_C_STR])
+dnl| Tim wasn't sure whether or not -lelf was needed, but it had been
+dnl| in the old Imakefile.  The other libraries should all be found by
+dnl| AC_PATH_XTRA or other code above.
+        X_LIBS="$X_LIBS -lelf"
+    ],
+    ["*-*-sco*"],
+    [
+        AC_DEFINE([PTY_ITERATION], [SCO_PTY_ITERATION])
+        AC_DEFINE([PTY_NAME_C_STR], [SCO_PTY_NAME_C_STR])
+        AC_DEFINE([PTY_TTY_NAME_C_STR], [SCO_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-dynix* | *-*-ptx* )
+    ],
+    ["*-*-dynix*" | "*-*-ptx*"],
+    [
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-esix* )
+    ],
+    ["*-*-esix*"],
+    [
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-usg5-4* | *-*-sysvr4* )
+    ],
+    ["*-*-usg5-4*" | "*-*-sysvr4*"],
+    [
 dnl| USE_PTYS=1
-  ;;
-
-  *-*-usg* | *-*-sysv* | *-*-aix* )
+    ],
+    ["*-*-usg*" | "*-*-sysv*" | "*-*-aix*"],
+    [
 dnl| USE_PTYS=1
-  ;;
-
-  vax-*-ultrix )
-    if test "$GCC" = yes; then
-      CONF_CFLAGS="-fwritable-strings"
-    fi
-  ;;
-
+    ],
+    ["vax-*-ultrix"],
+    [
+        AS_IF(
+            [test "x$GCC" = xyes],
+            [CONF_CFLAGS="-fwritable-strings"]
+        )
+    ],
 dnl| Add some libraries for macOS.
-  *-apple-* )
-    AC_MSG_WARN([Apple macOS support is experimental. Please report any problems to bug-xboard@gnu.org.])
-    AC_MSG_WARN([Use --enable-osxapp to enable the build target and automatically adjust target directories.])
-    AC_MSG_WARN([Building for macOS currently relies on some programs such as dylib that we do not test for.])
-    AC_MSG_WARN([Patches from macOS users would be most welcome! ;)])
-    AC_PATH_PROG(SW_VERS, sw_vers)
-    if test "x$SW_VERS" != x; then
-        AC_MSG_CHECKING(Mac OS X version)
-        MACOSX_VERSION=`$SW_VERS -productVersion`
-        AC_MSG_RESULT([$MACOSX_VERSION])
-    fi
-    FRONTEND_LIBS="$FRONTEND_LIBS -headerpad_max_install_names "
-    if test x"$enable_OSXAPP" = x"yes" ; then
-        FRONTEND_LIBS="$FRONTEND_LIBS -lgtkmacintegration-gtk2"
-    fi
-    FRONTEND_CFLAGS="$FRONTEND_CFLAGS -I/opt/local/include -L/opt/local/lib"
-  ;;
-esac
-
+    ["*-apple-*"],
+    [
+        AC_MSG_WARN([Apple macOS support is experimental. Please report any problems to bug-xboard@gnu.org.])
+        AC_MSG_WARN([Use --enable-osxapp to enable the build target and automatically adjust target directories.])
+        AC_MSG_WARN([Building for macOS currently relies on some programs such as dylib that we do not test for.])
+        AC_MSG_WARN([Patches from macOS users would be most welcome!])
+        AC_PATH_PROG(SW_VERS, sw_vers)
+        AS_IF(
+            [test "x$SW_VERS" != x],
+            [
+                AC_MSG_CHECKING(Mac OS X version)
+                MACOSX_VERSION=`$SW_VERS -productVersion`
+                AC_MSG_RESULT([$MACOSX_VERSION])
+            ]
+        )
+        FRONTEND_LIBS="$FRONTEND_LIBS -headerpad_max_install_names"
+        AS_IF(
+            [test "x$enable_OSXAPP" = xyes],
+            [
+                FRONTEND_LIBS="$FRONTEND_LIBS -lgtkmacintegration-gtk2"
+            ]
+        )
+        FRONTEND_CFLAGS="$FRONTEND_CFLAGS -I/opt/local/include -L/opt/local/lib"
+    ]
+)
 
 AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
@@ -587,23 +615,31 @@ AC_ARG_ENABLE(
         [--enable-ptys],
         [Use pseudo-ttys to communicate with child processes.]
     )],
-    [if test "$enableval" = yes; then
-        USE_PTYS=1
-        enable_ptys="ptys"
-        AC_MSG_RESULT([ptys (user override)])
-    fi
-    if test "$enableval" = no; then
-        USE_PTYS=0
-        enable_ptys="pipes"
-        AC_MSG_RESULT([pipes (user override)])
-    fi],
-    [if test "$USE_PTYS" = 1; then
-        AC_MSG_RESULT(ptys)
-        enable_ptys="ptys"
-    else
-        AC_MSG_RESULT(pipes)
-        enable_ptys="pipes"
-    fi]
+    [AS_IF(
+        [test "x$enableval" = xyes],
+        [
+            USE_PTYS=1
+            enable_ptys="ptys"
+            AC_MSG_RESULT([ptys (user override)])
+        ],
+        [test "x$enableval" = xno],
+        [
+            USE_PTYS=0
+            enable_ptys="pipes"
+            AC_MSG_RESULT([pipes (user override)])
+        ]
+    )],
+    [AS_IF(
+        [test "$USE_PTYS" = 1],
+        [
+            AC_MSG_RESULT(ptys)
+            enable_ptys="ptys"
+        ],
+        [
+            AC_MSG_RESULT(pipes)
+            enable_ptys="pipes"
+        ]
+    )]
 )
 AC_DEFINE_UNQUOTED([USE_PTYS], [$USE_PTYS])
 
@@ -613,17 +649,17 @@ AC_ARG_ENABLE(
     [zippy],
     [AS_HELP_STRING(
         [--enable-zippy],
-        [support interfacing a chess program to ICS (default)]
+        [support interfacing a chess program to FICS (default)]
     )],
     [],
     [enable_zippy="no"]
 )
 
-if test x"$enable_zippy" != x"no"; then
-    AC_DEFINE([ZIPPY], [1], [1 if Zippy should be enabled, otherwise 0.])
-else
-    AC_DEFINE([ZIPPY], [0], [1 if Zippy should be enabled, otherwise 0.])
-fi
+AS_IF(
+    [test "x$enable_zippy" != xno],
+    [AC_DEFINE([ZIPPY], [1], [1 if Zippy should be enabled, otherwise 0.])],
+    [AC_DEFINE([ZIPPY], [0], [1 if Zippy should be enabled, otherwise 0.])]
+)
 AM_CONDITIONAL([ZIPPY], [test "x$enable_zippy" != xno])
 
 AC_ARG_ENABLE(
@@ -633,24 +669,28 @@ AC_ARG_ENABLE(
         [sending SIGINT (^C) wakes up GNU Chess (default)]
     )],
     [
-        if test "$enableval" = yes; then
-            AC_DEFINE([ATTENTION], [1])
-        fi
-        enable_sigint=$enableval
+        AS_IF(
+            [test "x$enableval" = xyes],
+            [AC_DEFINE([ATTENTION], [1])]
+        )
+        enable_sigint="$enableval"
     ],
     [
-        enable_sigint="yes"
+        enable_sigint=yes
         AC_DEFINE([ATTENTION], [1])
     ]
 )
 
-if test x"$with_Xaw3d" = x"yes" -o  x"$with_Xaw" = x"yes" ; then
+AS_IF(
+    [test "x$with_Xaw3d" = xyes || test "x$with_Xaw" = xyes],
+    [
 dnl | save all information for X in X_LIBS, also add the libraries themself
 dnl | since AC_PATH_XTRA only adds the paths
-X_LIBS="$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS -lXmu -lX11 -lXt "
-AC_SUBST(X_CFLAGS)
-AC_SUBST(X_LIBS)
-fi
+        X_LIBS="$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS -lXmu -lX11 -lXt"
+        AC_SUBST(X_CFLAGS)
+        AC_SUBST(X_LIBS)
+    ]
+)
 
 dnl| Create a string that holds the configure options, so that this information
 dnl| may be displayed from within GNU XBoard while it is running.  (It can be
