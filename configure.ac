@@ -33,7 +33,7 @@ dnl| MAJOR means large changes
 dnl| MINOR can includes new features and bug fixes
 dnl| PATCHLEVEL is used for bugfixes only
 dnl| pre-release version could have a -YYYYMMDD attached, e.g., 4.9.0-20160313
-AC_INIT([GNU XBoard], [4.9.2-20260221], [bug-xboard@gnu.org])
+AC_INIT([GNU XBoard], [4.9.1], [bug-xboard@gnu.org])
 
 AC_CONFIG_SRCDIR([zippy.h])
 AC_CONFIG_HEADERS([config.h])
@@ -86,8 +86,8 @@ AH_TEMPLATE(
     [Letter to use in finding device name of first PTY, if PTYs are supported.]
 )
 AH_TEMPLATE(
-    [IBMRTAIX],
-    [Indicates that some special PTY-related code for AIX systems should be used.  Specifically, indicates whether or not a parent gets SIGHUP when a PTY-attached child dies.]
+    [IBM_RT_PC_AIX],
+    [Indicates that some special PTY-related code for IBM RISC Technology PC AIX systems should be used.  Specifically, indicates whether or not a parent gets SIGHUP when a PTY-attached child dies.]
 )
 AH_TEMPLATE(
     [LAST_PTY_LETTER],
@@ -95,19 +95,15 @@ AH_TEMPLATE(
 )
 AH_TEMPLATE(
     [PTY_ITERATION],
-    [How to iterate over PTYs.]
+    [How to iterate over PTYs, if not the default way.]
 )
 AH_TEMPLATE(
-    [PTY_NAME_SPRINTF],
-    [How to get the device name of the control end of a PTY, if non-standard.]
+    [PTY_NAME_C_STR],
+    [How to get the device name of the control end of a PTY, if not the default way.]
 )
 AH_TEMPLATE(
-    [PTY_OPEN],
-    [How to open a PTY, if non-standard.]
-)
-AH_TEMPLATE(
-    [PTY_TTY_NAME_SPRINTF],
-    [How to get device name of the tty end of a PTY, if non-standard.]
+    [PTY_TTY_NAME_C_STR],
+    [How to get device name of the tty end of a PTY, if not the default way.]
 )
 AH_TEMPLATE(
     [UNIPLUS],
@@ -133,7 +129,7 @@ AM_GNU_GETTEXT_REQUIRE_VERSION(0.20.2)
 
 AC_ARG_VAR(RSH)
 AC_CHECK_PROGS(RSH, rsh remsh, rsh)
-AC_DEFINE_UNQUOTED(REMOTE_SHELL, "$RSH")
+AC_DEFINE_UNQUOTED([REMOTE_SHELL], ["$RSH"])
 
 AC_HEADER_DIRENT
 AC_HEADER_SYS_WAIT
@@ -268,8 +264,8 @@ AC_ARG_ENABLE(
         [--enable-osxapp],
         [building for macOS (a.k.a. Mac OS X) [default=no]]
     )],
-    [enable_OSXAPP=$enableval],
-    [enable_OSXAPP="no"]
+    [enable_OSXAPP="$enableval"],
+    [enable_OSXAPP=no]
 )
 
 AS_IF(
@@ -404,12 +400,13 @@ dnl| fixed by doing "configure --enable-ptys".  Apparently, this didn't happen.
 dnl| TODO: Consider removing all of the pseudo-tty (pty) code from GNU XBoard.
 
 USE_PTYS=0
+AC_DEFINE([PTY_ITERATION], [DEFAULT_PTY_ITERATION])
+AC_DEFINE([PTY_NAME_C_STR], [DEFAULT_PTY_NAME_C_STR])
+AC_DEFINE([PTY_TTY_NAME_C_STR], [DEFAULT_PTY_TTY_NAME_C_STR])
 case "$host" in
   *-*-hpux* )
-    AC_DEFINE(PTY_TTY_NAME_SPRINTF,
-        [sprintf (pty_name, "/dev/pty/tty%c%x", c, i);])
-    AC_DEFINE(PTY_NAME_SPRINTF,
-        [sprintf (pty_name, "/dev/ptym/pty%c%x", c, i);])
+    AC_DEFINE([PTY_NAME_C_STR], [HPUX_PTY_NAME_C_STR])
+    AC_DEFINE([PTY_TTY_NAME_C_STR], [HPUX_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
     if test "$GCC" = yes; then
         CONF_CFLAGS="-fwritable-strings"
@@ -454,7 +451,7 @@ dnl| didn't want to delve into autoconf and hack on its internals.
   ;;
 
   romp-ibm-aix* )
-    AC_DEFINE(IBMRTAIX, 1)
+    AC_DEFINE([IBM_RT_PC_AIX], [1])
 dnl| USE_PTYS=1
   ;;
 
@@ -466,37 +463,34 @@ dnl| USE_PTYS=1
   ;;
 
   *-*-aix3* | *-*-bosx* )
-    AC_DEFINE(PTY_ITERATION, [for (c = 0; !c; c++)])
-    AC_DEFINE(PTY_NAME_SPRINTF, [strcpy (pty_name, "/dev/ptc");])
-    AC_DEFINE(PTY_TTY_NAME_SPRINTF, [strcpy (pty_name, ttyname (fd));])
+    AC_DEFINE([PTY_ITERATION], [AIX3_BOSX_PTY_ITERATION])
+    AC_DEFINE([PTY_NAME_C_STR], [AIX3_BOSX_PTY_NAME_C_STR])
+    AC_DEFINE([PTY_TTY_NAME_C_STR], [AIX3_BOSX_PTY_NAME_C_STR])
 dnl| USE_PTYS=1
   ;;
 
   *-*-cxux* )
-    AC_DEFINE(FIRST_PTY_LETTER, 'A')
-    AC_DEFINE(LAST_PTY_LETTER, 'P')
+    AC_DEFINE([FIRST_PTY_LETTER], ['A'])
+    AC_DEFINE([LAST_PTY_LETTER], ['P'])
 dnl| USE_PTYS=1
   ;;
 
   *-*-uniplus* )
-    AC_DEFINE(UNIPLUS, 1)
+    AC_DEFINE([UNIPLUS], [1])
 dnl| USE_PTYS=1
   ;;
 
   *-*-rtu* )
-    AC_DEFINE(FIRST_PTY_LETTER, 'z')
-    AC_DEFINE(PTY_TTY_NAME_SPRINTF,
-        [sprintf (pty_name, "/dev/ttyp%x", i);])
-    AC_DEFINE(PTY_NAME_SPRINTF,
-        [sprintf (pty_name, "/dev/pty%x", i);])
+    AC_DEFINE([FIRST_PTY_LETTER], ['z'])
+    AC_DEFINE([PTY_NAME_C_STR], [RT_PTY_NAME_C_STR])
+    AC_DEFINE([PTY_TTY_NAME_C_STR], [RTU_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
   ;;
 
   *-*-iris* | *-*-irix3* )
-    AC_DEFINE(PTY_ITERATION, [for (c = 0; !c; c++)])
-    AC_DEFINE(PTY_NAME_SPRINTF, [strcpy (pty_name, "/dev/ptc");])
-    AC_DEFINE(PTY_TTY_NAME_SPRINTF,
-        [sprintf (pty_name, "/dev/ttyq%d", minor(stb.st_rdev));])
+    AC_DEFINE([PTY_ITERATION], [IRIS_IRIX3_PTY_ITERATION])
+    AC_DEFINE([PTY_NAME_C_STR], [IRIS_IRIX3_PTY_NAME_C_STR])
+    AC_DEFINE([PTY_TTY_NAME_C_STR], [IRIS_IRIX3_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
   ;;
 
@@ -530,9 +524,9 @@ dnl| code above.
   ;;
 
   *-*-sco* )
-    AC_DEFINE(PTY_ITERATION, [for (i = 0; ; i++)])
-    AC_DEFINE(PTY_NAME_SPRINTF, [sprintf (pty_name, "/dev/ptyp%d", i);])
-    AC_DEFINE(PTY_TTY_NAME_SPRINTF, [sprintf (pty_name, "/dev/ttyp%d", i);])
+    AC_DEFINE([PTY_ITERATION], [SCO_PTY_ITERATION])
+    AC_DEFINE([PTY_NAME_C_STR], [SCO_PTY_NAME_C_STR])
+    AC_DEFINE([PTY_TTY_NAME_C_STR], [SCO_PTY_TTY_NAME_C_STR])
 dnl| USE_PTYS=1
   ;;
 
@@ -611,7 +605,7 @@ AC_ARG_ENABLE(
         enable_ptys="pipes"
     fi]
 )
-AC_DEFINE_UNQUOTED(USE_PTYS, $USE_PTYS)
+AC_DEFINE_UNQUOTED([USE_PTYS], [$USE_PTYS])
 
 
 dnl | define not to build zippy as a default, so that autoheader is happy
@@ -626,9 +620,9 @@ AC_ARG_ENABLE(
 )
 
 if test x"$enable_zippy" != x"no"; then
-    AC_DEFINE(ZIPPY, 1, [1 if Zippy should be enabled, otherwise 0.])
+    AC_DEFINE([ZIPPY], [1], [1 if Zippy should be enabled, otherwise 0.])
 else
-    AC_DEFINE(ZIPPY, 0, [1 if Zippy should be enabled, otherwise 0.])
+    AC_DEFINE([ZIPPY], [0], [1 if Zippy should be enabled, otherwise 0.])
 fi
 AM_CONDITIONAL([ZIPPY], [test "x$enable_zippy" != xno])
 
@@ -640,13 +634,13 @@ AC_ARG_ENABLE(
     )],
     [
         if test "$enableval" = yes; then
-            AC_DEFINE(ATTENTION, 1)
+            AC_DEFINE([ATTENTION], [1])
         fi
         enable_sigint=$enableval
     ],
     [
         enable_sigint="yes"
-        AC_DEFINE(ATTENTION, 1)
+        AC_DEFINE([ATTENTION], [1])
     ]
 )
 
