@@ -1,0 +1,79 @@
+*                 text=auto
+
+*.dsp             text           eol=crlf
+*.dsw             text           eol=crlf
+
+*.{[Bb][Aa][Tt]}  text           eol=crlf
+*.{[Cc][Mm][Dd]}  text           eol=crlf
+*.{[Pp][Ss]1}     text           eol=crlf
+*.desktop         text           eol=lf
+*.sh              text           diff=bash      eol=lf
+
+*.bmp             binary
+*.gif             binary
+*.ico             binary
+*.icns            binary
+*.jpeg            binary
+*.jpg             binary
+*.png             binary
+*.svg             text
+*.tif             binary
+*.tiff            binary
+
+*.css             text           diff=css
+*.htm             text           diff=html
+*.html            text           diff=html
+*.xhtml           text           diff=html
+*.xml             text
+
+*.exe             binary
+
+*.c               text           diff=cpp
+*.c++             text           diff=cpp
+*.cc              text           diff=cpp
+*.cpp             text           diff=cpp
+*.cxx             text           diff=cpp
+*.h               text           diff=cpp
+*.h++             text           diff=cpp
+*.hh              text           diff=cpp
+*.hpp             text           diff=cpp
+*.hxx             text           diff=cpp
+
+*.pl              text           diff=perl
+*.pm              text           diff=perl
+
+*.texi            text
+*.texinfo         text
+*.txt             text
+*.xml             text
+
+*.chm             binary
+*.hhc             text
+*.hhk             text
+*.hhp             text
+
+*.bm              text           diff=cpp
+*.org             text
+*.po              text
+*.pot             text
+
+.dirstamp         text
+cmail.in          text
+[Mm]akefile*      text
+[Mm]akevars       text
+metascript        text
+POTFILES.in       text
+
+AUTHORS           text
+ChangeLog         text
+COMPILING         text
+COPYING           text
+COPYRIGHT         text
+LINGUAS           text
+NEWS              text
+*README*          text
+SHORTLOG          text
+TODO              text
+
+.gitattributes    text           export-ignore
+.gitignore        text           export-ignore
