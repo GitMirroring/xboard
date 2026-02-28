@@ -70,7 +70,7 @@ static Option *currentOption;
 static Boolean browserUp;
 
 void
-UnCaret ()
+UnCaret (void)
 {
 #ifdef TODO_GTK
     Arg args[2];
@@ -104,7 +104,7 @@ SetFocus (Widget w, XtPointer data, XEvent *event, Boolean *b)
 #endif
 
 void
-BoardFocus ()
+BoardFocus (void)
 {
 #ifdef TODO_GTK
     XtSetKeyboardFocus(shellWidget, formWidget);
@@ -669,7 +669,7 @@ Show (Option *opt, int hide)
 }
 
 int
-ShiftKeys ()
+ShiftKeys (void)
 {   // bassic primitive for determining if modifier keys are pressed
     return 3*(shiftState != 0) + 0xC*(controlState != 0); // rely on what last mouse button press left us
 }
@@ -872,10 +872,8 @@ PopDown (DialogClass n)
 }
 
 /* GTK callback used when OK/cancel clicked in genericpopup for non-modal dialog */
-gboolean GenericPopDown(w, resptype, gdata)
-     GtkWidget *w;
-     GtkResponseType  resptype;
-     gpointer  gdata;
+gboolean
+GenericPopDown(GtkWidget *w, GtkResponseType resptype, gpointer gdata)
 {
     DialogClass dlg = (intptr_t) gdata; /* dialog number dlgnr */
     GtkWidget *sh = shells[dlg];
@@ -905,9 +903,8 @@ gboolean GenericPopDown(w, resptype, gdata)
     return TRUE;
 }
 
-gboolean PopDownProxy(w, gdata)
-     GtkWidget *w;
-     gpointer  gdata;
+gboolean
+PopDownProxy(GtkWidget *w, gpointer gdata)
 {
     GtkResponseType resp = GTK_RESPONSE_ACCEPT;
     int dlg = (intptr_t) gdata;

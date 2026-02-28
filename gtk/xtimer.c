@@ -114,7 +114,7 @@ ScheduleDelayedEvent (DelayedEventCallback cb, long millisec)
 }
 
 DelayedEventCallback
-GetDelayedEvent ()
+GetDelayedEvent (void)
 {
   if (delayedEventTimerTag) {
     return delayedEventCallback;
@@ -124,7 +124,7 @@ GetDelayedEvent ()
 }
 
 void
-CancelDelayedEvent ()
+CancelDelayedEvent (void)
 {
   if (delayedEventTimerTag) {
     g_source_remove(delayedEventTimerTag);
@@ -135,13 +135,13 @@ CancelDelayedEvent ()
 
 guint loadGameTimerTag = 0;
 
-int LoadGameTimerRunning()
+int LoadGameTimerRunning (void)
 {
     return loadGameTimerTag != 0;
 }
 
 int
-StopLoadGameTimer ()
+StopLoadGameTimer (void)
 {
     if (loadGameTimerTag != 0) {
 	g_source_remove(loadGameTimerTag);
@@ -180,7 +180,7 @@ AnalysisClockCallback(gpointer data)
 }
 
 void
-StartAnalysisClock ()
+StartAnalysisClock (void)
 {
     analysisClockTag =
 	g_timeout_add( 2000,(GSourceFunc) AnalysisClockCallback, NULL);
@@ -189,13 +189,13 @@ StartAnalysisClock ()
 guint clockTimerTag = 0;
 
 int
-ClockTimerRunning ()
+ClockTimerRunning (void)
 {
     return clockTimerTag != 0;
 }
 
 int
-StopClockTimer ()
+StopClockTimer (void)
 {
     if (clockTimerTag != 0)
     {

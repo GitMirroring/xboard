@@ -68,9 +68,9 @@ static char *filterPtr;
 static char *list[1003];
 static int listEnd;
 
-static int GameListPrepare P((int byPos, int narrow));
-static void GameListReplace P((int page));
-static void GL_Button P((int n));
+static int GameListPrepare (int byPos, int narrow);
+static void GameListReplace (int page);
+static void GL_Button (int n);
 
 Option gamesOptions[] = {
 { 200,  LR|TB,     400, NULL, (void*) list,       NULL, NULL, ListBox, "", &appData.gameListFont },
@@ -212,7 +212,7 @@ GameListReplace (int page)
 }
 
 void
-GameListUpdate ()
+GameListUpdate (void)
 {
     if(!DialogExists(GameListDlg)) return;
     GameListPrepare(False, False);
@@ -245,13 +245,13 @@ GameListPopUp (FILE *fp, char *filename)
 }
 
 FILE *
-GameFile ()
+GameFile (void)
 {
   return glc ? glc->fp : NULL;
 }
 
 void
-GameListDestroy ()
+GameListDestroy (void)
 {
     if (glc == NULL) return;
     EnableNamedMenuItem("File.SaveSelected", FALSE);
@@ -269,7 +269,7 @@ GameListDestroy ()
 }
 
 void
-ShowGameListProc ()
+ShowGameListProc (void)
 {
     if (glc == NULL) {
 	DisplayError(_("There is no game list"), 0);
@@ -326,7 +326,7 @@ GameListClicks (int direction)
 }
 
 void
-SetFilter ()
+SetFilter (void)
 {
         char *name;
 	GetWidgetText(&gamesOptions[1], &name);

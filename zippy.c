@@ -79,8 +79,10 @@
 #include "backend.h"
 #include "backendz.h"
 
-char *SendMoveToBookUser P((int nr, ChessProgramState *cps, int initial)); // [HGM] book
-void HandleMachineMove P((char *message, ChessProgramState *cps));
+// [HGM] book
+char *SendMoveToBookUser (int nr, ChessProgramState *cps, int initial);
+
+void HandleMachineMove (char *message, ChessProgramState *cps);
 
 static char zippyPartner[MSG_SIZ];
 static char zippyLastOpp[MSG_SIZ];
@@ -92,7 +94,7 @@ extern void mysrandom(unsigned int seed);
 extern int myrandom(void);
 
 void
-ZippyInit ()
+ZippyInit (void)
 {
     char *p;
 

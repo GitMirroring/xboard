@@ -40,8 +40,8 @@
 #endif
 
 // templates for calls into back-end (= history.c; should be moved to history.h header shared with it!)
-void RefreshMemoContent P((void));
-void MemoContentUpdated P((void));
+void RefreshMemoContent (void);
+void MemoContentUpdated (void);
 
 // variables in xoptions.c
 extern Option historyOptions[];
@@ -49,7 +49,7 @@ extern Option historyOptions[];
 // ------------- low-level front-end actions called by MoveHistory back-end -----------------
 
 void
-ClearHistoryMemo ()
+ClearHistoryMemo (void)
 {
     SetWidgetText(&historyOptions[0], "", HistoryDlg);
 }
@@ -92,19 +92,19 @@ ScrollToCurrent (int caretPos)
 // ------------ standard entry points into MoveHistory code -----------
 
 Boolean
-MoveHistoryIsUp ()
+MoveHistoryIsUp (void)
 {
     return shellUp[HistoryDlg];
 }
 
 Boolean
-MoveHistoryDialogExists ()
+MoveHistoryDialogExists (void)
 {
     return DialogExists(HistoryDlg);
 }
 
 void
-HistoryPopUp ()
+HistoryPopUp (void)
 {
     if(GenericPopUp(historyOptions, _("Move list"), HistoryDlg, BoardWindow, NONMODAL, appData.topLevel))
 	AddHandler(&historyOptions[0], HistoryDlg, 0);
@@ -112,7 +112,7 @@ HistoryPopUp ()
 }
 
 void
-HistoryShowProc ()
+HistoryShowProc (void)
 {
   if (!shellUp[HistoryDlg]) {
     ASSIGN(historyText, "");

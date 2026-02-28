@@ -50,4 +50,4 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-void SetUpChildIO P((int to_prog[2], int from_prog[2]));
+void SetUpChildIO (int to_prog[2], int from_prog[2]);

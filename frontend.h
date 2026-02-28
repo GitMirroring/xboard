@@ -57,164 +57,164 @@
 
 #include <stdio.h>
 
-char *T_ P((char *s));
-void ModeHighlight P((void));
-void SetICSMode P((void));
-void SetGNUMode P((void));
-void SetNCPMode P((void));
-void SetCmailMode P((void));
-void SetTrainingModeOn P((void));
-void SetTrainingModeOff P((void));
-void SetUserThinkingEnables P((void));
-void SetMachineThinkingEnables P((void));
-void DisplayTitle P((String title));
-void DisplayMessage P((String message, String extMessage));
-void DisplayMoveError P((String message));
+char *T_ (char *s);
+void ModeHighlight (void);
+void SetICSMode (void);
+void SetGNUMode (void);
+void SetNCPMode (void);
+void SetCmailMode (void);
+void SetTrainingModeOn (void);
+void SetTrainingModeOff (void);
+void SetUserThinkingEnables (void);
+void SetMachineThinkingEnables (void);
+void DisplayTitle (String title);
+void DisplayMessage (String message, String extMessage);
+void DisplayMoveError (String message);
 
-void DisplayNote P((String message));
+void DisplayNote (String message);
 
-void DisplayInformation P((String message));
-void AskQuestion P((String title, String question, String replyPrefix,
-		    ProcRef pr));
-void DisplayIcsInteractionTitle P((String title));
-void ParseArgsFromString P((char *p));
-void ParseArgsFromFile P((FILE *f));
-void DrawPosition P((int fullRedraw, Board board));
-void DrawPositionX P((int fullRedraw, Board board));
-void ResetFrontEnd P((void));
-void NotifyFrontendLogin P((void));
-void CommentPopUp P((String title, String comment));
-void CommentPopDown P((void));
-void EditCommentPopUp P((int index, String title, String text));
-void ErrorPopDown P((void));
-int  EventToSquare P((int x, int limit));
-void DrawSeekAxis P(( int x, int y, int xTo, int yTo ));
-void DrawSeekBackground P(( int left, int top, int right, int bottom ));
-void DrawSeekText P((char *buf, int x, int y));
-void DrawSeekDot P((int x, int y, int color));
-void PopUpMoveDialog P((char first));
+void DisplayInformation (String message);
+void AskQuestion (String title, String question, String replyPrefix,
+                  ProcRef pr);
+void DisplayIcsInteractionTitle (String title);
+void ParseArgsFromString (char *p);
+void ParseArgsFromFile (FILE *f);
+void DrawPosition (int fullRedraw, Board board);
+void DrawPositionX (int fullRedraw, Board board);
+void ResetFrontEnd (void);
+void NotifyFrontendLogin (void);
+void CommentPopUp (String title, String comment);
+void CommentPopDown (void);
+void EditCommentPopUp (int index, String title, String text);
+void ErrorPopDown (void);
+int  EventToSquare (int x, int limit);
+void DrawSeekAxis (int x, int y, int xTo, int yTo);
+void DrawSeekBackground (int left, int top, int right, int bottom);
+void DrawSeekText (char *buf, int x, int y);
+void DrawSeekDot (int x, int y, int color);
+void PopUpMoveDialog (char first);
 
-void RingBell P((void));
-int  Roar P((void));
-void PlayIcsWinSound P((void));
-void PlayIcsLossSound P((void));
-void PlayIcsDrawSound P((void));
-void PlayIcsUnfinishedSound P((void));
-void PlayAlarmSound P((void));
-void PlayTellSound P((void));
-int  PlaySoundFile P((char *name));
-void PlaySoundByColor P((void));
-void EchoOn P((void));
-void EchoOff P((void));
-void Raw P((void));
-void Colorize P((ColorClass cc, int continuation));
-char *InterpretFileName P((char *name, char *dir));
-void DoSleep P((int n));
-void DoEvents P((void));
+void RingBell (void);
+int  Roar (void);
+void PlayIcsWinSound (void);
+void PlayIcsLossSound (void);
+void PlayIcsDrawSound (void);
+void PlayIcsUnfinishedSound (void);
+void PlayAlarmSound (void);
+void PlayTellSound (void);
+int  PlaySoundFile (char *name);
+void PlaySoundByColor (void);
+void EchoOn (void);
+void EchoOff (void);
+void Raw (void);
+void Colorize (ColorClass cc, int continuation);
+char *InterpretFileName (char *name, char *dir);
+void DoSleep (int n);
+void DoEvents (void);
 
-char *UserName P((void));
-char *HostName P((void));
+char *UserName (void);
+char *HostName (void);
 
-int ClockTimerRunning P((void));
-int StopClockTimer P((void));
-void StartClockTimer P((long millisec));
-void DisplayWhiteClock P((long timeRemaining, int highlight));
-void DisplayBlackClock P((long timeRemaining, int highlight));
-void SetClockMessage P((int color, char *msg));
-void UpdateLogos P((int display));
+int ClockTimerRunning (void);
+int StopClockTimer (void);
+void StartClockTimer (long millisec);
+void DisplayWhiteClock (long timeRemaining, int highlight);
+void DisplayBlackClock (long timeRemaining, int highlight);
+void SetClockMessage (int color, char *msg);
+void UpdateLogos (int display);
 
-int LoadGameTimerRunning P((void));
-int StopLoadGameTimer P((void));
-void StartLoadGameTimer P((long millisec));
-void AutoSaveGame P((void));
-Boolean ParseSettingsFile P((char *name, char **addr));
+int LoadGameTimerRunning (void);
+int StopLoadGameTimer (void);
+void StartLoadGameTimer (long millisec);
+void AutoSaveGame (void);
+Boolean ParseSettingsFile (char *name, char **addr);
 
-void ScheduleDelayedEvent P((DelayedEventCallback cb, long millisec));
-DelayedEventCallback GetDelayedEvent P((void));
-void CancelDelayedEvent P((void));
+void ScheduleDelayedEvent (DelayedEventCallback cb, long millisec);
+DelayedEventCallback GetDelayedEvent (void);
+void CancelDelayedEvent (void);
 // [HGM] mouse: next six used by mouse handler, which was moved to backend
 extern int fromX, fromY, toX, toY;
-void PromotionPopUp P((char choice));
-void DragPieceBegin P((int x, int y, Boolean instantly));
-void DragPieceEnd P((int x, int y));
-void DragPieceMove P((int x, int y));
-void LeftClick P((ClickType c, int x, int y));
-int  RightClick P((ClickType c, int x, int y, int *col, int *row));
-void Wheel P((int dir, int x, int y));
+void PromotionPopUp (char choice);
+void DragPieceBegin (int x, int y, Boolean instantly);
+void DragPieceEnd (int x, int y);
+void DragPieceMove (int x, int y);
+void LeftClick (ClickType c, int x, int y);
+int  RightClick (ClickType c, int x, int y, int *col, int *row);
+void Wheel (int dir, int x, int y);
 
-int StartChildProcess P((char *cmdLine, char *dir, ProcRef *pr, int priority));
-void DestroyChildProcess P((ProcRef pr, int/*boolean*/ signal));
-void InterruptChildProcess P((ProcRef pr));
-char *BufferCommandOutput P((char *command, int size));
-void RunCommand P((char *buf));
+int StartChildProcess (char *cmdLine, char *dir, ProcRef *pr, int priority);
+void DestroyChildProcess (ProcRef pr, int/*boolean*/ signal);
+void InterruptChildProcess (ProcRef pr);
+char *BufferCommandOutput (char *command, int size);
+void RunCommand (char *buf);
 
-int OpenTelnet P((char *host, char *port, ProcRef *pr));
-int OpenTCP P((char *host, char *port, ProcRef *pr));
-int OpenCommPort P((char *name, ProcRef *pr));
-int OpenLoopback P((ProcRef *pr));
-int OpenRcmd P((char *host, char *user, char *cmd, ProcRef *pr));
+int OpenTelnet (char *host, char *port, ProcRef *pr);
+int OpenTCP (char *host, char *port, ProcRef *pr);
+int OpenCommPort (char *name, ProcRef *pr);
+int OpenLoopback (ProcRef *pr);
+int OpenRcmd (char *host, char *user, char *cmd, ProcRef *pr);
 
-typedef void (*InputCallback) P((InputSourceRef isr, VOIDSTAR closure,
-				 char *buf, int count, int error));
+typedef void (*InputCallback) (InputSourceRef isr, void *closure,
+				 char *buf, int count, int error);
 /* pr == NoProc means the local keyboard */
-InputSourceRef AddInputSource P((ProcRef pr, int lineByLine,
-				 InputCallback func, VOIDSTAR closure));
-void RemoveInputSource P((InputSourceRef isr));
+InputSourceRef AddInputSource (ProcRef pr, int lineByLine,
+				 InputCallback func, void *closure);
+void RemoveInputSource (InputSourceRef isr);
 
 /* pr == NoProc means the local display */
-int OutputToProcess P((ProcRef pr, char *message, int count, int *outError));
-int OutputToProcessDelayed P((ProcRef pr, char *message, int count,
-			      int *outError, long msdelay));
+int OutputToProcess (ProcRef pr, char *message, int count, int *outError);
+int OutputToProcessDelayed (ProcRef pr, char *message, int count,
+			      int *outError, long msdelay);
 
-void CmailSigHandlerCallBack P((InputSourceRef isr, VOIDSTAR closure,
-				char *buf, int count, int error));
+void CmailSigHandlerCallBack (InputSourceRef isr, void *closure,
+				char *buf, int count, int error);
 
 extern ProcRef cmailPR;
 extern int shiftKey, controlKey;
 extern char dataDir[], manDir[];
 
 /* in xgamelist.c or winboard.c */
-void GLT_ClearList();
-void GLT_DeSelectList();
-void GLT_AddToList( char *name );
-Boolean GLT_GetFromList( int index, char *name );
+void GLT_ClearList (void);
+void GLT_DeSelectList (void);
+void GLT_AddToList (char *name);
+Boolean GLT_GetFromList (int index, char *name);
 
 extern char lpUserGLT[];
 extern char *homeDir;
 
 /* these are in wgamelist.c */
-void GameListPopUp P((FILE *fp, char *filename));
-void GameListPopDown P((void));
-void GameListHighlight P((int index));
-void GameListDestroy P((void));
-void GameListUpdate P((void));
-FILE *GameFile P((void));
+void GameListPopUp (FILE *fp, char *filename);
+void GameListPopDown (void);
+void GameListHighlight (int index);
+void GameListDestroy (void);
+void GameListUpdate (void);
+FILE *GameFile (void);
 
 /* these are in wedittags.c */
-void EditTagsPopUp P((char *tags, char **dest));
-void TagsPopUp P((char *tags, char *msg));
-void TagsPopDown P((void));
+void EditTagsPopUp (char *tags, char **dest);
+void TagsPopUp (char *tags, char *msg);
+void TagsPopDown (void);
 
-void ParseIcsTextColors P((void));
-int  ICSInitScript P((void));
-void StartAnalysisClock P((void));
-void EngineOutputPopUp P((void));
-void EgineOutputPopDown P((void));
+void ParseIcsTextColors (void);
+int  ICSInitScript (void);
+void StartAnalysisClock (void);
+void EngineOutputPopUp (void);
+void EgineOutputPopDown (void);
 
-void SetHighlights P((int fromX, int fromY, int toX, int toY));
-void ClearHighlights P((void));
-void SetPremoveHighlights P((int fromX, int fromY, int toX, int toY));
-void ClearPremoveHighlights P((void));
+void SetHighlights (int fromX, int fromY, int toX, int toY);
+void ClearHighlights (void);
+void SetPremoveHighlights (int fromX, int fromY, int toX, int toY);
+void ClearPremoveHighlights (void);
 
-void AnimateAtomicCapture P((Board board, int fromX, int fromY, int toX, int toY));
-void ShutDownFrontEnd P((void));
-void BoardToTop P((void));
-void AnimateMove P((Board board, int fromX, int fromY, int toX, int toY));
-void HistorySet P((char movelist[][2*MOVE_LEN], int first, int last, int current));
-void FreezeUI P((void));
-void ThawUI P((void));
-void ChangeDragPiece P((ChessSquare piece));
-void CopyFENToClipboard P((void));
+void AnimateAtomicCapture (Board board, int fromX, int fromY, int toX, int toY);
+void ShutDownFrontEnd (void);
+void BoardToTop (void);
+void AnimateMove (Board board, int fromX, int fromY, int toX, int toY);
+void HistorySet (char movelist[][2*MOVE_LEN], int first, int last, int current);
+void FreezeUI (void);
+void ThawUI (void);
+void ChangeDragPiece (ChessSquare piece);
+void CopyFENToClipboard (void);
 extern char *programName;
 extern int commentUp;
 extern char *engineListFile;
@@ -222,8 +222,8 @@ extern char *firstChessProgramNames;
 extern char *icsTextMenuString;
 extern int mute;
 
-void GreyRevert P((Boolean grey));
-void EnableNamedMenuItem P((char *menuRef, int state));
+void GreyRevert (Boolean grey);
+void EnableNamedMenuItem (char *menuRef, int state);
 
 typedef struct FrontEndProgramStats_TAG {
     int which;
@@ -237,23 +237,24 @@ typedef struct FrontEndProgramStats_TAG {
     int an_move_count;
 } FrontEndProgramStats;
 
-void SetProgramStats P(( FrontEndProgramStats * stats )); /* [AS] */
+/* [AS] */
+void SetProgramStats (FrontEndProgramStats * stats);
 
-void EngineOutputPopUp P((void));
-void EngineOutputPopDown P((void));
-int  EngineOutputIsUp P((void));
-int  EngineOutputDialogExists P((void));
-void EvalGraphPopUp P((void));
-Boolean EvalGraphIsUp P((void));
-int  EvalGraphDialogExists P((void));
-void SlavePopUp P((void));
-void ActivateTheme P((int new));
-char *Col2Text P((int n));
-char *Shorten P((char *s));
+void EngineOutputPopUp (void);
+void EngineOutputPopDown (void);
+int  EngineOutputIsUp (void);
+int  EngineOutputDialogExists (void);
+void EvalGraphPopUp (void);
+Boolean EvalGraphIsUp (void);
+int  EvalGraphDialogExists (void);
+void SlavePopUp (void);
+void ActivateTheme (int new);
+char *Col2Text (int n);
+char *Shorten (char *s);
 
 /* these are in xhistory.c  */
-Boolean MoveHistoryIsUp P((void));
-void HistoryPopUp P((void));
-void FindMoveByCharIndex P(( int char_index ));
+Boolean MoveHistoryIsUp (void);
+void HistoryPopUp (void);
+void FindMoveByCharIndex (int char_index);
 
 #endif /* XB_FRONTEND */

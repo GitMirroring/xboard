@@ -71,12 +71,12 @@ typedef struct {
 } EngineOutputData;
 
 // called by other front-end
-void EngineOutputUpdate( FrontEndProgramStats * stats );
-void OutputKibitz(int window, char *text);
+void EngineOutputUpdate (FrontEndProgramStats * stats);
+void OutputKibitz (int window, char *text);
 
 // module back-end routines
-static void VerifyDisplayMode();
-static void UpdateControls( EngineOutputData * ed );
+static void VerifyDisplayMode (void);
+static void UpdateControls (EngineOutputData * ed);
 
 static int  lastDepth[2] = { -1, -1 };
 static int  lastForwardMostMove[2] = { -1, -1 };
@@ -93,7 +93,7 @@ static char fail[MAX_VAR];
 extern int initialRulePlies;
 
 void
-MakeEngineOutputTitle ()
+MakeEngineOutputTitle (void)
 {
 	static char buf[MSG_SIZ];
 	static char oldTitle[MSG_SIZ];
@@ -295,7 +295,7 @@ GetEngineColor (int which)
 
 // pure back end
 static char
-GetActiveEngineColor ()
+GetActiveEngineColor (void)
 {
     char result = ENGINE_COLOR_UNKNOWN;
 
@@ -345,7 +345,7 @@ SetDisplayMode (int mode)
 
 // pure back end
 static void
-VerifyDisplayMode ()
+VerifyDisplayMode (void)
 {
     int mode;
 

@@ -38,14 +38,14 @@
 #include "backend.h"
 
 /* templates for low-level front-end tasks (requiring platform-dependent implementation) */
-void ClearHistoryMemo P((void));                                   // essential
-int AppendToHistoryMemo P(( char * text, int bold, int colorNr )); // essential (coloring / styling optional)
-void HighlightMove P(( int from, int to, Boolean highlight ));     // optional (can be dummy)
-void ScrollToCurrent P((int caretPos));                            // optional (can be dummy)
+void ClearHistoryMemo (void);                                   // essential
+int AppendToHistoryMemo ( char * text, int bold, int colorNr ); // essential (coloring / styling optional)
+void HighlightMove ( int from, int to, Boolean highlight );     // optional (can be dummy)
+void ScrollToCurrent (int caretPos);                            // optional (can be dummy)
 
 /* templates for front-end entry point to allow inquiring about front-end state */
-Boolean MoveHistoryDialogExists P((void));
-Boolean MoveHistoryIsUp P((void));
+Boolean MoveHistoryDialogExists (void);
+Boolean MoveHistoryIsUp (void);
 
 /* Module globals */
 typedef char MoveHistoryString[ MOVE_LEN*2 ];
@@ -74,7 +74,7 @@ static HistoryMove histMoves[ MAX_MOVES ];
 
 // back-end after replacing Windows data-types by equivalents
 static Boolean
-OnlyCurrentPositionChanged ()
+OnlyCurrentPositionChanged (void)
 {
     Boolean result = FALSE;
 
@@ -101,7 +101,7 @@ OnlyCurrentPositionChanged ()
 
 // back-end, after replacing Windows data types
 static Boolean
-OneMoveAppended ()
+OneMoveAppended (void)
 {
     Boolean result = FALSE;
 
@@ -157,7 +157,7 @@ AppendMoveToMemo (int index)
 
 // back-end
 void
-RefreshMemoContent ()
+RefreshMemoContent (void)
 {
     int i;
 
@@ -180,7 +180,7 @@ DoHighlight (int index, int onoff)
 
 // back-end, now that a wrapper is provided for the front-end code to do the actual scrolling
 void
-MemoContentUpdated ()
+MemoContentUpdated (void)
 {
     int caretPos;
 
@@ -225,7 +225,7 @@ FindMoveByCharIndex (int char_index)
 
 // back-end. In WinBoard called by call-back, but could be called directly by SetIfExists?
 void
-UpdateMoveHistory ()
+UpdateMoveHistory (void)
 {
         /* Update the GUI */
         if( OnlyCurrentPositionChanged() ) {

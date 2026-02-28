@@ -167,10 +167,9 @@ unsigned char kanjiTab[] = {
   'l', 0211, 0105, 0,
   'v', 0222, 0274, 0,
    0,
-     
 };
 
-int NextUnit P((char **p));
+int NextUnit (char **p);
 
 int kifu = 0, xqUBB = 0;
 
@@ -283,7 +282,7 @@ KifuMove (char **p)
 }
 
 int
-ReadLine ()
+ReadLine (void)
 {   // Read one line from the input file, and append to the buffer
     int c; char *start = inPtr;
     if(fromString) return 0; // parsing string, so the end is a hard end
@@ -865,7 +864,7 @@ badMove:// we failed to find algebraic move
     Return offset of next pattern in the current file.
 */
 int
-yyoffset ()
+yyoffset (void)
 {
     return ftell(inputFile) - (inPtr - parsePtr); // subtract what is read but not yet parsed
 }
@@ -881,7 +880,7 @@ yynewfile (FILE *f)
 }
 
 void
-yynewstr P((char *s))
+yynewstr (char *s)
 {
     parsePtr = s;
     inputFile = NULL;
@@ -889,7 +888,7 @@ yynewstr P((char *s))
 }
 
 int
-yylex ()
+yylex (void)
 {   // this replaces the flex-generated parser
     int result = NextUnit(&parsePtr);
     char *p = parseStart, *q = yytext;
@@ -901,7 +900,7 @@ yylex ()
 }
 
 int
-Myylex ()
+Myylex (void)
 {   // [HGM] wrapper for yylex, which treats nesting of parentheses
     int symbol, nestingLevel = 0, i=0;
     char *p;

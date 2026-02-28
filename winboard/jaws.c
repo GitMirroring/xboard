@@ -400,14 +400,14 @@ typedef struct {
 
 extern void ReadCallback P((Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				VOIDSTAR closure));
+				void *closure));
 
 void ReadCallback(board, flags, kind, rf, ff, rt, ft, closure)
      Board board;
      int flags;
      ChessMove kind;
      int rf, ff, rt, ft;
-     VOIDSTAR closure;
+     void *closure;
 {
     register ReadClosure *cl = (ReadClosure *) closure;
     ChessSquare possiblepiece;
@@ -468,7 +468,7 @@ PossibleAttackMove()
 	swapColor = piece <  (int)BlackPawn && !WhiteOnMove(currentMove) ||
 		    piece >= (int)BlackPawn &&  WhiteOnMove(currentMove);
 	cl.count = 0; cl.rf = fromY; cl.ff = fromX; cl.rt = cl.ft = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove + swapColor), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
+	GenLegal(boards[currentMove], PosFlags(currentMove + swapColor), ReadCallback, (void *) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 	SayString("", TRUE); // flush
 	boards[currentMove][fromY][fromX] = victim; // repair
@@ -496,14 +496,14 @@ PossibleAttacked()
 	victim = boards[currentMove][fromY][fromX]; // put dummy piece on target square, to activate Pawn captures
 	boards[currentMove][fromY][fromX] = WhiteOnMove(currentMove) ? WhiteQueen : BlackQueen;
 	cl.count = 0; cl.rt = fromY; cl.ft = fromX; cl.rf = cl.ff = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove+1), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
+	GenLegal(boards[currentMove], PosFlags(currentMove+1), ReadCallback, (void *) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 
 	SayString("You are defended by", FALSE);
 
 	boards[currentMove][fromY][fromX] = WhiteOnMove(currentMove) ? BlackQueen : WhiteQueen;
 	cl.count = 0; cl.rt = fromY; cl.ft = fromX; cl.rf = cl.ff = -1;
-	GenLegal(boards[currentMove], PosFlags(currentMove), ReadCallback, (VOIDSTAR) &cl, EmptySquare);
+	GenLegal(boards[currentMove], PosFlags(currentMove), ReadCallback, (void *) &cl, EmptySquare);
 	if(cl.count == 0) SayString("None", FALSE);
 	SayString("", TRUE); // flush
 	boards[currentMove][fromY][fromX] = victim; // put back original occupant

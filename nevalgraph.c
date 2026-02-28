@@ -62,7 +62,7 @@ Option *disp;
 
 /* Module variables */
 
-static Option *EvalCallback P((int button, int x, int y));
+static Option *EvalCallback (int button, int x, int y);
 
 static int initDone = FALSE;
 
@@ -90,7 +90,7 @@ static Option graphOptions[] = {
 };
 
 static void
-DisplayEvalGraph ()
+DisplayEvalGraph (void)
 {   // back-end painting; calls back front-end primitives for lines, rectangles and text
     char *t = MakeEvalTitle(_(title[differentialView]));
     nWidthPB = disp->max; nHeightPB = disp->value;
@@ -127,7 +127,7 @@ EvalCallback (int button, int x, int y)
 }
 
 void
-EvalGraphPopUp ()
+EvalGraphPopUp (void)
 {
     if (GenericPopUp(graphOptions, _(title[differentialView]), EvalGraphDlg, BoardWindow, NONMODAL, appData.topLevel)) {
 	InitializeEvalGraph(&graphOptions[0], wpEvalGraph.width, wpEvalGraph.height); // first time: add callbacks and initialize pens
@@ -143,7 +143,7 @@ EvalGraphPopUp ()
 }
 
 void
-EvalGraphPopDown ()
+EvalGraphPopDown (void)
 {
     PopDown(EvalGraphDlg);
 
@@ -151,19 +151,19 @@ EvalGraphPopDown ()
 }
 
 Boolean
-EvalGraphIsUp ()
+EvalGraphIsUp (void)
 {
     return shellUp[EvalGraphDlg];
 }
 
 int
-EvalGraphDialogExists ()
+EvalGraphDialogExists (void)
 {
     return DialogExists(EvalGraphDlg);
 }
 
 void
-EvalGraphProc ()
+EvalGraphProc (void)
 {
   if (!PopDown(EvalGraphDlg)) EvalGraphPopUp();
 }

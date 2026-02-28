@@ -500,7 +500,7 @@ CreateAnyPieces (int p)
 }
 
 static void
-ClearPieces ()
+ClearPieces (void)
 {
     int i, p;
     for(i=0; i<2; i++) for(p=0; p<BlackPawn; p++) {
@@ -646,7 +646,7 @@ InitDrawingHandle (Option *opt)
 }
 
 void
-CreateGrid ()
+CreateGrid (void)
 {
     int i, j;
 
@@ -672,7 +672,7 @@ CreateGrid ()
 }
 
 void
-DrawGrid()
+DrawGrid (void)
 {
   /* draws a grid starting around Nx, Ny squares starting at x,y */
   int i;
@@ -990,7 +990,7 @@ InitAnimState (AnimNr anr)
 }
 
 void
-CreateAnimVars ()
+CreateAnimVars (void)
 {
   InitAnimState(Game);
   InitAnimState(Player);

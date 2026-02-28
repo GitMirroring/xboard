@@ -156,7 +156,7 @@
 # define N_(s)  s
 #endif
 
-static int get_term_width P(());
+static int get_term_width (void);
 
 static char *cnames[9] = { "black", "red", "green", "yellow", "blue",
 			     "magenta", "cyan", "white" };
@@ -227,7 +227,7 @@ parse_cpair (ColorClass cc, char *str)
 }
 
 void
-ParseIcsTextColors ()
+ParseIcsTextColors (void)
 {   // [HGM] tken out of main(), so it can be called from ICS-Options dialog
     if (parse_cpair(ColorShout, appData.colorShout) < 0 ||
 	parse_cpair(ColorSShout, appData.colorSShout) < 0 ||
@@ -255,7 +255,7 @@ ParseIcsTextColors ()
 char *oldICSInteractionTitle;
 
 void
-ShutDownFrontEnd ()
+ShutDownFrontEnd (void)
 {
     if (appData.icsActive && oldICSInteractionTitle != NULL) {
         DisplayIcsInteractionTitle(oldICSInteractionTitle);
@@ -307,7 +307,7 @@ Colorize (ColorClass cc, int continuation)
 }
 
 char *
-UserName ()
+UserName (void)
 {
     return getpwuid(getuid())->pw_name;
 }
@@ -379,7 +379,7 @@ MyGetFullPathName (char *name, char *fullname)
 }
 
 char *
-HostName ()
+HostName (void)
 {
     static char host_name[MSG_SIZ];
 
@@ -716,7 +716,7 @@ OutputToProcessDelayed (ProcRef pr, char *message, int count, int *outError, lon
 }
 
 int
-ICSInitScript ()
+ICSInitScript (void)
 {
   /* try to open the icsLogon script, either in the location given
    * or in the users HOME directory
@@ -749,7 +749,7 @@ ICSInitScript ()
 }
 
 void
-ResetFrontEnd ()
+ResetFrontEnd (void)
 {
     CommentPopDown();
     TagsPopDown();
@@ -758,7 +758,7 @@ ResetFrontEnd ()
 
 #include <sys/ioctl.h>
 static int
-get_term_width ()
+get_term_width (void)
 {
     int fd, default_width;
 
@@ -778,7 +778,7 @@ get_term_width ()
 }
 
 void
-update_ics_width ()
+update_ics_width (void)
 {
   static int old_width = 0;
   int new_width = get_term_width();
@@ -789,7 +789,7 @@ update_ics_width ()
 }
 
 void
-NotifyFrontendLogin ()
+NotifyFrontendLogin (void)
 {
     update_ics_width();
 }

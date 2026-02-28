@@ -20,9 +20,9 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-void SendToProgram P((char *message, ChessProgramState *cps));
-void SendToICS P((char *buf));
-void InitDrawingSizes P((int i, int j));
+void SendToProgram (char *message, ChessProgramState *cps);
+void SendToICS (char *buf);
+void InitDrawingSizes (int i, int j);
 
 extern int searchTime;
 extern int squareSize, lineGap, defaultLineGap;

@@ -115,28 +115,28 @@ char *theme;
 char *replace;
 char *engineListFile;
 
-void EnsureOnScreen(int *x, int *y, int minX, int minY);
-char StringGet(void *getClosure);
-void ParseFont(char *name, int number);
-void SetFontDefaults();
-void CreateFonts();
-void ParseColor(int n, char *name);
-void ParseTextAttribs(ColorClass cc, char *s);
-void ParseBoardSize(void * addr, char *name);
-void ParseCommPortSettings(char *name);
-void LoadAllSounds();
-void SetCommPortDefaults();
-void SaveFontArg(FILE *f, ArgDescriptor *ad);
-void ExportSounds();
-void SaveAttribsArg(FILE *f, ArgDescriptor *ad);
-void SaveColor(FILE *f, ArgDescriptor *ad);
-void SaveBoardSize(FILE *f, char *name, void *addr);
-void PrintCommPortSettings(FILE *f, char *name);
-void GetWindowCoords();
-int  MainWindowUp();
-void PopUpStartupDialog();
-typedef char GetFunc(void *getClosure);
-void ParseArgs(GetFunc get, void *cl);
+void EnsureOnScreen (int *x, int *y, int minX, int minY);
+char StringGet (void *getClosure);
+void ParseFont (char *name, int number);
+void SetFontDefaults (void);
+void CreateFonts (void);
+void ParseColor (int n, char *name);
+void ParseTextAttribs (ColorClass cc, char *s);
+void ParseBoardSize (void * addr, char *name);
+void ParseCommPortSettings (char *name);
+void LoadAllSounds (void);
+void SetCommPortDefaults (void);
+void SaveFontArg (FILE *f, ArgDescriptor *ad);
+void ExportSounds (void);
+void SaveAttribsArg (FILE *f, ArgDescriptor *ad);
+void SaveColor (FILE *f, ArgDescriptor *ad);
+void SaveBoardSize (FILE *f, char *name, void *addr);
+void PrintCommPortSettings (FILE *f, char *name);
+void GetWindowCoords (void);
+int  MainWindowUp (void);
+void PopUpStartupDialog (void);
+typedef char GetFunc (void *getClosure);
+void ParseArgs (GetFunc get, void *cl);
 
 // [HGM] this is an exact duplicate of something in winboard.c. Move to backend.c?
 char *defaultTextAttribs[] =
@@ -1166,11 +1166,33 @@ ParseArgs(GetFunc get, void *cl)
       break;
 
     case ArgX:
-      *(int *) ad->argLoc = ValidateInt(argValue) + wpMain.x; // [HGM] placement: translate stored relative to absolute
+      {
+          // [HGM] placement: translate stored relative to absolute
+          // (this is really kludgey, it should be done where used...)
+          int value = ValidateInt(argValue);
+          // Values that were previously stored can include
+          // unreasonable coordinate values (e.g., 2147483539).
+          // Therefore, we temporarily force using a lower precision
+          // so that we obtain a coordinate that is actually plausible.
+          value = (int)((int16_t)value);
+          value += wpMain.x;
+          *(int *) ad->argLoc = (int)value;
+      }
       break;
 
     case ArgY:
-      *(int *) ad->argLoc = ValidateInt(argValue) + wpMain.y; // (this is really kludgey, it should be done where used...)
+      {
+          // [HGM] placement: translate stored relative to absolute
+          // (this is really kludgey, it should be done where used...)
+          int value = ValidateInt(argValue);
+          // Values that were previously stored can include
+          // unreasonable coordinate values (e.g., 2147483539).
+          // Therefore, we temporarily force using a lower precision
+          // so that we obtain a coordinate that is actually plausible.
+          value = (int)((int16_t)value);
+          value += wpMain.y;
+          *(int *) ad->argLoc = (int)value;
+      }
       break;
 
     case ArgZ:
@@ -1366,7 +1388,7 @@ ParseIcsTextMenu(char *icsTextMenuString)
 }
 
 void
-SetDefaultTextAttribs()
+SetDefaultTextAttribs (void)
 {
   ColorClass cc;
   for (cc = (ColorClass)0; cc < ColorNone; cc++) {
@@ -1375,7 +1397,7 @@ SetDefaultTextAttribs()
 }
 
 void
-SetDefaultsFromList()
+SetDefaultsFromList (void)
 { // [HGM] ini: take defaults from argDescriptor list
   int i;
 
@@ -1649,9 +1671,11 @@ SaveSettings(char* name)
       fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc);
       break;
     case ArgX:
-      fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.x); // [HGM] placement: store relative value
+      // [HGM] placement: store relative value
+      fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.x);
       break;
     case ArgY:
+      // [HGM] placement: store relative value
       fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.y);
       break;
     case ArgFloat:

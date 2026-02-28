@@ -32,7 +32,7 @@
 
 #define HAVE_SYS_SOCKET_H 0
 
-/*#undef IBMRTAIX*/
+/*#undef IBM_RT_PC_AIX*/
 
 #define LAST_PTY_LETTER 'q'
 
@@ -60,9 +60,9 @@
 
 #define PTY_ITERATION
 
-#define PTY_NAME_SPRINTF
+#define PTY_NAME_C_STR
 
-#define PTY_TTY_NAME_SPRINTF
+#define PTY_TTY_NAME_C_STR
 
 #define REMOTE_SHELL ""
 
@@ -71,8 +71,6 @@
 /*#undef UNIPLUS*/
 
 #define USE_PTYS 0
-
-/*#undef X_WCHAR*/
 
 #ifndef __BORLANDC__
 #define WIN32 1

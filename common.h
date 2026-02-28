@@ -58,45 +58,25 @@
 
 /* Begin compatibility grunge  */
 
-#if defined(__STDC__) || defined(WIN32) || defined(_amigados)
-#define	P(args)	args
-typedef void *VOIDSTAR;
-#else
-#define P(args)		()
-typedef char *VOIDSTAR;
-#endif
-
 #ifdef WIN32
 typedef char Boolean;
 typedef char *String;
-#define popen _popen
-#define pclose _pclose
-
+#    define popen _popen
+#    define pclose _pclose
 #else
-#ifdef _amigados        /*  It is important, that these types have  */
-typedef int Boolean;    /*  a length of 4 bytes each, as we are     */
-typedef char *String;   /*  using ReadArgs() for argument parsing.  */
-#ifdef _DCC
-FILE *popen(const char *, const char *);
-int pclose(FILE *);
-#endif
-
-#else
-#ifdef X11
-#include <X11/Intrinsic.h>
-#else
+#    ifdef X11
+#        include <X11/Intrinsic.h>
+#    else
 typedef char Boolean;
 typedef char *String;
-#define True 1
-#define False 0
+#        define True 1
+#        define False 0
+#    endif
 #endif
-#endif
-#endif
-
 
 #ifndef TRUE
-#define TRUE 1
-#define FALSE 0
+#    define TRUE 1
+#    define FALSE 0
 #endif
 
 #define UNKNOWN -1 /* [HGM] nps */
@@ -273,11 +253,11 @@ typedef char *String;
 #define ZIPPY_MAX_GAMES 0
 #define ZIPPY_REPLAY_TIMEOUT 120
 
-typedef VOIDSTAR ProcRef;
+typedef void *ProcRef;
 #define NoProc ((ProcRef) 0)
-typedef VOIDSTAR InputSourceRef;
+typedef void *InputSourceRef;
 
-typedef void (*DelayedEventCallback) P((void));
+typedef void (*DelayedEventCallback) (void);
 
 typedef enum { Press, Release } ClickType;
 
@@ -287,7 +267,7 @@ typedef enum {
     EditGame, PlayFromGameFile, EndOfGame, EditPosition, Training,
     IcsIdle, IcsPlayingWhite, IcsPlayingBlack, IcsObserving,
     IcsExamining
-  } GameMode;
+} GameMode;
 
 typedef enum {
     /* [HGM] the order here is crucial for Crazyhouse & Shogi: */
@@ -320,7 +300,7 @@ typedef enum {
     EmptySquare, DarkSquare,
     NoRights, // [HGM] gamestate: for castling rights hidden in board[CASTLING]
     ClearBoard, WhitePlay, BlackPlay, PromotePiece, DemotePiece /*for use on EditPosition menus*/
-  } ChessSquare;
+} ChessSquare;
 
 /* [HGM] some macros that can be used as prefixes to convert piece types */
 #define WHITE_TO_BLACK (int)BlackPawn - (int)WhitePawn + (int)
@@ -353,7 +333,7 @@ typedef enum {
     WhiteWins, BlackWins, GameIsDrawn, GameUnfinished,
     GNUChessGame, XBoardGame, MoveNumberOne, Open, Close, Nothing,
     Comment, PositionDiagram, ElapsedTime, PGNTag, NAG
-  } ChessMove;
+} ChessMove;
 
 typedef enum {
     ColorShout, ColorSShout, ColorChannel1, ColorChannel, ColorKibitz,
@@ -475,7 +455,6 @@ typedef enum {
 
 typedef struct {
     char *language;
-#if !defined(_amigados)
     char *whitePieceColor;
     char *blackPieceColor;
     char *lightSquareColor;
@@ -485,15 +464,6 @@ typedef struct {
     char *premoveHighlightColor;
     char *dialogColor;
     char *buttonColor;
-#else
-    int whitePieceColor;
-    int blackPieceColor;
-    int lightSquareColor;
-    int darkSquareColor;
-    int jailSquareColor;
-    int highlightSquareColor;
-    int premoveHighlightColor;
-#endif
     int movesPerSession;
     float timeIncrement;
     char *engInitString[ENGINES];
@@ -915,8 +885,8 @@ extern char chatPartner[MAX_CHAT][MSG_SIZ];
 
 // Some prototypes of routines so general they should be available everywhere
 /* If status == 0, we are exiting with a benign message, not an error */
-void DisplayFatalError P((String message, int error, int status));
-void DisplayError P((String message, int error));
+void DisplayFatalError (String message, int error, int status);
+void DisplayError (String message, int error);
 
 // [HGM] generally useful macros; there are way too many memory leaks...
 #define FREE(x) if(x) free(x)

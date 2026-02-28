@@ -55,6 +55,10 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+// TODO: Normalize the line endings within the GNU XBoard repository to be
+// consistently LF only.  Currently, at least some Winboard-specific source
+// files are using CR+LF instead.
+
 #ifndef WINVER
 #define WINVER 0x0500
 #endif
@@ -66,6 +70,7 @@
 #include <winsock.h>
 #include <commctrl.h>
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -678,7 +683,7 @@ typedef struct _InputSource {
   int error;
   InputCallback func;
   struct _InputSource *second;  /* for stderr thread on CPRcmd */
-  VOIDSTAR closure;
+  void *closure;
 } InputSource;
 
 InputSource *consoleInputSource;
@@ -9870,7 +9875,7 @@ OpenRcmd(char* host, char* user, char* cmd, ProcRef* pr)
 
 InputSourceRef
 AddInputSource(ProcRef pr, int lineByLine,
-	       InputCallback func, VOIDSTAR closure)
+	       InputCallback func, void *closure)
 {
   InputSource *is, *is2 = NULL;
   ChildProc *cp = (ChildProc *) pr;
@@ -10051,7 +10056,7 @@ OutputToProcessDelayed(ProcRef pr, char *message, int count, int *outError,
 
 
 void
-CmailSigHandlerCallBack(InputSourceRef isr, VOIDSTAR closure,
+CmailSigHandlerCallBack(InputSourceRef isr, void *closure,
 			char *buf, int count, int error)
 {
   DisplayFatalError(_("Not implemented"), 0, 1);

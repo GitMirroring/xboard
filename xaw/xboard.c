@@ -58,6 +58,7 @@
 #include <errno.h>
 #include <math.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -207,43 +208,43 @@
 # define N_(s)  s
 #endif
 
-int main P((int argc, char **argv));
-void CmailSigHandler P((int sig));
-void IntSigHandler P((int sig));
-void TermSizeSigHandler P((int sig));
-Widget CreateMenuBar P((Menu *mb, int boardWidth));
+int main (int argc, char **argv);
+void CmailSigHandler (int sig);
+void IntSigHandler (int sig);
+void TermSizeSigHandler (int sig);
+Widget CreateMenuBar (Menu *mb, int boardWidth);
 #if ENABLE_NLS
-char *InsertPxlSize P((char *pattern, int targetPxlSize));
-XFontSet CreateFontSet P((char *base_fnt_lst));
+char *InsertPxlSize (char *pattern, int targetPxlSize);
+XFontSet CreateFontSet (char *base_fnt_lst);
 #else
-char *FindFont P((char *pattern, int targetPxlSize));
+char *FindFont (char *pattern, int targetPxlSize);
 #endif
-void ReadBitmap P((Pixmap *pm, String name, unsigned char bits[],
-		   u_int wreq, u_int hreq));
-void EventProc P((Widget widget, caddr_t unused, XEvent *event));
-void DelayedDrag P((void));
-static void MoveTypeInProc P((Widget widget, caddr_t unused, XEvent *event));
-void HandlePV P((Widget w, XEvent * event,
-		     String * params, Cardinal * nParams));
-void DrawPositionProc P((Widget w, XEvent *event,
-		     String *prms, Cardinal *nprms));
-void CommentClick P((Widget w, XEvent * event,
-		   String * params, Cardinal * nParams));
-void ICSInputBoxPopUp P((void));
-void SelectCommand P((Widget w, XtPointer client_data, XtPointer call_data));
-void KeyBindingProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void QuitWrapper P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-static void EnterKeyProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-static void UpKeyProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-static void DownKeyProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void TempBackwardProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void TempForwardProc P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
+void ReadBitmap (Pixmap *pm, String name, unsigned char bits[],
+		   u_int wreq, u_int hreq);
+void EventProc (Widget widget, caddr_t unused, XEvent *event);
+void DelayedDrag (void);
+static void MoveTypeInProc (Widget widget, caddr_t unused, XEvent *event);
+void HandlePV (Widget w, XEvent * event,
+		     String * params, Cardinal * nParams);
+void DrawPositionProc (Widget w, XEvent *event,
+		     String *prms, Cardinal *nprms);
+void CommentClick (Widget w, XEvent * event,
+		   String * params, Cardinal * nParams);
+void ICSInputBoxPopUp (void);
+void SelectCommand (Widget w, XtPointer client_data, XtPointer call_data);
+void KeyBindingProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void QuitWrapper (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+static void EnterKeyProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+static void UpKeyProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+static void DownKeyProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void TempBackwardProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void TempForwardProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
 Boolean TempBackwardActive = False;
-void ManInner P((Widget w, XEvent *event, String *prms, Cardinal *nprms));
-void DisplayMove P((int moveNumber));
-void update_ics_width P(());
-int CopyMemoProc P(());
-static int FindLogo P((char *place, char *name, char *buf));
+void ManInner (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void DisplayMove (int moveNumber);
+void update_ics_width (void);
+int CopyMemoProc (void);
+static int FindLogo (char *place, char *name, char *buf);
 
 /*
 * XBoard depends on Xt R4 or higher
@@ -423,7 +424,7 @@ CatchDeleteWindow (Widget w, String procname)
 }
 
 void
-BoardToTop ()
+BoardToTop (void)
 {
   Arg args[16];
   XtSetArg(args[0], XtNiconic, False);
@@ -508,7 +509,7 @@ ParseFont (char *name, int number)
 }
 
 void
-SetFontDefaults ()
+SetFontDefaults (void)
 { // only 2 fonts currently
   appData.clockFont = CLOCK_FONT_NAME;
   appData.coordFont = COORD_FONT_NAME;
@@ -516,7 +517,7 @@ SetFontDefaults ()
 }
 
 void
-CreateFonts ()
+CreateFonts (void)
 { // no-op, until we identify the code for this already in XBoard and move it here
 }
 
@@ -545,12 +546,12 @@ ParseBoardSize (void *addr, char *name)
 }
 
 void
-LoadAllSounds ()
+LoadAllSounds (void)
 { // In XBoard the sound-playing program takes care of obtaining the actual sound
 }
 
 void
-SetCommPortDefaults ()
+SetCommPortDefaults (void)
 { // for now, this is a no-op, as the corresponding option does not exist in XBoard
 }
 
@@ -584,7 +585,7 @@ SaveFontArg (FILE *f, ArgDescriptor *ad)
 }
 
 void
-ExportSounds ()
+ExportSounds (void)
 { // nothing to do, as the sounds are at all times represented by their text-string names already
 }
 
@@ -640,7 +641,7 @@ GetPlacement (DialogClass dlg, WindowPlacement *wp)
 }
 
 void
-GetWindowCoords ()
+GetWindowCoords (void)
 { // wrapper to shield use of window handles from back-end (make addressible by number?)
   // In XBoard this will have to wait until awareness of window parameters is implemented
   GetActualPlacement(shellWidget, &wpMain);
@@ -664,35 +665,38 @@ EnsureOnScreen (int *x, int *y, int minX, int minY)
 }
 
 int
-MainWindowUp ()
+MainWindowUp (void)
 { // [HGM] args: allows testing if main window is realized from back-end
   return xBoardWindow != 0;
 }
 
 void
-PopUpStartupDialog ()
+PopUpStartupDialog (void)
 {  // start menu not implemented in XBoard
 }
 
+// TODO: Properly handle individual arguments that exceed 1023 characters.
+// TODO: Deduplicate with other implementation in gtk/xboard.c.
 char *
 ConvertToLine (int argc, char **argv)
 {
-  static char line[128*1024], buf[1024];
-  int i;
+    static char line[128*1024];
+    char buf[1024];
+    int i;
 
-  line[0] = NULLCHAR;
-  for(i=1; i<argc; i++)
-    {
-      if( (strchr(argv[i], ' ') || strchr(argv[i], '\n') ||strchr(argv[i], '\t') || argv[i][0] == NULLCHAR)
-	  && argv[i][0] != '{' )
-	snprintf(buf, sizeof(buf)/sizeof(buf[0]), "{%s} ", argv[i]);
-      else
-	snprintf(buf, sizeof(buf)/sizeof(buf[0]), "%s ", argv[i]);
-      strncat(line, buf, 128*1024 - strlen(line) - 1 );
+    memset(line, 0, sizeof(line));
+    for (i = 1; i != argc; ++i) {
+        if ( (strchr(argv[i], ' ') || strchr(argv[i], '\n')
+         || strchr(argv[i], '\t') || argv[i][0] == NULLCHAR)
+         && argv[i][0] != '{' ) {
+            snprintf(buf, sizeof(buf), "{%s} ", argv[i]);
+        } else {
+            snprintf(buf, sizeof(buf), "%s ", argv[i]);
+        }
+        strncat(line, buf, sizeof(line) - strlen(line) - 1);
     }
 
-  line[strlen(line)-1] = NULLCHAR;
-  return line;
+    return line;
 }
 
 //--------------------------------------------------------------------------------------------
@@ -730,7 +734,7 @@ MakeOneColor (char *name, Pixel *color)
 }
 
 int
-MakeColors ()
+MakeColors (void)
 {   // [HGM] taken out of main(), so it can be called from BoardOptions dialog
     int forceMono = False;
 
@@ -935,7 +939,7 @@ GenerateGlobalTranslationTable (void)
 
 
 void
-PrintOptions ()
+PrintOptions (void)
 {
   char buf[MSG_SIZ];
   int len=0;
@@ -1350,7 +1354,7 @@ main (int argc, char **argv)
 }
 
 void
-DoEvents ()
+DoEvents (void)
 {
     XtInputMask m;
     while((m = XtAppPending(appContext))) XtAppProcessEvent(appContext, m);
@@ -1383,7 +1387,7 @@ CmailSigHandler (int sig)
 }
 
 void
-CmailSigHandlerCallBack (InputSourceRef isr, VOIDSTAR closure, char *message, int count, int error)
+CmailSigHandlerCallBack (InputSourceRef isr, void *closure, char *message, int count, int error)
 {
     BoardToTop();
     ReloadCmailMsgEvent(TRUE);	/* Reload cmail msg  */
@@ -1602,7 +1606,7 @@ KeyBindingProc (Widget w, XEvent *event, String *prms, Cardinal *nprms)
 }
 
 void
-SetupDropMenu ()
+SetupDropMenu (void)
 {
     int i, j, count;
     char label[32];
@@ -1706,7 +1710,7 @@ ReSize (WindowPlacement *wp)
 static XtIntervalId delayedDragID = 0;
 
 void
-DragProc ()
+DragProc (void)
 {
 	static int busy;
 	if(busy) return;
@@ -1730,7 +1734,7 @@ DragProc ()
 
 
 void
-DelayedDrag ()
+DelayedDrag (void)
 {
     if(delayedDragID) XtRemoveTimeOut(delayedDragID); // cancel pending
     delayedDragID =
@@ -1782,7 +1786,7 @@ CommentClick (Widget w, XEvent * event, String * params, Cardinal * nParams)
 static int frozen = 0;
 
 void
-FreezeUI ()
+FreezeUI (void)
 {
   if (frozen) return;
   /* Grab by a widget that doesn't accept input */
@@ -1792,7 +1796,7 @@ FreezeUI ()
 
 /* Undo a FreezeUI */
 void
-ThawUI ()
+ThawUI (void)
 {
   if (!frozen) return;
   XtRemoveGrab(optList[W_MESSG].handle);
@@ -1800,7 +1804,7 @@ ThawUI ()
 }
 
 void
-ModeHighlight ()
+ModeHighlight (void)
 {
     Arg args[16];
     static int oldPausing = FALSE;
@@ -1959,7 +1963,7 @@ PastePositionCB (Widget w, XtPointer client_data, Atom *selection,
 /* called when Paste Position button is pressed,
  * all parameters will be NULL */
 void
-PastePositionProc ()
+PastePositionProc (void)
 {
     XtGetSelectionValue(menuBarWidget,
       appData.pasteSelection ? XA_PRIMARY: XA_CLIPBOARD(xDisplay), XA_STRING,
@@ -2003,7 +2007,7 @@ PasteGameCB (Widget w, XtPointer client_data, Atom *selection,
 /* called when Paste Game button is pressed,
  * all parameters will be NULL */
 void
-PasteGameProc ()
+PasteGameProc (void)
 {
     XtGetSelectionValue(menuBarWidget,
       appData.pasteSelection ? XA_PRIMARY: XA_CLIPBOARD(xDisplay), XA_STRING,
@@ -2026,7 +2030,7 @@ QuitWrapper (Widget w, XEvent *event, String *prms, Cardinal *nprms)
 }
 
 int
-ShiftKeys ()
+ShiftKeys (void)
 {   // bassic primitive for determining if modifier keys are pressed
     long int codes[] = { XK_Meta_L, XK_Meta_R, XK_Control_L, XK_Control_R, XK_Shift_L, XK_Shift_R };
     char keys[32];
@@ -2108,13 +2112,13 @@ ManInner (Widget w, XEvent *event, String *prms, Cardinal *nprms)
 }
 
 void
-ManProc ()
+ManProc (void)
 {   // called from menu
     ManInner(NULL, NULL, NULL, NULL);
 }
 
 void
-InfoProc ()
+InfoProc (void)
 {
     char buf[MSG_SIZ];
     snprintf(buf, sizeof(buf), "xterm -e info --directory %s --directory . -f %s &",
@@ -2156,7 +2160,7 @@ DisplayIcsInteractionTitle (String message)
       Window win = (Window) atoi(wina);
       Window root, parent, *children;
       unsigned int nchildren;
-      int (*oldHandler)() = XSetErrorHandler(NullXErrorCheck);
+      int (*oldHandler)(Display *, XErrorEvent *) = XSetErrorHandler(NullXErrorCheck);
       for (;;) {
 	if (XFetchName(xDisplay, win, &oldICSInteractionTitle)) break;
 	if (!XQueryTree(xDisplay, win, &root, &parent,
@@ -2180,7 +2184,7 @@ XtIntervalId delayedEventTimerXID = 0;
 DelayedEventCallback delayedEventCallback = 0;
 
 void
-FireDelayedEvent ()
+FireDelayedEvent (void)
 {
     delayedEventTimerXID = 0;
     delayedEventCallback();
@@ -2199,7 +2203,7 @@ ScheduleDelayedEvent (DelayedEventCallback cb, long millisec)
 }
 
 DelayedEventCallback
-GetDelayedEvent ()
+GetDelayedEvent (void)
 {
   if (delayedEventTimerXID) {
     return delayedEventCallback;
@@ -2209,7 +2213,7 @@ GetDelayedEvent ()
 }
 
 void
-CancelDelayedEvent ()
+CancelDelayedEvent (void)
 {
   if (delayedEventTimerXID) {
     XtRemoveTimeOut(delayedEventTimerXID);
@@ -2220,13 +2224,13 @@ CancelDelayedEvent ()
 XtIntervalId loadGameTimerXID = 0;
 
 int
-LoadGameTimerRunning ()
+LoadGameTimerRunning (void)
 {
     return loadGameTimerXID != 0;
 }
 
 int
-StopLoadGameTimer ()
+StopLoadGameTimer (void)
 {
     if (loadGameTimerXID != 0) {
 	XtRemoveTimeOut(loadGameTimerXID);
@@ -2266,7 +2270,7 @@ AnalysisClockCallback (XtPointer arg, XtIntervalId *id)
 }
 
 void
-StartAnalysisClock ()
+StartAnalysisClock (void)
 {
     analysisClockXID =
       XtAppAddTimeOut(appContext, 2000,
@@ -2277,13 +2281,13 @@ StartAnalysisClock ()
 XtIntervalId clockTimerXID = 0;
 
 int
-ClockTimerRunning ()
+ClockTimerRunning (void)
 {
     return clockTimerXID != 0;
 }
 
 int
-StopClockTimer ()
+StopClockTimer (void)
 {
     if (clockTimerXID != 0) {
 	XtRemoveTimeOut(clockTimerXID);
@@ -2372,7 +2376,7 @@ typedef struct {
     InputCallback func;
     XtInputId xid;
     char buf[INPUT_SOURCE_BUF_SIZE];
-    VOIDSTAR closure;
+    void *closure;
 } InputSource;
 
 void
@@ -2415,7 +2419,7 @@ DoInputCallback (caddr_t closure, int *source, XtInputId *xid)
 }
 
 InputSourceRef
-AddInputSource (ProcRef pr, int lineByLine, InputCallback func, VOIDSTAR closure)
+AddInputSource (ProcRef pr, int lineByLine, InputCallback func, void *closure)
 {
     InputSource *is;
     ChildProc *cp = (ChildProc *) pr;
