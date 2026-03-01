@@ -2,6 +2,9 @@
 
 *.dsp             text           eol=crlf
 *.dsw             text           eol=crlf
+*.sln             text           eol=crlf
+*.vcxproj         text           eol=crlf
+*.vcxproj.filters text           eol=crlf
 
 *.{[Bb][Aa][Tt]}  text           eol=crlf
 *.{[Cc][Mm][Dd]}  text           eol=crlf

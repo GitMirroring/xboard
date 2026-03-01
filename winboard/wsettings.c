@@ -64,7 +64,7 @@ char *engineList[MAXENGINES] = {""}, *engineMnemonic[MAXENGINES] = {""};
 void (*okFunc)();
 ChessProgramState *activeCps;
 Option *activeList;
-int InstallOK P((void));
+int InstallOK (void);
 typedef int ButtonCallback(HWND h);
 ButtonCallback *comboCallback;
 
@@ -722,7 +722,7 @@ RefreshSettingsDialog (ChessProgramState *cps, int val)
     if(val == 3 || isUp) EngineOptionsPopup(hwndMain, cps);
 }
 
-int EnterGroup P((HWND hDlg));
+int EnterGroup (HWND hDlg);
 
 static int engineNr, selected;
 char *protocols[] = { "autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL };
@@ -819,8 +819,8 @@ void LoadEnginePopUp(HWND hwnd, int nr)
     GenericPopup(hwnd, installOptions);
 }
 
-int PickTheme P((HWND hDlg));
-void DeleteTheme P((HWND hDlg));
+int PickTheme (HWND hDlg);
+void DeleteTheme (HWND hDlg);
 
 int ThemeOK()
 {
@@ -979,9 +979,9 @@ void Inspect(HWND hDlg)
     } else DisplayError(_("First you must specify an existing tourney file to clone"), 0);
 }
 
-void TimeControlOptionsPopup P((HWND hDlg));
-void UciOptionsPopup P((HWND hDlg));
-int AddToTourney P((HWND hDlg));
+void TimeControlOptionsPopup (HWND hDlg);
+void UciOptionsPopup (HWND hDlg);
+int AddToTourney (HWND hDlg);
 
 Option tourneyOptions[] = {
   { 80,  15,        0, NULL, (void*) &AddToTourney, NULL, engineMnemonic, ListBox, N_("Select Engine:") },

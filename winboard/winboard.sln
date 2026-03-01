@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winboard", "winboard.vcxproj", "{B9950B89-3936-42CA-8372-F36B1DE461AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Jaws Debug|Win32 = Jaws Debug|Win32
+		Jaws Release|Win32 = Jaws Release|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Debug|Win32.Build.0 = Debug|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Jaws Debug|Win32.ActiveCfg = Jaws Debug|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Jaws Debug|Win32.Build.0 = Jaws Debug|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Jaws Release|Win32.ActiveCfg = Jaws Release|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Jaws Release|Win32.Build.0 = Jaws Release|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Release|Win32.ActiveCfg = Release|Win32
+		{B9950B89-3936-42CA-8372-F36B1DE461AE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

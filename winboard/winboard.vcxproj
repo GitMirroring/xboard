@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Jaws Debug|Win32">
+      <Configuration>Jaws Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Jaws Release|Win32">
+      <Configuration>Jaws Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{B9950B89-3936-42CA-8372-F36B1DE461AE}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Debug|Win32'">
+    <OutDir>.\Jaws-Debug\</OutDir>
+    <IntDir>.\Jaws-Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'">
+    <OutDir>.\Jaws-Release\</OutDir>
+    <IntDir>.\Jaws-Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;JAWS;WIN32;_WINDOWS;_WIN32_IE=0x300;WINVER=0x0501;_WIN32_WINNT=0x0501;_WIN32_WINDOWS=0x500;YY_NO_UNISTD_H;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Jaws-Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Jaws-Debug\winboard.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Jaws-Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Jaws-Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Jaws-Debug\winboard.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;JAWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Jaws-Debug\winboard.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Jaws-Debug\winboard.exe</OutputFile>
+      <AdditionalDependencies>wsock32.lib;comctl32.lib;winmm.lib;oldnames.lib;msimg32.lib;msvcrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_WIN32_IE=0x300;WINVER=0x0501;_WIN32_WINNT=0x0501;_WIN32_WINDOWS=0x500;YY_NO_UNISTD_H;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\winboard.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Debug\winboard.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\winboard.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Debug\winboard.exe</OutputFile>
+      <AdditionalDependencies>wsock32.lib;comctl32.lib;winmm.lib;oldnames.lib;msimg32.lib;msvcrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;JAWS;WIN32;_WINDOWS;_WIN32_IE=0x300;WINVER=0x0501;_WIN32_WINNT=0x0501;_WIN32_WINDOWS=0x500;YY_NO_UNISTD_H;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Jaws-Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Jaws-Release\winboard.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Jaws-Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Jaws-Release\</ProgramDataBaseFileName>
+      <AdditionalOptions> /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Jaws-Release\winboard.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;JAWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Jaws-Release\winboard.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Jaws-Release\winboard.exe</OutputFile>
+      <AdditionalDependencies>wsock32.lib;comctl32.lib;winmm.lib;oldnames.lib;msimg32.lib;msvcrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_WIN32_IE=0x300;WINVER=0x501;_WIN32_WINNT=0x0501;_WIN32_WINDOWS=0x500;YY_NO_UNISTD_H;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\winboard.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <AdditionalOptions> /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Release\winboard.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\winboard.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Release\winboard.exe</OutputFile>
+      <AdditionalDependencies>wsock32.lib;comctl32.lib;winmm.lib;oldnames.lib;msimg32.lib;msvcrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\backend.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\book.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\engineoutput.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\evalgraph.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\gamelist.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\history.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\lists.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\moves.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\parser.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\pgntags.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\uci.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\zippy.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="help.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wchat.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wclipbrd.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wedittags.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wengineoutput.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wevalgraph.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wgamelist.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="whistory.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="winboard.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Jaws Debug|Win32'">WINVER=0x500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'">WINVER=0x500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wlayout.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="woptions.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wsettings.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wsnap.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="wsockerr.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Gs /GA   /Gs /GA </AdditionalOptions>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="winboard.rc">
+      <Culture Condition="'$(Configuration)|$(Platform)'=='Jaws Debug|Win32'">0x0409</Culture>
+      <Culture Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">0x0409</Culture>
+      <Culture Condition="'$(Configuration)|$(Platform)'=='Jaws Release|Win32'">0x0409</Culture>
+      <Culture Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">0x0409</Culture>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

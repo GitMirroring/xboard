@@ -1,0 +1,29 @@
+# Dynamically-linked library file
+*.dll
+
+# Executable file
+*.exe
+
+# Object file
+*.obj
+
+# Visual Studio file that stores user-specific properties for a C/C++ project
+*.vcxproj.user
+
+# Visual Studio intermediate debug file
+*.idb
+
+# Visual Studio incremental linking file
+*.ilk
+
+# Visual Studio program database file
+*.pdb
+
+# Visual Studio browsing database file
+*.sdf
+
+# Visual Studio solution user options file
+*.suo
+
+# Visual Studio file tracker log
+*.tlog

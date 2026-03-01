@@ -55,12 +55,11 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-// TODO: Normalize the line endings within the GNU XBoard repository to be
-// consistently LF only.  Currently, at least some Winboard-specific source
-// files are using CR+LF instead.
-
 #ifndef WINVER
-#define WINVER 0x0500
+#define WINVER 0x0501
+#endif
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501
 #endif
 
 #include "config.h"
@@ -115,14 +114,14 @@ Boolean flipClock = FALSE;
 extern HANDLE chatHandle[];
 extern enum ICS_TYPE ics_type;
 
-int  MySearchPath P((char *installDir, char *name, char *fullname));
-int  MyGetFullPathName P((char *name, char *fullname));
+int MySearchPath (char *installDir, char *name, char *fullname);
+int MyGetFullPathName (char *name, char *fullname);
 void DisplayHoldingsCount(HDC hdc, int x, int y, int align, int copyNumber);
 VOID NewVariantPopup(HWND hwnd);
-int FinishMove P((ChessMove moveType, int fromX, int fromY, int toX, int toY,
-		   /*char*/int promoChar));
-void DisplayMove P((int moveNumber));
-void ChatPopUp P((char *s));
+int FinishMove (ChessMove moveType, int fromX, int fromY, int toX, int toY,
+	          /*char*/int promoChar);
+void DisplayMove (int moveNumber);
+void ChatPopUp (char *s);
 typedef struct {
   ChessSquare piece;  
   POINT pos;      /* window coordinates of current pos */
@@ -796,7 +795,7 @@ void ThawUI()
  *
 \*---------------------------------------------------------------------------*/
 
-static void HandleMessage P((MSG *message));
+static void HandleMessage (MSG *message);
 static HANDLE hAccelMain, hAccelNoAlt, hAccelNoICS;
 
 int APIENTRY

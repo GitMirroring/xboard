@@ -48,8 +48,8 @@ extern char chatPartner[MAX_CHAT][MSG_SIZ];
 HANDLE chatHandle[MAX_CHAT];
 static WNDPROC chatInputWindowProc;
 
-void SendToICS P((char *s));
-void ChatPopUp P((char *s));
+void SendToICS (char *s);
+void ChatPopUp (char *s);
 void ChatPopDown();
 
 /* Imports from backend.c */

@@ -398,9 +398,9 @@ typedef struct {
     int count;
 } ReadClosure;
 
-extern void ReadCallback P((Board board, int flags, ChessMove kind,
+extern void ReadCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
-				void *closure));
+				void *closure);
 
 void ReadCallback(board, flags, kind, rf, ff, rt, ft, closure)
      Board board;

@@ -44,9 +44,9 @@
 #include "wsnap.h"
 
 // templates for calls into back-end
-void RefreshMemoContent P((void));
-void MemoContentUpdated P((void));
-void FindMoveByCharIndex P(( int char_index ));
+void RefreshMemoContent (void);
+void MemoContentUpdated (void);
+void FindMoveByCharIndex (int char_index);
 
 #define DEFAULT_COLOR       0xFFFFFFFF
 
