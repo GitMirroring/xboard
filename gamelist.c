@@ -52,7 +52,7 @@
 List gameList;
 extern Board initialPosition;
 extern int quickFlag;
-extern int movePtr;
+extern unsigned int movePtr;
 
 /* Local function prototypes
  */

@@ -53,7 +53,7 @@
 extern MyFont *font[NUM_SIZES][NUM_FONTS];
 extern HINSTANCE hInst;          /* current instance */
 extern HWND hwndMain;            /* root window*/
-extern BOOLEAN alwaysOnTop;
+extern Boolean alwaysOnTop;
 extern RECT boardRect;
 extern COLORREF lightSquareColor, darkSquareColor, whitePieceColor,
   blackPieceColor, highlightSquareColor, premoveHighlightColor;
