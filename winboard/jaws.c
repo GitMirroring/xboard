@@ -111,17 +111,14 @@ char *pieceTypeName[] = {
 		"Empty"
 	};
 
-int CoordToNum(c)
-		char c;
+int CoordToNum(char c)
 {
 	if(isdigit(c)) return c - ONE;
 	if(c >= 'a') return c - AAA;
 	return 0;
 }
 
-char* PieceToName(p, i)
-	ChessSquare p;
-	int i;
+char* PieceToName(ChessSquare p, int i)
 {
 	static char buf[MSG_SIZ];
         int black = (p >= BlackPawn);
@@ -131,14 +128,12 @@ char* PieceToName(p, i)
 		return T_(buf);
 }
 
-char* SquareToChar(x)
-			int x;
+char* SquareToChar(int x)
 {
 		return T_(squareToChar[x - BOARD_LEFT]);
 }
 
-char* SquareToNum(y)
-			int y;
+char* SquareToNum(int y)
 {
 		return T_(squareToNum[y + (gameInfo.boardHeight != 10)]);
 }
@@ -402,12 +397,7 @@ extern void ReadCallback (Board board, int flags, ChessMove kind,
 				int rf, int ff, int rt, int ft,
 				void *closure);
 
-void ReadCallback(board, flags, kind, rf, ff, rt, ft, closure)
-     Board board;
-     int flags;
-     ChessMove kind;
-     int rf, ff, rt, ft;
-     void *closure;
+void ReadCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void *closure)
 {
     register ReadClosure *cl = (ReadClosure *) closure;
     ChessSquare possiblepiece;

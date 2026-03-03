@@ -4286,8 +4286,7 @@ HDCDrawPosition(HDC hdc, BOOLEAN repaint, Board board)
 
 /* [HGM] diag: Save the current board display to the given open file and close the file */
 int
-SaveDiagram(f)
-     FILE *f;
+SaveDiagram(FILE *f)
 {
     saveDiagFlag = 1; diagFile = f;
     HDCDrawPosition(NULL, TRUE, NULL);
@@ -4346,8 +4345,7 @@ PaintProc(HWND hwnd)
  * The offset boardRect.left or boardRect.top must already have been
  *   subtracted from x.
  */
-int EventToSquare(x, limit)
-     int x, limit;
+int EventToSquare(int x, int limit)
 {
   if (x <= border)
     return -2;
@@ -10169,12 +10167,7 @@ AnimateAtomicCapture(Board board, int fromX, int fromY, int toX, int toY)
 }
 
 void
-AnimateMove(board, fromX, fromY, toX, toY)
-     Board board;
-     int fromX;
-     int fromY;
-     int toX;
-     int toY;
+AnimateMove(Board board, int fromX, int fromY, int toX, int toY)
 {
   ChessSquare piece, victim = EmptySquare, victim2 = EmptySquare;
   int x = toX, y = toY, x2 = kill2X;
@@ -10254,8 +10247,7 @@ if(victim  != EmptySquare) board[killY][killX] = victim;
 /*      Convert board position to corner of screen rect and color       */
 
 static void
-ScreenSquare(column, row, pt)
-     int column; int row; POINT * pt;
+ScreenSquare(int column, int row, POINT * pt)
 {
   if (flipView) {
     pt->x = lineGap + ((BOARD_WIDTH-1)-column) * (squareSize + lineGap) + border;
@@ -10277,10 +10269,7 @@ ScreenSquare(column, row, pt)
         noticeable.                                             */
 
 static void
-Tween(start, mid, finish, factor, frames, nFrames)
-     POINT * start; POINT * mid;
-     POINT * finish; int factor;
-     POINT frames[]; int * nFrames;
+Tween(POINT * start, POINT * mid, POINT * finish, int factor, POINT frames[], int * nFrames)
 {
   int n, fraction = 1, count = 0;
 
