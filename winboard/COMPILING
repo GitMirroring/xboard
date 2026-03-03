@@ -1,31 +1,6 @@
-Compiling with an Integrated Development Envrionment
-
-    Microsoft Visual C++
-    --
-    For MSVC 6.0 IDE, all you need to do is 'File|Open Workspace...' and select
-    'winboard.dsw'.  Then to build, choose 'Build|Batch Build...' and select
-    the targets you want to build.  This method has full support for Debug and
-    Release builds either with or without JAWS support.
-
-    For later versions of Visual C++, open the same workspace and convert when
-    prompted.  Then compile as above.
-
-
-    DevCpp
-    --
-    For DevCpp, you need to 'File|Open Project or File...' and select either
-    'winboard.dev' or 'WB4Jaws.dev'.  After parsing the project, you can
-    'Execute|Compile' to build.  This IDE has no facility for defines in the
-    resource compiler, so the version information resource will not indicate
-    JAWS support even if it actually has that support.  These projects are not
-    set up for debugging, but you can do so by adjusting the 'Compiler' and
-    'Parameters' options in the 'Project|Project Options' dialog.
-
-
-
 Compiling from the Command Line
 
-    GCC -- this includes cygwin, mingw, djgpp and others.
+    GCC -- this includes cygwin, mingw-w64, msys2, and similar.
 
         make -f makefile.gcc
 
@@ -34,15 +9,25 @@ Compiling from the Command Line
         link with cygwin1.dll instead of the msvcrt runtime.
 
 
-    CL -- this includes MSVC and recent Intel compilers.
+Compiling with an Integrated Development Envrionment
 
-        nmake -f makefile.ms        Note: NMAKE, not MAKE
+    Before proceeding, please read https://fsf.org/about/what-is-free-software
+    regarding why you may wish to avoid choosing this option.
 
-        For Visual Studio 2005 and later, set VCVER to 8, otherwise set it to
-        6.  You can select JAWS support or debugging just like the GCC
-        makefile.  For MSVC 6.0 and earlier, you are going to need the latest
-        SDK from Microsoft.  After you install it, set the SDK_INC variable
-        appropriately.  It defaults to the standard location, but you still
-        need to uncomment the line.  Prior to compiling from the command line,
-        it will be necessary to invoke VCVARS32.BAT if you didn't have MSVC
-        register the command line environment variables during installation.
+    Microsoft Visual Studio Community Edition 2013
+
+    As of 2026-03-03, VS2013 appears to be the oldest version that can still be
+    obtained without monetary charge from Microsoft and installed and used from
+    Windows 11.  It can be downloaded from:
+
+        https://go.microsoft.com/fwlink/?LinkId=532496
+
+    1. Click FILE | Open | Project/Solution...
+
+    2. Navigate to and select the winboard.sln file.
+
+    3. Select a solution configuration (such as Jaws Release).
+
+    4. Click BUILD | Rebuild Solution.
+
+    5. The console output will show where winboard.exe has been created and saved.
