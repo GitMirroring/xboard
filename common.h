@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -93,7 +91,11 @@ typedef char *String;
 
 /* End compatibility grunge */
 
-/* unsigned int 64 for engine nodes work and display */
+/*
+   unsigned int 64 for engine nodes work and display.
+
+   TODO: Use <stdint.h>, uint64_t, UINT64_C, etc.
+*/
 #ifdef WIN32
        /* I don't know the name for this type of other compiler
         * If it not work, just modify here
@@ -101,36 +103,26 @@ typedef char *String;
         */
        #ifdef _MSC_VER
                #define u64 unsigned __int64
-               #define s64 signed __int64
                #define u64Display "%I64u"
-               #define s64Display "%I64d"
                #define u64Const(c) (c ## UI64)
-               #define s64Const(c) (c ## I64)
        #else
                /* place holder
                 * or dummy types for other compiler
                 * [HGM] seems that -mno-cygwin comple needs %I64?
                 */
                #define u64 unsigned long long
-               #define s64 signed long long
                #ifdef USE_I64
                   #define u64Display "%I64u"
-                  #define s64Display "%I64d"
                #else
                   #define u64Display "%llu"
-                  #define s64Display "%lld"
                #endif
                #define u64Const(c) (c ## ULL)
-               #define s64Const(c) (c ## LL)
        #endif
 #else
        /* GNU gcc */
        #define u64 unsigned long long
-       #define s64 signed long long
        #define u64Display "%llu"
-       #define s64Display "%lld"
        #define u64Const(c) (c ## ull)
-       #define s64Const(c) (c ## ll)
 #endif
 
 #define PROTOVER                2       /* engine protocol version */

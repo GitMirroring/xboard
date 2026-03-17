@@ -5,8 +5,7 @@
  *
  * Copyright 2005 Alessandro Scotti
  *
- * Enhancements Copyright 1995, 2009, 2010, 2011, 2012, 2013, 2014,
- * 2015, 2016 Free Software Foundation, Inc.
+ * Enhancements Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * ------------------------------------------------------------------------
  *
@@ -582,7 +581,7 @@ UpdateControls (EngineOutputData *ed)
             snprintf( s_nodes, sizeof(s_nodes)/sizeof(s_nodes[0]), u64Display "%s\t", ed->nodes, spaces + 2*i);
         }
         else {
-            double x = u64ToDouble(ed->nodes);
+            double x = (double)(ed->nodes);
             char unit = 'M';
             if(x >= 1e9) x /= 1e3, unit = 'G';
             snprintf( s_nodes, sizeof(s_nodes)/sizeof(s_nodes[0]), "%.*f%c%s\t", 1 + (x < 1e7), x / 1e6,

@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -347,26 +345,6 @@ safeStrCpy (char *dst, const char *src, size_t count)
     }
 
   return dst;
-}
-
-/* Some compiler can't cast u64 to double
- * This function do the job for us:
-
- * We use the highest bit for cast, this only
- * works if the highest bit is not
- * in use (This should not happen)
- *
- * We used this for all compiler
- */
-double
-u64ToDouble (u64 value)
-{
-  double r;
-  u64 tmp = value & u64Const(0x7fffffffffffffff);
-  r = (double)(s64)tmp;
-  if (value & u64Const(0x8000000000000000))
-       r +=  9.2233720368547758080e18; /* 2^63 */
- return r;
 }
 
 /* Fake up flags for now, as we aren't keeping track of castling
@@ -10141,7 +10119,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 			int ticklen;
 
 			if(cps->nps == 0) ticklen = 10*time;                    // use engine reported time
-			else ticklen = (1000. * u64ToDouble(nodes)) / cps->nps; // convert node count to time
+			else ticklen = (1000. * (double)(nodes)) / cps->nps;    // convert node count to time
 			if(WhiteOnMove(forwardMostMove) && (gameMode == MachinePlaysWhite ||
 						gameMode == TwoMachinesPlay && cps->twoMachinesColor[0] == 'w'))
 			     whiteTimeRemaining = timeRemaining[0][forwardMostMove] - ticklen;

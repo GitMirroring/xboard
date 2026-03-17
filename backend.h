@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -196,7 +194,6 @@ Boolean ParseOneMove (char *move, int moveNum,
 			int *toX, int *toY, char *promoChar);
 char *VariantName (VariantClass v);
 VariantClass StringToVariant (char *e);
-double u64ToDouble (u64 value);
 void OutputChatMessage (int partner, char *mess);
 void EditPositionDone (Boolean fakeRights);
 Boolean GetArgValue (char *name);
