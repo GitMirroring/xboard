@@ -51,7 +51,8 @@
  ** See the file ChangeLog for a revision history.  */
 
 /* [AS] Also useful here for debugging */
-#ifdef WIN32
+#ifdef _WIN32
+
 #include <windows.h>
 
     int flock(int f, int code);
@@ -75,13 +76,23 @@
 #   else
 #       define EGBB_NAME "egbbso.so"
 #   endif
-    // kludge to allow Windows code in back-end by converting it to corresponding Linux code 
+    /*
+       A kludge to allow some Windows code within backend.c by converting it to
+       the corresponding Linux code.
+
+       N.B. Most of this _WIN32 and else block seems to be about Scorpio
+       bitbase support (https://talkchess.com/viewtopic.php?t=66423).
+
+       TODO: Address the portability of the bitbase probing code elsewhere, and
+       eliminate this.
+    */
 #   define CDECL
 #   define HMODULE void *
 #   define LoadLibrary(x) dlopen(x, RTLD_LAZY)
 #   define GetProcAddress dlsym
 
-#endif
+#endif /* _WIN32 */
+
 
 #include "config.h"
 
@@ -133,7 +144,7 @@
 # define N_(s) gettext_noop (s)
 # define T_(s) gettext(s)
 #else
-# ifdef WIN32
+# ifdef _WIN32
 #   define _(s) T_(s)
 #   define N_(s) s
 # else
@@ -222,8 +233,8 @@ void ToggleSecond (void);
 void PauseEngine (ChessProgramState *cps);
 static int NonStandardBoardSize (VariantClass v, int w, int h, int s);
 
-#ifdef WIN32
-       extern void ConsoleCreate (void);
+#ifdef _WIN32
+extern void ConsoleCreate (void);
 #endif
 
 ChessProgramState *WhitePlayer (void);
@@ -1632,7 +1643,7 @@ InitBackEnd3 (void)
     }
 
     if (appData.icsActive) {
-#ifdef WIN32
+#ifdef _WIN32
         /* [DM] Make a console window if needed [HGM] merged ifs */
         ConsoleCreate();
 #endif
@@ -3081,7 +3092,7 @@ read_from_ics (InputSourceRef isr, void *closure, char *data, int count, int err
 		  strcat(str, "\n$iset startpos 1\n$iset ms 1\n");
 		  if(appData.seekGraph && appData.autoRefresh) // [HGM] seekgraph
 		      strcat(str, "$iset seekremove 1\n$set seek 1\n");
-#ifdef WIN32
+#ifdef _WIN32
 		  strcat(str, "$iset nohighlight 1\n");
 #endif
 		  strcat(str, "$iset lock 1\n$style 12\n");
@@ -14557,10 +14568,14 @@ SavePosition (FILE *f, int dummy, char *dummy2)
     return TRUE;
 }
 
+/* TODO: Re-evaluate the utility of Cmail as it relates to builds for
+   Windows.  ReloadCmailMsgEvent, MailMoveEvent, and CMailMsg
+   currently drop functionality on Windows. */
+
 void
 ReloadCmailMsgEvent (int unregister)
 {
-#if !WIN32
+#ifndef _WIN32
     static char *inFilename = NULL;
     static char *outFilename;
     int i;
@@ -14618,9 +14633,7 @@ ReloadCmailMsgEvent (int unregister)
 
     /* Load first game in the file or popup game menu */
     LoadGameFromFile(inFilename, 0, appData.cmailGameName, TRUE);
-
-#endif /* !WIN32 */
-    return;
+#endif
 }
 
 int
@@ -14716,7 +14729,7 @@ RegisterMove (void)
 void
 MailMoveEvent (void)
 {
-#if !WIN32
+#ifndef _WIN32
     static char *partCommandString = "cmail -xv%s -remail -game %s 2>&1";
     FILE *commandOutput;
     char buffer[MSG_SIZ], msg[MSG_SIZ], string[MSG_SIZ];
@@ -14798,13 +14811,13 @@ MailMoveEvent (void)
     }
 
     return;
-#endif /* !WIN32 */
+#endif /* _WIN32 */
 }
 
 char *
 CmailMsg (void)
 {
-#if WIN32
+#ifdef _WIN32
     return NULL;
 #else
     int  prependComma = 0;
@@ -14871,7 +14884,7 @@ CmailMsg (void)
 	}
     }
     return cmailMsg;
-#endif /* WIN32 */
+#endif /* _WIN32 */
 }
 
 void

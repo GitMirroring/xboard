@@ -37,7 +37,7 @@ CC = gcc
 FLEX = "flex.exe" # we need version 2.5.4 or later, cygwin's is 2.5.35
 #      "c:/mingw/mingw32/bin/flex.exe"
 HC="C:/Program Files/Help Workshop/hcrtf" -xn
-DEFS = -DWIN32
+DEFS = -D_WIN32
 ifeq ($(JAWS),1)
   DEFS += -DJAWS
 endif

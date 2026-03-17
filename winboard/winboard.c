@@ -55,12 +55,21 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+
+#if defined(_WIN32) && _WIN32 == 1
+
+
+/* As of 2026-03-16, WINVER and _WIN32_WINNT likely should be pre-set via
+   compiler settings to 0x0501 (_WIN32_WINNT_WINXP) when targeting Windows,
+   because that is the oldest version of Windows that can still be targeted by
+   routinely-available compilers, and unset otherwise. */
 #ifndef WINVER
-#define WINVER 0x0501
+#error WINVER was expected to be defined, but was not defined.
 #endif
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
+#error _WIN32_WINNT was expected to be defined, but was not defined.
 #endif
+
 
 #include "config.h"
 
@@ -10342,3 +10351,17 @@ ActivateTheme (int new)
    InitDrawingSizes(boardSize, 0);
    InvalidateRect(hwndMain, NULL, TRUE);
 }
+
+
+#else
+
+
+#ifdef WINVER
+#error WINVER was defined, but was not expected to be defined.
+#endif
+#ifdef _WIN32_WINNT
+#error _WIN32_WINNT was defined, but was not expected to be defined.
+#endif
+
+
+#endif

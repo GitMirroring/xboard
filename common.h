@@ -56,7 +56,7 @@
 
 /* Begin compatibility grunge  */
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef char Boolean;
 typedef char *String;
 #    define popen _popen
@@ -70,7 +70,7 @@ typedef char *String;
 #        define True 1
 #        define False 0
 #    endif
-#endif
+#endif /* _WIN32 */
 
 #ifndef TRUE
 #    define TRUE 1
