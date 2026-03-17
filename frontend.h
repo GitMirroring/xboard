@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -55,6 +53,7 @@
 #ifndef XB_FRONTEND
 #define XB_FRONTEND
 
+#include <stdint.h>
 #include <stdio.h>
 
 char *T_ (char *s);
@@ -228,7 +227,7 @@ void EnableNamedMenuItem (char *menuRef, int state);
 typedef struct FrontEndProgramStats_TAG {
     int which;
     int depth;
-    u64 nodes;
+    uint64_t nodes;
     int score;
     int time;
     char * pv;

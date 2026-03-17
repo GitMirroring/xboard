@@ -30,6 +30,7 @@
 #include "config.h"
 
 #include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,7 +60,7 @@ typedef struct {
     char * name;
     int which;
     int depth;
-    u64 nodes;
+    uint64_t nodes;
     int score;
     int time;
     char * pv;
@@ -578,13 +579,13 @@ UpdateControls (EngineOutputData *ed)
         if( ed->nodes < 1000000 ) {
             int h = ed->nodes, i=0;
             while(h > 0) h /= 10, i++; // [HGM] align: count digits; pad with 2 spaces for every missing digit
-            snprintf( s_nodes, sizeof(s_nodes)/sizeof(s_nodes[0]), u64Display "%s\t", ed->nodes, spaces + 2*i);
+            snprintf(s_nodes, sizeof(s_nodes), "%llu %s\t", ed->nodes, spaces + 2 * i);
         }
         else {
             double x = (double)(ed->nodes);
             char unit = 'M';
             if(x >= 1e9) x /= 1e3, unit = 'G';
-            snprintf( s_nodes, sizeof(s_nodes)/sizeof(s_nodes[0]), "%.*f%c%s\t", 1 + (x < 1e7), x / 1e6,
+            snprintf(s_nodes, sizeof(s_nodes), "%.*f%c%s\t", 1 + (x < 1e7), x / 1e6,
                       unit, spaces + 10 + 2*(ed->nodes >= 1e8));
         }
 

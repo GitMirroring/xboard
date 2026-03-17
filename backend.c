@@ -10002,7 +10002,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 				) {
 	int plylev, mvleft, mvtot, curscore, time;
 	char mvname[MOVE_LEN];
-	u64 nodes; // [DM]
+	uint64_t nodes; // [DM]
 	char plyext;
 	int ignore = FALSE;
 	int prefixHint = FALSE;
@@ -10037,12 +10037,15 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 	    ChessProgramStats tempStats = programStats; // [HGM] info: filter out info lines
 	    int solved = 0;
 	    buf1[0] = NULLCHAR;
-	    if (sscanf(message, "%d%c %d %d " u64Display " %[^\n]\n",
+	    if (sscanf(message, "%d%c %d %d %llu %[^\n]\n",
 		       &plylev, &plyext, &curscore, &time, &nodes, buf1) >= 5) {
 		char score_buf[MSG_SIZ];
 
-		if(nodes>>32 == u64Const(0xFFFFFFFF))   // [HGM] negative node count read
-		    nodes += u64Const(0x100000000);
+		// TODO: Investigate whether this hack can be deleted.
+		if (nodes >> 32 == UINT64_C(0xFFFFFFFF)) {
+			// [HGM] negative node count read
+			nodes += UINT64_C(0x100000000);
+		}
 
 		if (plyext != ' ' && plyext != '\t') {
 		    time *= 100;
@@ -10223,7 +10226,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 		    DisplayMove(currentMove - 1);
 		}
 		return;
-	    } else if (sscanf(message,"stat01: %d " u64Display " %d %d %d %s",
+	    } else if (sscanf(message,"stat01: %d %llu %d %d %d %s",
 			      &time, &nodes, &plylev, &mvleft,
 			      &mvtot, mvname) >= 5) {
 		/* The stat01: line is from Crafty (9.29+) in response
@@ -10287,7 +10290,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
         else {
 	    buf1[0] = NULLCHAR;
 
-	    if (sscanf(message, "%d%c %d %d " u64Display " %[^\n]\n",
+	    if (sscanf(message, "%d%c %d %d %llu %[^\n]\n",
 		       &plylev, &plyext, &curscore, &time, &nodes, buf1) >= 5)
             {
                 ChessProgramStats cpstats;

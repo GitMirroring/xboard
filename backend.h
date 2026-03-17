@@ -53,6 +53,8 @@
 #ifndef XB_BACKEND
 #define XB_BACKEND
 
+#include <stdint.h>
+
 #include "lists.h"
 
 typedef int (*FileProc) (FILE *f, int n, char *title);
@@ -396,7 +398,7 @@ typedef struct {
   int nr_moves;           /* Total nr of root moves */
   int moves_left;         /* Moves remaining to be searched */
   char move_name[MOVE_LEN];  /* Current move being searched, if provided */
-  u64 nodes;    /* # of nodes searched */
+  uint64_t nodes;         /* # of nodes searched */
   int time;               /* Search time (centiseconds) */
   int score;              /* Score (centipawns) */
   int got_only_move;      /* If last msg was "(only move)" */
