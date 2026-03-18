@@ -1,69 +1,105 @@
 bin_PROGRAMS = xboard
 
-### if we are compiling with ZIPPY we need some extra source files
+### If Zippy is being used, then we need its source files.
 
-if ZIPPY
-  ZPY = zippy.c zippy.h
+if USING_ZIPPY
+    zippy_sources = zippy.c zippy.h
+    zippy_extras =
 else
-  ZPY =
+    zippy_sources =
+    zippy_extras = zippy.c zippy.h
 endif
 
-### define sources for the front-end and backend
-GTKsources = gtk/xboard.c    gtk/xboard.h \
-             gtk/xoptions.c  gtk/xtimer.c \
-             gtk/xengineoutput.c
+### XBoard front-end source code that uses the X Athena Widgets library (whether
+### using the version with a two- or three-dimensional look).
 
-Xsources   = xaw/xboard.c    xaw/xboard.h    \
-             xaw/xengineoutput.c             \
-             xaw/xgamelist.c xaw/xgamelist.h \
-             xaw/xhistory.c  xaw/xhistory.h  \
-             xaw/xoptions.c \
-             bitmaps/checkmark.bm bitmaps/icon_black.bm bitmaps/icon_white.bm
+xaw_dependent_front_end_sources = \
+    bitmaps/checkmark.bm \
+    bitmaps/icon_black.bm \
+    bitmaps/icon_white.bm \
+    xaw/xboard.c \
+    xaw/xboard.h \
+    xaw/xengineoutput.c \
+    xaw/xgamelist.c \
+    xaw/xgamelist.h \
+    xaw/xhistory.c \
+    xaw/xhistory.h \
+    xaw/xoptions.c
 
-if withGTK
-  FRONTENDsources = $(GTKsources)
-  FRONTENDextras = $(Xsources)
-  headers = -I gtk
+### XBoard front-end source code that uses GTK 2.x.
+
+gtk_2_dependent_front_end_sources = \
+    gtk/xboard.c \
+    gtk/xboard.h \
+    gtk/xoptions.c \
+    gtk/xtimer.c \
+    gtk/xengineoutput.c
+
+if USING_GTK_2_FRONT_END
+    front_end_sources = $(gtk_2_dependent_front_end_sources)
+    front_end_extras = $(xaw_dependent_front_end_sources)
+    front_end_flags = -Igtk
 endif
-if withXaw
-  FRONTENDsources = $(Xsources)
-  FRONTENDextras = $(GTKsources)
-  headers = -I xaw -DX11
+if USING_X11_FRONT_END
+    front_end_sources = $(xaw_dependent_front_end_sources)
+    front_end_extras = $(gtk_2_dependent_front_end_sources)
+    front_end_flags = -Ixaw -DX11
 endif
 
-xboard_SOURCES = backend.c backend.h backendz.h \
-	 	 book.c \
-		 childio.c childio.h \
-	 	 common.h \
-		 frontend.h \
-	  	 gamelist.c ngamelist.c \
-	 	 gettext.h  \
-		 lists.c lists.h \
-		 moves.c moves.h \
-		 parser.c parser.h \
-		 pgntags.c \
-	  	 uci.c \
-	 	 args.h xboard2.h \
-	 	 board.c board.h \
-	 	 draw.c draw.h \
-		 dialogs.c dialogs.h \
-		 engineoutput.c nengineoutput.c engineoutput.h \
-		 evalgraph.c nevalgraph.c evalgraph.h \
-		 history.c nhistory.c \
-	 	 menus.c menus.h \
-	 	 usounds.c usystem.c usystem.h \
-		 $(ZPY) $(FRONTENDsources)
+xboard_SOURCES = \
+    args.h \
+    backend.c \
+    backend.h \
+    backendz.h \
+    board.c \
+    board.h \
+    book.c \
+    childio.c \
+    childio.h \
+    common.h \
+    dialogs.c \
+    dialogs.h \
+    draw.c \
+    draw.h \
+    engineoutput.c \
+    engineoutput.h \
+    evalgraph.c \
+    evalgraph.h \
+    frontend.h \
+    gamelist.c \
+    gettext.h \
+    history.c \
+    lists.c \
+    lists.h \
+    menus.c \
+    menus.h \
+    moves.c \
+    moves.h \
+    nengineoutput.c \
+    nevalgraph.c \
+    ngamelist.c \
+    nhistory.c \
+    parser.c \
+    parser.h \
+    pgntags.c \
+    uci.c \
+    usounds.c \
+    usystem.c \
+    usystem.h \
+    xboard2.h \
+    $(front_end_sources) \
+    $(zippy_sources)
 
-###
-
-SUBDIRS = po
 xboard_LDADD = -ldl -lm @FRONTEND_LIBS@ @X_LIBS@ @LIBINTL@ @CAIRO_LIBS@
 
-EXTRA_DIST = pixmaps themes png sounds winboard \
-	xboard.texi gpl.texinfo texi2man texinfo.tex xboard.man xboard.desktop xboard-config.desktop \
-	xboard-fen-viewer.desktop  xboard-pgn-viewer.desktop  xboard-tourney.desktop xboard.xml \
-	COPYRIGHT FAQ.html engine-intf.html ics-parsing.txt readme.htm zippy.README \
-	xboard.conf SHORTLOG DIFFSTAT history.c ABOUT-NLS $(FRONTENDextras)
+SUBDIRS = po
+
+EXTRA_DIST = \
+    pixmaps themes png sounds winboard \
+    xboard.texi gpl.texinfo texi2man texinfo.tex xboard.man xboard.desktop xboard-config.desktop \
+    xboard-fen-viewer.desktop xboard-pgn-viewer.desktop xboard-tourney.desktop xboard.xml \
+    COPYRIGHT FAQ.html engine-intf.html ics-parsing.txt readme.htm zippy.README \
+    xboard.conf SHORTLOG DIFFSTAT history.c ABOUT-NLS $(frontend_extras) $(zippy_extras)
 
 DISTCLEANFILES = stamp-h
 
@@ -78,14 +114,13 @@ AM_CPPFLAGS = @X_CFLAGS@ @CAIRO_CFLAGS@ @FRONTEND_CFLAGS@ \
     -DMANDIR='"$(mandir)"' \
     -DSVGDIR='"$(svgdir)"' \
     -DSYSCONFDIR='"$(sysconfdir)"' \
-    $(headers)
+    $(front_end_flags)
 
 ACLOCAL_AMFLAGS = -I m4
 
 info_TEXINFOS =  xboard.texi
 xboard_TEXINFOS =  copyright.texi
 man6_MANS = xboard.man
-
 
 ### config file
 
@@ -97,7 +132,6 @@ icondir = @ICONSDIR@
 dist_icon_DATA = xboard.png
 svgicondir = @SVGICONSDIR@
 dist_svgicon_DATA = xboard.svg
-
 
 ### desktop files for KDE and gnome
 
@@ -113,97 +147,99 @@ gamedatadir = @GAMEDATADIR@
 ### directory and files for svgs
 
 svgdir = $(gamedatadir)/themes/default
-dist_svg_DATA = svg/icon_white.svg         svg/icon_black.svg      \
-           svg/BlackAdvisor.svg       svg/WhiteAdvisor.svg    \
-           svg/BlackArchbishop.svg    svg/WhiteArchbishop.svg  \
-           svg/BlackBishop.svg	      svg/WhiteBishop.svg      \
-           svg/BlackCanon.svg	      svg/WhiteCanon.svg       \
-           svg/BlackChancellor.svg    svg/WhiteChancellor.svg  \
-           svg/BlackCobra.svg         svg/WhiteCobra.svg       \
-           svg/BlackCommoner.svg      svg/WhiteCommoner.svg    \
-           svg/BlackCrownedBishop.svg svg/WhiteCrownedBishop.svg  \
-           svg/BlackCrownedRook.svg   svg/WhiteCrownedRook.svg \
-           svg/BlackElephant.svg      svg/WhiteElephant.svg    \
-           svg/BlackGoldKnight.svg    svg/WhiteGoldKnight.svg  \
-           svg/BlackGoldLance.svg   svg/WhiteGoldLance.svg    \
-           svg/BlackGoldPawn.svg    svg/WhiteGoldPawn.svg     \
-           svg/BlackGoldSilver.svg  svg/WhiteGoldSilver.svg   \
-           svg/BlackGold.svg	    svg/WhiteGold.svg	      \
-           svg/BlackHawk.svg        svg/WhiteHawk.svg         \
-           svg/BlackKing.svg	    svg/WhiteKing.svg	      \
-           svg/BlackKnight.svg	    svg/WhiteKnight.svg	      \
-           svg/BlackLance.svg	    svg/WhiteLance.svg	      \
-           svg/BlackMarshall.svg    svg/WhiteMarshall.svg     \
-           svg/BlackNightrider.svg  svg/WhiteNightrider.svg   \
-           svg/BlackPawn.svg	    svg/WhitePawn.svg	      \
-           svg/BlackPrincess.svg    svg/WhitePrincess.svg     \
-           svg/BlackQueen.svg	    svg/WhiteQueen.svg	      \
-           svg/BlackRook.svg	    svg/WhiteRook.svg	      \
-           svg/BlackUnicorn.svg	    svg/WhiteUnicorn.svg      \
-           svg/BlackSword.svg	    svg/WhiteSword.svg        \
-           svg/BlackHSword.svg	    svg/WhiteHSword.svg       \
-           svg/BlackLeopard.svg	    svg/WhiteLeopard.svg      \
-           svg/BlackLion.svg	    svg/WhiteLion.svg         \
-           svg/BlackPromoBishop.svg svg/WhitePromoBishop.svg  \
-           svg/BlackPromoRook.svg   svg/WhitePromoRook.svg    \
-           svg/BlackPromoHorse.svg  svg/WhitePromoHorse.svg   \
-           svg/BlackPromoDragon.svg svg/WhitePromoDragon.svg  \
-           svg/BlackPromoSword.svg  svg/WhitePromoSword.svg   \
-           svg/BlackPromoHSword.svg svg/WhitePromoHSword.svg  \
-           svg/BlackHCrown.svg	    svg/WhiteHCrown.svg       \
-           svg/BlackDolphin.svg	    svg/WhiteDolphin.svg      \
-           svg/BlackClaw.svg	    svg/WhiteClaw.svg         \
-           svg/BlackWolf.svg	    svg/WhiteWolf.svg         \
-           svg/BlackCamel.svg	    svg/WhiteCamel.svg        \
-           svg/BlackZebra.svg	    svg/WhiteZebra.svg        \
-           svg/BlackGnu.svg	    svg/WhiteGnu.svg          \
-           svg/BlackWizard.svg	    svg/WhiteWizard.svg       \
-           svg/BlackViking.svg	    svg/WhiteViking.svg       \
-           svg/BlackIron.svg	    svg/WhiteIron.svg         \
-           svg/BlackCopper.svg	    svg/WhiteCopper.svg       \
-           svg/BlackTower.svg	    svg/WhiteTower.svg        \
-           svg/BlackDragon.svg	    svg/WhiteDragon.svg       \
-           svg/BlackCub.svg	    svg/WhiteCub.svg          \
-           svg/BlackButterfly.svg   svg/WhiteButterfly.svg    \
-           svg/BlackLeft.svg	    svg/WhiteLeft.svg         \
-           svg/BlackRight.svg	    svg/WhiteRight.svg        \
-           svg/BlackHat.svg	    svg/WhiteHat.svg          \
-           svg/BlackRShield.svg	    svg/WhiteRShield.svg      \
-           svg/BlackLShield.svg	    svg/WhiteLShield.svg      \
-           svg/BlackAxe.svg	    svg/WhiteAxe.svg          \
-           svg/BlackFlag.svg	    svg/WhiteFlag.svg         \
-           svg/BlackDuck.svg	    svg/WhiteDuck.svg         \
-           svg/BlackPegasus.svg	    svg/WhitePegasus.svg      \
-           svg/eo_Analyzing.svg     svg/eo_Black.svg          \
-           svg/eo_Clear.svg         svg/eo_Ponder.svg         \
-           svg/eo_Thinking.svg      svg/eo_Unknown.svg        \
-           svg/eo_White.svg         svg/WhiteDucky.svg
+dist_svg_DATA = \
+    svg/icon_white.svg          svg/icon_black.svg          \
+    svg/BlackAdvisor.svg        svg/WhiteAdvisor.svg        \
+    svg/BlackArchbishop.svg     svg/WhiteArchbishop.svg     \
+    svg/BlackBishop.svg         svg/WhiteBishop.svg         \
+    svg/BlackCanon.svg          svg/WhiteCanon.svg          \
+    svg/BlackChancellor.svg     svg/WhiteChancellor.svg     \
+    svg/BlackCobra.svg          svg/WhiteCobra.svg          \
+    svg/BlackCommoner.svg       svg/WhiteCommoner.svg       \
+    svg/BlackCrownedBishop.svg  svg/WhiteCrownedBishop.svg  \
+    svg/BlackCrownedRook.svg    svg/WhiteCrownedRook.svg    \
+    svg/BlackElephant.svg       svg/WhiteElephant.svg       \
+    svg/BlackGoldKnight.svg     svg/WhiteGoldKnight.svg     \
+    svg/BlackGoldLance.svg      svg/WhiteGoldLance.svg      \
+    svg/BlackGoldPawn.svg       svg/WhiteGoldPawn.svg       \
+    svg/BlackGoldSilver.svg     svg/WhiteGoldSilver.svg     \
+    svg/BlackGold.svg           svg/WhiteGold.svg           \
+    svg/BlackHawk.svg           svg/WhiteHawk.svg           \
+    svg/BlackKing.svg           svg/WhiteKing.svg           \
+    svg/BlackKnight.svg         svg/WhiteKnight.svg         \
+    svg/BlackLance.svg          svg/WhiteLance.svg          \
+    svg/BlackMarshall.svg       svg/WhiteMarshall.svg       \
+    svg/BlackNightrider.svg     svg/WhiteNightrider.svg     \
+    svg/BlackPawn.svg           svg/WhitePawn.svg           \
+    svg/BlackPrincess.svg       svg/WhitePrincess.svg       \
+    svg/BlackQueen.svg          svg/WhiteQueen.svg          \
+    svg/BlackRook.svg           svg/WhiteRook.svg           \
+    svg/BlackUnicorn.svg        svg/WhiteUnicorn.svg        \
+    svg/BlackSword.svg          svg/WhiteSword.svg          \
+    svg/BlackHSword.svg         svg/WhiteHSword.svg         \
+    svg/BlackLeopard.svg        svg/WhiteLeopard.svg        \
+    svg/BlackLion.svg           svg/WhiteLion.svg           \
+    svg/BlackPromoBishop.svg    svg/WhitePromoBishop.svg    \
+    svg/BlackPromoRook.svg      svg/WhitePromoRook.svg      \
+    svg/BlackPromoHorse.svg     svg/WhitePromoHorse.svg     \
+    svg/BlackPromoDragon.svg    svg/WhitePromoDragon.svg    \
+    svg/BlackPromoSword.svg     svg/WhitePromoSword.svg     \
+    svg/BlackPromoHSword.svg    svg/WhitePromoHSword.svg    \
+    svg/BlackHCrown.svg         svg/WhiteHCrown.svg         \
+    svg/BlackDolphin.svg        svg/WhiteDolphin.svg        \
+    svg/BlackClaw.svg           svg/WhiteClaw.svg           \
+    svg/BlackWolf.svg           svg/WhiteWolf.svg           \
+    svg/BlackCamel.svg          svg/WhiteCamel.svg          \
+    svg/BlackZebra.svg          svg/WhiteZebra.svg          \
+    svg/BlackGnu.svg            svg/WhiteGnu.svg            \
+    svg/BlackWizard.svg         svg/WhiteWizard.svg         \
+    svg/BlackViking.svg         svg/WhiteViking.svg         \
+    svg/BlackIron.svg           svg/WhiteIron.svg           \
+    svg/BlackCopper.svg         svg/WhiteCopper.svg         \
+    svg/BlackTower.svg          svg/WhiteTower.svg          \
+    svg/BlackDragon.svg         svg/WhiteDragon.svg         \
+    svg/BlackCub.svg            svg/WhiteCub.svg            \
+    svg/BlackButterfly.svg      svg/WhiteButterfly.svg      \
+    svg/BlackLeft.svg           svg/WhiteLeft.svg           \
+    svg/BlackRight.svg          svg/WhiteRight.svg          \
+    svg/BlackHat.svg            svg/WhiteHat.svg            \
+    svg/BlackRShield.svg        svg/WhiteRShield.svg        \
+    svg/BlackLShield.svg        svg/WhiteLShield.svg        \
+    svg/BlackAxe.svg            svg/WhiteAxe.svg            \
+    svg/BlackFlag.svg           svg/WhiteFlag.svg           \
+    svg/BlackDuck.svg           svg/WhiteDuck.svg           \
+    svg/BlackPegasus.svg        svg/WhitePegasus.svg        \
+    svg/eo_Analyzing.svg        svg/eo_Black.svg            \
+    svg/eo_Clear.svg            svg/eo_Ponder.svg           \
+    svg/eo_Thinking.svg         svg/eo_Unknown.svg          \
+    svg/eo_White.svg            svg/WhiteDucky.svg
 
 shogidir = $(gamedatadir)/themes/shogi
 dist_shogi_DATA = \
-           themes/shogi/WhiteGold.svg        themes/shogi/WhiteCrownedBishop.svg\
-           themes/shogi/WhiteBishop.svg      themes/shogi/WhiteKing.svg\
-           themes/shogi/WhiteKnight.svg      themes/shogi/WhiteGoldKnight.svg\
-           themes/shogi/WhiteLance.svg       themes/shogi/WhiteGoldLance.svg\
-           themes/shogi/WhitePawn.svg        themes/shogi/WhiteGoldPawn.svg\
-           themes/shogi/WhiteRook.svg        themes/shogi/WhiteCrownedRook.svg\
-           themes/shogi/WhiteAdvisor.svg     themes/shogi/WhiteGoldSilver.svg\
-           themes/shogi/BlackGold.svg        themes/shogi/BlackCrownedBishop.svg\
-           themes/shogi/BlackBishop.svg      themes/shogi/BlackKing.svg\
-           themes/shogi/BlackKnight.svg      themes/shogi/BlackGoldKnight.svg\
-           themes/shogi/BlackLance.svg       themes/shogi/BlackGoldLance.svg\
-           themes/shogi/BlackPawn.svg        themes/shogi/BlackGoldPawn.svg\
-           themes/shogi/BlackRook.svg        themes/shogi/BlackCrownedRook.svg\
-           themes/shogi/BlackAdvisor.svg     themes/shogi/BlackGoldSilver.svg
+    themes/shogi/WhiteGold.svg        themes/shogi/WhiteCrownedBishop.svg  \
+    themes/shogi/WhiteBishop.svg      themes/shogi/WhiteKing.svg           \
+    themes/shogi/WhiteKnight.svg      themes/shogi/WhiteGoldKnight.svg     \
+    themes/shogi/WhiteLance.svg       themes/shogi/WhiteGoldLance.svg      \
+    themes/shogi/WhitePawn.svg        themes/shogi/WhiteGoldPawn.svg       \
+    themes/shogi/WhiteRook.svg        themes/shogi/WhiteCrownedRook.svg    \
+    themes/shogi/WhiteAdvisor.svg     themes/shogi/WhiteGoldSilver.svg     \
+    themes/shogi/BlackGold.svg        themes/shogi/BlackCrownedBishop.svg  \
+    themes/shogi/BlackBishop.svg      themes/shogi/BlackKing.svg           \
+    themes/shogi/BlackKnight.svg      themes/shogi/BlackGoldKnight.svg     \
+    themes/shogi/BlackLance.svg       themes/shogi/BlackGoldLance.svg      \
+    themes/shogi/BlackPawn.svg        themes/shogi/BlackGoldPawn.svg       \
+    themes/shogi/BlackRook.svg        themes/shogi/BlackCrownedRook.svg    \
+    themes/shogi/BlackAdvisor.svg     themes/shogi/BlackGoldSilver.svg
 
 xiangqidir = $(gamedatadir)/themes/xiangqi
-dist_xiangqi_DATA = themes/xiangqi/BlackAdvisor.svg  themes/xiangqi/WhiteAdvisor.svg \
-           themes/xiangqi/BlackCanon.svg    themes/xiangqi/WhiteCanon.svg    \
-           themes/xiangqi/BlackElephant.svg themes/xiangqi/WhiteElephant.svg \
-           themes/xiangqi/BlackKnight.svg   themes/xiangqi/WhiteKnight.svg   \
-           themes/xiangqi/BlackGold.svg	    themes/xiangqi/WhiteGold.svg     \
-           themes/xiangqi/BlackPawn.svg	    themes/xiangqi/WhitePawn.svg     \
-           themes/xiangqi/BlackRook.svg	    themes/xiangqi/WhiteRook.svg
+dist_xiangqi_DATA = \
+    themes/xiangqi/BlackAdvisor.svg   themes/xiangqi/WhiteAdvisor.svg   \
+    themes/xiangqi/BlackCanon.svg     themes/xiangqi/WhiteCanon.svg     \
+    themes/xiangqi/BlackElephant.svg  themes/xiangqi/WhiteElephant.svg  \
+    themes/xiangqi/BlackKnight.svg    themes/xiangqi/WhiteKnight.svg    \
+    themes/xiangqi/BlackGold.svg      themes/xiangqi/WhiteGold.svg      \
+    themes/xiangqi/BlackPawn.svg      themes/xiangqi/WhitePawn.svg      \
+    themes/xiangqi/BlackRook.svg      themes/xiangqi/WhiteRook.svg
 
 ### directory and files for themes (and other) configuration files
 
@@ -224,8 +260,8 @@ dist_png_DATA = png/hatch.png png/wood_d.png png/wood_l.png png/xqboard-9x10.png
 
 soundsdir = $(gamedatadir)/sounds
 dist_sounds_DATA = \
-  sounds/cymbal.wav     sounds/pop2.wav   sounds/slap.wav     sounds/ding1.wav      sounds/laser.wav \
-  sounds/woodthunk.wav  sounds/gong.wav   sounds/penalty.wav  sounds/honkhonk.wav   sounds/phone.wav  sounds/roar.wav
+    sounds/cymbal.wav     sounds/pop2.wav   sounds/slap.wav     sounds/ding1.wav      sounds/laser.wav  \
+    sounds/woodthunk.wav  sounds/gong.wav   sounds/penalty.wav  sounds/honkhonk.wav   sounds/phone.wav  sounds/roar.wav
 
 ### the man page depends on several files, so we add a special rule
 
@@ -353,4 +389,3 @@ endif
 	rm -r $(datarootdir)/share/xboard/pixmaps
 	rm -r $(datarootdir)/share/games
 endif
-
