@@ -7,7 +7,7 @@
 
    Because it is possible to run autoconf and automake with either
    Cygwin or MSYS2, it makes the most sense to set these settings for
-   use with VS2013 (which contains the oldest MSVC that we will even
+   use with VS2015 (which contains the oldest MSVC that we will even
    attempt to support) and Windows XP (which is the oldest Windows
    version that we will even attempt to support).
 
@@ -99,7 +99,7 @@
 /* #undef HAVE_ICONV */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-/* #undef HAVE_INTTYPES_H */
+#define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the <lan/socket.h> header file. */
 /* #undef HAVE_LAN_SOCKET_H */
@@ -164,7 +164,7 @@
 /* #undef HAVE_SYS_SOCKET_H */
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
-/* #undef HAVE_SYS_STAT_H */
+#define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/systeminfo.h> header file. */
 /* #undef HAVE_SYS_SYSTEMINFO_H */
@@ -262,7 +262,7 @@
 #define VERSION "4.9.1"
 
 /* Define to 1 if the X Window System is missing or not being used. */
-/* #undef X_DISPLAY_MISSING */
+#define X_DISPLAY_MISSING 1
 
 /* 1 if Zippy should be enabled, otherwise 0. */
 #define ZIPPY 1
@@ -270,7 +270,7 @@
 /* Define to '__inline__' or '__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
 #ifndef __cplusplus
-/* #undef inline */
+#define inline __inline
 #endif
 
 /* Define as a signed integer type capable of holding a process identifier. */
@@ -281,48 +281,5 @@
 
 /* Define as 'fork' if 'vfork' does not work. */
 /* #undef vfork */
-
-/* All of the definitions below this point appear to be manually-added
-   information, not generated once by some version of autotools long
-   ago.  TODO: Relocate all such manually-added information to some
-   other source code file. */
-
-/* Define the Windows-specific FILE version info, which *MUST* be four
-   comma separated 16-bit integers.  Remember to not start a number
-   with 0 (which indicates octal): dates like 2014,0901 would lead to
-   an error.  Subject to avoiding the non-leading zero just mentioned,
-   the last two values appear to be used for YYYY and MMDD. */
-#define PACKAGE_FILEVERSION 4,9,2016,731
-
-/*
-  Options
-  -DEMULATE_RSH -DREMOTE_SHELL=\"\" is necessary on Windows 95, because it
-    does not have its own rsh command.  It works better this way on NT too,
-    because the NT rsh does not propagate signals to the remote process.
-*/
-#define EMULATE_RSH 1
-
-#ifdef __BORLANDC__
-#define _strdup(x) strdup(x)
-#define STRICT
-#define _winmajor 3  /* windows 95 */
-#endif
-
-/* Some definitions required by MSVC 4.1 */
-#ifndef WM_MOUSEWHEEL
-#define WM_MOUSEWHEEL 0x020A
-#endif
-#ifndef SCF_DEFAULT
-#define SCF_DEFAULT 0x0000
-#define SCF_ALL 0x0004
-#endif
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define inline __inline
-#if _MSC_VER < 1500
-#define vsnprintf _vsnprintf
-#endif
-#endif
 
 #endif /* GNU_XBOARD_CONFIG_H */

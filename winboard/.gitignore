@@ -25,9 +25,10 @@
 # Visual Studio compile resource script file
 *.res
 
-# Visual Studio browsing database file
+# Visual Studio code browsing database files
 *.opensdf
 *.sdf
+*.VC.db
 
 # Visual Studio solution user options file
 *.suo

@@ -13,15 +13,16 @@ Compiling from the command line with GCC on Windows:
 Compiling with an Integrated Development Envrionment
 
     Before proceeding, please read https://fsf.org/about/what-is-free-software
-    regarding why you may wish to avoid choosing this option.
+    regarding why you may wish to avoid choosing this particular option.
 
-    Microsoft Visual Studio Community Edition 2013
+    Microsoft Visual Studio Community Edition 2015
 
-    As of 2026-03-03, VS2013 appears to be the oldest version that can still be
-    obtained without monetary charge from Microsoft and installed and used from
-    Windows 11.  It can be downloaded from:
+    As of 2026-03-18, VS Community 2015 appears to be the oldest version of
+    Visual Studio that Microsoft still permits to be downloaded, installed,
+    used, and registered (i.e., the licence key to disable the 30-day trial
+    can still be acquired).  VS Community 2015 can be downloaded from:
 
-        https://go.microsoft.com/fwlink/?LinkId=532496
+        https://go.microsoft.com/fwlink/?LinkId=615448
 
     1. Click FILE | Open | Project/Solution...
 
@@ -31,4 +32,4 @@ Compiling with an Integrated Development Envrionment
 
     4. Click BUILD | Rebuild Solution.
 
-    5. The console output will show where winboard.exe has been created and saved.
+    5. The console output will show where winboard.exe has been created.
