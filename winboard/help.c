@@ -27,7 +27,7 @@
 #include "config.h"
 #include "help.h"
 
-FILE *debugFP;
+extern FILE *debugFP;
 
 HWND WINAPI
 HtmlHelp( HWND hwnd, LPCSTR helpFile, UINT action, DWORD_PTR data )

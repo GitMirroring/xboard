@@ -739,7 +739,7 @@ WindowPlacement wpEngineOutput;
 WindowPlacement wpGameList;
 WindowPlacement wpTags;
 
-VOID EngineOptionsPopup(); // [HGM] settings
+VOID EngineOptionsPopup(HWND hwnd, ChessProgramState *cps); // [HGM] settings
 
 VOID GothicPopUp(char *title, VariantClass variant);
 /*
@@ -4826,7 +4826,7 @@ void UpdateICSWidth(HWND hText)
 {
     LONG old_width, new_width;
 
-    new_width = get_term_width(hText, FALSE);
+    new_width = get_term_width();
     old_width = GetWindowLongPtr(hText, GWLP_USERDATA);
     if (new_width != old_width)
     {

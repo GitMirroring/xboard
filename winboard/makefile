@@ -1,62 +1,79 @@
-# WinBoard makefile using gcc
+# This makefile is intended for building with GCC on Windows.
 
+PROJ = winboard
 
-PROJ=winboard
-
-
-OBJS=backend.o book.o gamelist.o lists.o moves.o pgntags.o uci.o zippy.o\
- parser.o wbres.o wclipbrd.o wedittags.o wengineoutput.o wevalgraph.o\
- wgamelist.o whistory.o history.o winboard.o wlayout.o woptions.o wsnap.o\
- wsockerr.o help.o wsettings.o wchat.o engineoutput.o evalgraph.o
-
+OBJS = \
+    backend.o \
+    book.o \
+    engineoutput.o \
+    evalgraph.o \
+    gamelist.o \
+    help.o \
+    lists.o \
+    moves.o \
+    parser.o \
+    pgntags.o \
+    history.o \
+    wbres.o \
+    wchat.o \
+    wclipbrd.o \
+    wedittags.o \
+    wengineoutput.o \
+    wevalgraph.o \
+    wgamelist.o \
+    whistory.o \
+    winboard.o \
+    wlayout.o \
+    woptions.o \
+    wsettings.o \
+    wsnap.o \
+    wsockerr.o \
+    uci.o \
+    zippy.o \
 
 # make compiling less spammy
 compile = @echo "$1"; $(CC) $(CFLAGS) $1
 
-
 # Debugging?
-USE_DEBUG=0
-
+USE_DEBUG = 1
 
 # JAWS support? (Set to 2 for NVDA support!)
-JAWS=0
+JAWS = 0
 NVDADIR = .
-
 
 # set this to 1 unless you don't mind linking with cygwin1.dll
 USE_MINGW=1
-
-
 # set up for cygwin or not
 ifeq ($(USE_MINGW),1)
-CFCYG = -mno-cygwin -DUSE_I64
-LFCYG = -mno-cygwin -lmsvcrt
+LFCYG = -lmsvcrt
 endif
 
 CC = gcc
-FLEX = "flex.exe" # we need version 2.5.4 or later, cygwin's is 2.5.35
+# Flex version 2.5.4 or later is required.
+FLEX = "flex.exe"
 #      "c:/mingw/mingw32/bin/flex.exe"
 HC="C:/Program Files/Help Workshop/hcrtf" -xn
-DEFS = -D_WIN32
+DEFS = -DWINVER=0x0501 -D_WIN32_WINNT=0x0501
 ifeq ($(JAWS),1)
-  DEFS += -DJAWS
+    DEFS += -DJAWS
 endif
 ifeq ($(JAWS),2)
-  DEFS += -DJAWS -DNVDA=$(NVDADIR)
+    DEFS += -DJAWS -DNVDA=$(NVDADIR)
 endif
-WARN = -Wall -Wno-char-subscripts -Wno-parentheses
+WARN = -Wall -Wextra
 ARCH =
 ifeq ($(USE_DEBUG),0)
-  CFDEBUG = -DNDEBUG
-  OPTS = -Os -frename-registers -funit-at-a-time -fstrict-aliasing -fstrength-reduce
+    CFDEBUG = -DNDEBUG
+    OPTS = -O2
 else
-  CFDEBUG = -D_DEBUG -DDEBUG -g
+    CFDEBUG = -D_DEBUG
+    OPTS = -O0 -g
 endif
 CF = -c $(WARN) -pipe $(CFDEBUG) $(DEFS) -I. -I..
-CFLAGS = $(CF) $(ARCH) $(OPTS) $(CFCYG)
+CFLAGS = $(CF) $(ARCH) $(OPTS)
 LFLAGS = $(LFCYG) $(CFDEBUG) -fpic -s -mwindows -lwsock32 -lwinmm -lcomctl32 -lmsimg32
 ifeq ($(JAWS),2)
-  LFLAGS += $(NVDADIR)/nvdaControllerClient32.lib
+    LFLAGS += $(NVDADIR)/nvdaControllerClient32.lib
 endif
 
 all: $(PROJ).exe

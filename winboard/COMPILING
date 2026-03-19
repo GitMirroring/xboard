@@ -1,12 +1,13 @@
-Compiling from the Command Line
+Compiling from the command line with GCC on Windows:
 
-    GCC -- this includes cygwin, mingw-w64, msys2, and similar.
+    Install either MSYS2 (https://msys2.org) or Cygwin (https://cygwin.com).
 
-        make -f makefile.gcc
+    Invoke make.
 
-        You can modify certain settings in the makefile such as JAWS support,
-        debugging support.  If using cygwin, you can select whether or not to
-        link with cygwin1.dll instead of the msvcrt runtime.
+    The makefile contains some adjustable settings such as screen reader and
+    debugging support.  If using Cygwin, you can specify a mingw-w64
+    cross-compiler with CC=... to avoid having the generated executable depend
+    upon cygwin1.dll.
 
 
 Compiling with an Integrated Development Envrionment
