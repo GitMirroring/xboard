@@ -15798,10 +15798,16 @@ EditGameEvent (void)
 void
 DisplayClockMessage (char *msg)
 {
-  if(!msg) SetClockMessage(0, NULL), SetClockMessage(1, NULL); else
-  if(blackPlaysFirst) SetClockMessage(1, msg), SetClockMessage(0, _("Set White_to Move"));
-  else                SetClockMessage(0, msg), SetClockMessage(1, _("Set Black_to Move"));
-  DisplayBothClocks();
+    if (!msg) {
+        SetClockMessage(0, NULL), SetClockMessage(1, NULL);
+    } else {
+        if (blackPlaysFirst) {
+            SetClockMessage(1, msg), SetClockMessage(0, _("Set White to Move"));
+        } else {
+            SetClockMessage(0, msg), SetClockMessage(1, _("Set Black to Move"));
+        }
+    }
+    DisplayBothClocks();
 }
 
 int clearCycle;
@@ -15822,10 +15828,15 @@ EditPositionEvent (void)
     ModeHighlight();
     SetGameInfo();
     CopyBoard(rightsBoard, nullBoard);
-    if (currentMove > 0)
-      CopyBoard(boards[0], boards[currentMove]);
-    for(i=0; i<nrCastlingRights; i++) if(boards[0][CASTLING][i] != NoRights)
-      rightsBoard[castlingRank[i]][boards[0][CASTLING][i]] = 1; // copy remaining rights
+    if (currentMove > 0) {
+        CopyBoard(boards[0], boards[currentMove]);
+    }
+    for (i = 0; i < nrCastlingRights; i++) {
+        if (boards[0][CASTLING][i] != NoRights) {
+            /* Copy the remaining rights. */
+            rightsBoard[castlingRank[i]][boards[0][CASTLING][i]] = 1;
+        }
+    }
 
     blackPlaysFirst = !WhiteOnMove(currentMove);
     ResetClocks();
@@ -15833,7 +15844,7 @@ EditPositionEvent (void)
     HistorySet(parseList, backwardMostMove, forwardMostMove, currentMove-1);
     DisplayMove(-1);
     DisplayMessage(_("Keep Ctrl pressed to duplicate pieces"), "");
-    DisplayClockMessage(_("Clear_Board"));
+    DisplayClockMessage(_("Clear Board"));
     clearCycle = 0;
 }
 
@@ -15986,186 +15997,229 @@ EditPositionMenuEvent (ChessSquare selection, int x, int y)
 
     switch (selection) {
       case ClearBoard:
-	fromX = fromY = killX = killY = kill2X = kill2Y = -1; // [HGM] abort any move entry in progress
-	MarkTargetSquares(1);
-	CopyBoard(currentBoard, boards[0]);
-	CopyBoard(menuBoard, initialPosition);
-	if (gameMode == IcsExamining && ics_type == ICS_FICS) {
-	    SendToICS(ics_prefix);
-	    SendToICS("bsetup clear\n");
-	} else if (gameMode == IcsExamining && ics_type == ICS_ICC) {
-	    SendToICS(ics_prefix);
-	    SendToICS("clearboard\n");
-	} else {
-            for (x = 0; x < BOARD_WIDTH; x++) { ChessSquare p = EmptySquare;
-		if(x == BOARD_LEFT-1 || x == BOARD_RGHT) p = (ChessSquare) 0; /* [HGM] holdings */
+        /* Abort any move entry that was in progress. */
+        fromX = -1;
+        fromY = -1;
+        killX = -1;
+        killY = -1;
+        kill2X = -1;
+        kill2Y = -1;
+        MarkTargetSquares(1);
+        CopyBoard(currentBoard, boards[0]);
+        CopyBoard(menuBoard, initialPosition);
+        if (gameMode == IcsExamining && ics_type == ICS_FICS) {
+            SendToICS(ics_prefix);
+            SendToICS("bsetup clear\n");
+        } else if (gameMode == IcsExamining && ics_type == ICS_ICC) {
+            SendToICS(ics_prefix);
+            SendToICS("clearboard\n");
+        } else {
+            for (x = 0; x < BOARD_WIDTH; x++) {
+                ChessSquare p = EmptySquare;
+                if (x == BOARD_LEFT-1 || x == BOARD_RGHT) {
+                    /* Holdings. */
+                    p = (ChessSquare) 0;
+                }
                 for (y = 0; y < BOARD_HEIGHT; y++) {
-		    if (gameMode == IcsExamining) {
-			if (boards[currentMove][y][x] != EmptySquare) {
-			  snprintf(buf, MSG_SIZ, "%sx@%c%c\n", ics_prefix,
-                                    AAA + x, ONE + y);
-			    SendToICS(buf);
-			}
-		    }
-		}
-	    }
-	    CopyBoard(rightsBoard, nullBoard);
-	    if(gameMode != IcsExamining) { // [HGM] editpos: cycle trough boards
-		int r, i;
-		CopyBoard(menuBoard, initialPosition);
-		for(r = 0; r < BOARD_HEIGHT; r++) {
-		  for(x = BOARD_LEFT; x < BOARD_RGHT; x++) { // create 'menu board' by removing duplicates 
-		    ChessSquare p = menuBoard[r][x];
-		    for(y = x + 1; y < BOARD_RGHT; y++) if(menuBoard[r][y] == p) menuBoard[r][y] = EmptySquare;
-		  }
-		}
-		menuBoard[CASTLING][0] = menuBoard[CASTLING][3] = NoRights; // h-side Rook was deleted
-		switch(clearCycle++) {
-		  case 0:
-		    DisplayClockMessage(_("Clear_More"));
-		    CopyBoard(erasedBoard, boards[0]);
-		    CopyBoard(boards[0], menuBoard); break;
-		  case 1:
-		    DisplayClockMessage(_("Restore_Position"));
-		    for(r = 0; r < BOARD_HEIGHT; r++) {
-		      ChessSquare king = WhiteKing;
-		      for(x = 0; x < BOARD_WIDTH; x++) { // erase except Kings and center
-			ChessSquare p = (x == BOARD_LEFT-1 || x == BOARD_RGHT ? 0 : EmptySquare);
-		        if((x < BOARD_WIDTH/2 - 2 || x >= BOARD_WIDTH/2 + 2 ||
-		            r < BOARD_HEIGHT/2 - 2 || r >= BOARD_HEIGHT/2 + 2) &&
-			    boards[0][r][x] != king && boards[0][r][x] != king + BlackPawn
-			    && boards[0][r][x] != DarkSquare && boards[0][r][x] != p) boards[0][r][x] = EmptySquare;
-		      }
-		    }
-		    break;
-		  case 2:
-		    if(!CompareBoards(erasedBoard, initialPosition)) { // initial position if notyet there
-		      DisplayClockMessage(_("Resume_Edit"));
-		      CopyBoard(boards[0], initialPosition);
-		      break;
-		    }
-		    clearCycle++;
-		  case 3:
-		    DisplayClockMessage(_("Clear_Board"));
-		    CopyBoard(boards[0], erasedBoard);
-		}
-		clearCycle &= 3; // wrap
+                    if (gameMode == IcsExamining) {
+                        if (boards[currentMove][y][x] != EmptySquare) {
+                            snprintf(buf, MSG_SIZ, "%sx@%c%c\n", ics_prefix,
+                                     AAA + x, ONE + y);
+                            SendToICS(buf);
+                        }
+                    }
+                }
+            }
+            CopyBoard(rightsBoard, nullBoard);
+            if (gameMode != IcsExamining) {
+                /* [HGM] editpos: cycle through boards */
+                int r, i;
+                CopyBoard(menuBoard, initialPosition);
+                for (r = 0; r < BOARD_HEIGHT; r++) {
+                    for (x = BOARD_LEFT; x < BOARD_RGHT; x++) {
+                        /* Create 'menu board' by removing duplicates. */
+                        ChessSquare p = menuBoard[r][x];
+                        for (y = x + 1; y < BOARD_RGHT; y++) {
+                            if(menuBoard[r][y] == p) menuBoard[r][y] = EmptySquare;
+                        }
+                    }
+                }
+                menuBoard[CASTLING][0] = NoRights;
+                menuBoard[CASTLING][3] = NoRights; /* h-side Rook was deleted */
+                switch (clearCycle++) {
+                  case 0:
+                    DisplayClockMessage(_("Clear More"));
+                    CopyBoard(erasedBoard, boards[0]);
+                    CopyBoard(boards[0], menuBoard);
+                    break;
+                  case 1:
+                    DisplayClockMessage(_("Restore Position"));
+                    for (r = 0; r < BOARD_HEIGHT; r++) {
+                        ChessSquare king = WhiteKing;
+                        for (x = 0; x < BOARD_WIDTH; x++) {
+                            /* Erase except Kings and center */
+                            ChessSquare p = (x == BOARD_LEFT-1 || x == BOARD_RGHT ? 0 : EmptySquare);
+                            if ((x < BOARD_WIDTH/2 - 2 || x >= BOARD_WIDTH/2 + 2
+                             || r < BOARD_HEIGHT/2 - 2 || r >= BOARD_HEIGHT/2 + 2)
+                             && boards[0][r][x] != king && boards[0][r][x] != king + BlackPawn
+                             && boards[0][r][x] != DarkSquare && boards[0][r][x] != p) {
+                                boards[0][r][x] = EmptySquare;
+                            }
+                        }
+                    }
+                    break;
+                  case 2:
+                    /* Re-initialize the position if necessary. */
+                    if (!CompareBoards(erasedBoard, initialPosition)) {
+                        DisplayClockMessage(_("Resume Edit"));
+                        CopyBoard(boards[0], initialPosition);
+                        break;
+                    }
+                    clearCycle++;
+                  case 3:
+                      DisplayClockMessage(_("Clear Board"));
+                      CopyBoard(boards[0], erasedBoard);
+                }
+                /* Wrap around. */
+                clearCycle &= 3;
 
-		for(i=0; i<nrCastlingRights; i++) if(boards[0][CASTLING][i] != NoRights)
-		    rightsBoard[castlingRank[i]][boards[0][CASTLING][i]] = 1; // copy remaining rights
-	    }
-	}
-	if (gameMode == EditPosition) {
-	    DrawPosition(FALSE, boards[0]);
-	}
-	break;
+                for (i=0; i<nrCastlingRights; i++) {
+                    if (boards[0][CASTLING][i] != NoRights) {
+                        /* Copy the remaining rights. */
+                        rightsBoard[castlingRank[i]][boards[0][CASTLING][i]] = 1;
+                    }
+                }
+            }
+        }
+        if (gameMode == EditPosition) {
+            DrawPosition(FALSE, boards[0]);
+        }
+        break;
 
       case WhitePlay:
-	SetWhiteToPlayEvent();
-	DisplayClockMessage("");
-	break;
+        SetWhiteToPlayEvent();
+        DisplayClockMessage("");
+        break;
 
       case BlackPlay:
-	SetBlackToPlayEvent();
-	DisplayClockMessage("");
-	break;
+        SetBlackToPlayEvent();
+        DisplayClockMessage("");
+        break;
 
       case EmptySquare:
-	if (gameMode == IcsExamining) {
-            if (x < BOARD_LEFT || x >= BOARD_RGHT) break; // [HGM] holdings
+        if (gameMode == IcsExamining) {
+            if (x < BOARD_LEFT || x >= BOARD_RGHT) {
+                /* Holdings. */
+                break;
+            }
             snprintf(buf, MSG_SIZ, "%sx@%c%c\n", ics_prefix, AAA + x, ONE + y);
-	    SendToICS(buf);
-	} else {
-            if(x < BOARD_LEFT || x >= BOARD_RGHT) {
-                if(x == BOARD_LEFT-2) {
-                    if(y < handSize-1-gameInfo.holdingsSize) break;
+            SendToICS(buf);
+        } else {
+            if (x < BOARD_LEFT || x >= BOARD_RGHT) {
+                if (x == BOARD_LEFT-2) {
+                    if (y < handSize-1-gameInfo.holdingsSize) break;
                     boards[0][y][1] = 0;
-                } else
-                if(x == BOARD_RGHT+1) {
-                    if(y >= gameInfo.holdingsSize) break;
+                } else if (x == BOARD_RGHT+1) {
+                    if (y >= gameInfo.holdingsSize) break;
                     boards[0][y][BOARD_WIDTH-2] = 0;
                 } else break;
             }
-	    boards[0][y][x] = EmptySquare;
-	    DrawPosition(FALSE, boards[0]);
-	}
-	break;
+            boards[0][y][x] = EmptySquare;
+            DrawPosition(FALSE, boards[0]);
+        }
+        break;
 
       case PromotePiece:
-        if(piece >= (int)WhitePawn && piece < (int)WhiteMan ||
-           piece >= (int)BlackPawn && piece < (int)BlackMan   ) {
+        if (piece >= (int)WhitePawn && piece < (int)WhiteMan
+         || piece >= (int)BlackPawn && piece < (int)BlackMan) {
             selection = (ChessSquare) (PROMOTED(piece));
-        } else if(piece == EmptySquare) selection = WhiteSilver;
-        else selection = (ChessSquare)((int)piece - 1);
+        } else if (piece == EmptySquare) {
+            selection = WhiteSilver;
+        } else {
+            selection = (ChessSquare)((int)piece - 1);
+        }
         goto defaultlabel;
 
       case DemotePiece:
-        if(piece > (int)WhiteMan && piece <= (int)WhiteKing ||
-           piece > (int)BlackMan && piece <= (int)BlackKing   ) {
+        if (piece > (int)WhiteMan && piece <= (int)WhiteKing ||
+            piece > (int)BlackMan && piece <= (int)BlackKing   ) {
             selection = (ChessSquare) (DEMOTED(piece));
-        } else if(piece == EmptySquare) selection = BlackSilver;
-        else selection = (ChessSquare)((int)piece + 1);
+        } else if (piece == EmptySquare) {
+            selection = BlackSilver;
+	} else {
+	    selection = (ChessSquare)((int)piece + 1);
+        }
         goto defaultlabel;
 
       case WhiteQueen:
       case BlackQueen:
-        if(gameInfo.variant == VariantShatranj ||
-           gameInfo.variant == VariantXiangqi  ||
-           gameInfo.variant == VariantJanggi  ||
-           gameInfo.variant == VariantCourier  ||
-           gameInfo.variant == VariantASEAN    ||
-           gameInfo.variant == VariantMakruk     )
+        if (gameInfo.variant == VariantShatranj || gameInfo.variant == VariantXiangqi
+         || gameInfo.variant == VariantJanggi   || gameInfo.variant == VariantCourier
+         || gameInfo.variant == VariantASEAN    || gameInfo.variant == VariantMakruk) {
             selection = (ChessSquare)((int)selection - (int)WhiteQueen + (int)WhiteFerz);
+        }
         goto defaultlabel;
 
       case WhiteRook:
         baseRank = 0;
       case BlackRook:
-        if(y == baseRank && (x == BOARD_LEFT || x == BOARD_RGHT-1 || appData.fischerCastling)) hasRights = 1;
-        if(y == baseRank && (x == BOARD_WIDTH>>1 || appData.fischerCastling)) hasRights = 1;
+        if (y == baseRank && (x == BOARD_LEFT || x == BOARD_RGHT-1 || appData.fischerCastling)) hasRights = 1;
+        if (y == baseRank && (x == BOARD_WIDTH >> 1 || appData.fischerCastling)) hasRights = 1;
         goto defaultlabel;
 
       case WhiteKing:
         baseRank = 0;
       case BlackKing:
-        if(gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi)
+        if (gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) {
             selection = (ChessSquare)((int)selection - (int)WhiteKing + (int)WhiteWazir);
-        if(gameInfo.variant == VariantKnightmate)
+        }
+        if (gameInfo.variant == VariantKnightmate) {
             selection = (ChessSquare)((int)selection - (int)WhiteKing + (int)WhiteUnicorn);
-        if(y == baseRank && (x == BOARD_WIDTH>>1 || appData.fischerCastling)) hasRights = 1;
+        }
+        if (y == baseRank && (x == BOARD_WIDTH >> 1 || appData.fischerCastling)) {
+            hasRights = 1;
+        }
       default:
         defaultlabel:
-	if (gameMode == IcsExamining) {
-            if (x < BOARD_LEFT || x >= BOARD_RGHT) break; // [HGM] holdings
-	    snprintf(buf, MSG_SIZ, "%s%c@%c%c\n", ics_prefix,
-		     PieceToChar(selection), AAA + x, ONE + y);
-	    SendToICS(buf);
-	} else {
+        if (gameMode == IcsExamining) {
+            if (x < BOARD_LEFT || x >= BOARD_RGHT) {
+                /* Holdings. */
+                break;
+            }
+            snprintf(buf, MSG_SIZ, "%s%c@%c%c\n", ics_prefix,
+                     PieceToChar(selection), AAA + x, ONE + y);
+            SendToICS(buf);
+        } else {
             rightsBoard[y][x] = hasRights;
-            if(x < BOARD_LEFT || x >= BOARD_RGHT) {
+            if (x < BOARD_LEFT || x >= BOARD_RGHT) {
                 int n;
-                if(x == BOARD_LEFT-2 && selection >= BlackPawn) {
+                if (x == BOARD_LEFT-2 && selection >= BlackPawn) {
                     n = PieceToNumber(selection - BlackPawn);
-                    if(n >= gameInfo.holdingsSize) { n = 0; selection = BlackPawn; }
+                    if (n >= gameInfo.holdingsSize) {
+                        n = 0;
+                        selection = BlackPawn;
+                    }
                     boards[0][handSize-1-n][0] = selection;
                     boards[0][handSize-1-n][1]++;
-                } else
-                if(x == BOARD_RGHT+1 && selection < BlackPawn) {
+                } else if (x == BOARD_RGHT+1 && selection < BlackPawn) {
                     n = PieceToNumber(selection);
-                    if(n >= gameInfo.holdingsSize) { n = 0; selection = WhitePawn; }
+                    if (n >= gameInfo.holdingsSize) {
+                        n = 0;
+                        selection = WhitePawn;
+                    }
                     boards[0][n][BOARD_WIDTH-1] = selection;
                     boards[0][n][BOARD_WIDTH-2]++;
                 }
-            } else
-	    boards[0][y][x] = selection;
-	    DrawPosition(TRUE, boards[0]);
-	    ClearHighlights();
-	    fromX = fromY = -1;
-	}
-	break;
+            } else {
+                boards[0][y][x] = selection;
+	    }
+            DrawPosition(TRUE, boards[0]);
+            ClearHighlights();
+            fromX = fromY = -1;
+        }
+        break;
     }
 }
-
 
 void
 DropMenuEvent (ChessSquare selection, int x, int y)
@@ -17799,105 +17853,108 @@ FeatureDone (ChessProgramState *cps, int val)
 void
 ParseFeatures (char *args, ChessProgramState *cps)
 {
-  char *p = args;
-  char *q = NULL;
-  int val;
-  char buf[MSG_SIZ];
+    char *p = args;
+    char *q = NULL;
+    int val;
+    char buf[MSG_SIZ];
 
-  for (;;) {
-    while (*p == ' ') p++;
-    if (*p == NULLCHAR) return;
+    for (;;) {
+        while (*p == ' ') p++;
+        if (*p == NULLCHAR) return;
 
-    if (BoolFeature(&p, "setboard", &cps->useSetboard, cps)) continue;
-    if (BoolFeature(&p, "xedit", &cps->extendedEdit, cps)) continue;
-    if (BoolFeature(&p, "time", &cps->sendTime, cps)) continue;
-    if (BoolFeature(&p, "draw", &cps->sendDrawOffers, cps)) continue;
-    if (BoolFeature(&p, "sigint", &cps->useSigint, cps)) continue;
-    if (BoolFeature(&p, "sigterm", &cps->useSigterm, cps)) continue;
-    if (BoolFeature(&p, "reuse", &val, cps)) {
-      /* Engine can disable reuse, but can't enable it if user said no */
-      if (!val) cps->reuse = FALSE;
-      continue;
-    }
-    if (BoolFeature(&p, "analyze", &cps->analysisSupport, cps)) continue;
-    if (StringFeature(&p, "myname", &cps->tidy, cps)) {
-      if (gameMode == TwoMachinesPlay) {
-	DisplayTwoMachinesTitle();
-      } else {
-	DisplayTitle("");
-      }
-      continue;
-    }
-    if (StringFeature(&p, "variants", &cps->variants, cps)) continue;
-    if (BoolFeature(&p, "san", &cps->useSAN, cps)) continue;
-    if (BoolFeature(&p, "ping", &cps->usePing, cps)) continue;
-    if (BoolFeature(&p, "playother", &cps->usePlayother, cps)) continue;
-    if (BoolFeature(&p, "colors", &cps->useColors, cps)) continue;
-    if (BoolFeature(&p, "usermove", &cps->useUsermove, cps)) continue;
-    if (BoolFeature(&p, "exclude", &cps->excludeMoves, cps)) continue;
-    if (BoolFeature(&p, "ics", &cps->sendICS, cps)) continue;
-    if (BoolFeature(&p, "name", &cps->sendName, cps)) continue;
-    if (BoolFeature(&p, "dice", &cps->dice, cps)) continue; // [HGM] dice
-    if (BoolFeature(&p, "pause", &cps->pause, cps)) continue; // [HGM] pause
-    if (IntFeature(&p, "done", &val, cps)) {
-      FeatureDone(cps, val);
-      continue;
-    }
-    /* Added by Tord: */
-    if (BoolFeature(&p, "fen960", &cps->useFEN960, cps)) continue;
-    if (BoolFeature(&p, "oocastle", &cps->useOOCastle, cps)) continue;
-    /* End of additions by Tord */
+        if (BoolFeature(&p, "setboard", &cps->useSetboard, cps)) continue;
+        if (BoolFeature(&p, "xedit", &cps->extendedEdit, cps)) continue;
+        if (BoolFeature(&p, "time", &cps->sendTime, cps)) continue;
+        if (BoolFeature(&p, "draw", &cps->sendDrawOffers, cps)) continue;
+        if (BoolFeature(&p, "sigint", &cps->useSigint, cps)) continue;
+        if (BoolFeature(&p, "sigterm", &cps->useSigterm, cps)) continue;
+        if (BoolFeature(&p, "reuse", &val, cps)) {
+            /* The engine can disable reuse, but it may not override the user's
+               choice to prohibit reuse. */
+            if (!val) cps->reuse = FALSE;
+            continue;
+        }
+        if (BoolFeature(&p, "analyze", &cps->analysisSupport, cps)) continue;
+        if (StringFeature(&p, "myname", &cps->tidy, cps)) {
+            if (gameMode == TwoMachinesPlay) {
+                DisplayTwoMachinesTitle();
+            } else {
+                DisplayTitle("");
+            }
+            continue;
+        }
+        if (StringFeature(&p, "variants", &cps->variants, cps)) continue;
+        if (BoolFeature(&p, "san", &cps->useSAN, cps)) continue;
+        if (BoolFeature(&p, "ping", &cps->usePing, cps)) continue;
+        if (BoolFeature(&p, "playother", &cps->usePlayother, cps)) continue;
+        if (BoolFeature(&p, "colors", &cps->useColors, cps)) continue;
+        if (BoolFeature(&p, "usermove", &cps->useUsermove, cps)) continue;
+        if (BoolFeature(&p, "exclude", &cps->excludeMoves, cps)) continue;
+        if (BoolFeature(&p, "ics", &cps->sendICS, cps)) continue;
+        if (BoolFeature(&p, "name", &cps->sendName, cps)) continue;
+        if (BoolFeature(&p, "dice", &cps->dice, cps)) continue;
+        if (BoolFeature(&p, "pause", &cps->pause, cps)) continue;
+        if (IntFeature(&p, "done", &val, cps)) {
+            FeatureDone(cps, val);
+            continue;
+        }
+        if (BoolFeature(&p, "fen960", &cps->useFEN960, cps)) continue;
+        if (BoolFeature(&p, "oocastle", &cps->useOOCastle, cps)) continue;
+        if (BoolFeature(&p, "highlight", &cps->highlight, cps)) continue;
+        if (BoolFeature(&p, "debug", &cps->debug, cps)) continue;
+        if (BoolFeature(&p, "nps", &cps->supportsNPS, cps)) continue;
+        if (IntFeature(&p, "level", &cps->maxNrOfSessions, cps)) continue;
+        if (BoolFeature(&p, "memory", &cps->memSize, cps)) continue;
+        if (BoolFeature(&p, "smp", &cps->maxCores, cps)) continue;
+        if (StringFeature(&p, "egt", &cps->egtFormats, cps)) continue;
+        if (StringFeature(&p, "option", &q, cps)) {
+            /* First, read to a freshly-allocated temporary buffer. */
+            if (cps->reload) {
+                /* We are reloading because of xreuse. */
+                FREE(q);
+                q = NULL;
+                continue;
+            }
+            if (cps->nrOptions == 0) {
+                FREE(cps->option[0].name);
+                cps->option[0].name = calloc(1, MSG_SIZ);
+                snprintf(cps->option[0].name, MSG_SIZ - 1, "%s", _("Make Persistent (save)"));
+                ParseOption(&(cps->option[cps->nrOptions++]), cps);
+            }
+            FREE(cps->option[cps->nrOptions].name);
+            cps->option[cps->nrOptions].name = q;
+            q = NULL;
+            if (!ParseOption(&(cps->option[cps->nrOptions++]), cps)) {
+                /* [HGM] options: add option feature */
+                snprintf(buf, MSG_SIZ, "rejected option %s\n", cps->option[--cps->nrOptions].name);
+                SendToProgram(buf, cps);
+                continue;
+            }
+            if (cps->nrOptions >= MAX_OPTIONS) {
+                cps->nrOptions--;
+                snprintf(buf, MSG_SIZ, _("%s engine has too many options\n"), _(cps->which));
+                DisplayError(buf, 0);
+            }
+            continue;
+        }
 
-    /* [HGM] added features: */
-    if (BoolFeature(&p, "highlight", &cps->highlight, cps)) continue;
-    if (BoolFeature(&p, "debug", &cps->debug, cps)) continue;
-    if (BoolFeature(&p, "nps", &cps->supportsNPS, cps)) continue;
-    if (IntFeature(&p, "level", &cps->maxNrOfSessions, cps)) continue;
-    if (BoolFeature(&p, "memory", &cps->memSize, cps)) continue;
-    if (BoolFeature(&p, "smp", &cps->maxCores, cps)) continue;
-    if (StringFeature(&p, "egt", &cps->egtFormats, cps)) continue;
-    if (StringFeature(&p, "option", &q, cps)) { // read to freshly allocated temp buffer first
-	if(cps->reload) { FREE(q); q = NULL; continue; } // we are reloading because of xreuse
-	if(cps->nrOptions == 0) {
-		FREE(cps->option[0].name);
-		cps->option[0].name = calloc(1, MSG_SIZ);
-		snprintf(cps->option[0].name, MSG_SIZ - 1, "%s", _("Make Persistent -save"));
-		ParseOption(&(cps->option[cps->nrOptions++]), cps);
-	}
-	FREE(cps->option[cps->nrOptions].name);
-	cps->option[cps->nrOptions].name = q; q = NULL;
-	if(!ParseOption(&(cps->option[cps->nrOptions++]), cps)) { // [HGM] options: add option feature
-	  snprintf(buf, MSG_SIZ, "rejected option %s\n", cps->option[--cps->nrOptions].name);
-	    SendToProgram(buf, cps);
-	    continue;
-	}
-	if(cps->nrOptions >= MAX_OPTIONS) {
-	    cps->nrOptions--;
-	    snprintf(buf, MSG_SIZ, _("%s engine has too many options\n"), _(cps->which));
-	    DisplayError(buf, 0);
-	}
-	continue;
+        /* Unknown feature, so complain about it, and otherwise ignore it. */
+        q = p;
+        while (*q && *q != '=') q++;
+        snprintf(buf, MSG_SIZ, "rejected %.*s\n", (int)(q-p), p);
+        SendToProgram(buf, cps);
+        p = q;
+        if (*p == '=') {
+            p++;
+            if (*p == '\"') {
+                p++;
+                while (*p && *p != '\"') p++;
+                if (*p == '\"') p++;
+            } else {
+                while (*p && *p != ' ') p++;
+            }
+        }
     }
-    /* End of additions by HGM */
-
-    /* unknown feature: complain and skip */
-    q = p;
-    while (*q && *q != '=') q++;
-    snprintf(buf, MSG_SIZ,"rejected %.*s\n", (int)(q-p), p);
-    SendToProgram(buf, cps);
-    p = q;
-    if (*p == '=') {
-      p++;
-      if (*p == '\"') {
-	p++;
-	while (*p && *p != '\"') p++;
-	if (*p == '\"') p++;
-      } else {
-	while (*p && *p != ' ') p++;
-      }
-    }
-  }
-
 }
 
 void
