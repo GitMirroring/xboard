@@ -788,11 +788,11 @@ ClearOptions (ChessProgramState *cps)
 }
 
 char *engineNames[] = {
-  /* TRANSLATORS: "first" is the first of possible two chess engines. It is inserted into strings
-     such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing */
+  /* TRANSLATORS: "first" is the first of possibly two chess engines.  It is inserted into strings
+     such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing. */
 N_("first"),
-  /* TRANSLATORS: "second" is the second of possible two chess engines. It is inserted into strings
-     such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing */
+  /* TRANSLATORS: "second" is the second of possibly two chess engines.  It is inserted into strings
+     such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing. */
 N_("second")
 };
 
@@ -3149,10 +3149,10 @@ read_from_ics (InputSourceRef isr, void *closure, char *data, int count, int err
 			} else {
 			    char tmp[MSG_SIZ];
 			    if(gameMode == IcsObserving) // restore original ICS messages
-			      /* TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers */
+			      /* TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers. */
 			      snprintf(tmp, MSG_SIZ, "%s kibitzes: %s", star_match[0], parse);
 			    else
-			    /* TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers */
+			    /* TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers. */
 			    snprintf(tmp, MSG_SIZ, _("your opponent kibitzes: %s"), parse);
 			    SendToPlayer(tmp, strlen(tmp));
 			}
@@ -10119,7 +10119,7 @@ FakeBookMove: // [HGM] book: we jump here to simulate machine moves after book h
 				fclose(f);
 			}
 			else
-			  /* TRANSLATORS: PV = principal variation, the variation the chess engine thinks is the best for everyone */
+			  /* TRANSLATORS: PV = principal variation, the variation the chess engine thinks is the best for everyone. */
 			  DisplayError(_("failed writing PV"), 0);
 		}
 

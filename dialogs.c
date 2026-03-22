@@ -403,7 +403,8 @@ static Option generalOptions[] = {
 { 0,  0, 0, NULL, (void*) &appData.autoCallFlag, "", NULL, CheckBox, N_("Auto Flag") },
 { 0,  0, 0, NULL, (void*) &appData.autoFlipView, "", NULL, CheckBox, N_("Auto Flip View") },
 { 0,  0, 0, NULL, (void*) &appData.blindfold, "", NULL, CheckBox, N_("Blindfold") },
-/* TRANSLATORS: the drop menu is used to drop a piece, e.g. during bughouse or editing a position */
+/* TRANSLATORS: The drop menu is used to drop a piece onto the board,
+   e.g., while playing bughouse chess or editing a position. */
 { 0,  0, 0, NULL, (void*) &appData.dropMenu, "", NULL, CheckBox, N_("Drop Menu") },
 { 0,  0, 0, NULL, (void*) &appData.variations, "", NULL, CheckBox, N_("Enable Variation Trees") },
 { 0,  0, 0, NULL, (void*) &appData.headers, "", NULL, CheckBox, N_("Headers in Engine Output Window") },
@@ -893,13 +894,13 @@ static Option boardOptions[] = {
 { 0,SAME_ROW, 0, NULL, NULL, NULL, NULL, Break, NULL },
 { 0,          0, 70, NULL, (void*) &appData.whitePieceColor, "", NULL, TextBox, N_("White Piece Color:") },
 { 1000, SAME_ROW, 0, NULL, (void*) &DefColor, NULL, (char**) "#FFFFCC", Button, "      " },
-/* TRANSLATORS: R = single letter for the color red */
+/* TRANSLATORS: The role of R here is to be a single letter that represents the colour red. */
 {    1, SAME_ROW, 0, NULL, (void*) &AdjustColor, NULL, NULL, Button, N_("R") },
-/* TRANSLATORS: G = single letter for the color green */
+/* TRANSLATORS: The role of G here is to be a single letter that represents the colour green. */
 {    2, SAME_ROW, 0, NULL, (void*) &AdjustColor, NULL, NULL, Button, N_("G") },
-/* TRANSLATORS: B = single letter for the color blue */
+/* TRANSLATORS: The role of B here is to be a single letter that represents the colour blue. */
 {    3, SAME_ROW, 0, NULL, (void*) &AdjustColor, NULL, NULL, Button, N_("B") },
-/* TRANSLATORS: D = single letter to make a color darker */
+/* TRANSLATORS: The role of D here is to be a single letter that represents making a colour darker. */
 {    4, SAME_ROW, 0, NULL, (void*) &AdjustColor, NULL, NULL, Button, N_("D") },
 { 0,          0, 70, NULL, (void*) &appData.blackPieceColor, "", NULL, TextBox, N_("Black Piece Color:") },
 { 1000, SAME_ROW, 0, NULL, (void*) &DefColor, NULL, (char**) "#202020", Button, "      " },
