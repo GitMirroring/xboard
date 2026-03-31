@@ -76,6 +76,8 @@
 #include "gettext.h"
 #include "draw.h"
 
+/* C doesn't guarantee that M_PI is defined anyway. */
+double const tau = 6.28318530717958647692528676655900577;
 
 #ifdef __EMX__
 #ifndef HAVE_USLEEP
@@ -615,27 +617,36 @@ void DrawSeekText(char *buf, int x, int y)
 
 void DrawSeekDot(int x, int y, int colorNr)
 {
-    cairo_t *cr = cairo_create (CsBoardWindow(currBoard));
+    cairo_t *cr;
     int square = colorNr & 0x80;
+
+    cr = cairo_create(CsBoardWindow(currBoard));
     colorNr &= 0x7F;
 
-    if(square)
-	cairo_rectangle (cr, x-squareSize/9, y-squareSize/9, 2*(squareSize/9), 2*(squareSize/9));
-    else
-	cairo_arc(cr, x, y, squareSize/9, 0.0, 2*M_PI);
+    if (square) {
+        cairo_rectangle(cr, x - squareSize / 9, y - squareSize / 9,
+         2 * (squareSize / 9), 2 * (squareSize / 9));
+    } else {
+        cairo_arc(cr, x, y, squareSize / 9, 0.0, tau);
+    }
 
     SetPen(cr, 2, "#000000", 0);
     cairo_stroke_preserve(cr);
     switch (colorNr) {
-      case 0: cairo_set_source_rgba(cr, 1.0, 0, 0,1.0);	break;
-      case 1: cairo_set_source_rgba (cr, 0.0, 0.7, 0.2, 1.0); break;
-      default: cairo_set_source_rgba (cr, 1.0, 1.0, 0.0, 1.0); break;
+      case 0:
+        cairo_set_source_rgba(cr, 1.0, 0, 0,1.0);
+        break;
+      case 1:
+        cairo_set_source_rgba(cr, 0.0, 0.7, 0.2, 1.0);
+        break;
+      default:
+        cairo_set_source_rgba(cr, 1.0, 1.0, 0.0, 1.0);
+        break;
     }
     cairo_fill(cr);
-
-    /* free memory */
-    cairo_destroy (cr);
-    GraphExpose(currBoard, x-squareSize/8, y-squareSize/8, 2*(squareSize/8), 2*(squareSize/8));
+    cairo_destroy(cr);
+    GraphExpose(currBoard, x - squareSize / 8, y - squareSize / 8,
+     2 * (squareSize / 8), 2 * (squareSize / 8));
 }
 
 void
@@ -827,20 +838,20 @@ static char *markerColor[8] = { "#FFFF00", "#FF0000", "#00FF00", "#0000FF", "#00
 void
 DoDrawDot (cairo_surface_t *cs, int marker, int x, int y, int r)
 {
-	cairo_t *cr;
+    cairo_t *cr;
 
-	cr = cairo_create(cs);
-	cairo_arc(cr, x+r/2, y+r/2, r/2, 0.0, 2*M_PI);
-	if(appData.monoMode) {
-	    SetPen(cr, 2, marker == 2 ? "#000000" : "#FFFFFF", 0);
-	    cairo_stroke_preserve(cr);
-	    SetPen(cr, 2, marker == 2 ? "#FFFFFF" : "#000000", 0);
-	} else {
-	    SetPen(cr, 2, markerColor[marker-1], 0);
-	}
-	cairo_fill(cr);
+    cr = cairo_create(cs);
+    cairo_arc(cr, x + r / 2, y + r / 2, r / 2, 0.0, tau);
+    if (appData.monoMode) {
+        SetPen(cr, 2, marker == 2 ? "#000000" : "#FFFFFF", 0);
+        cairo_stroke_preserve(cr);
+        SetPen(cr, 2, marker == 2 ? "#FFFFFF" : "#000000", 0);
+    } else {
+        SetPen(cr, 2, markerColor[marker-1], 0);
+    }
+    cairo_fill(cr);
 
-	cairo_destroy(cr);
+    cairo_destroy(cr);
 }
 
 void
