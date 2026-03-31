@@ -1,0 +1,10 @@
+# Generated in a clean workspace by autoreconf -i:
+compile
+config.guess
+config.rpath
+config.sub
+depcomp
+install-sh
+mdate-sh
+missing
+texinfo.tex
