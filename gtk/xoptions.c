@@ -1,7 +1,7 @@
 /*
  * xoptions.c -- Move list window, part of X front end for XBoard
  *
- * Copyright 2000, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Copyright 2000, 2009-2016, 2026 Free Software Foundation, Inc.
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.  *
  *
- *------------------------------------------------------------------------
+ * ------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
 // [HGM] this file is the counterpart of woptions.c, containing xboard popup menus
@@ -470,70 +470,85 @@ MenuSelect (gpointer addr) // callback for all combo items
 
 static GtkWidget *
 CreateMenuPopup (Option *opt, int n, int def)
-{   // fromList determines if the item texts are taken from a list of strings, or from a menu table
+{
     int i;
     GtkWidget *menu, *entry;
     MenuItem *mb = (MenuItem *) opt->choice;
 
     menu = gtk_menu_new();
-//    menu = XtCreatePopupShell(opt->name, simpleMenuWidgetClass, parent, NULL, 0);
-    for (i=0; 1; i++)
-      {
-	char *msg = mb[i].string;
-	if(!msg) break;
+    for (i = 0; ; i++) {
+        char *msg = mb[i].string;
+        if (!msg) break;
 #ifdef OSXAPP
-	if(!strcmp(msg, "Quit ")) continue;             // Quit item will appear automatically in App menu
-	if(!strcmp(msg, "About XBoard")) msg = "About"; // 'XBoard' will be appended automatically when moved to App menu 1st item
+        /* The Quit item will appear automatically in the App menu. */
+        if (!strcmp(msg, "Quit ")) continue;
+        /* On macOS, 'XBoard' is appended automatically whenever the user moves
+           to the first item of the App menu. */
+        if (!strcmp(msg, "About XBoard")) {
+            msg = "About";
+        }
 #endif
-        if(!strcmp(msg, "ICS Input Box")) { mb[i].handle = NULL; continue; } // suppress ICS Input Box in GTK
-	if(strcmp(msg, "----")) { //
-	  if(!(opt->min & NO_GETTEXT)) msg = _(msg);
-	  if(mb[i].handle) {
-	    entry = gtk_check_menu_item_new_with_label(msg); // should be used for items that can be checkmarked
-	    if(mb[i].handle == RADIO) gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(entry), True);
-	  } else
-	    entry = gtk_menu_item_new_with_label(msg);
-	  gtk_signal_connect_object (GTK_OBJECT (entry), "activate", GTK_SIGNAL_FUNC(MenuSelect), (gpointer) (intptr_t) ((n<<16)+i));
-	  g_signal_connect(entry, "button-release-event", G_CALLBACK (HelpEvent), (gpointer) (mb[i].proc ? mb[i].string : "Recently Used Engines"));
-	  if(mb[i].accel) {
-	    guint accelerator_key;
-	    GdkModifierType accelerator_mods;
+        if (!strcmp(msg, "ICS Input Box")) {
+            /* We suppress the ICS Input Box in GTK.  (Why?) */
+            mb[i].handle = NULL;
+            continue;
+        }
+        if (strcmp(msg, "----")) {
+            if (!(opt->min & NO_GETTEXT)) {
+                msg = _(msg);
+            }
+            if (mb[i].handle) {
+                entry = gtk_check_menu_item_new_with_label(msg);
+                if (mb[i].handle == RADIO) {
+                    gtk_check_menu_item_set_draw_as_radio(
+                     GTK_CHECK_MENU_ITEM(entry), True);
+                }
+            } else {
+                entry = gtk_menu_item_new_with_label(msg);
+            }
+            g_signal_connect_swapped(entry, "activate", G_CALLBACK(MenuSelect),
+             (gpointer) (intptr_t) ((n<<16)+i));
+            g_signal_connect(entry, "button-release-event",
+             G_CALLBACK(HelpEvent),
+             (gpointer)(mb[i].proc ? mb[i].string : "Recently Used Engines"));
+            if (mb[i].accel) {
+                guint accelerator_key;
+                GdkModifierType accelerator_mods;
 
-	    gtk_accelerator_parse(mb[i].accel, &accelerator_key, &accelerator_mods);
+                gtk_accelerator_parse(mb[i].accel, &accelerator_key, &accelerator_mods);
 #ifdef OSXAPP
-          if(accelerator_mods & GDK_CONTROL_MASK &&
-             accelerator_key != 'v' &&          // don't use Cmd+V as this is a OS text edit command
-             accelerator_key != 'c' &&           // and Cmd+C
-             accelerator_key != 'x' &&          // and CMD+X
-             accelerator_key != 'a'           // and CMD+A
-             ) {  // in OSX use Meta (Cmd) where Linux uses Ctrl
-              accelerator_mods &= ~GDK_CONTROL_MASK; // clear Ctrl flag
-              accelerator_mods |= GDK_META_MASK;     // set Meta flag
-		  } else if (accelerator_mods & GDK_CONTROL_MASK &&
-					 accelerator_key == 'v' ||
-					 accelerator_key == 'c' ||
-					 accelerator_key == 'x' ||
-					 accelerator_key == 'a'
-					 ) { // For these conflicting commands, lets make them alt-cmd
-			  accelerator_mods &= ~GDK_CONTROL_MASK; // clear Ctrl flag
-			  accelerator_mods |= GDK_META_MASK;
-			  accelerator_mods |= GDK_MOD1_MASK;
-		  } 
+                if (accelerator_mods & GDK_CONTROL_MASK
+                 /* For macOS, we don't use Cmd+V, Cmd-C, Cmd-X, or Cmd-A,
+                    because these are macOS text editing commands. */
+                 && accelerator_key != 'v' && accelerator_key != 'c'
+                 && accelerator_key != 'x' && accelerator_key != 'a') {
+                    /* In general, for macOS, we use Meta (Cmd) where Linux
+                       would use Ctrl instead. */
+                    accelerator_mods &= ~GDK_CONTROL_MASK; // clear Ctrl flag
+                    accelerator_mods |= GDK_META_MASK;     // set Meta flag
+                } else if (accelerator_mods & GDK_CONTROL_MASK
+                 /* For macOS, we use Alt-Cmd-[VCXA] for the commands that would
+                    have conflicted with the aforementioned macOS text editing
+                    commands. */
+                 && accelerator_key == 'v' || accelerator_key == 'c'
+                 || accelerator_key == 'x' || accelerator_key == 'a') {
+                    accelerator_mods &= ~GDK_CONTROL_MASK;
+                    accelerator_mods |= GDK_META_MASK;
+                    accelerator_mods |= GDK_MOD1_MASK;
+                }
 #endif
-	    gtk_widget_add_accelerator (GTK_WIDGET(entry), "activate",GtkAccelerators,
-					accelerator_key, accelerator_mods, GTK_ACCEL_VISIBLE);
-	  }
-	} else entry = gtk_separator_menu_item_new();
-	gtk_widget_show(entry);
-	gtk_menu_append(GTK_MENU (menu), entry);
-//CreateMenuItem(menu, opt->min & NO_GETTEXT ? msg : _(msg), (XtCallbackProc) ComboSelect, (n<<16)+i);
-	mb[i].handle = (void*) entry; // save item ID, for enabling / checkmarking
-//	if(i==def) {
-//	    XtSetArg(arg, XtNpopupOnEntry, entry);
-//	    XtSetValues(menu, &arg, 1);
-//	}
-      }
-      return menu;
+            gtk_widget_add_accelerator(GTK_WIDGET(entry), "activate",
+             GtkAccelerators, accelerator_key, accelerator_mods, GTK_ACCEL_VISIBLE);
+            }
+        } else {
+            entry = gtk_separator_menu_item_new();
+        }
+        gtk_widget_show(entry);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), entry);
+        /* Save the item ID, for enabling and checkmarking. */
+        mb[i].handle = (void*) entry;
+    }
+    return menu;
 }
 
 Option *icsBox; // kludge to distinguish type-in callback from input-box callback
@@ -546,12 +561,21 @@ CursorAtEnd (Option *opt)
 
 static gboolean
 ICSKeyEvent (int keyval)
-{   // TODO_GTK: arrow-handling should really be integrated in type-in proc, and this should be a backe-end OK handler
+{
+    /* TODO_GTK: Arrow-handling should really be integrated into
+       TypeInProc, and this should be a back-end OK handler. */
     switch(keyval) {
-      case GDK_Return: IcsKey(0); return TRUE;
-      case GDK_Up:     IcsKey(1); return TRUE;
-      case GDK_Down:  IcsKey(-1); return TRUE;
-      default: return FALSE;
+      case GDK_KEY_Return:
+        IcsKey(0);
+        return TRUE;
+      case GDK_KEY_Up:
+        IcsKey(1);
+        return TRUE;
+      case GDK_KEY_Down:
+        IcsKey(-1);
+        return TRUE;
+      default:
+        return FALSE;
     }
 }
 
@@ -559,35 +583,59 @@ int shiftState, controlState;
 
 static gboolean
 TypeInProc (GtkWidget *widget, GdkEventKey *event, gpointer gdata)
-{   // This callback catches key presses on text-entries, and uses <Enter> and <Esc> as synonyms for dialog OK or Cancel
-    // *** kludge alert *** If a dialog does want some other action, like sending the line typed in the text-entry to an ICS,
-    // it should define an OK handler that does so, and returns FALSE to suppress the popdown.
+{
+    /*
+       This callback catches key presses on text-entries, and uses
+       <Enter> and <Esc> as synonyms for dialog OK or Cancel.
+
+       Kludge alert: if a dialog does want some other action, like
+       sending the line typed in the text-entry to an ICS, then it
+       should define an OK handler that does so, and return FALSE to
+       suppress the pop-down.
+    */
     int n = (intptr_t) gdata;
     int dlg = n >> 16;
     Option *opt;
     n &= 0xFFFF;
     opt = &dialogOptions[dlg][n];
 
-    if(opt == icsBox) return ICSKeyEvent(event->keyval); // Intercept ICS Input Box, which needs special treatment
+    /* Intercept the ICS Input Box, which needs special treatment. */
+    if (opt == icsBox) {
+        return ICSKeyEvent(event->keyval);
+    }
 
     shiftState = event->state & GDK_SHIFT_MASK;
     controlState = event->state & GDK_CONTROL_MASK;
     switch(event->keyval) {
-      case 'e':       return (controlState && IcsHist( 5, opt, dlg));
-      case 'h':       return (controlState && IcsHist( 8, opt, dlg));
-      case 'n':       return (controlState && IcsHist(14, opt, dlg));
-      case 'o':       return (controlState && IcsHist(15, opt, dlg));
-      case GDK_Tab:   IcsHist(10, opt, dlg); break;
-      case GDK_Up:     IcsHist(1, opt, dlg); break;
-      case GDK_Down:  IcsHist(-1, opt, dlg); break;
-      case GDK_Return:
-	if(GenericReadout(dialogOptions[dlg], -1)) PopDown(dlg);
-	break;
-      case GDK_Escape:
-	if(!IcsHist(33, opt, dlg)) PopDown(dlg);
-	break;
+      case 'e':
+        return (controlState && IcsHist( 5, opt, dlg));
+      case 'h':
+        return (controlState && IcsHist( 8, opt, dlg));
+      case 'n':
+        return (controlState && IcsHist(14, opt, dlg));
+      case 'o':
+        return (controlState && IcsHist(15, opt, dlg));
+      case GDK_KEY_Tab:
+        IcsHist(10, opt, dlg);
+        break;
+      case GDK_KEY_Up:
+        IcsHist(1, opt, dlg);
+        break;
+      case GDK_KEY_Down:
+        IcsHist(-1, opt, dlg);
+        break;
+      case GDK_KEY_Return:
+        if (GenericReadout(dialogOptions[dlg], -1)) {
+            PopDown(dlg);
+        }
+        break;
+      case GDK_KEY_Escape:
+        if (!IcsHist(33, opt, dlg)) {
+            PopDown(dlg);
+        }
+        break;
       default:
-	return FALSE;
+        return FALSE;
     }
     return TRUE;
 }
@@ -677,30 +725,56 @@ ShiftKeys (void)
 static gboolean
 GameListEvent(GtkWidget *widget, GdkEvent *event, gpointer gdata)
 {
-    int n = (intptr_t) gdata;
+    int ctrl;
+    int n;
 
-    if(n == 4) {
-	if(((GdkEventKey *) event)->keyval != GDK_Return) return FALSE;
-	SetFilter();
-	return TRUE;
+    n = (intptr_t)gdata;
+    if (n == 4) {
+        if (((GdkEventKey *) event)->keyval != GDK_KEY_Return) {
+            return FALSE;
+        }
+        SetFilter();
+        return TRUE;
     }
 
-    if(event->type == GDK_KEY_PRESS) {
-	int ctrl = (((GdkEventKey *) event)->state & GDK_CONTROL_MASK) != 0;
-	switch(((GdkEventKey *) event)->keyval) {
-	  case GDK_Up: GameListClicks(-1 - 2*ctrl); return TRUE;
-	  case GDK_Left: GameListClicks(-1); return TRUE;
-	  case GDK_Down: GameListClicks(1 + 2*ctrl); return TRUE;
-	  case GDK_Right: GameListClicks(1); return TRUE;
-	  case GDK_Prior: GameListClicks(-4); return TRUE;
-	  case GDK_Next: GameListClicks(4); return TRUE;
-	  case GDK_Home: GameListClicks(-2); return TRUE;
-	  case GDK_End: GameListClicks(2); return TRUE;
-	  case GDK_Return: GameListClicks(0); return TRUE;
-	  default: return FALSE;
-	}
+    if (event->type == GDK_KEY_PRESS) {
+        ctrl = (((GdkEventKey *) event)->state & GDK_CONTROL_MASK) != 0;
+        switch (((GdkEventKey *) event)->keyval) {
+          case GDK_KEY_Up:
+            GameListClicks(-1 - 2 * ctrl);
+            return TRUE;
+          case GDK_KEY_Left:
+            GameListClicks(-1);
+            return TRUE;
+          case GDK_KEY_Down:
+            GameListClicks(1 + 2 * ctrl);
+            return TRUE;
+          case GDK_KEY_Right:
+            GameListClicks(1);
+            return TRUE;
+          case GDK_KEY_Prior:
+            GameListClicks(-4);
+            return TRUE;
+          case GDK_KEY_Next:
+            GameListClicks(4);
+            return TRUE;
+          case GDK_KEY_Home:
+            GameListClicks(-2);
+            return TRUE;
+          case GDK_KEY_End:
+            GameListClicks(2);
+            return TRUE;
+          case GDK_KEY_Return:
+            GameListClicks(0);
+            return TRUE;
+          default:
+            return FALSE;
+        }
     }
-    if(event->type != GDK_2BUTTON_PRESS || ((GdkEventButton *) event)->button != 1) return FALSE;
+    if (event->type != GDK_2BUTTON_PRESS
+     || ((GdkEventButton *) event)->button != 1) {
+        return FALSE;
+    }
     GameListClicks(0);
     return TRUE;
 }
@@ -951,11 +1025,17 @@ static void
 ExposeDraw (Option *graph, GdkEventExpose *eevent)
 {
     int w = eevent->area.width;
-    cairo_t *cr;
-    if(eevent->area.x + w > graph->max) w--; // cut off fudge pixel
-    cr = gdk_cairo_create(((GtkWidget *) (graph->handle))->window);
+    GdkWindow * gdk_window;
+    cairo_t * cr;
+
+    if (eevent->area.x + w > graph->max) {
+        /* Cut off the width fudge pixel. */
+        w--;
+    }
+    gdk_window = gtk_widget_get_window(GTK_WIDGET(graph->handle));
+    cr = gdk_cairo_create(gdk_window);
     cairo_set_source_surface(cr, (cairo_surface_t *) graph->choice, 0, 0);
-//cairo_set_source_rgb(cr, 1, 0, 0);
+    /* cairo_set_source_rgb(cr, 1, 0, 0); */
     cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
     cairo_rectangle(cr, eevent->area.x, eevent->area.y, w, eevent->area.height);
     cairo_fill(cr);
@@ -1379,7 +1459,7 @@ if(appData.debugMode) printf("n=%d, h=%d, w=%d\n",n,height,width);
       {
 	dialog = gtk_dialog_new_with_buttons( title,
 					      GTK_WINDOW(shells[parent]),
-					      GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR |
+					      GTK_DIALOG_DESTROY_WITH_PARENT |
 					      (modal ? GTK_DIALOG_MODAL : 0),
 					      GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 					      GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
@@ -1636,11 +1716,12 @@ if(appData.debugMode) printf("n=%d, h=%d, w=%d\n",n,height,width);
 	    gtk_widget_set_sensitive(label, TRUE);
             gtk_table_attach(GTK_TABLE(table), label, left, left+1, top, top+1, GTK_FILL, GTK_FILL, 2, 1);
 
-            combobox = gtk_combo_box_new_text();
+            combobox = gtk_combo_box_text_new();
 
-            for(j=0;;j++) {
-               if (  ((char **) option[i].textValue)[j] == NULL) break;
-               gtk_combo_box_append_text(GTK_COMBO_BOX(combobox), ((char **) option[i].choice)[j]);
+            for (j = 0; ; j++) {
+               if (((char **)option[i].textValue)[j] == NULL) break;
+               gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox),
+                ((char **)option[i].choice)[j]);
             }
 
             if(currentCps)
@@ -1742,8 +1823,8 @@ if(appData.debugMode) printf("n=%d, h=%d, w=%d\n",n,height,width);
 		(menuButton = gtk_menu_item_new_with_mnemonic(msg));
 	    gtk_widget_show(menuButton);
 	    option[i].textValue = (char*) (menu = CreateMenuPopup(option + i, i + 256*dlgNr, -1));
-	    gtk_menu_item_set_submenu(GTK_MENU_ITEM (menuButton), menu);
-	    gtk_menu_bar_append (GTK_MENU_BAR (menuBar), menuButton);
+	    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuButton), menu);
+	    gtk_menu_shell_append(GTK_MENU_SHELL(menuBar), menuButton);
 	    break;
 	  case BarBegin:
 	    menuBar = gtk_menu_bar_new ();

@@ -1501,8 +1501,9 @@ MarkMenuItem (char *menuRef, int state)
 {
     MenuItem *item = MenuNameToItem(menuRef);
 
-    if(item && item->handle) {
-        ((GtkCheckMenuItem *) (item->handle))->active = state;
+    if (item && item->handle) {
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->handle),
+         state);
     }
     SYNC_MENUBAR;
 }
@@ -1543,7 +1544,7 @@ KeyPressProc(GtkWindow *window, GdkEventKey *eventkey, gpointer data)
 #ifdef TODO_GTK
     /* check for other key values */
     switch(eventkey->keyval) {
-        case GDK_question:
+        case GDK_KEY_question:
 	  AboutGameEvent();
 	  break;
         default:
