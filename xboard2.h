@@ -20,13 +20,13 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-void SendToProgram (char *message, ChessProgramState *cps);
-void SendToICS (char *buf);
-void InitDrawingSizes (int i, int j);
+void SendToProgram(char * message, ChessProgramState * cps);
+void SendToICS(char * buf);
+void InitDrawingSizes(int i, int j);
 
 extern int searchTime;
 extern int squareSize, lineGap, defaultLineGap;
 extern int startedFromPositionFile;
-extern char *icsTextMenuString;
+extern char * icsTextMenuString;
 extern int hi2X, hi2Y;
 extern char dataDir[];

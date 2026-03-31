@@ -39,35 +39,29 @@
 #include "frontend.h"
 #include "winboard.h"
 
-VOID RestoreWindowPlacement( HWND hWnd, WindowPlacement * wp )
-{
-    if( wp->x != CW_USEDEFAULT || 
-        wp->y != CW_USEDEFAULT ||
-        wp->width != CW_USEDEFAULT || 
-        wp->height != CW_USEDEFAULT )
-    {
-	WINDOWPLACEMENT stWP;
+VOID RestoreWindowPlacement(HWND hWnd, WindowPlacement * wp) {
+    if (wp->x != CW_USEDEFAULT || wp->y != CW_USEDEFAULT || wp->width != CW_USEDEFAULT || wp->height != CW_USEDEFAULT) {
+        WINDOWPLACEMENT stWP;
 
-        ZeroMemory( &stWP, sizeof(stWP) );
+        ZeroMemory(&stWP, sizeof(stWP));
 
-	EnsureOnScreen( &wp->x, &wp->y, 0, 0);
+        EnsureOnScreen(&wp->x, &wp->y, 0, 0);
 
-	stWP.length = sizeof(stWP);
-	stWP.flags = 0;
-	stWP.showCmd = SW_SHOW;
-	stWP.ptMaxPosition.x = 0;
+        stWP.length = sizeof(stWP);
+        stWP.flags = 0;
+        stWP.showCmd = SW_SHOW;
+        stWP.ptMaxPosition.x = 0;
         stWP.ptMaxPosition.y = 0;
-	stWP.rcNormalPosition.left = wp->x;
-	stWP.rcNormalPosition.right = wp->x + wp->width;
-	stWP.rcNormalPosition.top = wp->y;
-	stWP.rcNormalPosition.bottom = wp->y + wp->height;
+        stWP.rcNormalPosition.left = wp->x;
+        stWP.rcNormalPosition.right = wp->x + wp->width;
+        stWP.rcNormalPosition.top = wp->y;
+        stWP.rcNormalPosition.bottom = wp->y + wp->height;
 
-	SetWindowPlacement(hWnd, &stWP);
+        SetWindowPlacement(hWnd, &stWP);
     }
 }
 
-VOID InitWindowPlacement( WindowPlacement * wp )
-{
+VOID InitWindowPlacement(WindowPlacement * wp) {
     wp->visible = TRUE;
     wp->x = CW_USEDEFAULT;
     wp->y = CW_USEDEFAULT;
@@ -75,40 +69,37 @@ VOID InitWindowPlacement( WindowPlacement * wp )
     wp->height = CW_USEDEFAULT;
 }
 
-static BOOL IsAttachDistance( int a, int b )
-{
+static BOOL IsAttachDistance(int a, int b) {
     BOOL result = FALSE;
 
-    if( a == b ) {
+    if (a == b) {
         result = TRUE;
     }
 
     return result;
 }
 
-static BOOL IsDefaultPlacement( WindowPlacement * wp )
-{
+static BOOL IsDefaultPlacement(WindowPlacement * wp) {
     BOOL result = FALSE;
 
-    if( wp->x == CW_USEDEFAULT || wp->y == CW_USEDEFAULT || wp->width == CW_USEDEFAULT || wp->height == CW_USEDEFAULT ) {
+    if (wp->x == CW_USEDEFAULT || wp->y == CW_USEDEFAULT || wp->width == CW_USEDEFAULT || wp->height == CW_USEDEFAULT) {
         result = TRUE;
     }
 
     return result;
 }
 
-BOOL GetActualPlacement( HWND hWnd, WindowPlacement * wp )
-{
+BOOL GetActualPlacement(HWND hWnd, WindowPlacement * wp) {
     BOOL result = FALSE;
 
-    if( hWnd != NULL ) {
+    if (hWnd != NULL) {
         WINDOWPLACEMENT stWP;
 
-        ZeroMemory( &stWP, sizeof(stWP) );
+        ZeroMemory(&stWP, sizeof(stWP));
 
         stWP.length = sizeof(stWP);
 
-        GetWindowPlacement( hWnd, &stWP );
+        GetWindowPlacement(hWnd, &stWP);
 
         wp->x = stWP.rcNormalPosition.left;
         wp->y = stWP.rcNormalPosition.top;
@@ -121,16 +112,12 @@ BOOL GetActualPlacement( HWND hWnd, WindowPlacement * wp )
     return result;
 }
 
-static BOOL IsAttachedByWindowPlacement( LPRECT lprcMain, WindowPlacement * wp )
-{
+static BOOL IsAttachedByWindowPlacement(LPRECT lprcMain, WindowPlacement * wp) {
     BOOL result = FALSE;
 
-    if( ! IsDefaultPlacement(wp) ) {
-        if( IsAttachDistance( lprcMain->right, wp->x ) ||
-            IsAttachDistance( lprcMain->bottom, wp->y ) ||
-            IsAttachDistance( lprcMain->left, (wp->x + wp->width) ) ||
-            IsAttachDistance( lprcMain->top, (wp->y + wp->height) ) )
-        {
+    if (!IsDefaultPlacement(wp)) {
+        if (IsAttachDistance(lprcMain->right, wp->x) || IsAttachDistance(lprcMain->bottom, wp->y) ||
+         IsAttachDistance(lprcMain->left, (wp->x + wp->width)) || IsAttachDistance(lprcMain->top, (wp->y + wp->height))) {
             result = TRUE;
         }
     }
@@ -138,12 +125,11 @@ static BOOL IsAttachedByWindowPlacement( LPRECT lprcMain, WindowPlacement * wp )
     return result;
 }
 
-VOID ReattachAfterMove( LPRECT lprcOldPos, int new_x, int new_y, HWND hWndChild, WindowPlacement * pwpChild )
-{
-    if( ! IsDefaultPlacement( pwpChild ) ) {
-        GetActualPlacement( hWndChild, pwpChild );
+VOID ReattachAfterMove(LPRECT lprcOldPos, int new_x, int new_y, HWND hWndChild, WindowPlacement * pwpChild) {
+    if (!IsDefaultPlacement(pwpChild)) {
+        GetActualPlacement(hWndChild, pwpChild);
 
-        if( IsAttachedByWindowPlacement( lprcOldPos, pwpChild ) ) {
+        if (IsAttachedByWindowPlacement(lprcOldPos, pwpChild)) {
             /* Get position delta */
             int delta_x = pwpChild->x - lprcOldPos->left;
             int delta_y = pwpChild->y - lprcOldPos->top;
@@ -153,48 +139,55 @@ VOID ReattachAfterMove( LPRECT lprcOldPos, int new_x, int new_y, HWND hWndChild,
             pwpChild->y = new_y + delta_y;
 
             /* Move window */
-            if( hWndChild != NULL ) {
-                SetWindowPos( hWndChild, HWND_TOP,
-                    pwpChild->x, pwpChild->y,
-                    0, 0,
-                    SWP_NOZORDER | SWP_NOSIZE );
+            if (hWndChild != NULL) {
+                SetWindowPos(hWndChild, HWND_TOP, pwpChild->x, pwpChild->y, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
             }
         }
     }
 }
 
-extern FILE *debugFP;
-VOID ReattachAfterSize( LPRECT lprcOldPos, int new_w, int new_h, HWND hWndChild, WindowPlacement * pwpChild )
-{
-    if( ! IsDefaultPlacement( pwpChild ) ) {
-        GetActualPlacement( hWndChild, pwpChild );
+extern FILE * debugFP;
+VOID ReattachAfterSize(LPRECT lprcOldPos, int new_w, int new_h, HWND hWndChild, WindowPlacement * pwpChild) {
+    if (!IsDefaultPlacement(pwpChild)) {
+        GetActualPlacement(hWndChild, pwpChild);
 
-        if( IsAttachedByWindowPlacement( lprcOldPos, pwpChild ) ) {
+        if (IsAttachedByWindowPlacement(lprcOldPos, pwpChild)) {
             /* Get delta of lower right corner */
-            int delta_x = new_w - (lprcOldPos->right  - lprcOldPos->left);
+            int delta_x = new_w - (lprcOldPos->right - lprcOldPos->left);
             int delta_y = new_h - (lprcOldPos->bottom - lprcOldPos->top);
 
             /* Adjust size & placement */
-            if(pwpChild->x + pwpChild->width  >= lprcOldPos->right &&
-              (pwpChild->x + pwpChild->width  < screenGeometry.right - 5 || delta_x > 0) ) // keep right edge glued to display edge if touching
-		pwpChild->width += delta_x;
-            if(pwpChild->x + pwpChild->width  >= screenGeometry.right  ) // don't move right edge off screen
-		pwpChild->width = screenGeometry.right - pwpChild->x;
-            if(pwpChild->y + pwpChild->height >= lprcOldPos->bottom &&
-              (pwpChild->y + pwpChild->height < screenGeometry.bottom - 35 || delta_y > 0) ) // keep bottom edge glued to display edge if touching
-		pwpChild->height += delta_y;
-            if(pwpChild->y + pwpChild->height >= screenGeometry.bottom - 30 ) // don't move bottom edge off screen
-		pwpChild->height = screenGeometry.bottom - 30 - pwpChild->y;
-            if(pwpChild->x >= lprcOldPos->right)  pwpChild->width  -= delta_x, pwpChild->x += delta_x;
-            if(pwpChild->y >= lprcOldPos->bottom) pwpChild->height -= delta_y, pwpChild->y += delta_y;
-            if(pwpChild->width  < 30) pwpChild->width = 30;  // force minimum width
-            if(pwpChild->height < 50) pwpChild->height = 50; // force minimum height
+            if (pwpChild->x + pwpChild->width >= lprcOldPos->right &&
+             (pwpChild->x + pwpChild->width < screenGeometry.right - 5 ||
+              delta_x > 0)) {  // keep right edge glued to display edge if touching
+                pwpChild->width += delta_x;
+            }
+            if (pwpChild->x + pwpChild->width >= screenGeometry.right) {  // don't move right edge off screen
+                pwpChild->width = screenGeometry.right - pwpChild->x;
+            }
+            if (pwpChild->y + pwpChild->height >= lprcOldPos->bottom &&
+             (pwpChild->y + pwpChild->height < screenGeometry.bottom - 35 ||
+              delta_y > 0)) {  // keep bottom edge glued to display edge if touching
+                pwpChild->height += delta_y;
+            }
+            if (pwpChild->y + pwpChild->height >= screenGeometry.bottom - 30) {  // don't move bottom edge off screen
+                pwpChild->height = screenGeometry.bottom - 30 - pwpChild->y;
+            }
+            if (pwpChild->x >= lprcOldPos->right) {
+                pwpChild->width -= delta_x, pwpChild->x += delta_x;
+            }
+            if (pwpChild->y >= lprcOldPos->bottom) {
+                pwpChild->height -= delta_y, pwpChild->y += delta_y;
+            }
+            if (pwpChild->width < 30) {
+                pwpChild->width = 30;  // force minimum width
+            }
+            if (pwpChild->height < 50) {
+                pwpChild->height = 50;  // force minimum height
+            }
             /* Move window */
-            if( hWndChild != NULL ) {
-                SetWindowPos( hWndChild, HWND_TOP,
-                    pwpChild->x, pwpChild->y,
-                    pwpChild->width, pwpChild->height,
-                    SWP_NOZORDER );
+            if (hWndChild != NULL) {
+                SetWindowPos(hWndChild, HWND_TOP, pwpChild->x, pwpChild->y, pwpChild->width, pwpChild->height, SWP_NOZORDER);
             }
         }
     }

@@ -42,117 +42,117 @@
 #include "evalgraph.h"
 #include "wsnap.h"
 
-#define WM_REFRESH_GRAPH    (WM_USER + 1)
+#define WM_REFRESH_GRAPH (WM_USER + 1)
 
 /* Module globals */
 static BOOLEAN evalGraphDialogUp;
 
-static COLORREF crWhite = RGB( 0xFF, 0xFF, 0xB0 );
-static COLORREF crBlack = RGB( 0xAD, 0x5D, 0x3D );
+static COLORREF crWhite = RGB(0xff, 0xff, 0xb0);
+static COLORREF crBlack = RGB(0xad, 0x5d, 0x3d);
 
 static HDC hdcPB = NULL;
 static HBITMAP hbmPB = NULL;
-static HPEN pens[PEN_ANY+1]; // [HGM] put all pens in one array
-static HBRUSH hbrHist[3] = { NULL, NULL, NULL };
+static HPEN pens[PEN_ANY + 1];  // [HGM] put all pens in one array
+static HBRUSH hbrHist[3] = {NULL, NULL, NULL};
 
-Boolean EvalGraphIsUp()
-{
-    return evalGraphDialogUp;
-}
+Boolean EvalGraphIsUp() { return evalGraphDialogUp; }
 
-// [HGM] front-end, added as wrapper to avoid use of LineTo and MoveToEx in other routines (so they can be back-end) 
-void DrawSegment( int x, int y, int *lastX, int *lastY, int penType )
-{
+// [HGM] front-end, added as wrapper to avoid use of LineTo and MoveToEx in other routines (so they can be back-end)
+void DrawSegment(int x, int y, int * lastX, int * lastY, int penType) {
     POINT stPt;
-    if(penType == PEN_NONE) MoveToEx( hdcPB, x, y, &stPt ); else {
-	HPEN hp = SelectObject( hdcPB, pens[penType] );
-	LineTo( hdcPB, x, y );
-	SelectObject( hdcPB, hp );
+    if (penType == PEN_NONE) {
+        MoveToEx(hdcPB, x, y, &stPt);
+    } else {
+        HPEN hp = SelectObject(hdcPB, pens[penType]);
+        LineTo(hdcPB, x, y);
+        SelectObject(hdcPB, hp);
     }
-    if(lastX != NULL) { *lastX = stPt.x; *lastY = stPt.y; }
+    if (lastX != NULL) {
+        *lastX = stPt.x;
+        *lastY = stPt.y;
+    }
 }
 
 // front-end wrapper for drawing functions to do rectangles
-void DrawRectangle( int left, int top, int right, int bottom, int side, int style )
-{
-    HPEN hp = SelectObject( hdcPB, pens[PEN_BLACK] );
+void DrawRectangle(int left, int top, int right, int bottom, int side, int style) {
+    HPEN hp = SelectObject(hdcPB, pens[PEN_BLACK]);
     RECT rc;
 
-    rc.top = top; rc.left = left; rc.bottom = bottom; rc.right = right;
-    if(style == FILLED)
-        FillRect( hdcPB, &rc, hbrHist[side] );
-    else {
-        SelectObject( hdcPB, hbrHist[side] );
-        Rectangle( hdcPB, left, top, right, bottom );
+    rc.top = top;
+    rc.left = left;
+    rc.bottom = bottom;
+    rc.right = right;
+    if (style == FILLED) {
+        FillRect(hdcPB, &rc, hbrHist[side]);
+    } else {
+        SelectObject(hdcPB, hbrHist[side]);
+        Rectangle(hdcPB, left, top, right, bottom);
     }
-    SelectObject( hdcPB, hp );
+    SelectObject(hdcPB, hp);
 }
 
 // front-end wrapper for putting text in graph
-void DrawEvalText(char *buf, int cbBuf, int y)
-{
-        SIZE stSize;
-	SetBkMode( hdcPB, TRANSPARENT );
-        GetTextExtentPoint32( hdcPB, buf, cbBuf, &stSize );
-        TextOut( hdcPB, MarginX - stSize.cx - 2, y - stSize.cy / 2, buf, cbBuf );
+void DrawEvalText(char * buf, int cbBuf, int y) {
+    SIZE stSize;
+    SetBkMode(hdcPB, TRANSPARENT);
+    GetTextExtentPoint32(hdcPB, buf, cbBuf, &stSize);
+    TextOut(hdcPB, MarginX - stSize.cx - 2, y - stSize.cy / 2, buf, cbBuf);
 }
 
 // front-end
-static HBRUSH CreateBrush( UINT style, COLORREF color )
-{
+static HBRUSH CreateBrush(UINT style, COLORREF color) {
     LOGBRUSH stLB;
 
     stLB.lbStyle = style;
     stLB.lbColor = color;
     stLB.lbHatch = 0;
 
-    return CreateBrushIndirect( &stLB );
+    return CreateBrushIndirect(&stLB);
 }
 
 // front-end. Create pens, device context and buffer bitmap for global use, copy result to display
 // The back-end part n the middle has been taken out and moed to PainEvalGraph()
-static VOID DisplayEvalGraph( HWND hWnd, HDC hDC )
-{
+static VOID DisplayEvalGraph(HWND hWnd, HDC hDC) {
     RECT rcClient;
     int width;
     int height;
 
     /* Get client area */
-    GetClientRect( hWnd, &rcClient );
+    GetClientRect(hWnd, &rcClient);
 
     width = rcClient.right - rcClient.left;
     height = rcClient.bottom - rcClient.top;
 
     /* Create or recreate paint box if needed */
-    if( hbmPB == NULL || width != nWidthPB || height != nHeightPB ) {
-        if( pens[PEN_DOTTED] == NULL ) {
-	    pens[PEN_BLACK]      = GetStockObject(BLACK_PEN);
-            pens[PEN_DOTTED]     = CreatePen( PS_DOT, 0, RGB(0xA0,0xA0,0xA0) );
-            pens[PEN_BLUEDOTTED] = CreatePen( PS_DOT, 0, RGB(0x00,0x00,0xFF) );
-            pens[PEN_BOLDWHITE]  = CreatePen( PS_SOLID, 2, crWhite );
-            pens[PEN_BOLDBLACK]  = CreatePen( PS_SOLID, 2, crBlack );
-            hbrHist[0] = CreateBrush( BS_SOLID, crWhite );
-            hbrHist[1] = CreateBrush( BS_SOLID, crBlack );
-            hbrHist[2] = CreateBrush( BS_SOLID, GetSysColor( COLOR_3DFACE ) ); // background
+    if (hbmPB == NULL || width != nWidthPB || height != nHeightPB) {
+        if (pens[PEN_DOTTED] == NULL) {
+            pens[PEN_BLACK] = GetStockObject(BLACK_PEN);
+            pens[PEN_DOTTED] = CreatePen(PS_DOT, 0, RGB(0xa0, 0xa0, 0xa0));
+            pens[PEN_BLUEDOTTED] = CreatePen(PS_DOT, 0, RGB(0x00, 0x00, 0xff));
+            pens[PEN_BOLDWHITE] = CreatePen(PS_SOLID, 2, crWhite);
+            pens[PEN_BOLDBLACK] = CreatePen(PS_SOLID, 2, crBlack);
+            hbrHist[0] = CreateBrush(BS_SOLID, crWhite);
+            hbrHist[1] = CreateBrush(BS_SOLID, crBlack);
+            hbrHist[2] = CreateBrush(BS_SOLID, GetSysColor(COLOR_3DFACE));  // background
         }
 
-        if( hdcPB != NULL ) {
-            DeleteDC( hdcPB );
+        if (hdcPB != NULL) {
+            DeleteDC(hdcPB);
             hdcPB = NULL;
         }
 
-        if( hbmPB != NULL ) {
-            DeleteObject( hbmPB );
+        if (hbmPB != NULL) {
+            DeleteObject(hbmPB);
             hbmPB = NULL;
         }
 
-        hdcPB = CreateCompatibleDC( hDC );
+        hdcPB = CreateCompatibleDC(hDC);
 
         nWidthPB = width;
         nHeightPB = height;
-        hbmPB = CreateCompatibleBitmap( hDC, nWidthPB, nHeightPB );
+        hbmPB = CreateCompatibleBitmap(hDC, nWidthPB, nHeightPB);
 
-        SelectObject( hdcPB, hbmPB );
+        SelectObject(hdcPB, hbmPB);
     }
 
     // back-end painting; calls back front-end primitives for lines, rectangles and text
@@ -160,14 +160,13 @@ static VOID DisplayEvalGraph( HWND hWnd, HDC hDC )
     SetWindowText(hWnd, MakeEvalTitle(differentialView ? T_("Blunder Graph") : T_("Evaluation Graph")));
 
     /* Copy bitmap into destination DC */
-    BitBlt( hDC, 0, 0, nWidthPB, nHeightPB, hdcPB, 0, 0, SRCCOPY );
+    BitBlt(hDC, 0, 0, nWidthPB, nHeightPB, hdcPB, 0, 0, SRCCOPY);
 }
 
 // Note: Once the eval graph is opened, this window-proc lives forever; een closing the
 // eval-graph window merely hides it. On opening we re-initialize it, though, so it could
 // as well hae been destroyed. While it is open it processes the REFRESH_GRAPH commands.
-LRESULT CALLBACK EvalGraphProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
-{
+LRESULT CALLBACK EvalGraphProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     static SnapData sd;
 
     PAINTSTRUCT stPS;
@@ -176,10 +175,10 @@ LRESULT CALLBACK EvalGraphProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
     switch (message) {
     case WM_INITDIALOG:
         Translate(hDlg, DLG_EvalGraph);
-        if( evalGraphDialog == NULL ) {
+        if (evalGraphDialog == NULL) {
             evalGraphDialog = hDlg;
 
-            RestoreWindowPlacement( hDlg, &wpEvalGraph ); /* Restore window placement */
+            RestoreWindowPlacement(hDlg, &wpEvalGraph); /* Restore window placement */
         }
 
         return FALSE;
@@ -187,15 +186,15 @@ LRESULT CALLBACK EvalGraphProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
         case IDOK:
-          EndDialog(hDlg, TRUE);
-          return TRUE;
+            EndDialog(hDlg, TRUE);
+            return TRUE;
 
         case IDCANCEL:
-          EndDialog(hDlg, FALSE);
-          return TRUE;
+            EndDialog(hDlg, FALSE);
+            return TRUE;
 
         default:
-          break;
+            break;
         }
 
         break;
@@ -204,46 +203,48 @@ LRESULT CALLBACK EvalGraphProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
         return TRUE;
 
     case WM_PAINT:
-        hDC = BeginPaint( hDlg, &stPS );
-        DisplayEvalGraph( hDlg, hDC );
-        EndPaint( hDlg, &stPS );
+        hDC = BeginPaint(hDlg, &stPS);
+        DisplayEvalGraph(hDlg, hDC);
+        EndPaint(hDlg, &stPS);
         break;
 
     case WM_MOUSEWHEEL:
-        if((short)HIWORD(wParam) < 0) appData.zoom++;
-        if((short)HIWORD(wParam) > 0 && appData.zoom > 1)  appData.zoom--;
+        if ((short)HIWORD(wParam) < 0) {
+            appData.zoom++;
+        }
+        if ((short)HIWORD(wParam) > 0 && appData.zoom > 1) {
+            appData.zoom--;
+        }
         goto paint;
     case WM_RBUTTONDOWN:
         differentialView = !differentialView;
     case WM_REFRESH_GRAPH:
-    paint:
-        hDC = GetDC( hDlg );
-        DisplayEvalGraph( hDlg, hDC );
-        ReleaseDC( hDlg, hDC );
+paint:
+        hDC = GetDC(hDlg);
+        DisplayEvalGraph(hDlg, hDC);
+        ReleaseDC(hDlg, hDC);
         break;
 
     case WM_LBUTTONDOWN:
-        if( wParam == 0 || wParam == MK_LBUTTON ) {
-            int index = GetMoveIndexFromPoint( LOWORD(lParam), HIWORD(lParam) );
+        if (wParam == 0 || wParam == MK_LBUTTON) {
+            int index = GetMoveIndexFromPoint(LOWORD(lParam), HIWORD(lParam));
 
-            if( index >= 0 && index < currLast ) {
-                ToNrEvent( index + 1 );
+            if (index >= 0 && index < currLast) {
+                ToNrEvent(index + 1);
             }
         }
         return TRUE;
 
     case WM_SIZE:
-        InvalidateRect( hDlg, NULL, FALSE );
+        InvalidateRect(hDlg, NULL, FALSE);
         break;
 
-    case WM_GETMINMAXINFO:
-        {
-            MINMAXINFO * mmi = (MINMAXINFO *) lParam;
-        
-            mmi->ptMinTrackSize.x = 100;
-            mmi->ptMinTrackSize.y = 100;
-        }
-        break;
+    case WM_GETMINMAXINFO: {
+        MINMAXINFO * mmi = (MINMAXINFO *)lParam;
+
+        mmi->ptMinTrackSize.x = 100;
+        mmi->ptMinTrackSize.y = 100;
+    } break;
 
     /* Support for captionless window */
     case WM_CLOSE:
@@ -251,67 +252,63 @@ LRESULT CALLBACK EvalGraphProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
         break;
 
     case WM_ENTERSIZEMOVE:
-        return OnEnterSizeMove( &sd, hDlg, wParam, lParam );
+        return OnEnterSizeMove(&sd, hDlg, wParam, lParam);
 
     case WM_SIZING:
-        return OnSizing( &sd, hDlg, wParam, lParam );
+        return OnSizing(&sd, hDlg, wParam, lParam);
 
     case WM_MOVING:
-        return OnMoving( &sd, hDlg, wParam, lParam );
+        return OnMoving(&sd, hDlg, wParam, lParam);
 
     case WM_EXITSIZEMOVE:
-        return OnExitSizeMove( &sd, hDlg, wParam, lParam );
+        return OnExitSizeMove(&sd, hDlg, wParam, lParam);
     }
 
     return FALSE;
 }
 
 // creates the eval graph, or unhides it.
-VOID EvalGraphPopUp()
-{
-  FARPROC lpProc;
-  
-  CheckMenuItem(GetMenu(hwndMain), IDM_ShowEvalGraph, MF_CHECKED);
+VOID EvalGraphPopUp() {
+    FARPROC lpProc;
 
-  if( evalGraphDialog ) {
-    SendMessage( evalGraphDialog, WM_INITDIALOG, 0, 0 );
+    CheckMenuItem(GetMenu(hwndMain), IDM_ShowEvalGraph, MF_CHECKED);
 
-    if( ! evalGraphDialogUp ) {
-        ShowWindow(evalGraphDialog, SW_SHOW);
+    if (evalGraphDialog) {
+        SendMessage(evalGraphDialog, WM_INITDIALOG, 0, 0);
+
+        if (!evalGraphDialogUp) {
+            ShowWindow(evalGraphDialog, SW_SHOW);
+        }
+    } else {
+        crWhite = appData.evalHistColorWhite;
+        crBlack = appData.evalHistColorBlack;
+
+        lpProc = MakeProcInstance((FARPROC)EvalGraphProc, hInst);
+
+        /* Note to self: dialog must have the WS_VISIBLE style set, otherwise it's not shown! */
+        CreateDialog(hInst, MAKEINTRESOURCE(DLG_EvalGraph), hwndMain, (DLGPROC)lpProc);
+
+        FreeProcInstance(lpProc);
     }
-  }
-  else {
-    crWhite = appData.evalHistColorWhite;
-    crBlack = appData.evalHistColorBlack;
 
-    lpProc = MakeProcInstance( (FARPROC) EvalGraphProc, hInst );
-
-    /* Note to self: dialog must have the WS_VISIBLE style set, otherwise it's not shown! */
-    CreateDialog( hInst, MAKEINTRESOURCE(DLG_EvalGraph), hwndMain, (DLGPROC)lpProc );
-
-    FreeProcInstance(lpProc);
-  }
-
-  evalGraphDialogUp = TRUE;
+    evalGraphDialogUp = TRUE;
 }
 
 // Note that this hides the window. It could as well have destroyed it.
-VOID EvalGraphPopDown()
-{
-  CheckMenuItem(GetMenu(hwndMain), IDM_ShowEvalGraph, MF_UNCHECKED);
+VOID EvalGraphPopDown() {
+    CheckMenuItem(GetMenu(hwndMain), IDM_ShowEvalGraph, MF_UNCHECKED);
 
-  if( evalGraphDialog ) {
-      ShowWindow(evalGraphDialog, SW_HIDE);
-  }
+    if (evalGraphDialog) {
+        ShowWindow(evalGraphDialog, SW_HIDE);
+    }
 
-  evalGraphDialogUp = FALSE;
+    evalGraphDialogUp = FALSE;
 }
 
 // This function is the interface to the back-end. It is currently called through the front-end,
 // though, where it shares the HistorySet() wrapper with MoveHistorySet(). Once all front-ends
 // support the eval graph, it would be more logical to call it directly from the back-end.
-VOID EvalGraphSet( int first, int last, int current, ChessProgramStats_Move * pvInfo )
-{
+VOID EvalGraphSet(int first, int last, int current, ChessProgramStats_Move * pvInfo) {
     /* [AS] Danger! For now we rely on the pvInfo parameter being a static variable! */
 
     currFirst = first;
@@ -319,7 +316,7 @@ VOID EvalGraphSet( int first, int last, int current, ChessProgramStats_Move * pv
     currCurrent = current;
     currPvInfo = pvInfo;
 
-    if( evalGraphDialog ) {
-        SendMessage( evalGraphDialog, WM_REFRESH_GRAPH, 0, 0 );
+    if (evalGraphDialog) {
+        SendMessage(evalGraphDialog, WM_REFRESH_GRAPH, 0, 0);
     }
 }

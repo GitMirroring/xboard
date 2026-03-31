@@ -85,131 +85,95 @@
 #include "frontend.h"
 
 #ifdef __EMX__
-#ifndef HAVE_USLEEP
-#define HAVE_USLEEP
-#endif
-#define usleep(t)   _sleep2(((t)+500)/1000)
+# ifndef HAVE_USLEEP
+#  define HAVE_USLEEP
+# endif
+# define usleep(t) _sleep2(((t) + 500) / 1000)
 #endif
 
 guint delayedEventTimerTag = 0;
 DelayedEventCallback delayedEventCallback = 0;
 
-void
-FireDelayedEvent(gpointer data)
-{
+void FireDelayedEvent(gpointer data) {
     g_source_remove(delayedEventTimerTag);
     delayedEventTimerTag = 0;
     delayedEventCallback();
 }
 
-void
-ScheduleDelayedEvent (DelayedEventCallback cb, long millisec)
-{
-    if(delayedEventTimerTag && delayedEventCallback == cb)
-	// [HGM] alive: replace, rather than add or flush identical event
+void ScheduleDelayedEvent(DelayedEventCallback cb, long millisec) {
+    if (delayedEventTimerTag && delayedEventCallback == cb) {
+        // [HGM] alive: replace, rather than add or flush identical event
         g_source_remove(delayedEventTimerTag);
+    }
     delayedEventCallback = cb;
     delayedEventCallback = cb;
-    delayedEventTimerTag = g_timeout_add(millisec,(GSourceFunc) FireDelayedEvent, NULL);
+    delayedEventTimerTag = g_timeout_add(millisec, (GSourceFunc)FireDelayedEvent, NULL);
 }
 
-DelayedEventCallback
-GetDelayedEvent (void)
-{
-  if (delayedEventTimerTag) {
-    return delayedEventCallback;
-  } else {
-    return NULL;
-  }
+DelayedEventCallback GetDelayedEvent(void) {
+    if (delayedEventTimerTag) {
+        return delayedEventCallback;
+    } else {
+        return NULL;
+    }
 }
 
-void
-CancelDelayedEvent (void)
-{
-  if (delayedEventTimerTag) {
-    g_source_remove(delayedEventTimerTag);
-    delayedEventTimerTag = 0;
-  }
+void CancelDelayedEvent(void) {
+    if (delayedEventTimerTag) {
+        g_source_remove(delayedEventTimerTag);
+        delayedEventTimerTag = 0;
+    }
 }
 
 
 guint loadGameTimerTag = 0;
 
-int LoadGameTimerRunning (void)
-{
-    return loadGameTimerTag != 0;
-}
+int LoadGameTimerRunning(void) { return loadGameTimerTag != 0; }
 
-int
-StopLoadGameTimer (void)
-{
+int StopLoadGameTimer(void) {
     if (loadGameTimerTag != 0) {
-	g_source_remove(loadGameTimerTag);
-	loadGameTimerTag = 0;
-	return TRUE;
+        g_source_remove(loadGameTimerTag);
+        loadGameTimerTag = 0;
+        return TRUE;
     } else {
-	return FALSE;
+        return FALSE;
     }
 }
 
-void
-LoadGameTimerCallback(gpointer data)
-{
+void LoadGameTimerCallback(gpointer data) {
     g_source_remove(loadGameTimerTag);
     loadGameTimerTag = 0;
     AutoPlayGameLoop();
 }
 
-void
-StartLoadGameTimer (long millisec)
-{
-    loadGameTimerTag =
-	g_timeout_add( millisec, (GSourceFunc) LoadGameTimerCallback, NULL);
-}
+void StartLoadGameTimer(long millisec) { loadGameTimerTag = g_timeout_add(millisec, (GSourceFunc)LoadGameTimerCallback, NULL); }
 
 guint analysisClockTag = 0;
 
-int
-AnalysisClockCallback(gpointer data)
-{
-    if (gameMode == AnalyzeMode || gameMode == AnalyzeFile
-         || appData.icsEngineAnalyze) { // [DM]
-	AnalysisPeriodicEvent(0);
+int AnalysisClockCallback(gpointer data) {
+    if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || appData.icsEngineAnalyze) {  // [DM]
+        AnalysisPeriodicEvent(0);
     }
     return 1;
 }
 
-void
-StartAnalysisClock (void)
-{
-    analysisClockTag =
-	g_timeout_add( 2000,(GSourceFunc) AnalysisClockCallback, NULL);
-}
+void StartAnalysisClock(void) { analysisClockTag = g_timeout_add(2000, (GSourceFunc)AnalysisClockCallback, NULL); }
 
 guint clockTimerTag = 0;
 
-int
-ClockTimerRunning (void)
-{
-    return clockTimerTag != 0;
-}
+int ClockTimerRunning(void) { return clockTimerTag != 0; }
 
-int
-StopClockTimer (void)
-{
-    if (clockTimerTag != 0)
-    {
-	g_source_remove(clockTimerTag);
-	clockTimerTag = 0;
-	return TRUE;
+int StopClockTimer(void) {
+    if (clockTimerTag != 0) {
+        g_source_remove(clockTimerTag);
+        clockTimerTag = 0;
+        return TRUE;
     } else {
-	return FALSE;
+        return FALSE;
     }
 }
 
-void
-ClockTimerCallback(gpointer data)
-{
+void ClockTimerCallback(gpointer data) {
     /* remove timer */
     g_source_remove(clockTimerTag);
     clockTimerTag = 0;
@@ -217,8 +181,4 @@ ClockTimerCallback(gpointer data)
     DecrementClocks();
 }
 
-void
-StartClockTimer (long millisec)
-{
-    clockTimerTag = g_timeout_add(millisec,(GSourceFunc) ClockTimerCallback,NULL);
-}
+void StartClockTimer(long millisec) { clockTimerTag = g_timeout_add(millisec, (GSourceFunc)ClockTimerCallback, NULL); }

@@ -50,30 +50,30 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#define DRAWABLE(X) ((cairo_surface_t *) ((X)->choice))
+#define DRAWABLE(X) ((cairo_surface_t *)((X)->choice))
 
 // defined in xboard.c
-void ResizeBoardWindow (int w, int h, int inhibit);
-void CreateGrid (void);
-void CreateGCs (int redo);
-void DelayedDrag (void);
+void ResizeBoardWindow(int w, int h, int inhibit);
+void CreateGrid(void);
+void CreateGCs(int redo);
+void DelayedDrag(void);
 
 extern int lineGap, squareSize;
 
 // defined in draw.c
-void CreateGCs (int redo);
-void CreateAnyPieces (int p);
-void CreatePNGPieces (char *pieceDir);
-void CreateGrid (void);
-void DrawSegment (int x, int y, int *lastX, int *lastY, int p);
-void DrawRectangle (int left, int top, int right, int bottom, int side, int style);
-void DrawEvalText (char *buf, int cbBuf, int y);
-void DrawText (char *string, int x, int y, int align);
-extern Option *disp;
+void CreateGCs(int redo);
+void CreateAnyPieces(int p);
+void CreatePNGPieces(char * pieceDir);
+void CreateGrid(void);
+void DrawSegment(int x, int y, int * lastX, int * lastY, int p);
+void DrawRectangle(int left, int top, int right, int bottom, int side, int style);
+void DrawEvalText(char * buf, int cbBuf, int y);
+void DrawText(char * string, int x, int y, int align);
+extern Option * disp;
 extern char svgDir[];
 
 // defined in evaldraw.c
-float Color (char *col, int n);
+float Color(char * col, int n);
 
 // defined in xoptions.c
-void GraphExpose (Option *opt, int x, int y, int w, int h);
+void GraphExpose(Option * opt, int x, int y, int w, int h);

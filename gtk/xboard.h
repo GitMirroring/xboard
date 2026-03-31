@@ -52,30 +52,30 @@
 
 #include <stdio.h>
 
-#define ICS_LOGON    ".icsrc"
-#define MANPAGE      "xboard.6"
-#define CLOCK_FONT_NAME         "Sans Bold %d"
-#define COORD_FONT_NAME         "Sans Bold %d"
-#define DEFAULT_FONT_NAME       "Sans Normal %d"
-#define CONSOLE_FONT_NAME       "Monospace Normal %d"
-#define HISTORY_FONT_NAME       "Sans Normal %d"
-#define COMMENT_FONT_NAME       "Sans Normal %d"
-#define TAGS_FONT_NAME          "Sans Normal %d"
-#define GAMELIST_FONT_NAME      "Sans Normal %d"
-#define COLOR_SHOUT             "green"
-#define COLOR_SSHOUT            "green,black,1"
-#define COLOR_CHANNEL1          "cyan"
-#define COLOR_CHANNEL           "cyan,black,1"
-#define COLOR_KIBITZ            "magenta,black,1"
-#define COLOR_TELL              "yellow,black,1"
-#define COLOR_CHALLENGE         "red,black,1"
-#define COLOR_REQUEST           "red"
-#define COLOR_SEEK              "blue"
-#define COLOR_NORMAL            "default"
-#define COLOR_LOWTIMEWARNING    "red"
+#define ICS_LOGON ".icsrc"
+#define MANPAGE "xboard.6"
+#define CLOCK_FONT_NAME "Sans Bold %d"
+#define COORD_FONT_NAME "Sans Bold %d"
+#define DEFAULT_FONT_NAME "Sans Normal %d"
+#define CONSOLE_FONT_NAME "Monospace Normal %d"
+#define HISTORY_FONT_NAME "Sans Normal %d"
+#define COMMENT_FONT_NAME "Sans Normal %d"
+#define TAGS_FONT_NAME "Sans Normal %d"
+#define GAMELIST_FONT_NAME "Sans Normal %d"
+#define COLOR_SHOUT "green"
+#define COLOR_SSHOUT "green,black,1"
+#define COLOR_CHANNEL1 "cyan"
+#define COLOR_CHANNEL "cyan,black,1"
+#define COLOR_KIBITZ "magenta,black,1"
+#define COLOR_TELL "yellow,black,1"
+#define COLOR_CHALLENGE "red,black,1"
+#define COLOR_REQUEST "red"
+#define COLOR_SEEK "blue"
+#define COLOR_NORMAL "default"
+#define COLOR_LOWTIMEWARNING "red"
 
 typedef struct {
-    char *name;
+    char * name;
     int squareSize;
     int lineGap;
     int clockFontPxlSize;
@@ -87,88 +87,90 @@ typedef struct {
 } SizeDefaults;
 
 #define SIZE_DEFAULTS \
-{ { "Titanic",  129, 4, 34, 14, 14, 0, 0, 1200 }, \
-  { "Colossal", 116, 4, 34, 14, 14, 0, 0, 1200 }, \
-  { "Giant",    108, 3, 34, 14, 14, 0, 0, 1024 }, \
-  { "Huge",     95, 3, 34, 14, 14, 0, 0, 1024 }, \
-  { "Big",      87, 3, 34, 14, 14, 0, 0, 864 }, \
-  { "Large",    80, 3, 34, 14, 14, 0, 0, 864 }, \
-  { "Bulky",    72, 3, 34, 12, 14, 0, 0, 864 }, \
-  { "Medium",   64, 3, 34, 12, 14, 1, 0, 768 }, \
-  { "Moderate", 58, 3, 34, 12, 14, 1, 0, 768 }, \
-  { "Average",  54, 2, 30, 11, 12, 1, 0, 600 }, \
-  { "Middling", 49, 2, 24, 10, 12, 1, 0, 600 }, \
-  { "Mediocre", 45, 2, 20, 10, 12, 1, 4, 600 }, \
-  { "Small",    40, 2, 20, 10, 12, 1, 3, 480 }, \
-  { "Slim",     37, 2, 20, 10, 12, 1, 3, 480 }, \
-  { "Petite",   33, 1, 15, 9,  11, 1, 2, 480 }, \
-  { "Dinky",    29, 1, 15, 9,  11, 1, 1, 480 }, \
-  { "Teeny",    25, 1, 12, 8,  11, 1, 1, 480 }, \
-  { "Tiny",     21, 1, 12, 8,  11, 1, 1, 0 }, \
-  {   NULL,      0, 0,  0, 0,   0, 0, 0, 0 } }
+    { \
+     {"Titanic",  129, 4, 34, 14, 14, 0, 0, 1200}, \
+     {"Colossal", 116, 4, 34, 14, 14, 0, 0, 1200}, \
+     {"Giant",    108, 3, 34, 14, 14, 0, 0, 1024}, \
+     {"Huge",     95,  3, 34, 14, 14, 0, 0, 1024}, \
+     {"Big",      87,  3, 34, 14, 14, 0, 0, 864 }, \
+     {"Large",    80,  3, 34, 14, 14, 0, 0, 864 }, \
+     {"Bulky",    72,  3, 34, 12, 14, 0, 0, 864 }, \
+     {"Medium",   64,  3, 34, 12, 14, 1, 0, 768 }, \
+     {"Moderate", 58,  3, 34, 12, 14, 1, 0, 768 }, \
+     {"Average",  54,  2, 30, 11, 12, 1, 0, 600 }, \
+     {"Middling", 49,  2, 24, 10, 12, 1, 0, 600 }, \
+     {"Mediocre", 45,  2, 20, 10, 12, 1, 4, 600 }, \
+     {"Small",    40,  2, 20, 10, 12, 1, 3, 480 }, \
+     {"Slim",     37,  2, 20, 10, 12, 1, 3, 480 }, \
+     {"Petite",   33,  1, 15, 9,  11, 1, 2, 480 }, \
+     {"Dinky",    29,  1, 15, 9,  11, 1, 1, 480 }, \
+     {"Teeny",    25,  1, 12, 8,  11, 1, 1, 480 }, \
+     {"Tiny",     21,  1, 12, 8,  11, 1, 1, 0   }, \
+     {NULL,       0,   0, 0,  0,  0,  0, 0, 0   } \
+}
 
 #define BORDER_X_OFFSET 3
 #define BORDER_Y_OFFSET 27
-#define FIRST_CHESS_PROGRAM	"fairymax"
-#define SECOND_CHESS_PROGRAM	""
-#define FIRST_DIRECTORY         "."
-#define SECOND_DIRECTORY        "."
-#define SOUND_BELL              ""
-#define ICS_NAMES               ""
-#define FCP_NAMES               ""
-#define SCP_NAMES               ""
-#define ICS_TEXT_MENU_DEFAULT   ""
-#define SETTINGS_FILE           SYSCONFDIR"/xboard.conf"
-#define COLOR_BKGD              "white"
+#define FIRST_CHESS_PROGRAM "fairymax"
+#define SECOND_CHESS_PROGRAM ""
+#define FIRST_DIRECTORY "."
+#define SECOND_DIRECTORY "."
+#define SOUND_BELL ""
+#define ICS_NAMES ""
+#define FCP_NAMES ""
+#define SCP_NAMES ""
+#define ICS_TEXT_MENU_DEFAULT ""
+#define SETTINGS_FILE SYSCONFDIR "/xboard.conf"
+#define COLOR_BKGD "white"
 
-GdkPixbuf *LoadIconFile (char *name);
-void NewTagsPopup (char *text, char *msg);
-int AppendText (Option *opt, char *s);
-void NewCommentPopup (char *title, char *text, int index);
-void GetActualPlacement (GtkWidget *shell, WindowPlacement *wp);
-void DelayedDrag (void);
+GdkPixbuf * LoadIconFile(char * name);
+void NewTagsPopup(char * text, char * msg);
+int AppendText(Option * opt, char * s);
+void NewCommentPopup(char * title, char * text, int index);
+void GetActualPlacement(GtkWidget * shell, WindowPlacement * wp);
+void DelayedDrag(void);
 #ifdef TODO_GTK
-void CatchDeleteWindow (Widget w, String procname);
-void GenericPopDown (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void CatchDeleteWindow(Widget w, String procname);
+void GenericPopDown(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 
 // from xoptions.c
-void SetFocus (Widget w, XtPointer data, XEvent *event, Boolean *b);
-void TypeInProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
-Widget CreateMenuItem (Widget menu, char *msg, XtCallbackProc CB, int n);
-void WheelProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
-void TabProc (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void SetFocus(Widget w, XtPointer data, XEvent * event, Boolean * b);
+void TypeInProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
+Widget CreateMenuItem(Widget menu, char * msg, XtCallbackProc CB, int n);
+void WheelProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
+void TabProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 
-void GenericMenu (Widget w, XEvent *event, String *prms, Cardinal *nprms);
+void GenericMenu(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 
 // from xengineoutput.c
-void SelectPV (Widget w, XEvent * event, String * params, Cardinal * nParams);
-void StopPV (Widget w, XEvent * event, String * params, Cardinal * nParams);
+void SelectPV(Widget w, XEvent * event, String * params, Cardinal * nParams);
+void StopPV(Widget w, XEvent * event, String * params, Cardinal * nParams);
 #endif
 
 extern char memoTranslations[];
 
-extern GtkAccelGroup *GtkAccelerators;
+extern GtkAccelGroup * GtkAccelerators;
 
 #if TODO_GTK
 extern Widget shells[];
 extern Widget formWidget, shellWidget, boardWidget, menuBarWidget;
-extern Display *xDisplay;
+extern Display * xDisplay;
 extern Window xBoardWindow;
 extern Pixmap xMarkPixmap, wIconPixmap, bIconPixmap;
 extern Pixel timerForegroundPixel, timerBackgroundPixel, dialogColor, buttonColor;
 extern Atom wm_delete_window;
 extern GC coordGC;
-extern Dimension textHeight; // of message widget in board window
+extern Dimension textHeight;  // of message widget in board window
 #else
-extern GtkWidget *shells[];
+extern GtkWidget * shells[];
 #endif
 extern int dialogError;
 extern int squareSize;
-extern char *layoutName;
+extern char * layoutName;
 extern int useImages, useImageSqs;
 extern char ICSInputTranslations[];
-extern char *selected_fen_position;
-extern char *chessDir;
+extern char * selected_fen_position;
+extern char * chessDir;
 
 
 #define TOPLEVEL 1 /* preference item; 1 = make popup windows toplevel */

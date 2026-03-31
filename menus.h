@@ -51,154 +51,152 @@
  ** See the file ChangeLog for a revision history.  */
 
 
-
-typedef void MenuProc (void);
+typedef void MenuProc(void);
 
 typedef struct {
-    char *string;
-    char *accel;
-    char *ref;
-    MenuProc *proc;
-    void *handle;
+    char * string;
+    char * accel;
+    char * ref;
+    MenuProc * proc;
+    void * handle;
 } MenuItem;
 
 typedef struct {
-    char *name;
-    char *ref;
-    MenuItem *mi;
+    char * name;
+    char * ref;
+    MenuItem * mi;
 } Menu;
 
 typedef struct {
-    char *name;
+    char * name;
     Boolean value;
 } Enables;
 
 extern Menu menuBar[];
 
-void ErrorPopUp (char *title, char *text, int modal);
-void AppendEnginesToMenu (char *list);
-void LoadGameProc (void);
-void LoadNextGameProc (void);
-void LoadPrevGameProc (void);
-void ReloadGameProc (void);
-void LoadPositionProc (void);
-void LoadNextPositionProc (void);
-void LoadPrevPositionProc (void);
-void ReloadPositionProc (void);
-void CopyPositionProc (void);
-void PastePositionProc (void);
-void CopyGameProc (void);
-void CopyGameListProc (void);
-void PasteGameProc (void);
-void SaveGameProc (void);
-void SavePositionProc (void);
-void ReloadCmailMsgProc (void);
-void QuitProc (void);
-void AnalyzeModeProc (void);
-void AnalyzeFileProc (void);
-void MatchProc (void);
-void MatchOptionsProc (void);
-void EditTagsProc (void);
-void EditCommentProc (void);
-void IcsInputBoxProc (void);
-void ChatProc (void);
-void AdjuWhiteProc (void);
-void AdjuBlackProc (void);
-void AdjuDrawProc (void);
-void RevertProc (void);
-void AnnotateProc (void);
-void AlwaysQueenProc (void);
-void AnimateDraggingProc (void);
-void AnimateMovingProc (void);
-void AutoflagProc (void);
-void AutoflipProc (void);
-void BlindfoldProc (void);
-void FlashMovesProc (void);
-void FlipViewProc (void);
-void HighlightDraggingProc (void);
-void HighlightLastMoveProc (void);
-void HighlightArrowProc (void);
-void MoveSoundProc (void);
-//void IcsAlarmProc (void);
-void OneClickProc (void);
-void PeriodicUpdatesProc (void);
-void PonderNextMoveProc (void);
-void PopupMoveErrorsProc (void);
-void PopupExitMessageProc (void);
-//void PremoveProc (void);
-void ShowCoordsProc (void);
-void ShowThinkingProc (void);
-void HideThinkingProc (void);
-void TestLegalityProc (void);
-void SaveSettingsProc (void);
-void SaveOnExitProc (void);
-void InfoProc (void);
-void ManProc (void);
-void GuideProc (void);
-void HomePageProc (void);
-void NewsPageProc (void);
-void BugReportProc (void);
-void AboutGameProc (void);
-void AboutProc (void);
-void DebugProc (void);
-void NothingProc (void);
-void ShuffleMenuProc (void);
-void EngineMenuProc (void);
-void UciMenuProc (void);
-void TimeControlProc (void);
-void OptionsProc (void);
-void NewVariantProc (void);
-void IcsTextProc (void);
-void LoadEngine1Proc (void);
-void LoadEngine2Proc (void);
-void FirstSettingsProc (void);
-void SecondSettingsProc (void);
-void GameListOptionsProc (void);
-void IcsOptionsProc (void);
-void SoundOptionsProc (void);
-void BoardOptionsProc (void);
-void LoadOptionsProc (void);
-void SaveOptionsProc (void);
-void SaveSettings (char *);
-void EditBookProc (void);
-void InitMenuMarkers (void);
-void FontsProc (void);
+void ErrorPopUp(char * title, char * text, int modal);
+void AppendEnginesToMenu(char * list);
+void LoadGameProc(void);
+void LoadNextGameProc(void);
+void LoadPrevGameProc(void);
+void ReloadGameProc(void);
+void LoadPositionProc(void);
+void LoadNextPositionProc(void);
+void LoadPrevPositionProc(void);
+void ReloadPositionProc(void);
+void CopyPositionProc(void);
+void PastePositionProc(void);
+void CopyGameProc(void);
+void CopyGameListProc(void);
+void PasteGameProc(void);
+void SaveGameProc(void);
+void SavePositionProc(void);
+void ReloadCmailMsgProc(void);
+void QuitProc(void);
+void AnalyzeModeProc(void);
+void AnalyzeFileProc(void);
+void MatchProc(void);
+void MatchOptionsProc(void);
+void EditTagsProc(void);
+void EditCommentProc(void);
+void IcsInputBoxProc(void);
+void ChatProc(void);
+void AdjuWhiteProc(void);
+void AdjuBlackProc(void);
+void AdjuDrawProc(void);
+void RevertProc(void);
+void AnnotateProc(void);
+void AlwaysQueenProc(void);
+void AnimateDraggingProc(void);
+void AnimateMovingProc(void);
+void AutoflagProc(void);
+void AutoflipProc(void);
+void BlindfoldProc(void);
+void FlashMovesProc(void);
+void FlipViewProc(void);
+void HighlightDraggingProc(void);
+void HighlightLastMoveProc(void);
+void HighlightArrowProc(void);
+void MoveSoundProc(void);
+// void IcsAlarmProc (void);
+void OneClickProc(void);
+void PeriodicUpdatesProc(void);
+void PonderNextMoveProc(void);
+void PopupMoveErrorsProc(void);
+void PopupExitMessageProc(void);
+// void PremoveProc (void);
+void ShowCoordsProc(void);
+void ShowThinkingProc(void);
+void HideThinkingProc(void);
+void TestLegalityProc(void);
+void SaveSettingsProc(void);
+void SaveOnExitProc(void);
+void InfoProc(void);
+void ManProc(void);
+void GuideProc(void);
+void HomePageProc(void);
+void NewsPageProc(void);
+void BugReportProc(void);
+void AboutGameProc(void);
+void AboutProc(void);
+void DebugProc(void);
+void NothingProc(void);
+void ShuffleMenuProc(void);
+void EngineMenuProc(void);
+void UciMenuProc(void);
+void TimeControlProc(void);
+void OptionsProc(void);
+void NewVariantProc(void);
+void IcsTextProc(void);
+void LoadEngine1Proc(void);
+void LoadEngine2Proc(void);
+void FirstSettingsProc(void);
+void SecondSettingsProc(void);
+void GameListOptionsProc(void);
+void IcsOptionsProc(void);
+void SoundOptionsProc(void);
+void BoardOptionsProc(void);
+void LoadOptionsProc(void);
+void SaveOptionsProc(void);
+void SaveSettings(char *);
+void EditBookProc(void);
+void InitMenuMarkers(void);
+void FontsProc(void);
 
 // in ngamelist.c
-void ShowGameListProc (void);
+void ShowGameListProc(void);
 
 // in nhistory.c
-void HistoryShowProc (void);
+void HistoryShowProc(void);
 
 // only here because it is the only header shared by xoptions.c and usystem.c
-void SetTextColor (char **cnames, int fg, int bg, int attr);
-void ConsoleWrite (char *message, int count);
+void SetTextColor(char ** cnames, int fg, int bg, int attr);
+void ConsoleWrite(char * message, int count);
 
 // must be moved to xengineoutput.h
 
-void EngineOutputProc (void);
-void EvalGraphProc (void);
+void EngineOutputProc(void);
+void EvalGraphProc(void);
 
-int SaveGameListAsText (FILE *f);
-void FileNamePopUp (
-    char *label, char *def, char *filter, FileProc proc, char *openMode);
+int SaveGameListAsText(FILE * f);
+void FileNamePopUp(char * label, char * def, char * filter, FileProc proc, char * openMode);
 
-void AppendMenuItem (char *text, int n);
-MenuItem *MenuNameToItem (char *menuName);
-void SetMenuEnables (Enables *enab);
-void EnableButtonBar (int state);
-char *ModeToWidgetName (GameMode mode);
-void CreateAnimVars (void);
-void CopySomething (char *s);
-void EditAnyPopUp (char *tags, char **dest, char *title);
+void AppendMenuItem(char * text, int n);
+MenuItem * MenuNameToItem(char * menuName);
+void SetMenuEnables(Enables * enab);
+void EnableButtonBar(int state);
+char * ModeToWidgetName(GameMode mode);
+void CreateAnimVars(void);
+void CopySomething(char * s);
+void EditAnyPopUp(char * tags, char ** dest, char * title);
 
-extern char  *gameCopyFilename, *gamePasteFilename;
+extern char *gameCopyFilename, *gamePasteFilename;
 extern Boolean saveSettingsOnExit;
-extern char *settingsFileName;
+extern char * settingsFileName;
 extern int firstEngineItem;
 
-#define CHECK (void *) 1
-#define RADIO (void *) 2
+#define CHECK (void *)1
+#define RADIO (void *)2
 
 #define OPTIONSDIALOG
-#define INFOFILE     "xboard.info"
+#define INFOFILE "xboard.info"

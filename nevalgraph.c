@@ -50,129 +50,122 @@
 #include "gettext.h"
 
 #ifdef ENABLE_NLS
-# define  _(s) gettext (s)
-# define N_(s) gettext_noop (s)
+# define _(s) gettext(s)
+# define N_(s) gettext_noop(s)
 #else
-# define  _(s) (s)
-# define N_(s)  s
+# define _(s) (s)
+# define N_(s) s
 #endif
 
-static char *title[2] = { N_("Evaluation graph"), N_("Blunder graph") };
-Option *disp;
+static char * title[2] = {N_("Evaluation graph"), N_("Blunder graph")};
+Option * disp;
 
 /* Module variables */
 
-static Option *EvalCallback (int button, int x, int y);
+static Option * EvalCallback(int button, int x, int y);
 
 static int initDone = FALSE;
 
-static void
-InitializeEvalGraph (Option *opt, int w, int h)
-{
-  nWidthPB = w, nHeightPB = h;
+static void InitializeEvalGraph(Option * opt, int w, int h) {
+    nWidthPB = w, nHeightPB = h;
 
-  initDone = TRUE;
+    initDone = TRUE;
 }
 
 // The following stuff is really back-end (but too little to bother with a separate file)
 
-static void
-EvalClick (int x, int y)
-{
-    int index = GetMoveIndexFromPoint( x, y );
+static void EvalClick(int x, int y) {
+    int index = GetMoveIndexFromPoint(x, y);
 
-    if( index >= 0 && index < currLast ) ToNrEvent( index + 1 );
+    if (index >= 0 && index < currLast) {
+        ToNrEvent(index + 1);
+    }
 }
 
 static Option graphOptions[] = {
-{ 150, 0x9C, 300, NULL, (void*) &EvalCallback, NULL, NULL, Graph , "" },
-{ 0, 2, 0, NULL, NULL, "", NULL, EndMark , "" }
+ {150, 0x9c, 300, NULL, (void *)&EvalCallback, NULL, NULL, Graph,   ""},
+ {0,   2,    0,   NULL, NULL,                  "",   NULL, EndMark, ""}
 };
 
-static void
-DisplayEvalGraph (void)
-{   // back-end painting; calls back front-end primitives for lines, rectangles and text
-    char *t = MakeEvalTitle(_(title[differentialView]));
-    nWidthPB = disp->max; nHeightPB = disp->value;
-    if(t != title[differentialView] && nWidthPB < 340)
-	t = MakeEvalTitle(nWidthPB < 240 ? "" : differentialView ? _("Blunder") : _("Eval"));
+static void DisplayEvalGraph(void) {  // back-end painting; calls back front-end primitives for lines, rectangles and text
+    char * t = MakeEvalTitle(_(title[differentialView]));
+    nWidthPB = disp->max;
+    nHeightPB = disp->value;
+    if (t != title[differentialView] && nWidthPB < 340) {
+        t = MakeEvalTitle(nWidthPB < 240 ? "" : differentialView ? _("Blunder") : _("Eval"));
+    }
     PaintEvalGraph();
     GraphExpose(graphOptions, 0, 0, nWidthPB, nHeightPB);
     SetDialogTitle(EvalGraphDlg, t);
 }
 
-static Option *
-EvalCallback (int button, int x, int y)
-{
+static Option * EvalCallback(int button, int x, int y) {
     int dir = appData.zoom + 1;
-    if(!initDone) return NULL;
-
-    switch(button) {
-	case 3: dir = 0; differentialView = !differentialView;
-	case 4: dir -= 2;
-	case 5: if(dir > 0) appData.zoom = dir;
-	case 10: // expose event
-	    /* Create or recreate paint box if needed */
-	    if(x != nWidthPB || y != nHeightPB) {
-		InitializeEvalGraph(&graphOptions[0], x, y);
-	    }
-	    nWidthPB = x;
-	    nHeightPB = y;
-	    DisplayEvalGraph();
-	    break;
-	case 1: EvalClick(x, y); // left button
-	default: break; // other buttons ignored
+    if (!initDone) {
+        return NULL;
     }
-    return NULL; // no context menu!
+
+    switch (button) {
+    case 3:
+        dir = 0;
+        differentialView = !differentialView;
+    case 4:
+        dir -= 2;
+    case 5:
+        if (dir > 0) {
+            appData.zoom = dir;
+        }
+    case 10:  // expose event
+        /* Create or recreate paint box if needed */
+        if (x != nWidthPB || y != nHeightPB) {
+            InitializeEvalGraph(&graphOptions[0], x, y);
+        }
+        nWidthPB = x;
+        nHeightPB = y;
+        DisplayEvalGraph();
+        break;
+    case 1:
+        EvalClick(x, y);  // left button
+    default:
+        break;  // other buttons ignored
+    }
+    return NULL;  // no context menu!
 }
 
-void
-EvalGraphPopUp (void)
-{
+void EvalGraphPopUp(void) {
     if (GenericPopUp(graphOptions, _(title[differentialView]), EvalGraphDlg, BoardWindow, NONMODAL, appData.topLevel)) {
-	InitializeEvalGraph(&graphOptions[0], wpEvalGraph.width, wpEvalGraph.height); // first time: add callbacks and initialize pens
-	disp = graphOptions;
+        InitializeEvalGraph(
+         &graphOptions[0], wpEvalGraph.width, wpEvalGraph.height);  // first time: add callbacks and initialize pens
+        disp = graphOptions;
     } else {
-	SetDialogTitle(EvalGraphDlg, _(title[differentialView]));
-	SetIconName(EvalGraphDlg, _(title[differentialView]));
+        SetDialogTitle(EvalGraphDlg, _(title[differentialView]));
+        SetIconName(EvalGraphDlg, _(title[differentialView]));
     }
 
     MarkMenu("View.EvaluationGraph", EvalGraphDlg);
 
-//    ShowThinkingEvent(); // [HGM] thinking: might need to prompt engine for thinking output
+    // ShowThinkingEvent(); // [HGM] thinking: might need to prompt engine for thinking output
 }
 
-void
-EvalGraphPopDown (void)
-{
+void EvalGraphPopDown(void) {
     PopDown(EvalGraphDlg);
 
-//    ShowThinkingEvent(); // [HGM] thinking: might need to shut off thinking output
+    // ShowThinkingEvent(); // [HGM] thinking: might need to shut off thinking output
 }
 
-Boolean
-EvalGraphIsUp (void)
-{
-    return shellUp[EvalGraphDlg];
-}
+Boolean EvalGraphIsUp(void) { return shellUp[EvalGraphDlg]; }
 
-int
-EvalGraphDialogExists (void)
-{
-    return DialogExists(EvalGraphDlg);
-}
+int EvalGraphDialogExists(void) { return DialogExists(EvalGraphDlg); }
 
-void
-EvalGraphProc (void)
-{
-  if (!PopDown(EvalGraphDlg)) EvalGraphPopUp();
+void EvalGraphProc(void) {
+    if (!PopDown(EvalGraphDlg)) {
+        EvalGraphPopUp();
+    }
 }
 
 // This function is the interface to the back-end.
 
-void
-EvalGraphSet (int first, int last, int current, ChessProgramStats_Move * pvInfo)
-{
+void EvalGraphSet(int first, int last, int current, ChessProgramStats_Move * pvInfo) {
     /* [AS] Danger! For now we rely on the pvInfo parameter being a static variable! */
 
     currFirst = first;
@@ -180,7 +173,7 @@ EvalGraphSet (int first, int last, int current, ChessProgramStats_Move * pvInfo)
     currCurrent = current;
     currPvInfo = pvInfo;
 
-    if( DialogExists(EvalGraphDlg) ) {
+    if (DialogExists(EvalGraphDlg)) {
         DisplayEvalGraph();
     }
 }

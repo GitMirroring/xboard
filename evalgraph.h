@@ -25,13 +25,13 @@
  ** See the file ChangeLog for a revision history.
  */
 
-#define MIN_HIST_WIDTH  4
-#define MAX_HIST_WIDTH  10
+#define MIN_HIST_WIDTH 4
+#define MAX_HIST_WIDTH 10
 
 typedef enum { PEN_NONE, PEN_BLACK, PEN_DOTTED, PEN_BLUEDOTTED, PEN_BOLDWHITE, PEN_BOLDBLACK, PEN_BACKGD, PEN_ANY } PenType;
 
 #define FILLED 1
-#define OPEN   0
+#define OPEN 0
 
 /* Module globals */
 extern ChessProgramStats_Move * currPvInfo;
@@ -48,12 +48,12 @@ extern int MarginW;
 extern int MarginH;
 
 // calls from back-end part into front-end part
-void DrawSegment (int x, int y, int *lastX, int *lastY, int p);
-void DrawRectangle (int left, int top, int right, int bottom, int side, int style);
-void DrawEvalText (char *buf, int cbBuf, int y);
-void EvalGraphSet (int first, int last, int current, ChessProgramStats_Move * pvInfo);
+void DrawSegment(int x, int y, int * lastX, int * lastY, int p);
+void DrawRectangle(int left, int top, int right, int bottom, int side, int style);
+void DrawEvalText(char * buf, int cbBuf, int y);
+void EvalGraphSet(int first, int last, int current, ChessProgramStats_Move * pvInfo);
 
 // calls of front-end part into back-end part
-extern int GetMoveIndexFromPoint (int x, int y);
-extern void PaintEvalGraph (void);
-extern char *MakeEvalTitle (char *title);
+extern int GetMoveIndexFromPoint(int x, int y);
+extern void PaintEvalGraph(void);
+extern char * MakeEvalTitle(char * title);

@@ -27,73 +27,74 @@
 #include "config.h"
 #include "help.h"
 
-extern FILE *debugFP;
+extern FILE * debugFP;
 
-HWND WINAPI
-HtmlHelp( HWND hwnd, LPCSTR helpFile, UINT action, DWORD_PTR data )
-{
-	PROCESS_INFORMATION helpProcInfo;
-	STARTUPINFO siStartInfo;
-	char buf[100];
-	static int status = 0;
-	FILE *f;
+HWND WINAPI HtmlHelp(HWND hwnd, LPCSTR helpFile, UINT action, DWORD_PTR data) {
+    PROCESS_INFORMATION helpProcInfo;
+    STARTUPINFO siStartInfo;
+    char buf[100];
+    static int status = 0;
+    FILE * f;
 
-	if(status < 0) return NULL;
+    if (status < 0) {
+        return NULL;
+    }
 
-	if(!status) {
-		f = fopen(helpFile, "r");
-		if(f == NULL) {
-			status = -1;
-			return NULL;
-		}
-		status = 1;
-		fclose(f);
-	}
+    if (!status) {
+        f = fopen(helpFile, "r");
+        if (f == NULL) {
+            status = -1;
+            return NULL;
+        }
+        status = 1;
+        fclose(f);
+    }
 
-	siStartInfo.cb = sizeof(STARTUPINFO);
-	siStartInfo.lpReserved = NULL;
-	siStartInfo.lpDesktop = NULL;
-	siStartInfo.lpTitle = NULL;
-	siStartInfo.dwFlags = STARTF_USESTDHANDLES;
-	siStartInfo.cbReserved2 = 0;
-	siStartInfo.lpReserved2 = NULL;
-	siStartInfo.hStdInput = NULL;
-	siStartInfo.hStdOutput = NULL;
-	siStartInfo.hStdError = debugFP;
+    siStartInfo.cb = sizeof(STARTUPINFO);
+    siStartInfo.lpReserved = NULL;
+    siStartInfo.lpDesktop = NULL;
+    siStartInfo.lpTitle = NULL;
+    siStartInfo.dwFlags = STARTF_USESTDHANDLES;
+    siStartInfo.cbReserved2 = 0;
+    siStartInfo.lpReserved2 = NULL;
+    siStartInfo.hStdInput = NULL;
+    siStartInfo.hStdOutput = NULL;
+    siStartInfo.hStdError = debugFP;
 
-	snprintf(buf, sizeof(buf)/sizeof(buf[0]),"Hh.exe %s", helpFile);
+    snprintf(buf, sizeof(buf) / sizeof(buf[0]), "Hh.exe %s", helpFile);
 
-	// ignore the other parameters; just start the viewer with the help file
-	if(  CreateProcess(NULL,
-			   buf,		   /* command line */
-			   NULL,	   /* process security attributes */
-			   NULL,	   /* primary thread security attrs */
-			   FALSE,	   /* handles are inherited */
-			   DETACHED_PROCESS|CREATE_NEW_PROCESS_GROUP,
-			   NULL,	   /* use parent's environment */
-			   NULL,
-			   &siStartInfo,   /* STARTUPINFO pointer */
-			   &helpProcInfo)  /* receives PROCESS_INFORMATION */
-		) return hwnd; else return NULL;
+    // ignore the other parameters; just start the viewer with the help file
+    if (CreateProcess(NULL, buf, /* command line */
+         NULL, /* process security attributes */
+         NULL, /* primary thread security attrs */
+         FALSE, /* handles are inherited */
+         DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP, NULL, /* use parent's environment */
+         NULL, &siStartInfo, /* STARTUPINFO pointer */
+         &helpProcInfo) /* receives PROCESS_INFORMATION */
+    ) {
+        return hwnd;
+    } else {
+        return NULL;
+    }
 }
 
-//HWND WINAPI
-int
-MyHelp(HWND hwnd, LPSTR helpFile, UINT action, DWORD_PTR data)
-{
-	static int status = 0;
-	FILE *f;
+// HWND WINAPI
+int MyHelp(HWND hwnd, LPSTR helpFile, UINT action, DWORD_PTR data) {
+    static int status = 0;
+    FILE * f;
 
-	if(status < 0) return 0;
+    if (status < 0) {
+        return 0;
+    }
 
-	if(!status) {
-		f = fopen(helpFile, "r");
-		if(f == NULL) {
-			status = -1;
-			return 0;
-		}
-		status = 1;
-		fclose(f);
-	}
-	return WinHelp(hwnd, helpFile, action, data);
+    if (!status) {
+        f = fopen(helpFile, "r");
+        if (f == NULL) {
+            status = -1;
+            return 0;
+        }
+        status = 1;
+        fclose(f);
+    }
+    return WinHelp(hwnd, helpFile, action, data);
 }

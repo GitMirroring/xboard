@@ -68,10 +68,10 @@ typedef struct {
     int fdTo, fdFrom;
 } ChildProc;
 
-extern char *oldICSInteractionTitle;
+extern char * oldICSInteractionTitle;
 extern Boolean stdoutClosed;
 
-char *ExpandPathName (char *path);
-int  MySearchPath (char *installDir, char *name, char *fullname);
-int  MyGetFullPathName (char *name, char *fullname);
-void PlaySoundForColor (ColorClass cc);
+char * ExpandPathName(char * path);
+int MySearchPath(char * installDir, char * name, char * fullname);
+int MyGetFullPathName(char * name, char * fullname);
+void PlaySoundForColor(ColorClass cc);

@@ -44,14 +44,14 @@
 #include "wsnap.h"
 
 // templates for calls into back-end
-void RefreshMemoContent (void);
-void MemoContentUpdated (void);
-void FindMoveByCharIndex (int char_index);
+void RefreshMemoContent(void);
+void MemoContentUpdated(void);
+void FindMoveByCharIndex(int char_index);
 
-#define DEFAULT_COLOR       0xFFFFFFFF
+#define DEFAULT_COLOR 0xffffffff
 
-#define H_MARGIN            2
-#define V_MARGIN            2
+#define H_MARGIN 2
+#define V_MARGIN 2
 
 static BOOLEAN moveHistoryDialogUp = FALSE;
 
@@ -59,86 +59,79 @@ static BOOLEAN moveHistoryDialogUp = FALSE;
 
 // low-level front-end, after calculating from & to is left to caller
 // it task is to highlight the indicated characters. (In WinBoard it makes them bold and blue.)
-void HighlightMove( int from, int to, Boolean highlight )
-{
-        CHARFORMAT cf;
-        HWND hMemo = GetDlgItem( moveHistoryDialog, IDC_MoveHistory );
+void HighlightMove(int from, int to, Boolean highlight) {
+    CHARFORMAT cf;
+    HWND hMemo = GetDlgItem(moveHistoryDialog, IDC_MoveHistory);
 
-        SendMessage( hMemo, EM_SETSEL, from, to);
+    SendMessage(hMemo, EM_SETSEL, from, to);
 
 
-        /* Set style */
-        ZeroMemory( &cf, sizeof(cf) );
+    /* Set style */
+    ZeroMemory(&cf, sizeof(cf));
 
-        cf.cbSize = sizeof(cf);
-        cf.dwMask = CFM_BOLD | CFM_COLOR;
+    cf.cbSize = sizeof(cf);
+    cf.dwMask = CFM_BOLD | CFM_COLOR;
 
-        if( highlight ) {
-            cf.dwEffects |= CFE_BOLD;
-            cf.crTextColor = RGB( 0x00, 0x00, 0xFF );
-        }
-        else {
-            cf.dwEffects |= CFE_AUTOCOLOR;
-        }
+    if (highlight) {
+        cf.dwEffects |= CFE_BOLD;
+        cf.crTextColor = RGB(0x00, 0x00, 0xff);
+    } else {
+        cf.dwEffects |= CFE_AUTOCOLOR;
+    }
 
-        SendMessage( hMemo, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf );
+    SendMessage(hMemo, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 }
 
 // low-level front-end, but replace Windows data types to make it callable from back-end
 // its task is to clear the contents of the move-history text edit
-void ClearHistoryMemo()
-{
-    SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, WM_SETTEXT, 0, (LPARAM) "" );
-}
+void ClearHistoryMemo() { SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, WM_SETTEXT, 0, (LPARAM) ""); }
 
 // low-level front-end, made callable from back-end by passing flags and color numbers
 // its task is to append the given text to the text edit
 // the bold argument says 0 = normal, 1 = bold typeface
 // the colorNr argument says 0 = font-default, 1 = gray
-int AppendToHistoryMemo( char * text, int bold, int colorNr )
-{
+int AppendToHistoryMemo(char * text, int bold, int colorNr) {
     CHARFORMAT cf;
-    DWORD flags = bold ? CFE_BOLD :0;
+    DWORD flags = bold ? CFE_BOLD : 0;
     DWORD color = colorNr ? GetSysColor(COLOR_GRAYTEXT) : DEFAULT_COLOR;
 
-    HWND hMemo = GetDlgItem( moveHistoryDialog, IDC_MoveHistory );
+    HWND hMemo = GetDlgItem(moveHistoryDialog, IDC_MoveHistory);
 
     /* Select end of text */
-    int cbTextLen = (int) SendMessage( hMemo, WM_GETTEXTLENGTH, 0, 0 );
+    int cbTextLen = (int)SendMessage(hMemo, WM_GETTEXTLENGTH, 0, 0);
 
-    SendMessage( hMemo, EM_SETSEL, cbTextLen, cbTextLen );
+    SendMessage(hMemo, EM_SETSEL, cbTextLen, cbTextLen);
 
     /* Set style */
-    ZeroMemory( &cf, sizeof(cf) );
+    ZeroMemory(&cf, sizeof(cf));
 
     cf.cbSize = sizeof(cf);
     cf.dwMask = CFM_BOLD | CFM_ITALIC | CFM_COLOR | CFM_UNDERLINE;
     cf.dwEffects = flags;
 
-    if( color != DEFAULT_COLOR ) {
+    if (color != DEFAULT_COLOR) {
         cf.crTextColor = color;
-    }
-    else {
+    } else {
         cf.dwEffects |= CFE_AUTOCOLOR;
     }
 
-    SendMessage( hMemo, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf );
+    SendMessage(hMemo, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 
     /* Append text */
-    SendMessage( hMemo, EM_REPLACESEL, (WPARAM) FALSE, (LPARAM) text );
+    SendMessage(hMemo, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)text);
 
     /* Return offset of appended text */
     return cbTextLen;
 }
 
 // low-level front-end; wrapper for the code to scroll the mentioned character in view (-1 = end)
-void ScrollToCurrent(int caretPos)
-{
-    if(caretPos < 0)
-        caretPos = (int) SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, WM_GETTEXTLENGTH, 0, 0 );
-    SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, EM_SETSEL, caretPos, caretPos );
+void ScrollToCurrent(int caretPos) {
+    if (caretPos < 0) {
+        caretPos = (int)SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, WM_GETTEXTLENGTH, 0, 0);
+    }
+    SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, EM_SETSEL, caretPos, caretPos);
 
-    SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, EM_SCROLLCARET, 0, 0 );
+    SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, EM_SCROLLCARET, 0, 0);
 }
 
 
@@ -146,26 +139,26 @@ void ScrollToCurrent(int caretPos)
 
 // front-end. Universal call-back for any event. Recognized vents are dialog creation, OK and cancel button-press
 // (dead code, as these buttons do not exist?), mouse clicks on the text edit, and moving / sizing
-LRESULT CALLBACK HistoryDialogProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
-{
+LRESULT CALLBACK HistoryDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     static SnapData sd;
 
     switch (message) {
     case WM_INITDIALOG:
-        if( moveHistoryDialog == NULL ) {
+        if (moveHistoryDialog == NULL) {
             moveHistoryDialog = hDlg;
             Translate(hDlg, DLG_MoveHistory);
 
             /* Enable word wrapping and notifications */
-            SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, EM_SETTARGETDEVICE, 0, 0 );
+            SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, EM_SETTARGETDEVICE, 0, 0);
 
-            SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, EM_SETEVENTMASK, 0, ENM_MOUSEEVENTS );
+            SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, EM_SETEVENTMASK, 0, ENM_MOUSEEVENTS);
 
             /* Set font */
-	    SendDlgItemMessage( moveHistoryDialog, IDC_MoveHistory, WM_SETFONT, (WPARAM)font[boardSize][MOVEHISTORY_FONT]->hf, MAKELPARAM(TRUE, 0 ));
+            SendDlgItemMessage(
+             moveHistoryDialog, IDC_MoveHistory, WM_SETFONT, (WPARAM)font[boardSize][MOVEHISTORY_FONT]->hf, MAKELPARAM(TRUE, 0));
 
             /* Restore window placement */
-            RestoreWindowPlacement( hDlg, &wpMoveHistory );
+            RestoreWindowPlacement(hDlg, &wpMoveHistory);
         }
 
         /* Update memo */
@@ -178,33 +171,33 @@ LRESULT CALLBACK HistoryDialogProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
         case IDOK:
-          EndDialog(hDlg, TRUE);
-          return TRUE;
+            EndDialog(hDlg, TRUE);
+            return TRUE;
 
         case IDCANCEL:
-          EndDialog(hDlg, FALSE);
-          return TRUE;
+            EndDialog(hDlg, FALSE);
+            return TRUE;
 
         default:
-          break;
+            break;
         }
 
         break;
 
     case WM_NOTIFY:
-        if( wParam == IDC_MoveHistory ) {
-            MSGFILTER * lpMF = (MSGFILTER *) lParam;
+        if (wParam == IDC_MoveHistory) {
+            MSGFILTER * lpMF = (MSGFILTER *)lParam;
 
-            if( lpMF->msg == WM_LBUTTONDBLCLK && (lpMF->wParam & (MK_CONTROL | MK_SHIFT)) == 0 ) {
+            if (lpMF->msg == WM_LBUTTONDBLCLK && (lpMF->wParam & (MK_CONTROL | MK_SHIFT)) == 0) {
                 POINTL pt;
                 LRESULT index;
 
-                pt.x = LOWORD( lpMF->lParam );
-                pt.y = HIWORD( lpMF->lParam );
+                pt.x = LOWORD(lpMF->lParam);
+                pt.y = HIWORD(lpMF->lParam);
 
-                index = SendDlgItemMessage( hDlg, IDC_MoveHistory, EM_CHARFROMPOS, 0, (LPARAM) &pt );
+                index = SendDlgItemMessage(hDlg, IDC_MoveHistory, EM_CHARFROMPOS, 0, (LPARAM)&pt);
 
-                FindMoveByCharIndex( index ); // [HGM] also does the actual moving to it, now
+                FindMoveByCharIndex(index);  // [HGM] also does the actual moving to it, now
 
                 /* Zap the message for good: apparently, returning non-zero is not enough */
                 lpMF->msg = WM_USER;
@@ -215,38 +208,32 @@ LRESULT CALLBACK HistoryDialogProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
         break;
 
     case WM_SIZE:
-        SetWindowPos( GetDlgItem( moveHistoryDialog, IDC_MoveHistory ),
-            HWND_TOP,
-            H_MARGIN, V_MARGIN,
-            LOWORD(lParam) - 2*H_MARGIN,
-            HIWORD(lParam) - 2*V_MARGIN,
-            SWP_NOZORDER );
+        SetWindowPos(GetDlgItem(moveHistoryDialog, IDC_MoveHistory), HWND_TOP, H_MARGIN, V_MARGIN, LOWORD(lParam) - 2 * H_MARGIN,
+         HIWORD(lParam) - 2 * V_MARGIN, SWP_NOZORDER);
         break;
 
-    case WM_GETMINMAXINFO:
-        {
-            MINMAXINFO * mmi = (MINMAXINFO *) lParam;
-        
-            mmi->ptMinTrackSize.x = 100;
-            mmi->ptMinTrackSize.y = 100;
-        }
-        break;
+    case WM_GETMINMAXINFO: {
+        MINMAXINFO * mmi = (MINMAXINFO *)lParam;
+
+        mmi->ptMinTrackSize.x = 100;
+        mmi->ptMinTrackSize.y = 100;
+    } break;
 
     case WM_CLOSE:
         MoveHistoryPopDown();
         break;
 
     case WM_ENTERSIZEMOVE:
-        return OnEnterSizeMove( &sd, hDlg, wParam, lParam );
+        return OnEnterSizeMove(&sd, hDlg, wParam, lParam);
 
     case WM_SIZING:
-        return OnSizing( &sd, hDlg, wParam, lParam );
+        return OnSizing(&sd, hDlg, wParam, lParam);
 
     case WM_MOVING:
-        return OnMoving( &sd, hDlg, wParam, lParam );
+        return OnMoving(&sd, hDlg, wParam, lParam);
 
     case WM_EXITSIZEMOVE:
-        return OnExitSizeMove( &sd, hDlg, wParam, lParam );
+        return OnExitSizeMove(&sd, hDlg, wParam, lParam);
     }
 
     return FALSE;
@@ -255,55 +242,46 @@ LRESULT CALLBACK HistoryDialogProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
 // ------------ standard entry points into MoveHistory code -----------
 
 // front-end
-VOID MoveHistoryPopUp()
-{
-  FARPROC lpProc;
-  
-  CheckMenuItem(GetMenu(hwndMain), IDM_ShowMoveHistory, MF_CHECKED);
+VOID MoveHistoryPopUp() {
+    FARPROC lpProc;
 
-  if( moveHistoryDialog ) {
-    SendMessage( moveHistoryDialog, WM_INITDIALOG, 0, 0 );
+    CheckMenuItem(GetMenu(hwndMain), IDM_ShowMoveHistory, MF_CHECKED);
 
-    if( ! moveHistoryDialogUp ) {
-        ShowWindow(moveHistoryDialog, SW_SHOW);
+    if (moveHistoryDialog) {
+        SendMessage(moveHistoryDialog, WM_INITDIALOG, 0, 0);
+
+        if (!moveHistoryDialogUp) {
+            ShowWindow(moveHistoryDialog, SW_SHOW);
+        }
+    } else {
+        lpProc = MakeProcInstance((FARPROC)HistoryDialogProc, hInst);
+
+        /* Note to self: dialog must have the WS_VISIBLE style set, otherwise it's not shown! */
+        CreateDialog(hInst, MAKEINTRESOURCE(DLG_MoveHistory), hwndMain, (DLGPROC)lpProc);
+
+        FreeProcInstance(lpProc);
     }
-  }
-  else {
-    lpProc = MakeProcInstance( (FARPROC) HistoryDialogProc, hInst );
 
-    /* Note to self: dialog must have the WS_VISIBLE style set, otherwise it's not shown! */
-    CreateDialog( hInst, MAKEINTRESOURCE(DLG_MoveHistory), hwndMain, (DLGPROC)lpProc );
+    moveHistoryDialogUp = TRUE;
 
-    FreeProcInstance(lpProc);
-  }
-
-  moveHistoryDialogUp = TRUE;
-
-// Note that in WIndows creating the dialog causes its call-back to perform
-// RefreshMemoContent() and MemoContentUpdated() immediately after it is realized.
-// To port this to X we might have to do that from here.
+    // Note that in WIndows creating the dialog causes its call-back to perform
+    // RefreshMemoContent() and MemoContentUpdated() immediately after it is realized.
+    // To port this to X we might have to do that from here.
 }
 
 // front-end
-VOID MoveHistoryPopDown()
-{
-  CheckMenuItem(GetMenu(hwndMain), IDM_ShowMoveHistory, MF_UNCHECKED);
+VOID MoveHistoryPopDown() {
+    CheckMenuItem(GetMenu(hwndMain), IDM_ShowMoveHistory, MF_UNCHECKED);
 
-  if( moveHistoryDialog ) {
-      ShowWindow(moveHistoryDialog, SW_HIDE);
-  }
+    if (moveHistoryDialog) {
+        ShowWindow(moveHistoryDialog, SW_HIDE);
+    }
 
-  moveHistoryDialogUp = FALSE;
+    moveHistoryDialogUp = FALSE;
 }
 
 // front-end
-Boolean MoveHistoryIsUp()
-{
-    return moveHistoryDialogUp;
-}
+Boolean MoveHistoryIsUp() { return moveHistoryDialogUp; }
 
 // front-end
-Boolean MoveHistoryDialogExists()
-{
-    return moveHistoryDialog != NULL;
-}
+Boolean MoveHistoryDialogExists() { return moveHistoryDialog != NULL; }
