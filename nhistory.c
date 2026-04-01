@@ -32,93 +32,71 @@
 #include "gettext.h"
 
 #ifdef ENABLE_NLS
-# define  _(s) gettext (s)
-# define N_(s) gettext_noop (s)
+# define _(s) gettext(s)
+# define N_(s) gettext_noop(s)
 #else
-# define  _(s) (s)
-# define N_(s)  s
+# define _(s) (s)
+# define N_(s) s
 #endif
 
 // templates for calls into back-end (= history.c; should be moved to history.h header shared with it!)
-void RefreshMemoContent (void);
-void MemoContentUpdated (void);
+void RefreshMemoContent(void);
+void MemoContentUpdated(void);
 
 // variables in xoptions.c
 extern Option historyOptions[];
 
 // ------------- low-level front-end actions called by MoveHistory back-end -----------------
 
-void
-ClearHistoryMemo (void)
-{
-    SetWidgetText(&historyOptions[0], "", HistoryDlg);
-}
+void ClearHistoryMemo(void) { SetWidgetText(&historyOptions[0], "", HistoryDlg); }
 
 // the bold argument says 0 = normal, 1 = bold typeface
 // the colorNr argument says 0 = font-default, 1 = gray
-int
-AppendToHistoryMemo (char * text, int bold, int colorNr)
-{
-    return AppendText(&historyOptions[0], text); // for now ignore bold & color stuff, as Xaw cannot handle that
+int AppendToHistoryMemo(char * text, int bold, int colorNr) {
+    return AppendText(&historyOptions[0], text);  // for now ignore bold & color stuff, as Xaw cannot handle that
 }
 
-void
-HighlightMove (int from, int to, Boolean highlight)
-{
-    HighlightText (&historyOptions[0], from, to, highlight);
-}
+void HighlightMove(int from, int to, Boolean highlight) { HighlightText(&historyOptions[0], from, to, highlight); }
 
-char *historyText;
+char * historyText;
 
-int
-SelectMove (Option *opt, int n, int x, int y, char *text, int index)
-{
-	if(n != 3 && n != 1) return FALSE; // only on button-1 and 3 press
-	FindMoveByCharIndex( index ); // [HGM] also does the actual moving to it, now
-	return (n == 3);  // suppress context menu for button 3, but allow selection with button 1
+int SelectMove(Option * opt, int n, int x, int y, char * text, int index) {
+    if (n != 3 && n != 1) {
+        return FALSE;  // only on button-1 and 3 press
+    }
+    FindMoveByCharIndex(index);  // [HGM] also does the actual moving to it, now
+    return (n == 3);  // suppress context menu for button 3, but allow selection with button 1
 }
 
 Option historyOptions[] = {
-{ 200, T_VSCRL | T_FILL | T_WRAP | T_TOP, 400, NULL, (void*) &historyText, NULL , (char**) &SelectMove, TextBox, "", &appData.historyFont },
-{   0,           NO_OK,             0, NULL, (void*) NULL, "", NULL, EndMark , "" }
+ {200, T_VSCRL | T_FILL | T_WRAP | T_TOP, 400, NULL, (void *)&historyText, NULL, (char **)&SelectMove, TextBox, "",
+  &appData.historyFont},
+ {0, NO_OK, 0, NULL, (void *)NULL, "", NULL, EndMark, ""}
 };
 
-void
-ScrollToCurrent (int caretPos)
-{
-    ScrollToCursor(&historyOptions[0], caretPos);
-}
+void ScrollToCurrent(int caretPos) { ScrollToCursor(&historyOptions[0], caretPos); }
 
 // ------------ standard entry points into MoveHistory code -----------
 
-Boolean
-MoveHistoryIsUp (void)
-{
-    return shellUp[HistoryDlg];
-}
+Boolean MoveHistoryIsUp(void) { return shellUp[HistoryDlg]; }
 
-Boolean
-MoveHistoryDialogExists (void)
-{
-    return DialogExists(HistoryDlg);
-}
+Boolean MoveHistoryDialogExists(void) { return DialogExists(HistoryDlg); }
 
-void
-HistoryPopUp (void)
-{
-    if(GenericPopUp(historyOptions, _("Move list"), HistoryDlg, BoardWindow, NONMODAL, appData.topLevel))
-	AddHandler(&historyOptions[0], HistoryDlg, 0);
+void HistoryPopUp(void) {
+    if (GenericPopUp(historyOptions, _("Move list"), HistoryDlg, BoardWindow, NONMODAL, appData.topLevel)) {
+        AddHandler(&historyOptions[0], HistoryDlg, 0);
+    }
     MarkMenu("View.MoveHistory", HistoryDlg);
 }
 
-void
-HistoryShowProc (void)
-{
-  if (!shellUp[HistoryDlg]) {
-    ASSIGN(historyText, "");
-    HistoryPopUp();
-    RefreshMemoContent();
-    MemoContentUpdated();
-  } else PopDown(HistoryDlg);
-  ToNrEvent(currentMove);
+void HistoryShowProc(void) {
+    if (!shellUp[HistoryDlg]) {
+        ASSIGN(historyText, "");
+        HistoryPopUp();
+        RefreshMemoContent();
+        MemoContentUpdated();
+    } else {
+        PopDown(HistoryDlg);
+    }
+    ToNrEvent(currentMove);
 }

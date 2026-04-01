@@ -55,49 +55,51 @@ int MarginW = 4;
 int MarginH = 4;
 
 // back-end
-static void
-DrawLine (int x1, int y1, int x2, int y2, int penType)
-{
-    DrawSegment( x1, y1, NULL, NULL, PEN_NONE );
-    DrawSegment( x2, y2, NULL, NULL, penType );
+static void DrawLine(int x1, int y1, int x2, int y2, int penType) {
+    DrawSegment(x1, y1, NULL, NULL, PEN_NONE);
+    DrawSegment(x2, y2, NULL, NULL, penType);
 }
 
 // back-end
-static void
-DrawLineEx (int x1, int y1, int x2, int y2, int penType)
-{
+static void DrawLineEx(int x1, int y1, int x2, int y2, int penType) {
     int savX, savY;
-    DrawSegment( x1, y1, &savX, &savY, PEN_NONE );
-    DrawSegment( x2, y2, NULL, NULL, penType );
-    DrawSegment( savX, savY, NULL, NULL, PEN_NONE );
+    DrawSegment(x1, y1, &savX, &savY, PEN_NONE);
+    DrawSegment(x2, y2, NULL, NULL, penType);
+    DrawSegment(savX, savY, NULL, NULL, PEN_NONE);
 }
 
 // back-end
-static int
-GetPvScore (int index)
-{
-    int score = currPvInfo[ index ].score;
+static int GetPvScore(int index) {
+    int score = currPvInfo[index].score;
 
-    if(differentialView) score = index < currLast-1 ? -currPvInfo[ index+1 ].score - score : 0;
-    if( index & 1 ) score = -score; /* Flip score for black */
+    if (differentialView) {
+        score = index < currLast - 1 ? -currPvInfo[index + 1].score - score : 0;
+    }
+    if (index & 1) {
+        score = -score; /* Flip score for black */
+    }
 
     return score;
 }
 
-char *
-MakeEvalTitle (char *title)
-{
+char * MakeEvalTitle(char * title) {
     int score, depth;
     static char buf[MSG_SIZ];
 
-    if( currCurrent <0 ) return title; // currCurrent = -1 crashed WB on start without ini file!
-    score = currPvInfo[ currCurrent ].score;
-    depth = currPvInfo[ currCurrent ].depth;
+    if (currCurrent < 0) {
+        return title;  // currCurrent = -1 crashed WB on start without ini file!
+    }
+    score = currPvInfo[currCurrent].score;
+    depth = currPvInfo[currCurrent].depth;
 
-    if( depth <=0 ) return title;
-    if( currCurrent & 1 ) score = -score; /* Flip score for black */
-    snprintf(buf, MSG_SIZ, "%s {%d: %s%.2f/%-2d %d}", title, currCurrent/2+1,
-				score>0 ? "+" : " ", score/100., depth, (currPvInfo[currCurrent].time+50)/100);
+    if (depth <= 0) {
+        return title;
+    }
+    if (currCurrent & 1) {
+        score = -score; /* Flip score for black */
+    }
+    snprintf(buf, MSG_SIZ, "%s {%d: %s%.2f/%-2d %d}", title, currCurrent / 2 + 1, score > 0 ? "+" : " ", score / 100., depth,
+     (currPvInfo[currCurrent].time + 50) / 100);
 
     return buf;
 }
@@ -109,105 +111,102 @@ MakeEvalTitle (char *title)
 
     Note: height can be negative!
 */
-static int
-GetValueY (int value)
-{
-    if( value < -range*700 ) value = -range*700;
-    if( value > +range*700 ) value = +range*700;
-    if(value > 100*range)  value += (appData.zoom - 1)*100*range; else
-    if(value < -100*range) value -= (appData.zoom - 1)*100*range; else
-	value *= appData.zoom;
-    return (nHeightPB / 2) - (int)(value * (nHeightPB - 2*MarginH) / ((1200. + 200.*appData.zoom)*range));
+static int GetValueY(int value) {
+    if (value < -range * 700) {
+        value = -range * 700;
+    }
+    if (value > +range * 700) {
+        value = +range * 700;
+    }
+    if (value > 100 * range) {
+        value += (appData.zoom - 1) * 100 * range;
+    } else if (value < -100 * range) {
+        value -= (appData.zoom - 1) * 100 * range;
+    } else {
+        value *= appData.zoom;
+    }
+    return (nHeightPB / 2) - (int)(value * (nHeightPB - 2 * MarginH) / ((1200. + 200. * appData.zoom) * range));
 }
 
 // the brush selection is made part of the DrawLine, by passing a style argument
 // the wrapper for doing the text output makes this back-end
-static void
-DrawAxisSegmentHoriz (int value, Boolean drawValue)
-{
-    int y = GetValueY( range*value*100 );
+static void DrawAxisSegmentHoriz(int value, Boolean drawValue) {
+    int y = GetValueY(range * value * 100);
 
-    if( drawValue ) {
+    if (drawValue) {
         char buf[MSG_SIZ], *b = buf;
 
-        if( value > 0 ) *b++ = '+';
-	sprintf(b, "%d", range*value);
+        if (value > 0) {
+            *b++ = '+';
+        }
+        sprintf(b, "%d", range * value);
 
-	DrawEvalText(buf, strlen(buf), y);
+        DrawEvalText(buf, strlen(buf), y);
     }
     // [HGM] counts on DrawEvalText to have select transparent background for dotted line!
-    DrawLine( MarginX, y, MarginX + MarginW, y, PEN_BLACK ); // Y-axis tick marks
-    DrawLine( MarginX + MarginW, y, nWidthPB - MarginW, y, PEN_DOTTED ); // hor grid
+    DrawLine(MarginX, y, MarginX + MarginW, y, PEN_BLACK);  // Y-axis tick marks
+    DrawLine(MarginX + MarginW, y, nWidthPB - MarginW, y, PEN_DOTTED);  // hor grid
 }
 
 // The DrawLines again must select their own brush.
 // the initial brush selection is useless? BkMode needed for dotted line and text
-static void
-DrawAxis (void)
-{
-    int cy = nHeightPB / 2, space = nHeightPB/(6 + appData.zoom);
+static void DrawAxis(void) {
+    int cy = nHeightPB / 2, space = nHeightPB / (6 + appData.zoom);
 
-    DrawAxisSegmentHoriz( +5, TRUE );
-    DrawAxisSegmentHoriz( +3, space >= 20 );
-    DrawAxisSegmentHoriz( +1, space >= 20 && space*appData.zoom >= 40 );
-    DrawAxisSegmentHoriz(  0, TRUE );
-    DrawAxisSegmentHoriz( -1, space >= 20 && space*appData.zoom >= 40 );
-    DrawAxisSegmentHoriz( -3, space >= 20 );
-    DrawAxisSegmentHoriz( -5, TRUE );
+    DrawAxisSegmentHoriz(+5, TRUE);
+    DrawAxisSegmentHoriz(+3, space >= 20);
+    DrawAxisSegmentHoriz(+1, space >= 20 && space * appData.zoom >= 40);
+    DrawAxisSegmentHoriz(0, TRUE);
+    DrawAxisSegmentHoriz(-1, space >= 20 && space * appData.zoom >= 40);
+    DrawAxisSegmentHoriz(-3, space >= 20);
+    DrawAxisSegmentHoriz(-5, TRUE);
 
-    DrawLine( MarginX + MarginW, cy, nWidthPB - MarginW, cy, PEN_BLACK ); // x-axis
-    DrawLine( MarginX + MarginW, MarginH, MarginX + MarginW, nHeightPB - MarginH, PEN_BLACK ); // y-axis
+    DrawLine(MarginX + MarginW, cy, nWidthPB - MarginW, cy, PEN_BLACK);  // x-axis
+    DrawLine(MarginX + MarginW, MarginH, MarginX + MarginW, nHeightPB - MarginH, PEN_BLACK);  // y-axis
 }
 
 // back-end
-static void
-DrawHistogram (int x, int y, int width, int value, int side)
-{
+static void DrawHistogram(int x, int y, int width, int value, int side) {
     int left, top, right, bottom;
 
-    if( value > -appData.evalThreshold*range && value < +appData.evalThreshold*range ) return;
+    if (value > -appData.evalThreshold * range && value < +appData.evalThreshold * range) {
+        return;
+    }
 
     left = x;
     right = left + width + 1;
 
-    if( value > 0 ) {
-        top = GetValueY( value );
-        bottom = y+1;
-    }
-    else {
+    if (value > 0) {
+        top = GetValueY(value);
+        bottom = y + 1;
+    } else {
         top = y;
-        bottom = GetValueY( value ) + 1;
+        bottom = GetValueY(value) + 1;
     }
 
 
-    if( width == MIN_HIST_WIDTH ) {
+    if (width == MIN_HIST_WIDTH) {
         right--;
-        DrawRectangle( left, top, right, bottom, side, FILLED );
-    }
-    else {
-        DrawRectangle( left, top, right, bottom, side, OPEN );
+        DrawRectangle(left, top, right, bottom, side, FILLED);
+    } else {
+        DrawRectangle(left, top, right, bottom, side, OPEN);
     }
 }
 
 // back-end
-static void
-DrawSeparator (int index, int x)
-{
-    if( index > 0 ) {
-        if( index == currCurrent ) {
-            DrawLineEx( x, MarginH, x, nHeightPB - MarginH, PEN_BLUEDOTTED );
-        }
-        else if( (index % 20) == 0 ) {
-            DrawLineEx( x, MarginH, x, nHeightPB - MarginH, PEN_DOTTED );
+static void DrawSeparator(int index, int x) {
+    if (index > 0) {
+        if (index == currCurrent) {
+            DrawLineEx(x, MarginH, x, nHeightPB - MarginH, PEN_BLUEDOTTED);
+        } else if ((index % 20) == 0) {
+            DrawLineEx(x, MarginH, x, nHeightPB - MarginH, PEN_DOTTED);
         }
     }
 }
 
 // made back-end by replacing MoveToEx and LineTo by DrawSegment
 /* Actually draw histogram as a diagram, cause there's too much data */
-static void
-DrawHistogramAsDiagram (int cy, int paint_width, int hist_count)
-{
+static void DrawHistogramAsDiagram(int cy, int paint_width, int hist_count) {
     double step;
     int i;
 
@@ -216,30 +215,30 @@ DrawHistogramAsDiagram (int cy, int paint_width, int hist_count)
     hist_count += 8;
     hist_count /= 2;
 
-    step = (double) paint_width / (hist_count + 1);
+    step = (double)paint_width / (hist_count + 1);
 
-    for( i=0; i<2; i++ ) {
+    for (i = 0; i < 2; i++) {
         int index = currFirst;
         int side = (currCurrent + i + 1) & 1; /* Draw current side last */
         double x = MarginX + MarginW;
 
-        if( (index & 1) != side ) {
+        if ((index & 1) != side) {
             x += step / 2;
             index++;
         }
 
-        DrawSegment( (int) x, cy, NULL, NULL, PEN_NONE );
+        DrawSegment((int)x, cy, NULL, NULL, PEN_NONE);
 
         index += 2;
 
-        while( index < currLast ) {
+        while (index < currLast) {
             x += step;
 
-            DrawSeparator( index, (int) x );
+            DrawSeparator(index, (int)x);
 
             /* Extend line up to current point */
-            if( currPvInfo[index].depth > 0 ) {
-	      DrawSegment((int) x, GetValueY( GetPvScore(index) ), NULL, NULL, (side==0 ? PEN_BOLDWHITE: PEN_BOLDBLACK) );
+            if (currPvInfo[index].depth > 0) {
+                DrawSegment((int)x, GetValueY(GetPvScore(index)), NULL, NULL, (side == 0 ? PEN_BOLDWHITE : PEN_BOLDBLACK));
             }
 
             index += 2;
@@ -248,23 +247,21 @@ DrawHistogramAsDiagram (int cy, int paint_width, int hist_count)
 }
 
 // back-end, delete pen selection
-static void
-DrawHistogramFull (int cy, int hist_width, int hist_count)
-{
+static void DrawHistogramFull(int cy, int hist_width, int hist_count) {
     int i;
 
-//    SelectObject( hdcPB, GetStockObject(BLACK_PEN) );
+    // SelectObject( hdcPB, GetStockObject(BLACK_PEN) );
 
-    for( i=0; i<hist_count; i++ ) {
+    for (i = 0; i < hist_count; i++) {
         int index = currFirst + i;
         int x = MarginX + MarginW + index * hist_width;
 
         /* Draw a separator every 10 moves */
-        DrawSeparator( index, x );
+        DrawSeparator(index, x);
 
         /* Draw histogram */
-        if( currPvInfo[i].depth > 0 ) {
-            DrawHistogram( x, cy, hist_width, GetPvScore(index), index & 1 );
+        if (currPvInfo[i].depth > 0) {
+            DrawHistogram(x, cy, hist_width, GetPvScore(index), index & 1);
         }
     }
 }
@@ -277,23 +274,23 @@ typedef struct {
 } VisualizationData;
 
 // back-end
-static Boolean
-InitVisualization (VisualizationData *vd)
-{
+static Boolean InitVisualization(VisualizationData * vd) {
     Boolean result = FALSE;
 
     vd->cy = nHeightPB / 2;
     vd->hist_width = MIN_HIST_WIDTH;
     vd->hist_count = currLast - currFirst;
-    vd->paint_width = nWidthPB - MarginX - 2*MarginW;
+    vd->paint_width = nWidthPB - MarginX - 2 * MarginW;
 
-    if( vd->hist_count > 0 ) {
+    if (vd->hist_count > 0) {
         result = TRUE;
 
         /* Compute width */
         vd->hist_width = vd->paint_width / vd->hist_count;
 
-        if( vd->hist_width > MAX_HIST_WIDTH ) vd->hist_width = MAX_HIST_WIDTH;
+        if (vd->hist_width > MAX_HIST_WIDTH) {
+            vd->hist_width = MAX_HIST_WIDTH;
+        }
 
         vd->hist_width -= vd->hist_width % 2;
     }
@@ -302,60 +299,57 @@ InitVisualization (VisualizationData *vd)
 }
 
 // back-end
-static void
-DrawHistograms (void)
-{
+static void DrawHistograms(void) {
     VisualizationData vd;
-    int i; double step = 1;
+    int i;
+    double step = 1;
 
-    if( InitVisualization( &vd ) ) {
-        if( vd.hist_width < MIN_HIST_WIDTH ) {
-            DrawHistogramAsDiagram( vd.cy, vd.paint_width, vd.hist_count );
-            step = 0.5*vd.paint_width / (((vd.hist_count | 7) + 1)/2 + 1.);
-        }
-        else {
-            DrawHistogramFull( vd.cy, step = vd.hist_width, vd.hist_count );
+    if (InitVisualization(&vd)) {
+        if (vd.hist_width < MIN_HIST_WIDTH) {
+            DrawHistogramAsDiagram(vd.cy, vd.paint_width, vd.hist_count);
+            step = 0.5 * vd.paint_width / (((vd.hist_count | 7) + 1) / 2 + 1.);
+        } else {
+            DrawHistogramFull(vd.cy, step = vd.hist_width, vd.hist_count);
         }
     }
-    if(!differentialView) return;
+    if (!differentialView) {
+        return;
+    }
     differentialView = 0;
-    DrawSegment( MarginX + MarginW, vd.cy, NULL, NULL, PEN_NONE );
-    for( i=0; i<vd.hist_count; i++ ) {
+    DrawSegment(MarginX + MarginW, vd.cy, NULL, NULL, PEN_NONE);
+    for (i = 0; i < vd.hist_count; i++) {
         int index = currFirst + i;
-        int x = MarginX + MarginW + index * step + step/2;
-        DrawSegment((int) x, GetValueY( GetPvScore(index) ), NULL, NULL, PEN_ANY );
+        int x = MarginX + MarginW + index * step + step / 2;
+        DrawSegment((int)x, GetValueY(GetPvScore(index)), NULL, NULL, PEN_ANY);
     }
     differentialView = 1;
 }
 
 // back-end
-int
-GetMoveIndexFromPoint (int x, int y)
-{
+int GetMoveIndexFromPoint(int x, int y) {
     int result = -1;
     int start_x = MarginX + MarginW;
     VisualizationData vd;
 
-    if( x >= start_x && InitVisualization( &vd ) ) {
+    if (x >= start_x && InitVisualization(&vd)) {
         /* Almost an hack here... we duplicate some of the paint logic */
-        if( vd.hist_width < MIN_HIST_WIDTH ) {
+        if (vd.hist_width < MIN_HIST_WIDTH) {
             double step;
 
             vd.hist_count -= vd.hist_count % 8;
             vd.hist_count += 8;
             vd.hist_count /= 2;
 
-            step = (double) vd.paint_width / (vd.hist_count + 1);
+            step = (double)vd.paint_width / (vd.hist_count + 1);
             step /= 2;
 
-            result = (int) (0.5 + (double) (x - start_x) / step);
-        }
-        else {
+            result = (int)(0.5 + (double)(x - start_x) / step);
+        } else {
             result = (x - start_x) / vd.hist_width;
         }
     }
 
-    if( result >= currLast ) {
+    if (result >= currLast) {
         result = -1;
     }
 
@@ -363,11 +357,11 @@ GetMoveIndexFromPoint (int x, int y)
 }
 
 // init and display part split of so they can be moved to front end
-void
-PaintEvalGraph (void)
-{
+void PaintEvalGraph(void) {
     VariantClass v = gameInfo.variant;
-    range = (gameInfo.holdingsWidth && v != VariantSuper && v != VariantGreat && v != VariantSChess) ? 2 : 1; // [HGM] double range in drop games
+    range = (gameInfo.holdingsWidth && v != VariantSuper && v != VariantGreat && v != VariantSChess)
+     ? 2
+     : 1;  // [HGM] double range in drop games
     /* Draw */
     DrawRectangle(0, 0, nWidthPB, nHeightPB, 2, FILLED);
     DrawAxis();

@@ -52,12 +52,12 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-extern void yynewfile (FILE *f);
-extern void yynewstr (char *s);
+extern void yynewfile(FILE * f);
+extern void yynewstr(char * s);
 
 // [HGM] yylex now globally invisible, all calls must use wrapper
-extern int Myylex (void);
-extern ChessMove yylexstr (int boardIndex, char *s, char *buf, int buflen);
+extern int Myylex(void);
+extern ChessMove yylexstr(int boardIndex, char * s, char * buf, int buflen);
 extern char currentMoveString[];
 extern int yyboardindex;
 
@@ -65,9 +65,8 @@ extern int yyboardindex;
 extern int yyskipmoves;
 
 /* Needed because yytext can be either a char[] or a (non-constant) char *. */
-extern char *yy_text;
+extern char * yy_text;
 
-extern int yyoffset (void);
+extern int yyoffset(void);
 extern unsigned char initialRights[BOARD_FILES];
-extern signed char  castlingRank[BOARD_FILES];
-
+extern signed char castlingRank[BOARD_FILES];

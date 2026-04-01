@@ -77,7 +77,7 @@ AH_TEMPLATE(
 )
 AH_TEMPLATE(
     [USE_XAW3D],
-    [Use a 3D-styled version of the X Athena Widgets.]
+    [Use a 3D-styled version of the X Athena Widgets library.]
 )
 
 dnl| PTY-related autoheader templates.
@@ -95,15 +95,15 @@ AH_TEMPLATE(
 )
 AH_TEMPLATE(
     [PTY_ITERATION],
-    [How to iterate over PTYs, if not the default way.]
+    [How to iterate over PTYs.]
 )
 AH_TEMPLATE(
     [PTY_NAME_C_STR],
-    [How to get the device name of the control end of a PTY, if not the default way.]
+    [How to get the device name of the control end of a PTY.]
 )
 AH_TEMPLATE(
     [PTY_TTY_NAME_C_STR],
-    [How to get device name of the tty end of a PTY, if not the default way.]
+    [How to get device name of the tty end of a PTY.]
 )
 AH_TEMPLATE(
     [UNIPLUS],
@@ -112,6 +112,11 @@ AH_TEMPLATE(
 AH_TEMPLATE(
     [USE_PTYS],
     [Whether or not to use PTYs.]
+)
+
+AH_TEMPLATE(
+    [API_USED_FOR_DRAWING_GUI],
+    [The API used for drawing the graphical user interface: 0 = X11; 1 = Windows; 2 = GTK 2.x.]
 )
 
 AC_PROG_CC
@@ -312,6 +317,7 @@ AS_IF([test "x$with_GTK" = xyes], [
     FRONTEND_CFLAGS=$GTK_CFLAGS
     FRONTEND_LIBS=$GTK_LIBS
     with_Xaw="no"
+    AC_DEFINE([API_USED_FOR_DRAWING_GUI], [2])
 ])
 
 AS_IF([test "x$with_GTK" = xno], [
@@ -320,9 +326,7 @@ dnl| general check for Xaw and Xaw3d
     AS_IF(
         [test "x$no_x" = xyes],
         [AC_MSG_ERROR(
-            ["    $PACKAGE requires the X Window System header files and libraries!
-They were not found on your system.  See FAQ topic C.2.
-configure failed"]
+            ["$PACKAGE" requires the X Window System header files and libraries, but they were not found on your system.  See FAQ topic C.2.]
         )]
     )
     save_cflags="$CFLAGS"
@@ -332,7 +336,7 @@ configure failed"]
     AC_CHECK_HEADER([X11/Intrinsic.h], [xt="yes"], [xt="no"])
     AS_IF(
         [test "x$xt" = xno],
-        [AC_MSG_ERROR([Xt headers not found. Please install the X11 packages.])]
+        [AC_MSG_ERROR([The Xt headers were not found.  Please ensure that they are properly installed.])]
     )
     CFLAGS="$save_cflags"
     CPPFLAGS="$save_cppflags"
@@ -346,10 +350,11 @@ dnl| check availability of Xaw3d
             [XawTextReplace],
             [
                 FRONTEND_LIBS="-lXaw3d"
-                AC_DEFINE([USE_XAW3D], [1], [Define if you want to use Xaw3d])
+                AC_DEFINE([API_USED_FOR_DRAWING_GUI], [0])
+                AC_DEFINE([USE_XAW3D], [1])
             ],
             [AC_MSG_ERROR(
-                [--with-Xaw3d was given, but test for Xaw3d failed. Make sure that you have Xaw3d installed, else you might want to try the configure option --without-Xaw3d]
+                [The configure option --with-Xaw3d was given, but the test for Xaw3d failed.  Ensure that you have Xaw3d installed, or alternatively, you might try using --without-Xaw3d instead.]
             )],
             [-lXaw]
         )]
@@ -367,7 +372,8 @@ dnl| no Xaw3d, check for Xaw; make it the default
             AC_CHECK_HEADER([X11/Xaw/Dialog.h], [xaw_headers="yes"], [xaw_headers="no"])
             AS_IF(
                 [test "x$xaw_headers" = xno],
-                [AC_MSG_ERROR([Xaw headers not found. Please install the Xaw package and headers.])]
+                [AC_MSG_ERROR([The Xaw headers were not found.  Please ensure that they are properly installed.])],
+                [AC_DEFINE([API_USED_FOR_DRAWING_GUI], [0])]
             )
             CFLAGS="$save_cflags"
             CPPFLAGS="$save_cppflags"
@@ -377,8 +383,8 @@ dnl| no Xaw3d, check for Xaw; make it the default
 ])
 
 dnl| make results available in Makefile.am
-AM_CONDITIONAL([withGTK], [test "x$with_GTK" = xyes])
-AM_CONDITIONAL([withXaw], [test "x$with_Xaw3d" = xyes || test "x$with_Xaw" = xyes])
+AM_CONDITIONAL([USING_GTK_2_FRONT_END], [test "x$with_GTK" = xyes])
+AM_CONDITIONAL([USING_X11_FRONT_END], [test "x$with_Xaw3d" = xyes || test "x$with_Xaw" = xyes])
 
 dnl| end Front-end check
 
@@ -660,7 +666,7 @@ AS_IF(
     [AC_DEFINE([ZIPPY], [1], [1 if Zippy should be enabled, otherwise 0.])],
     [AC_DEFINE([ZIPPY], [0], [1 if Zippy should be enabled, otherwise 0.])]
 )
-AM_CONDITIONAL([ZIPPY], [test "x$enable_zippy" != xno])
+AM_CONDITIONAL([USING_ZIPPY], [test "x$enable_zippy" != xno])
 
 AC_ARG_ENABLE(
     [sigint],

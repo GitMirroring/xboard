@@ -46,176 +46,181 @@
 
 
 /* Flags Option.min used (2) for TextBox (-string): */
-#define T_VSCRL		(1 << 0)
-#define T_HSCRL		(1 << 1)
-#define T_FILL		(1 << 2)
-#define T_WRAP		(1 << 3)
-#define T_TOP		(1 << 4)
+#define T_VSCRL (1 << 0)
+#define T_HSCRL (1 << 1)
+#define T_FILL (1 << 2)
+#define T_WRAP (1 << 3)
+#define T_TOP (1 << 4)
 
 /* Flags Option.min used (3) for ComboBox (-combo) and menus (PopUp, PopDown): */
-#define COMBO_CALLBACK	(1 << 0)
-#define NO_GETTEXT	(1 << 2)
+#define COMBO_CALLBACK (1 << 0)
+#define NO_GETTEXT (1 << 2)
 
 /* Flags for Option.min used (1) for Button, SaveButton, ListBox, Label: */
-#define SAME_ROW	(1 << 0) /* also in Break & EndMark */
-#define BORDER		(1 << 1) /* Label */
-#define FIX_H		(1 << 1) /* in other, this bit specifies top and botom of the control chain to same window edge */
-#define B2B		(1 << 2) /* chain bottom to bottom (by default, no chaining is done) */
-#define T2T		(1 << 3)
-#define R2R		(1 << 4)
-#define L2R		(1 << 5)
-#define R2L		(1 << 6)
-#define L2L		(1 << 7)
-#define TT		(T2T|FIX_H) /* useful combinations: 0xA = entirely to top */
-#define BB		(B2B|FIX_H) /*   6 = entirely to bottom */
-#define TB		(B2B|T2T)   /*   0xC = absorb all vertical size change */
-#define LL		(L2L|R2L)   /*   0xC0 = entirely to left */
-#define RR		(L2R|R2R)   /*   0x30 = entirely to right */
-#define LR		(L2L|R2R)   /*   0x90 = absorb all horizontal size change */
+#define SAME_ROW (1 << 0) /* also in Break & EndMark */
+#define BORDER (1 << 1) /* Label */
+#define FIX_H (1 << 1) /* in other, this bit specifies top and botom of the control chain to same window edge */
+#define B2B (1 << 2) /* chain bottom to bottom (by default, no chaining is done) */
+#define T2T (1 << 3)
+#define R2R (1 << 4)
+#define L2R (1 << 5)
+#define R2L (1 << 6)
+#define L2L (1 << 7)
+#define TT (T2T | FIX_H) /* useful combinations: 0xA = entirely to top */
+#define BB (B2B | FIX_H) /*   6 = entirely to bottom */
+#define TB (B2B | T2T) /*   0xC = absorb all vertical size change */
+#define LL (L2L | R2L) /*   0xC0 = entirely to left */
+#define RR (L2R | R2R) /*   0x30 = entirely to right */
+#define LR (L2L | R2R) /*   0x90 = absorb all horizontal size change */
 
 /* Flags for Option.min used (4) for EndMark: */
-#define NO_OK		(1 << 1)
-#define NO_CANCEL	(1 << 2)
+#define NO_OK (1 << 1)
+#define NO_CANCEL (1 << 2)
 
-#define REPLACE		(1 << 16)
+#define REPLACE (1 << 16)
 
 #define MODAL 1
 #define NONMODAL 0
 
 /* Board widget numbers, MUST correspond to mainOptions array */
 
-#define W_MENU   0  // main menu bar
-#define W_ENGIN  6  // engine menu
+#define W_MENU 0  // main menu bar
+#define W_ENGIN 6  // engine menu
 #define W_TITLE 10
 #define W_WHITE 12
 #define W_BLACK 13
 #define W_SMALL 15  // title in small layout
 #define W_MESSG 16
-#define W_BUTTON 17 // button bar
+#define W_BUTTON 17  // button bar
 #define W_PAUSE 20
 #define W_BOARD 24
 #define W_MENUW 25
 #define W_MENUB 26
-#define W_DROP  27  // drop (popup) menu
+#define W_DROP 27  // drop (popup) menu
 
 typedef enum {  // identifier of dialogs done by GenericPopup
-TransientDlg=0, // transient: grabs mouse events and is destroyed at pop-down (so other dialog can use this ID next time)
-CommentDlg, TagsDlg, TextMenuDlg, InputBoxDlg, ChatDlg, DummyDlg, HistoryDlg, // persistent: no grab and reused
-GameListDlg,
-EngOutDlg,
-EvalGraphDlg,
-PromoDlg,       // this and beyond are destroyed at pop-down
-ErrorDlg,
-AskDlg,         // this and beyond do grab mouse events (and are destroyed)
-FatalDlg,
-BoardWindow,
-BrowserDlg,
-MasterDlg,
-NrOfDialogs     // dummy for total
+    TransientDlg = 0,  // transient: grabs mouse events and is destroyed at pop-down (so other dialog can use this ID next time)
+    CommentDlg,
+    TagsDlg,
+    TextMenuDlg,
+    InputBoxDlg,
+    ChatDlg,
+    DummyDlg,
+    HistoryDlg,  // persistent: no grab and reused
+    GameListDlg,
+    EngOutDlg,
+    EvalGraphDlg,
+    PromoDlg,  // this and beyond are destroyed at pop-down
+    ErrorDlg,
+    AskDlg,  // this and beyond do grab mouse events (and are destroyed)
+    FatalDlg,
+    BoardWindow,
+    BrowserDlg,
+    MasterDlg,
+    NrOfDialogs  // dummy for total
 } DialogClass;
 
-typedef int MemoCallback (Option *opt, int n, int x, int y, char *text, int index);
-typedef Option *PointerCallback(int n, int x, int y);
+typedef int MemoCallback(Option * opt, int n, int x, int y, char * text, int index);
+typedef Option * PointerCallback(int n, int x, int y);
 typedef void ListBoxCallback(int n, int selected);
 typedef void ButtonCallback(int n);
 typedef int OKCallback(int n);
 
 extern char commentTranslations[];
 extern char historyTranslations[];
-//extern Pixel timerBackgroundPixel;
+// extern Pixel timerBackgroundPixel;
 extern int values[];
-extern ChessProgramState *currentCps;
+extern ChessProgramState * currentCps;
 extern int dialogError;
-extern ButtonCallback *comboCallback;
-extern void *userLogo;
+extern ButtonCallback * comboCallback;
+extern void * userLogo;
 
 extern WindowPlacement wpComment, wpTags, wpMoveHistory, wpMain, wpDualBoard, wpConsole;
-extern char *marked[];
+extern char * marked[];
 extern Boolean shellUp[];
 extern Option textOptions[], typeOptions[], dualOptions[], mainOptions[];
 extern Option historyOptions[], engoutOptions[], gamesOptions[], chatOptions[], tagsOptions[], commentOptions[];
 #define MAX_SIZE 130
 extern Boolean fontIsSet[], fontValid[][MAX_SIZE];
 extern int initialSquareSize;
-extern char *fontTable[][MAX_SIZE];
+extern char * fontTable[][MAX_SIZE];
 
 
-void GetPlacement (DialogClass dlg, WindowPlacement *wp);
-int DialogExists (DialogClass n);
-int GenericPopUp (Option *option, char *title, DialogClass dlgNr, DialogClass parent, int modal, int topLevel);
-int GenericReadout (Option *currentOption, int selected);
-int PopDown (DialogClass n);
-void MarkMenu (char *item, int dlgNr);
-int AppendText (Option *opt, char *s);
-void AppendColorized (Option *opt, char *s, int count);
-void Show (Option *opt, int hide);
-int  IcsHist (int dir, Option *opt, DialogClass dlg);
-void HighlightText (Option *opt, int from, int to, Boolean highlight);
-void SetColor (char *colorName, Option *box);
-//void ColorChanged (Widget w, XtPointer data, XEvent *event, Boolean *b);
-void SetInsertPos (Option *opt, int pos);
-void HardSetFocus (Option *opt, DialogClass dlg);
-void CursorAtEnd (Option *opt);
-void GetWidgetText (Option *opt, char **buf);
-void SetWidgetText (Option *opt, char *buf, int n);
-void GetWidgetState (Option *opt, int *state);
-void SetWidgetState (Option *opt, int state);
-void SetWidgetLabel (Option *opt, char *buf);
-void SetComboChoice (Option *opt, int choice);
-void SetDialogTitle (DialogClass dlg, char *title);
-void LoadListBox (Option *opt, char *emptyText, int n1, int n2);
-void HighlightListBoxItem (Option *opt, int nr);
-void HighlightWithScroll (Option *opt, int sel, int max);
-void ScrollToCursor (Option *opt, int pos);
-int  SelectedListBoxItem (Option *opt);
-void BoardFocus (void);
-void FocusOnWidget (Option *opt, DialogClass dlg);
-void UnCaret (void);
-void SetIconName (DialogClass dlg, char *name);
-int  ReadScroll (Option *opt, float *top, float *bottom);
-void SetScroll (Option *opt, float f);
-void AddHandler (Option *opt, DialogClass dlg, int nr);
-void SendText (int n);
-void DisplayLogos (Option *left, Option *right);
-void StartDir (char *filter, char *newName);
-void Browse (DialogClass dlg, char *label, char *proposed, char *ext,
-                       Boolean pathFlag, char *mode, char **name, FILE **fp);
-void FileNamePopUpWrapper (char *label, char *def, char *filter, FileProc proc,
-                  Boolean pathFlag, char *openMode, char **openName, FILE **openFP);
+void GetPlacement(DialogClass dlg, WindowPlacement * wp);
+int DialogExists(DialogClass n);
+int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass parent, int modal, int topLevel);
+int GenericReadout(Option * currentOption, int selected);
+int PopDown(DialogClass n);
+void MarkMenu(char * item, int dlgNr);
+int AppendText(Option * opt, char * s);
+void AppendColorized(Option * opt, char * s, int count);
+void Show(Option * opt, int hide);
+int IcsHist(int dir, Option * opt, DialogClass dlg);
+void HighlightText(Option * opt, int from, int to, Boolean highlight);
+void SetColor(char * colorName, Option * box);
+// void ColorChanged (Widget w, XtPointer data, XEvent *event, Boolean *b);
+void SetInsertPos(Option * opt, int pos);
+void HardSetFocus(Option * opt, DialogClass dlg);
+void CursorAtEnd(Option * opt);
+void GetWidgetText(Option * opt, char ** buf);
+void SetWidgetText(Option * opt, char * buf, int n);
+void GetWidgetState(Option * opt, int * state);
+void SetWidgetState(Option * opt, int state);
+void SetWidgetLabel(Option * opt, char * buf);
+void SetComboChoice(Option * opt, int choice);
+void SetDialogTitle(DialogClass dlg, char * title);
+void LoadListBox(Option * opt, char * emptyText, int n1, int n2);
+void HighlightListBoxItem(Option * opt, int nr);
+void HighlightWithScroll(Option * opt, int sel, int max);
+void ScrollToCursor(Option * opt, int pos);
+int SelectedListBoxItem(Option * opt);
+void BoardFocus(void);
+void FocusOnWidget(Option * opt, DialogClass dlg);
+void UnCaret(void);
+void SetIconName(DialogClass dlg, char * name);
+int ReadScroll(Option * opt, float * top, float * bottom);
+void SetScroll(Option * opt, float f);
+void AddHandler(Option * opt, DialogClass dlg, int nr);
+void SendText(int n);
+void DisplayLogos(Option * left, Option * right);
+void StartDir(char * filter, char * newName);
+void Browse(DialogClass dlg, char * label, char * proposed, char * ext, Boolean pathFlag, char * mode, char ** name, FILE ** fp);
+void FileNamePopUpWrapper(
+ char * label, char * def, char * filter, FileProc proc, Boolean pathFlag, char * openMode, char ** openName, FILE ** openFP);
 
 // in draw.c
-void InitDrawingParams (int reload);
-void InitDrawingHandle (Option *opt);
-void ExposeRedraw (Option *opt, int x, int y, int w, int h);
-void DrawLogo (Option *opt, void *logo);
+void InitDrawingParams(int reload);
+void InitDrawingHandle(Option * opt);
+void ExposeRedraw(Option * opt, int x, int y, int w, int h);
+void DrawLogo(Option * opt, void * logo);
 
-void ErrorPopUp (char *title, char *text, int modal);
-int  ShiftKeys (void);
-void SetClockIcon (int color);
-void DelayedLoad (void);
-void DisplayTimerLabel (Option *opt, char *color, long timer, int highlight);
-void SetWindowTitle (char *text, char *title, char *icon);
-void SetupDropMenu (void);
-Option *BoardPopUp (int squareSize, int lineGap, void *clockFontThingy);
-void SlaveResize (Option *opt);
+void ErrorPopUp(char * title, char * text, int modal);
+int ShiftKeys(void);
+void SetClockIcon(int color);
+void DelayedLoad(void);
+void DisplayTimerLabel(Option * opt, char * color, long timer, int highlight);
+void SetWindowTitle(char * text, char * title, char * icon);
+void SetupDropMenu(void);
+Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy);
+void SlaveResize(Option * opt);
 
-int  SetCurrentComboSelection (Option *opt);
-void BoxAutoPopUp (char *buf);
-void ConsoleAutoPopUp (char *buf);
-void IcsKey (int n);
-void ICSInputBoxPopUp (void);
-void LoadOptionsPopUp (DialogClass parent);
-void GameListOptionsPopUp (DialogClass parent);
-void RefreshColor (int source, int n);
-void SendString (char *p);
-void DisplayHelp (char *name);
-void WidgetEcho (Option *opt, int n);
-int  ErrorOK (int n);
-void ApplyFont (Option *opt, char *font);
-void LockBoardSize (int after);
-void Preview (int n, char *s);
-void DrawPosition (int fullRedraw, Board b);
+int SetCurrentComboSelection(Option * opt);
+void BoxAutoPopUp(char * buf);
+void ConsoleAutoPopUp(char * buf);
+void IcsKey(int n);
+void ICSInputBoxPopUp(void);
+void LoadOptionsPopUp(DialogClass parent);
+void GameListOptionsPopUp(DialogClass parent);
+void RefreshColor(int source, int n);
+void SendString(char * p);
+void DisplayHelp(char * name);
+void WidgetEcho(Option * opt, int n);
+int ErrorOK(int n);
+void ApplyFont(Option * opt, char * font);
+void LockBoardSize(int after);
+void Preview(int n, char * s);
+void DrawPosition(int fullRedraw, Board b);
 
 // in ngamelist.c
-int GameListClicks (int direction);
-void SetFilter (void);
+int GameListClicks(int direction);
+void SetFilter(void);

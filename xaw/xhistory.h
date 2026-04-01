@@ -23,8 +23,8 @@
 #ifndef XB_XHISTLIST
 #define XB_XHISTLIST
 
-void HistoryShowProc (void);
-Boolean MoveHistoryIsUp (void);
-void SelectMoveX (Widget w, XEvent * event, String * params, Cardinal * nParams);
+void HistoryShowProc(void);
+Boolean MoveHistoryIsUp(void);
+void SelectMoveX(Widget w, XEvent * event, String * params, Cardinal * nParams);
 
 #endif /* XB_XHISTLIST */

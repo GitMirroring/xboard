@@ -67,107 +67,78 @@
 #include "common.h"
 #include "frontend.h"
 
-int
-PlaySoundFile (char *name)
-{
-  if(mute == 1) return 1;
-  if (*name == NULLCHAR) {
-    return 0;
-  } else if (strcmp(name, "$") == 0) {
-    putc(BELLCHAR, stderr);
-  } else {
-    char buf[2048];
-    char *prefix = "", *sep = "";
-    if(appData.soundProgram[0] == NULLCHAR) return 1;
-    if(!strchr(name, '/')) { prefix = appData.soundDirectory; sep = "/"; }
-    snprintf(buf, sizeof(buf), "%s '%s%s%s' &", appData.soundProgram, prefix, sep, name);
-    system(buf);
-  }
-  return 1;
+int PlaySoundFile(char * name) {
+    if (mute == 1) {
+        return 1;
+    }
+    if (*name == NULLCHAR) {
+        return 0;
+    } else if (strcmp(name, "$") == 0) {
+        putc(BELLCHAR, stderr);
+    } else {
+        char buf[2048];
+        char *prefix = "", *sep = "";
+        if (appData.soundProgram[0] == NULLCHAR) {
+            return 1;
+        }
+        if (!strchr(name, '/')) {
+            prefix = appData.soundDirectory;
+            sep = "/";
+        }
+        snprintf(buf, sizeof(buf), "%s '%s%s%s' &", appData.soundProgram, prefix, sep, name);
+        system(buf);
+    }
+    return 1;
 }
 
-void
-RingBell (void)
-{
-  PlaySoundFile(appData.soundMove);
-}
+void RingBell(void) { PlaySoundFile(appData.soundMove); }
 
-void
-PlayIcsWinSound (void)
-{
-  PlaySoundFile(appData.soundIcsWin);
-}
+void PlayIcsWinSound(void) { PlaySoundFile(appData.soundIcsWin); }
 
-void
-PlayIcsLossSound (void)
-{
-  PlaySoundFile(appData.soundIcsLoss);
-}
+void PlayIcsLossSound(void) { PlaySoundFile(appData.soundIcsLoss); }
 
-void
-PlayIcsDrawSound (void)
-{
-  PlaySoundFile(appData.soundIcsDraw);
-}
+void PlayIcsDrawSound(void) { PlaySoundFile(appData.soundIcsDraw); }
 
-void
-PlayIcsUnfinishedSound (void)
-{
-  PlaySoundFile(appData.soundIcsUnfinished);
-}
+void PlayIcsUnfinishedSound(void) { PlaySoundFile(appData.soundIcsUnfinished); }
 
-void
-PlayAlarmSound (void)
-{
-  PlaySoundFile(appData.soundIcsAlarm);
-}
+void PlayAlarmSound(void) { PlaySoundFile(appData.soundIcsAlarm); }
 
-void
-PlayTellSound (void)
-{
-  PlaySoundFile(appData.soundTell);
-}
+void PlayTellSound(void) { PlaySoundFile(appData.soundTell); }
 
-int
-Roar (void)
-{
-  return PlaySoundFile(appData.soundRoar);
-}
+int Roar(void) { return PlaySoundFile(appData.soundRoar); }
 
-void
-PlaySoundForColor (ColorClass cc)
-{
+void PlaySoundForColor(ColorClass cc) {
     switch (cc) {
     case ColorShout:
-      PlaySoundFile(appData.soundShout);
-      break;
+        PlaySoundFile(appData.soundShout);
+        break;
     case ColorSShout:
-      PlaySoundFile(appData.soundSShout);
-      break;
+        PlaySoundFile(appData.soundSShout);
+        break;
     case ColorChannel1:
-      PlaySoundFile(appData.soundChannel1);
-      break;
+        PlaySoundFile(appData.soundChannel1);
+        break;
     case ColorChannel:
-      PlaySoundFile(appData.soundChannel);
-      break;
+        PlaySoundFile(appData.soundChannel);
+        break;
     case ColorKibitz:
-      PlaySoundFile(appData.soundKibitz);
-      break;
+        PlaySoundFile(appData.soundKibitz);
+        break;
     case ColorTell:
-      PlaySoundFile(appData.soundTell);
-      break;
+        PlaySoundFile(appData.soundTell);
+        break;
     case ColorChallenge:
-      PlaySoundFile(appData.soundChallenge);
-      break;
+        PlaySoundFile(appData.soundChallenge);
+        break;
     case ColorRequest:
-      PlaySoundFile(appData.soundRequest);
-      break;
+        PlaySoundFile(appData.soundRequest);
+        break;
     case ColorSeek:
-      PlaySoundFile(appData.soundSeek);
-      break;
+        PlaySoundFile(appData.soundSeek);
+        break;
     case ColorNormal:
     case ColorNone:
     default:
-      break;
+        break;
     }
 }

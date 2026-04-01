@@ -57,36 +57,51 @@
 
 /* Types */
 typedef struct {
-  char faceName[LF_FACESIZE];
-  float pointSize;
-  BYTE bold, italic, underline, strikeout;
-  BYTE charset;
+    char faceName[LF_FACESIZE];
+    float pointSize;
+    BYTE bold, italic, underline, strikeout;
+    BYTE charset;
 } MyFontParams;
 
 typedef struct {
-  char *def;
-  MyFontParams mfp;
-  LOGFONT lf;
-  HFONT hf;
+    char * def;
+    MyFontParams mfp;
+    LOGFONT lf;
+    HFONT hf;
 } MyFont;
 
-typedef enum { 
-  SizeTiny, SizeTeeny, SizeDinky, SizePetite, SizeSlim, SizeSmall,
-  SizeMediocre, SizeMiddling, SizeAverage, SizeModerate, SizeMedium,
-  SizeBulky, SizeLarge, SizeBig, SizeHuge, SizeGiant, SizeColossal,
-  SizeTitanic, NUM_SIZES 
+typedef enum {
+    SizeTiny,
+    SizeTeeny,
+    SizeDinky,
+    SizePetite,
+    SizeSlim,
+    SizeSmall,
+    SizeMediocre,
+    SizeMiddling,
+    SizeAverage,
+    SizeModerate,
+    SizeMedium,
+    SizeBulky,
+    SizeLarge,
+    SizeBig,
+    SizeHuge,
+    SizeGiant,
+    SizeColossal,
+    SizeTitanic,
+    NUM_SIZES
 } BoardSize;
 
 typedef struct {
     COLORREF color;
     int effects;
-    char *name;
+    char * name;
 } MyColorizeAttribs;
 
 typedef struct {
-  char* name;
-  void* data;
-  int flag; // [HGM] needed to indicate if data was malloc'ed or not
+    char * name;
+    void * data;
+    int flag;  // [HGM] needed to indicate if data was malloc'ed or not
 } MySound;
 
 typedef struct {
@@ -107,37 +122,36 @@ VOID InitAppData(LPSTR);
 VOID InitDrawingColors(VOID);
 VOID InitDrawingSizes(BoardSize boardSize, int flags);
 VOID InitMenuChecks(VOID);
-int  ICSInitScript(VOID);
+int ICSInitScript(VOID);
 BOOL CenterWindow(HWND hwndChild, HWND hwndParent);
 VOID ResizeEditPlusButtons(HWND hDlg, HWND hText, int sizeX, int sizeY, int newSizeX, int newSizeY);
 VOID PromotionPopup(HWND hwnd);
-FILE *OpenFileDialog(HWND hWnd, char *write, char *defName, char *defExt, 
-		     char *nameFilt, char *dlgTitle, UINT *number,
-		     char fileTitle[MSG_SIZ], char fileName[MSG_SIZ]);
+FILE * OpenFileDialog(HWND hWnd, char * write, char * defName, char * defExt, char * nameFilt, char * dlgTitle, UINT * number,
+ char fileTitle[MSG_SIZ], char fileName[MSG_SIZ]);
 VOID InputEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 DWORD InputThread(LPVOID arg);
 DWORD NonOvlInputThread(LPVOID arg);
 DWORD SocketInputThread(LPVOID arg);
-BOOL ChangeColor(HWND hwnd, COLORREF *which);
+BOOL ChangeColor(HWND hwnd, COLORREF * which);
 VOID ChangeBoardSize(BoardSize newSize);
-BOOL APIENTRY MyCreateFont(HWND hwnd, MyFont *font);
+BOOL APIENTRY MyCreateFont(HWND hwnd, MyFont * font);
 VOID ErrorPopDown(VOID);
-VOID EnsureOnScreen(int *x, int *y, int minX, int minY);
-HBITMAP 
-DoLoadBitmap(HINSTANCE hinst, char *piece, int squareSize, char *suffix);
-COLORREF ParseColorName(char *name);
-void ParseAttribs(COLORREF *color, int *effects, char* argValue);
-VOID CreateFontInMF(MyFont *mf);
+VOID EnsureOnScreen(int * x, int * y, int minX, int minY);
+HBITMAP
+DoLoadBitmap(HINSTANCE hinst, char * piece, int squareSize, char * suffix);
+COLORREF ParseColorName(char * name);
+void ParseAttribs(COLORREF * color, int * effects, char * argValue);
+VOID CreateFontInMF(MyFont * mf);
 VOID ChangedConsoleFont();
-VOID ParseFontName(char *name, MyFontParams *mfp);
-void InitComboStrings(HANDLE hwndCombo, char **cd);
-BOOLEAN MyLoadSound(MySound *ms);
-BOOLEAN MyPlaySound(MySound *ms);
-VOID ExitArgError(char *msg, char *badArg, Boolean quit);
-void SaveSettings(char* name);
-BOOL BrowseForFolder( const char * title, char * path );
-VOID TourneyPopup();
-VOID LoadEnginePopUp();
+VOID ParseFontName(char * name, MyFontParams * mfp);
+void InitComboStrings(HANDLE hwndCombo, char ** cd);
+BOOLEAN MyLoadSound(MySound * ms);
+BOOLEAN MyPlaySound(MySound * ms);
+VOID ExitArgError(char * msg, char * badArg, Boolean quit);
+void SaveSettings(char * name);
+BOOL BrowseForFolder(const char * title, char * path);
+VOID TourneyPopup(HWND hwnd);
+VOID LoadEnginePopUp(HWND hwnd, int nr);
 VOID LoadOptionsPopup(HWND hDlg);
 VOID InitTextures();
 void ThemeOptionsPopup(HWND hwnd);
@@ -156,25 +170,25 @@ void ThemeOptionsPopup(HWND hwnd);
 
 /* Positions of some menu items.  Origin is zero and separator lines count. */
 /* It's gross that these are needed. */
-#define ACTION_POS 4	 /* Posn of "Action" on menu bar */
-#define OPTIONS_POS 6	 /* Posn of "Options" on menu bar */
+#define ACTION_POS 4 /* Posn of "Action" on menu bar */
+#define OPTIONS_POS 6 /* Posn of "Options" on menu bar */
 /* end grossness */
 
-extern MyFont *font[NUM_SIZES][NUM_FONTS];
+extern MyFont * font[NUM_SIZES][NUM_FONTS];
 
-#define WM_USER_Input                 (WM_USER + 4242)
-#define WM_USER_Mouseleave            (WM_USER + 4243)
-#define WM_USER_GetConsoleBackground  (WM_USER + 4244)
+#define WM_USER_Input (WM_USER + 4242)
+#define WM_USER_Mouseleave (WM_USER + 4243)
+#define WM_USER_GetConsoleBackground (WM_USER + 4244)
 
-#define CLOCK_TIMER_ID        51
-#define LOAD_GAME_TIMER_ID    52
-#define ANALYSIS_TIMER_ID     53
-#define MOUSE_TIMER_ID        54
-#define DELAYED_TIMER_ID      55
+#define CLOCK_TIMER_ID 51
+#define LOAD_GAME_TIMER_ID 52
+#define ANALYSIS_TIMER_ID 53
+#define MOUSE_TIMER_ID 54
+#define DELAYED_TIMER_ID 55
 
-#define SOLID_PIECE           0
-#define OUTLINE_PIECE         1
-#define WHITE_PIECE           2
+#define SOLID_PIECE 0
+#define OUTLINE_PIECE 1
+#define WHITE_PIECE 2
 
 #define COPY_TMP "wbcopy.tmp"
 #define PASTE_TMP "wbpaste.tmp"
@@ -187,20 +201,17 @@ extern BoardSize boardSize;
 // [HGM] Some stuff to allo a platform-independent reference to windows
 // This should be moved to frontend.h in due time
 
-typedef enum {
-  W_Main, W_Console, W_Comment, W_Tags, W_GameList, 
-  W_MoveHist, W_EngineOut, NUM_WINDOWS
-} WindowID;
+typedef enum { W_Main, W_Console, W_Comment, W_Tags, W_GameList, W_MoveHist, W_EngineOut, NUM_WINDOWS } WindowID;
 
 extern WindowPlacement placementTab[NUM_WINDOWS];
-extern HWND hwndTab[NUM_WINDOWS]; // this remains pure front-end.
+extern HWND hwndTab[NUM_WINDOWS];  // this remains pure front-end.
 
-void Translate( HWND hDlg, int id);
-VOID InitWindowPlacement( WindowPlacement * wp );
-VOID RestoreWindowPlacement( HWND hWnd, WindowPlacement * wp );
-VOID ReattachAfterMove( LPRECT lprcOldPos, int new_x, int new_y, HWND hWndChild, WindowPlacement * pwpChild );
-VOID ReattachAfterSize( LPRECT lprcOldPos, int new_w, int new_h, HWND hWndChild, WindowPlacement * pwpChild );
-BOOL GetActualPlacement( HWND hWnd, WindowPlacement * wp );
+void Translate(HWND hDlg, int id);
+VOID InitWindowPlacement(WindowPlacement * wp);
+VOID RestoreWindowPlacement(HWND hWnd, WindowPlacement * wp);
+VOID ReattachAfterMove(LPRECT lprcOldPos, int new_x, int new_y, HWND hWndChild, WindowPlacement * pwpChild);
+VOID ReattachAfterSize(LPRECT lprcOldPos, int new_w, int new_h, HWND hWndChild, WindowPlacement * pwpChild);
+BOOL GetActualPlacement(HWND hWnd, WindowPlacement * wp);
 
 VOID MoveHistoryPopUp();
 VOID MoveHistoryPopDown();
@@ -212,20 +223,18 @@ extern HWND evalGraphDialog;
 
 extern HWND engineOutputDialog;
 
-struct GameListStats
-{
+struct GameListStats {
     int white_wins;
     int black_wins;
     int drawn;
     int unfinished;
 };
 
-int GameListToListBox( HWND hDlg, BOOL boReset, char * pszFilter, struct GameListStats * stats, BOOL byPos, BOOL narrow );
+int GameListToListBox(HWND hDlg, BOOL boReset, char * pszFilter, struct GameListStats * stats, BOOL byPos, BOOL narrow);
 VOID ShowGameListProc(void);
 extern HWND gameListDialog;
 
 VOID EditTagsProc(void);
 extern HWND editTagsDialog;
 extern int screenWidth, screenHeight;
-extern RECT screenGeometry; // Top-left coordiate of the screen can be different from (0,0)
-
+extern RECT screenGeometry;  // Top-left coordiate of the screen can be different from (0,0)

@@ -27,20 +27,20 @@
 
 #include <windows.h>
 
-#define MAX_SNAP_POINTS     12
+#define MAX_SNAP_POINTS 12
 
-#define SNAP_DISTANCE       4
+#define SNAP_DISTANCE 4
 
 typedef struct {
-    int x_grid[ MAX_SNAP_POINTS ];
+    int x_grid[MAX_SNAP_POINTS];
     int x_grid_len;
-    int y_grid[ MAX_SNAP_POINTS ];
+    int y_grid[MAX_SNAP_POINTS];
     int y_grid_len;
 } SnapData;
 
-LRESULT OnEnterSizeMove( SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam );
-LRESULT OnMoving( SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam );
-LRESULT OnSizing( SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam );
-LRESULT OnExitSizeMove( SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam );
+LRESULT OnEnterSizeMove(SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam);
+LRESULT OnMoving(SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam);
+LRESULT OnSizing(SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam);
+LRESULT OnExitSizeMove(SnapData * snapData, HWND hWnd, WPARAM wParam, LPARAM lParam);
 
-#endif // WSNAP_H_
+#endif  // WSNAP_H_

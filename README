@@ -15,7 +15,7 @@ COPYING for details.
 
 You can build xboard on most systems with the following commands:
 
-    test -f ./configure || autoreconf --install
+    test -f ./configure || autoreconf -i
     ./configure
     make
 
@@ -61,7 +61,7 @@ Here is a sample of approximately what you should type (on GNU/Linux):
 
     script
     uname -a
-    test -f ./configure || autoreconf --install
+    test -f ./configure || autoreconf -i
     ./configure
     make
     ./xboard -debug

@@ -1,3 +1,2 @@
-# whitespace separated list of translated languages goes below
-# note: zh translations are untested; xboard fails to create a fontset for them
-da de es fr it ka nl pl ro ru sr sv tr uk vi zh_CN zh_HK zh_TW
+# A whitespace-separated list of translated languages goes below.
+da de es fr it ka nl pl ro ru sr sv tr uk vi zh_CN

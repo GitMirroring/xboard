@@ -39,31 +39,31 @@
 #include <X11/Shell.h>
 #include <X11/cursorfont.h>
 #if USE_XAW3D
-#include <X11/Xaw3d/Dialog.h>
-#include <X11/Xaw3d/Form.h>
-#include <X11/Xaw3d/List.h>
-#include <X11/Xaw3d/Label.h>
-#include <X11/Xaw3d/SimpleMenu.h>
-#include <X11/Xaw3d/SmeBSB.h>
-#include <X11/Xaw3d/SmeLine.h>
-#include <X11/Xaw3d/Box.h>
-#include <X11/Xaw3d/MenuButton.h>
-#include <X11/Xaw3d/Text.h>
-#include <X11/Xaw3d/AsciiText.h>
-#include <X11/Xaw3d/Viewport.h>
+# include <X11/Xaw3d/Dialog.h>
+# include <X11/Xaw3d/Form.h>
+# include <X11/Xaw3d/List.h>
+# include <X11/Xaw3d/Label.h>
+# include <X11/Xaw3d/SimpleMenu.h>
+# include <X11/Xaw3d/SmeBSB.h>
+# include <X11/Xaw3d/SmeLine.h>
+# include <X11/Xaw3d/Box.h>
+# include <X11/Xaw3d/MenuButton.h>
+# include <X11/Xaw3d/Text.h>
+# include <X11/Xaw3d/AsciiText.h>
+# include <X11/Xaw3d/Viewport.h>
 #else
-#include <X11/Xaw/Dialog.h>
-#include <X11/Xaw/Form.h>
-#include <X11/Xaw/List.h>
-#include <X11/Xaw/Label.h>
-#include <X11/Xaw/SimpleMenu.h>
-#include <X11/Xaw/SmeBSB.h>
-#include <X11/Xaw/SmeLine.h>
-#include <X11/Xaw/Box.h>
-#include <X11/Xaw/MenuButton.h>
-#include <X11/Xaw/Text.h>
-#include <X11/Xaw/AsciiText.h>
-#include <X11/Xaw/Viewport.h>
+# include <X11/Xaw/Dialog.h>
+# include <X11/Xaw/Form.h>
+# include <X11/Xaw/List.h>
+# include <X11/Xaw/Label.h>
+# include <X11/Xaw/SimpleMenu.h>
+# include <X11/Xaw/SmeBSB.h>
+# include <X11/Xaw/SmeLine.h>
+# include <X11/Xaw/Box.h>
+# include <X11/Xaw/MenuButton.h>
+# include <X11/Xaw/Text.h>
+# include <X11/Xaw/AsciiText.h>
+# include <X11/Xaw/Viewport.h>
 #endif
 
 #include "common.h"
@@ -73,8 +73,7 @@
 #include "dialogs.h"
 
 
-char gameListTranslations[] =
-  "<Btn4Down>: WheelProc(-3) \n \
+char gameListTranslations[] = "<Btn4Down>: WheelProc(-3) \n \
    <Btn5Down>: WheelProc(3) \n \
    <Btn1Down>: LoadSelectedProc(100) Set() \n \
    <Btn1Up>(2): LoadSelectedProc(0) \n \
@@ -89,20 +88,15 @@ char gameListTranslations[] =
    <Key>Prior: LoadSelectedProc(-4) \n \
    <Key>Next: LoadSelectedProc(4) \n \
    <Key>Return: LoadSelectedProc(0) \n";
-char filterTranslations[] =
-  "<Key>Return: SetFilterProc() \n";
+char filterTranslations[] = "<Key>Return: SetFilterProc() \n";
 
 
-void
-LoadSelectedProc (Widget w, XEvent *event, String *prms, Cardinal *nprms)
-{
-    if(GameListClicks(atoi(prms[0]))) return; // if no game loaded, no focus transfer
+void LoadSelectedProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
+    if (GameListClicks(atoi(prms[0]))) {
+        return;  // if no game loaded, no focus transfer
+    }
     XSync(xDisplay, False);
     XSetInputFocus(xDisplay, XtWindow(boardWidget), RevertToPointerRoot, CurrentTime);
 }
 
-void
-SetFilterProc (Widget w, XEvent *event, String *prms, Cardinal *nprms)
-{
-    SetFilter();
-}
+void SetFilterProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { SetFilter(); }

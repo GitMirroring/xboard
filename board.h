@@ -54,7 +54,7 @@
 /* This magic number is the number of intermediate frames used
    in each half of the animation. For short moves it's reduced
    by 1. The total number of frames will be factor * 2 + 1.  */
-#define kFactor	   4
+#define kFactor 4
 
 /* Variables for doing smooth animation. This whole thing
    would be much easier if the board was double-buffered,
@@ -62,38 +62,38 @@
 
 #define DISP 4
 
-typedef enum { Game=0, Player, NrOfAnims } AnimNr;
+typedef enum { Game = 0, Player, NrOfAnims } AnimNr;
 
 typedef struct {
-	short int x, y;
-    } Pnt;
+    short int x, y;
+} Pnt;
 
 typedef struct {
-	Pnt	startSquare, prevFrame, mouseDelta;
-	int	startColor;
-	int	dragPiece;
-	Boolean	dragActive;
-        int     startBoardX, startBoardY;
-    } AnimState;
+    Pnt startSquare, prevFrame, mouseDelta;
+    int startColor;
+    int dragPiece;
+    Boolean dragActive;
+    int startBoardX, startBoardY;
+} AnimState;
 
 extern AnimState anims[];
 
-void DrawPolygon (Pnt arrow[], int nr);
-void DrawOneSquare (int x, int y, ChessSquare piece, int square_color, int marker, char *tString, char *bString, int align);
-void DrawDot (int marker, int x, int y, int r);
-void DrawGrid (void);
-int SquareColor (int row, int column);
-void ScreenSquare (int column, int row, Pnt *pt, int *color);
-void BoardSquare (int x, int y, int *column, int *row);
-void FrameDelay (int time);
-void InsertPiece (AnimNr anr, ChessSquare piece);
-void DrawBlank (AnimNr anr, int x, int y, int startColor);
-void CopyRectangle (AnimNr anr, int srcBuf, int destBuf, int srcX, int srcY, int width, int height, int destX, int destY);
-void SetDragPiece (AnimNr anr, ChessSquare piece);
-void DragPieceMove (int x, int y);
-void DrawBorder (int x, int y, int type, int odd);
-void FlashDelay (int flash_delay);
-void SwitchWindow (int main);
+void DrawPolygon(Pnt arrow[], int nr);
+void DrawOneSquare(int x, int y, ChessSquare piece, int square_color, int marker, char * tString, char * bString, int align);
+void DrawDot(int marker, int x, int y, int r);
+void DrawGrid(void);
+int SquareColor(int row, int column);
+void ScreenSquare(int column, int row, Pnt * pt, int * color);
+void BoardSquare(int x, int y, int * column, int * row);
+void FrameDelay(int time);
+void InsertPiece(AnimNr anr, ChessSquare piece);
+void DrawBlank(AnimNr anr, int x, int y, int startColor);
+void CopyRectangle(AnimNr anr, int srcBuf, int destBuf, int srcX, int srcY, int width, int height, int destX, int destY);
+void SetDragPiece(AnimNr anr, ChessSquare piece);
+void DragPieceMove(int x, int y);
+void DrawBorder(int x, int y, int type, int odd);
+void FlashDelay(int flash_delay);
+void SwitchWindow(int main);
 
 extern int damage[2][BOARD_RANKS][BOARD_FILES];
-extern Option *currBoard;
+extern Option * currBoard;

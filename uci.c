@@ -32,40 +32,57 @@
 
 #include "common.h"
 #include "backend.h"
-Boolean GetArgValue(char *a);
+Boolean GetArgValue(char * a);
 
-void
-InitEngineUCI (const char *iniDir, ChessProgramState *cps)
-{   // replace engine command line by adapter command with expanded meta-symbols
-    if( cps->isUCI ) {
+void InitEngineUCI(
+ const char * iniDir, ChessProgramState * cps) {  // replace engine command line by adapter command with expanded meta-symbols
+    if (cps->isUCI) {
         char *p, *q;
         char polyglotCommand[MSG_SIZ];
 
-        if(cps->isUCI == 2) p = appData.ucciAdapter; else
-        p = appData.adapterCommand;
+        if (cps->isUCI == 2) {
+            p = appData.ucciAdapter;
+        } else {
+            p = appData.adapterCommand;
+        }
         q = polyglotCommand;
-        while(*p) {
-          if(*p == '\\') p++; else
-          if(*p == '%') { // substitute marker
-            char argName[MSG_SIZ], buf[MSG_SIZ], *s = buf;
-            if(*++p == '%') { // second %, expand as f or s in option name (e.g. %%cp -> fcp)
-              *s++ = cps == &first ? 'f' : 's';
-              p++;
+        while (*p) {
+            if (*p == '\\') {
+                p++;
+            } else if (*p == '%') {  // substitute marker
+                char argName[MSG_SIZ], buf[MSG_SIZ], *s = buf;
+                if (*++p == '%') {  // second %, expand as f or s in option name (e.g. %%cp -> fcp)
+                    *s++ = cps == &first ? 'f' : 's';
+                    p++;
+                }
+                while (isdigit(*p) || isalpha(*p)) {
+                    *s++ = *p++;  // copy option name
+                }
+                *s = NULLCHAR;
+                if (cps == &second) {  // change options for first into those for second engine
+                    if (strstr(buf, "first") == buf) {
+                        sprintf(argName, "second%s", buf + 5);
+                    } else if (buf[0] == 'f') {
+                        sprintf(argName, "s%s", buf + 1);
+                    } else {
+                        safeStrCpy(argName, buf, sizeof(argName) / sizeof(argName[0]));
+                    }
+                } else {
+                    safeStrCpy(argName, buf, sizeof(argName) / sizeof(argName[0]));
+                }
+                if (GetArgValue(argName)) {  // look up value of option with this name
+                    s = argName;
+                    while (*s) {
+                        *q++ = *s++;
+                    }
+                } else {
+                    DisplayFatalError("Bad adapter command", 0, 1);
+                }
+                continue;
             }
-            while(isdigit(*p) || isalpha(*p)) *s++ = *p++; // copy option name
-            *s = NULLCHAR;
-            if(cps == &second) { // change options for first into those for second engine
-              if(strstr(buf, "first") == buf) sprintf(argName, "second%s", buf+5); else
-              if(buf[0] == 'f') sprintf(argName, "s%s", buf+1); else
-		safeStrCpy(argName, buf, sizeof(argName)/sizeof(argName[0]));
-            } else safeStrCpy(argName, buf, sizeof(argName)/sizeof(argName[0]));
-            if(GetArgValue(argName)) { // look up value of option with this name
-              s = argName;
-              while(*s) *q++ = *s++;
-            } else DisplayFatalError("Bad adapter command", 0, 1);
-            continue;
-          }
-          if(*p) *q++ = *p++;
+            if (*p) {
+                *q++ = *p++;
+            }
         }
         *q = NULLCHAR;
         cps->program = StrSave(polyglotCommand);

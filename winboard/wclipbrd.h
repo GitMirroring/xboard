@@ -27,11 +27,11 @@
 VOID CopyFENToClipboard();
 VOID CopyGameToClipboard();
 VOID CopyGameListToClipboard();
-int CopyTextToClipboard(char *text);
+int CopyTextToClipboard(char * text);
 
 VOID PasteFENFromClipboard();
 VOID PasteGameFromClipboard();
-int PasteTextFromClipboard(char **text);
+int PasteTextFromClipboard(char ** text);
 
 VOID DeleteClipboardTempFiles();
 

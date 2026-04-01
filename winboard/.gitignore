@@ -1,0 +1,40 @@
+# Dynamically-linked library file
+*.dll
+
+# Executable file
+*.exe
+
+# Object file
+*.obj
+
+# Visual Studio (C/C++) resource file
+*.aps
+
+# Visual Studio intermediate debug file
+*.idb
+
+# Visual Studio incremental linking file
+*.ilk
+
+# Visual Studio log files
+*.log
+
+# Visual Studio program database file
+*.pdb
+
+# Visual Studio compile resource script file
+*.res
+
+# Visual Studio code browsing database files
+*.opensdf
+*.sdf
+*.VC.db
+
+# Visual Studio solution user options file
+*.suo
+
+# Visual Studio file tracker log
+*.tlog
+
+# Visual Studio file that stores user-specific properties for a C/C++ project
+*.vcxproj.user

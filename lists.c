@@ -38,74 +38,59 @@
 #include "lists.h"
 
 
-
 /* Check, if List l is empty; returns TRUE, if it is, FALSE
  * otherwise.
  */
-int
-ListEmpty (List *l)
-{
-    return(l->head == (ListNode *) &l->tail);
-}
+int ListEmpty(List * l) { return (l->head == (ListNode *)&l->tail); }
 
 
 /* Initialize a list. Must be executed before list is used.
  */
-void
-ListNew (List *l)
-{
-    l->head = (ListNode *) &l->tail;
+void ListNew(List * l) {
+    l->head = (ListNode *)&l->tail;
     l->tail = NULL;
-    l->tailPred = (ListNode *) l;
+    l->tailPred = (ListNode *)l;
 }
 
 
 /* Remove node n from the list it is inside.
  */
-void
-ListRemove (ListNode *n)
-{
-    if (n->succ != NULL) {  /*  Be safe  */
-	n->pred->succ = n->succ;
-	n->succ->pred = n->pred;
-	n->succ = NULL;     /*  Mark node as no longer being member */
-	n->pred = NULL;     /*  of a list.                          */
+void ListRemove(ListNode * n) {
+    if (n->succ != NULL) { /*  Be safe  */
+        n->pred->succ = n->succ;
+        n->succ->pred = n->pred;
+        n->succ = NULL; /*  Mark node as no longer being member */
+        n->pred = NULL; /*  of a list.                          */
     }
 }
 
 
 /* Delete node n.
  */
-void
-ListNodeFree (ListNode *n)
-{
+void ListNodeFree(ListNode * n) {
     if (n) {
-	ListRemove(n);
-	free(n);
+        ListRemove(n);
+        free(n);
     }
 }
 
 
 /* Create a list node with size s. Returns NULL, if out of memory.
  */
-ListNode *
-ListNodeCreate (size_t s)
-{
-    ListNode *n;
+ListNode * ListNodeCreate(size_t s) {
+    ListNode * n;
 
-    if ((n = (ListNode*) malloc(s))) {
-	n->succ = NULL; /*  Mark node as not being member of a list.    */
-	n->pred = NULL;
+    if ((n = (ListNode *)malloc(s))) {
+        n->succ = NULL; /*  Mark node as not being member of a list.    */
+        n->pred = NULL;
     }
-    return(n);
+    return (n);
 }
 
 
 /* Insert node n into the list of node m after m.
  */
-void
-ListInsert (ListNode *m, ListNode *n)
-{
+void ListInsert(ListNode * m, ListNode * n) {
     n->succ = m->succ;
     n->pred = m;
     m->succ = n;
@@ -115,35 +100,25 @@ ListInsert (ListNode *m, ListNode *n)
 
 /* Add node n to the head of list l.
  */
-void
-ListAddHead (List *l, ListNode *n)
-{
-    ListInsert((ListNode *) &l->head, n);
-}
+void ListAddHead(List * l, ListNode * n) { ListInsert((ListNode *)&l->head, n); }
 
 
 /* Add node n to the tail of list l.
  */
-void
-ListAddTail (List *l, ListNode *n)
-{
-    ListInsert((ListNode *) l->tailPred, n);
-}
+void ListAddTail(List * l, ListNode * n) { ListInsert((ListNode *)l->tailPred, n); }
 
 
 /* Return element with number n of list l. (NULL, if n doesn't exist.)
  * Counting starts with 0.
  */
-ListNode *
-ListElem (List *l, int n)
-{
-    ListNode *ln;
+ListNode * ListElem(List * l, int n) {
+    ListNode * ln;
 
-    for (ln = l->head;  ln->succ;  ln = ln->succ) {
-	if (!n--) {
-	    return (ln);
-	}
+    for (ln = l->head; ln->succ; ln = ln->succ) {
+        if (!n--) {
+            return (ln);
+        }
     }
 
-    return(NULL);
+    return (NULL);
 }

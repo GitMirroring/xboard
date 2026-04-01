@@ -25,55 +25,55 @@
  ** See the file ChangeLog for a revision history.  */
 
 // [HGM] define numbers to indicate icons, for referring to them in platform-independent way
-#define nColorBlack   1
-#define nColorWhite   2
+#define nColorBlack 1
+#define nColorWhite 2
 #define nColorUnknown 3
-#define nClear        4
-#define nPondering    5
-#define nThinking     6
-#define nAnalyzing    7
+#define nClear 4
+#define nPondering 5
+#define nThinking 6
+#define nAnalyzing 7
 
 // [HGM] same for output fields (note that there are two of each type, one per color)
 #define nColorIcon 1
-#define nLabel     2
+#define nLabel 2
 #define nStateIcon 3
 #define nStateData 4
-#define nLabelNPS  5
-#define nMemo      6 /* must match the ranking of the TextBox in following option list! */
+#define nLabelNPS 5
+#define nMemo 6 /* must match the ranking of the TextBox in following option list! */
 
 #define STRIDE 7 /* must match the number of option in one pane! */
-#define MEMO  (nMemo-1)
+#define MEMO (nMemo - 1)
 
 /* Module variables */
-#define H_MARGIN            2
-#define V_MARGIN            2
-#define LABEL_V_DISTANCE    1   /* Distance between label and memo */
-#define SPLITTER_SIZE       4   /* Distance between first memo and second label */
+#define H_MARGIN 2
+#define V_MARGIN 2
+#define LABEL_V_DISTANCE 1 /* Distance between label and memo */
+#define SPLITTER_SIZE 4 /* Distance between first memo and second label */
 
-#define ICON_SIZE           14
+#define ICON_SIZE 14
 
 enum ENGINE_STATE { STATE_UNKNOWN, STATE_THINKING, STATE_IDLE, STATE_PONDERING, STATE_ANALYZING };
 
-extern int  windowMode;
+extern int windowMode;
 extern char exclusionHeader[];
 extern int highTextStart[2], highTextEnd[2], endPV;
 
 // back-end called by front-end
-void SetEngineState (int which, enum ENGINE_STATE state, char * state_data);
+void SetEngineState(int which, enum ENGINE_STATE state, char * state_data);
 
 // front-end called by back-end
-void SetEngineColorIcon (int which);
-void SetIcon (int which, int field, int nIcon);
-void DoSetWindowText (int which, int field, char *s_label);
-void InsertIntoMemo (int which, char * text, int where);
-void DoClearMemo (int which);
-void ResizeWindowControls (int mode);
-int  EngineOutputDialogExists (void);
-void SetEngineOutputTitle (char *title);
-void Collapse (int colNr);
+void SetEngineColorIcon(int which);
+void SetIcon(int which, int field, int nIcon);
+void DoSetWindowText(int which, int field, char * s_label);
+void InsertIntoMemo(int which, char * text, int where);
+void DoClearMemo(int which);
+void ResizeWindowControls(int mode);
+int EngineOutputDialogExists(void);
+void SetEngineOutputTitle(char * title);
+void Collapse(int colNr);
 
 // XB only
-void InitEngineOutput (Option *opt, Option *memo2);
+void InitEngineOutput(Option * opt, Option * memo2);
 
 // XB only
-void DrawWidgetIcon (Option *opt, int nIcon);
+void DrawWidgetIcon(Option * opt, int nIcon);

@@ -51,12 +51,11 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-void ZippyInit (void);
-int ZippyControl (char *buf, int *i);
-int ZippyConverse (char *buf, int *i);
-void ZippyGameStart (char *white, char *black);
-int ZippyMatch (char *buf, int *i);
-void ZippyFirstBoard (int moveNum, int basetime, int increment);
-void ZippyGameEnd (ChessMove result, char *resultDetails);
-void ZippyHoldings (char *white_holding, char *black_holding,
-		      char *new_piece);
+void ZippyInit(void);
+int ZippyControl(char * buf, int * i);
+int ZippyConverse(char * buf, int * i);
+void ZippyGameStart(char * white, char * black);
+int ZippyMatch(char * buf, int * i);
+void ZippyFirstBoard(int moveNum, int basetime, int increment);
+void ZippyGameEnd(ChessMove result, char * resultDetails);
+void ZippyHoldings(char * white_holding, char * black_holding, char * new_piece);

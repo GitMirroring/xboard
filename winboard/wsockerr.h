@@ -25,8 +25,7 @@
 
 typedef struct {
     int err;
-    char* msg;
+    char * msg;
 } ErrorMap;
 
 extern ErrorMap errmap[];
-
