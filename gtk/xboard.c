@@ -1510,7 +1510,7 @@ void MarkMenuItem(char * menuRef, int state) {
     MenuItem * item = MenuNameToItem(menuRef);
 
     if (item && item->handle) {
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->handle), state);
+        GTK_CHECK_MENU_ITEM(item->handle)->active = state;
     }
     SYNC_MENUBAR;
 }
