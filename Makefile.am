@@ -39,8 +39,7 @@ if USING_GTK_2_FRONT_END
     front_end_sources = $(gtk_2_dependent_front_end_sources)
     front_end_extras = $(xaw_dependent_front_end_sources)
     # Using all of these -D flags is recommended by https://docs.gtk.org/gtk3/migrating-2to3.html.
-    # TODO: Also use -DGSEAL_ENABLE.
-    front_end_flags = -Igtk -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
+    front_end_flags = -Igtk -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE
 endif
 
 if USING_X11_FRONT_END

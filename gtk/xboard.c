@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * The following terms apply to Digital Equipment Corporation's copyright
  * interest in XBoard:
@@ -1507,10 +1505,17 @@ char * FindFont(char * pattern, int targetPxlSize) {
 #endif
 
 void MarkMenuItem(char * menuRef, int state) {
-    MenuItem * item = MenuNameToItem(menuRef);
+    unsigned int signal_id;
+    unsigned long handler_id;
+    MenuItem * item;
 
+    item = MenuNameToItem(menuRef);
     if (item && item->handle) {
-        GTK_CHECK_MENU_ITEM(item->handle)->active = state;
+        signal_id = g_signal_lookup("activate", GTK_TYPE_MENU_ITEM);
+        handler_id = g_signal_handler_find(item->handle, G_SIGNAL_MATCH_ID, signal_id, 0, NULL, NULL, NULL);
+        g_signal_handler_block(item->handle, handler_id);
+        gtk_check_menu_item_set_active(item->handle, state);
+        g_signal_handler_unblock(item->handle, handler_id);
     }
     SYNC_MENUBAR;
 }
