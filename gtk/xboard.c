@@ -203,12 +203,12 @@ char * FindFont(char * pattern, int targetPxlSize);
 void DelayedDrag(void);
 void ICSInputBoxPopUp(void);
 void MoveTypeInProc(GdkEventKey * eventkey);
-gboolean KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, gpointer data);
+int KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, void * data);
 Boolean TempBackwardActive = False;
 void DisplayMove(int moveNumber);
 void update_ics_width(void);
 int CopyMemoProc(void);
-static gboolean EventProc(GtkWidget * widget, GdkEvent * event, gpointer g);
+static int EventProc(GtkWidget * widget, GdkEvent * event, void * g);
 static int FindLogo(char * place, char * name, char * buf);
 
 #ifdef TODO_GTK
@@ -810,7 +810,7 @@ void SlaveResize(Option * opt) {
     gtk_window_resize(GTK_WINDOW(shells[DummyDlg]), slaveW + opt->max, slaveH + opt->value);
 }
 
-GdkPixbuf * LoadIconFile(gchar * svgFilename) {
+GdkPixbuf * LoadIconFile(char * svgFilename) {
     char buf[MSG_SIZ];
 
     snprintf(buf, MSG_SIZ, "%s/%s" IMG, svgDir, svgFilename);
@@ -821,16 +821,20 @@ GdkPixbuf * LoadIconFile(gchar * svgFilename) {
 static char clickedFile[MSG_SIZ];
 TimeMark started;
 
-static gboolean StartNewXBoard(GtkosxApplication * app, gchar * path,
- gpointer user_data) {  // handler of OSX OpenFile signal, which sends us the filename of clicked file or first argument
+static int StartNewXBoard(GtkosxApplication * app, char * path, void * user_data) {
+    /* handler of macOS OpenFile signal, which sends us the filename of clicked file or first argument */
     TimeMark now;
     GetTimeMark(&now);
-    if (1000 * now.sec + now.ms - 1000 * started.sec - started.ms < 1000) {  // received during first second
-        strncpy(clickedFile, path, MSG_SIZ);  // remember file name, but otherwise ignore
-    } else {  // we are running something presumably useful
+    if (1000 * now.sec + now.ms - 1000 * started.sec - started.ms < 1000) {
+        /* received during first second */
+        /* remember file name, but otherwise ignore */
+        strncpy(clickedFile, path, MSG_SIZ);
+    } else {
+        /* we are running something presumably useful */
         char buf[MSG_SIZ];
         snprintf(buf, MSG_SIZ, "open -n -a \"xboard\" --args \"%s\"", path);
-        system(buf);  // start new instance on this file
+        /* start new instance on this file */
+        system(buf);
     }
     return TRUE;
 }
@@ -1057,8 +1061,8 @@ int main(int argc, char ** argv) {
         if (*appData.boardSize == NULLCHAR) {
             // GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainwindow)); // TODO: this does not work, as no mainwindow yet
             GdkScreen * screen = gdk_screen_get_default();
-            guint screenwidth = gdk_screen_get_width(screen);
-            guint screenheight = gdk_screen_get_height(screen);
+            unsigned int screenwidth = gdk_screen_get_width(screen);
+            unsigned int screenheight = gdk_screen_get_height(screen);
             while (screenwidth < (szd->minScreenSize * BOARD_WIDTH + 4) / 8 ||
              screenheight < (szd->minScreenSize * BOARD_HEIGHT + 4) / 8) {
                 szd++;
@@ -1543,7 +1547,7 @@ void SetMenuEnables(Enables * enab) {
     }
 }
 
-gboolean KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, gpointer data) {
+int KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, void * data) {
     MoveTypeInProc(eventkey);  // pop up for typed in moves
 
 #ifdef TODO_GTK
@@ -1556,7 +1560,7 @@ gboolean KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, gpointer data)
         break;
     }
 #endif
-    return False;
+    return FALSE;
 }
 #ifdef TODO_GTK
 void KeyBindingProc(Widget w, XEvent * event, String * prms,
@@ -1796,7 +1800,7 @@ void ReSize(WindowPlacement * wp) {
     }
 }
 
-static guint delayedDragTag = 0;
+static unsigned int delayedDragTag = 0;
 
 void DragProc(void) {
     static int busy;
@@ -1851,7 +1855,7 @@ void DelayedDrag(void) {
     // printf("new timr = %d\n", delayedDragTag);
 }
 
-static gboolean EventProc(GtkWidget * widget, GdkEvent * event, gpointer g) {
+static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
     // printf("event proc (%d,%d) %dx%d\n", event->configure.x, event->configure.y, event->configure.width,
     // event->configure.height);
     //  immediately
@@ -1933,8 +1937,8 @@ void ModeHighlight(void) {
  * Button/menu procedures
  */
 
-void CopyFileToClipboard(gchar * filename) {
-    gchar * selection_tmp;
+void CopyFileToClipboard(char * filename) {
+    char * selection_tmp;
     GtkClipboard * cb;
 
     // read the file
@@ -1988,7 +1992,7 @@ void CopySomething(char * src) {
 void PastePositionProc(void) {
     GdkDisplay * gdisp = gdk_display_get_default();
     GtkClipboard * cb;
-    gchar * fenstr;
+    char * fenstr;
 
     if (gdisp == NULL) {
         return;
@@ -2003,9 +2007,9 @@ void PastePositionProc(void) {
 }
 
 void PasteGameProc(void) {
-    gchar * text = NULL;
+    char * text = NULL;
     GtkClipboard * cb;
-    guint len = 0;
+    unsigned int len = 0;
     int flip = appData.flipView;
     FILE * f;
 
@@ -2262,12 +2266,12 @@ typedef struct {
     int lineByLine;
     char * unused;
     InputCallback func;
-    guint sid;
+    unsigned int sid;
     char buf[INPUT_SOURCE_BUF_SIZE];
     void * closure;
 } InputSource;
 
-gboolean DoInputCallback(GIOChannel * io, GIOCondition cond, gpointer * data) {
+int DoInputCallback(GIOChannel * io, GIOCondition cond, void ** data) {
     /* read input from one of the input source (for example a chess program, ICS, etc).
      * and call a function that will handle the input
      */
@@ -2288,10 +2292,10 @@ gboolean DoInputCallback(GIOChannel * io, GIOCondition cond, gpointer * data) {
              shells[ChatDlg]) {  // [HGM] absence of terminal is no error if ICS Console present
                 RemoveInputSource(is);  // cease reading stdin
                 stdoutClosed = TRUE;  // suppress future output
-                return True;
+                return TRUE;
             }
             (is->func)(is, is->closure, is->buf, count, count ? errno : 0);
-            return True;
+            return TRUE;
         }
         is->unused += count;
         p = is->buf;
@@ -2325,7 +2329,7 @@ gboolean DoInputCallback(GIOChannel * io, GIOCondition cond, gpointer * data) {
         }
         (is->func)(is, is->closure, is->buf, count, error);
     }
-    return True;  // Must return true or the watch will be removed
+    return TRUE;  // Must return true or the watch will be removed
 }
 
 InputSourceRef AddInputSource(ProcRef pr, int lineByLine, InputCallback func, void * closure) {

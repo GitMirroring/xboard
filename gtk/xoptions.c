@@ -266,14 +266,14 @@ void ApplyFont(Option * opt, char * font) {
 
 GtkWidget * fbutton;
 
-void FontCallback(GtkWidget * widget, gpointer gdata) {
+void FontCallback(GtkWidget * widget, void * gdata) {
     Option * opt = (Option *)gdata;
-    gchar * p = (char *)gtk_font_button_get_font_name(GTK_FONT_BUTTON(fbutton));
+    char * p = (char *)gtk_font_button_get_font_name(GTK_FONT_BUTTON(fbutton));
     SetWidgetText(opt, p, TransientDlg);
     ApplyFont(opt, p);
 }
 
-void ColorCallback(GtkWidget * widget, gpointer gdata) {
+void ColorCallback(GtkWidget * widget, void * gdata) {
     Option * opt = (Option *)gdata;
     GdkColor rgba;
     char buf[MSG_SIZ];
@@ -384,7 +384,7 @@ void SetIconName(DialogClass dlg, char * name) {
 
 static int menuBlock;
 
-static gboolean HelpEvent(GtkWidget * widget, GdkEventButton * event, gpointer gdata) {  // intercept button3 clicks to pop up help
+static int HelpEvent(GtkWidget * widget, GdkEventButton * event, void * gdata) {  // intercept button3 clicks to pop up help
     char * msg = (char *)gdata;
     int menu = (event->type == GDK_BUTTON_RELEASE);  // only menu items trigger help on release
     if (event->button != 3) {
@@ -392,17 +392,17 @@ static gboolean HelpEvent(GtkWidget * widget, GdkEventButton * event, gpointer g
     }
     menuBlock = 2 * menu;  // prevent menu action is really excuted by default action
     if (menu) {
-        gtk_menu_item_activate(
-         GTK_MENU_ITEM(widget));  // hideous kludge: activate (blocked) menu item twice to prevent check-marking
+        // hideous kludge: activate (blocked) menu item twice to prevent check-marking
+        gtk_menu_item_activate(GTK_MENU_ITEM(widget));
     }
     DisplayHelp(msg);
     return !menu;  // in case of menu we have to execute default action to popdown and unfocus
 }
 
-void ComboSelect(GtkWidget * widget, gpointer addr) {
+void ComboSelect(GtkWidget * widget, void * addr) {
     Option * opt = dialogOptions[((intptr_t)addr) >> 8];  // applicable option list
-    gint i = ((intptr_t)addr) & 255;  // option number
-    gint g;
+    int i = ((intptr_t)addr) & 255;  // option number
+    int g;
 
     g = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
     values[i] = g;  // store in temporary, for transfer at OK
@@ -437,7 +437,7 @@ Widget CreateMenuItem(Widget menu, char * msg, XtCallbackProc CB, int n) {
 }
 #endif
 
-static void MenuSelect(gpointer addr)  // callback for all combo items
+static void MenuSelect(void * addr)  // callback for all combo items
 {
     Option * opt = dialogOptions[((intptr_t)addr) >> 24];  // applicable option list
     int i = ((intptr_t)addr) >> 16 & 255;  // option number
@@ -490,11 +490,11 @@ static GtkWidget * CreateMenuPopup(Option * opt, int n, int def) {
             } else {
                 entry = gtk_menu_item_new_with_label(msg);
             }
-            g_signal_connect_swapped(entry, "activate", G_CALLBACK(MenuSelect), (gpointer)(intptr_t)((n << 16) + i));
+            g_signal_connect_swapped(entry, "activate", G_CALLBACK(MenuSelect), (void *)(intptr_t)((n << 16) + i));
             g_signal_connect(
-             entry, "button-release-event", G_CALLBACK(HelpEvent), (gpointer)(mb[i].proc ? mb[i].string : "Recently Used Engines"));
+             entry, "button-release-event", G_CALLBACK(HelpEvent), (void *)(mb[i].proc ? mb[i].string : "Recently Used Engines"));
             if (mb[i].accel) {
-                guint accelerator_key;
+                unsigned int accelerator_key;
                 GdkModifierType accelerator_mods;
 
                 gtk_accelerator_parse(mb[i].accel, &accelerator_key, &accelerator_mods);
@@ -536,7 +536,7 @@ Option * icsBox;  // kludge to distinguish type-in callback from input-box callb
 
 void CursorAtEnd(Option * opt) { gtk_editable_set_position(opt->handle, -1); }
 
-static gboolean ICSKeyEvent(int keyval) {
+static int ICSKeyEvent(int keyval) {
     /* TODO_GTK: Arrow-handling should really be integrated into
        TypeInProc, and this should be a back-end OK handler. */
     switch (keyval) {
@@ -556,7 +556,7 @@ static gboolean ICSKeyEvent(int keyval) {
 
 int shiftState, controlState;
 
-static gboolean TypeInProc(GtkWidget * widget, GdkEventKey * event, gpointer gdata) {
+static int TypeInProc(GtkWidget * widget, GdkEventKey * event, void * gdata) {
     /*
        This callback catches key presses on text-entries, and uses
        <Enter> and <Esc> as synonyms for dialog OK or Cancel.
@@ -698,11 +698,11 @@ void Show(Option * opt, int hide) {
     }
 }
 
-int ShiftKeys(void) {  // bassic primitive for determining if modifier keys are pressed
+int ShiftKeys(void) {  // basic primitive for determining if modifier keys are pressed
     return 3 * (shiftState != 0) + 0xc * (controlState != 0);  // rely on what last mouse button press left us
 }
 
-static gboolean GameListEvent(GtkWidget * widget, GdkEvent * event, gpointer gdata) {
+static int GameListEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
     int ctrl;
     int n;
 
@@ -756,18 +756,23 @@ static gboolean GameListEvent(GtkWidget * widget, GdkEvent * event, gpointer gda
     return TRUE;
 }
 
-static gboolean MemoEvent(
- GtkWidget * widget, GdkEvent * event, gpointer gdata) {  // handle mouse clicks on text widgets that need it
-    int w, h;
-    int button = 10, f = 1;
+static int MemoEvent(
+ GtkWidget * widget, GdkEvent * event, void * gdata) {  // handle mouse clicks on text widgets that need it
+    int w;
+    int h;
+    int button = 10;
+    int f = 1;
     Option * memo = (Option *)gdata;
     MemoCallback * userHandler = (MemoCallback *)memo->choice;
     GdkEventButton * bevent = (GdkEventButton *)event;
     GdkEventMotion * mevent = (GdkEventMotion *)event;
-    GtkTextIter start, end;
+    GtkTextIter start;
+    GtkTextIter end;
     String val = NULL;
-    gboolean res;
-    gint index = 0, x, y;
+    int res;
+    int index = 0;
+    int x;
+    int y;
 
     switch (event->type) {  // figure out what's up
     case GDK_MOTION_NOTIFY:
@@ -835,12 +840,12 @@ void AddHandler(Option * opt, DialogClass dlg, int nr) {
         icsBox = opt;
     case 2:  // move type-in
         g_signal_connect(
-         opt->handle, "key-press-event", G_CALLBACK(TypeInProc), (gpointer)(dlg << 16 | (opt - dialogOptions[dlg])));
+         opt->handle, "key-press-event", G_CALLBACK(TypeInProc), (void *)(dlg << 16 | (opt - dialogOptions[dlg])));
         break;
     case 5:  // game list
-        g_signal_connect(opt->handle, "button-press-event", G_CALLBACK(GameListEvent), (gpointer)0);
+        g_signal_connect(opt->handle, "button-press-event", G_CALLBACK(GameListEvent), (void *)0);
     case 4:  // game-list filter
-        g_signal_connect(opt->handle, "key-press-event", G_CALLBACK(GameListEvent), (gpointer)(intptr_t)nr);
+        g_signal_connect(opt->handle, "key-press-event", G_CALLBACK(GameListEvent), (void *)(intptr_t)nr);
         break;
     case 6:  // engine output (uses generic textview callback)
         break;
@@ -878,7 +883,7 @@ void RaiseWindow(DialogClass dlg) {
     xev.xclient.data.l[1] = CurrentTime;
 
     XSendEvent(xDisplay, root, False,
-     static gboolean MemoEvent(GtkWidget * widget, GdkEvent * event, gpointer gdata)
+     static int MemoEvent(GtkWidget * widget, GdkEvent * event, void * gdata)
 
        SubstructureRedirectMask |
       SubstructureNotifyMask,
@@ -933,7 +938,7 @@ int PopDown(DialogClass n) {
 }
 
 /* GTK callback used when OK/cancel clicked in genericpopup for non-modal dialog */
-gboolean GenericPopDown(GtkWidget * w, GtkResponseType resptype, gpointer gdata) {
+int GenericPopDown(GtkWidget * w, GtkResponseType resptype, void * gdata) {
     DialogClass dlg = (intptr_t)gdata; /* dialog number dlgnr */
     GtkWidget * sh = shells[dlg];
 
@@ -942,11 +947,11 @@ gboolean GenericPopDown(GtkWidget * w, GtkResponseType resptype, gpointer gdata)
 #ifdef TODO_GTK
     // I guess BrowserDlg will be abandoned, as GTK has a better browser of its own
     if (shellUp[BrowserDlg] && dlg != BrowserDlg || dialogError) {
-        return True;  // prevent closing dialog when it has an open file-browse daughter
+        return TRUE;  // prevent closing dialog when it has an open file-browse daughter
     }
 #else
     if (browserUp || dialogError && dlg != FatalDlg || dlg == MasterDlg && shellUp[TransientDlg]) {
-        return True;  // prevent closing dialog when it has an open file-browse, transient or error-popup daughter
+        return TRUE;  // prevent closing dialog when it has an open file-browse, transient or error-popup daughter
     }
 #endif
     shells[dlg] = w;  // make sure we pop down the right one in case of multiple instances
@@ -973,13 +978,13 @@ gboolean GenericPopDown(GtkWidget * w, GtkResponseType resptype, gpointer gdata)
     return TRUE;
 }
 
-gboolean PopDownProxy(GtkWidget * w, gpointer gdata) {
+int PopDownProxy(GtkWidget * w, void * gdata) {
     GtkResponseType resp = GTK_RESPONSE_ACCEPT;
     int dlg = (intptr_t)gdata;
     if (dlg >= 3000) {
         dlg -= 3000, resp = GTK_RESPONSE_REJECT;
     }
-    return GenericPopDown(gtk_widget_get_toplevel(w), resp, (gpointer)(intptr_t)dlg);
+    return GenericPopDown(gtk_widget_get_toplevel(w), resp, (void *)(intptr_t)dlg);
 }
 
 int AppendText(Option * opt, char * s) {
@@ -1033,7 +1038,7 @@ static void ExposeDraw(Option * graph, GdkEventExpose * eevent) {
 }
 
 static void GraphEventProc(
- GtkWidget * widget, GdkEvent * event, gpointer gdata) {  // handle expose and mouse events on Graph widget
+ GtkWidget * widget, GdkEvent * event, void * gdata) {  // handle expose and mouse events on Graph widget
     int w, h;
     int button = 10, f = 1, sizing = 0;
     Option *opt, *graph = (Option *)gdata;
@@ -1149,8 +1154,8 @@ void GraphExpose(Option * opt, int x, int y, int w, int h) {
     ExposeDraw(opt, &e);  // fake expose event
 }
 
-void GenericCallback(GtkWidget * widget, gpointer gdata) {
-    const gchar * name;
+void GenericCallback(GtkWidget * widget, void * gdata) {
+    const char * name;
     char buf[MSG_SIZ];
     int data = (intptr_t)gdata;
     DialogClass dlg;
@@ -1196,7 +1201,7 @@ void GenericCallback(GtkWidget * widget, gpointer gdata) {
     shells[dlg] = oldSh;  // in case of multiple instances, restore previous (as this one could be popped down now)
 }
 
-int BrowseCallback(GtkFileChooser * chooser, gpointer data) {
+int BrowseCallback(GtkFileChooser * chooser, void * data) {
     char * name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(chooser));
     Option * opt = currentOption + (int)(intptr_t)data;
     int n = (int)(intptr_t)opt->choice;
@@ -1208,7 +1213,7 @@ int BrowseCallback(GtkFileChooser * chooser, gpointer data) {
     return FALSE;
 }
 
-void BrowseGTK(GtkWidget * widget, gpointer gdata) {
+void BrowseGTK(GtkWidget * widget, void * gdata) {
     GtkWidget * entry;
     GtkWidget * dialog;
     GtkFileFilter * gtkfilter;
@@ -1284,7 +1289,7 @@ void BrowseGTK(GtkWidget * widget, gpointer gdata) {
     messedUp = FALSE;
     n = (int)(intptr_t)currentOption[opt_i].choice;
     if (n && !currentCps) {
-        g_signal_connect(GTK_DIALOG(dialog), "selection-changed", G_CALLBACK(BrowseCallback), (gpointer)(intptr_t)opt_i);
+        g_signal_connect(GTK_DIALOG(dialog), "selection-changed", G_CALLBACK(BrowseCallback), (void *)(intptr_t)opt_i);
         gtk_window_set_title(GTK_WINDOW(dialog), _("*** Board window shows preview of selection ***"));
     }
 
@@ -1305,7 +1310,7 @@ void BrowseGTK(GtkWidget * widget, gpointer gdata) {
     dialog = NULL;
 }
 
-gboolean ListCallback(GtkWidget * widget, GdkEventButton * event, gpointer gdata) {
+int ListCallback(GtkWidget * widget, GdkEventButton * event, void * gdata) {
     int n = (intptr_t)gdata & 0xffff;
     int dlg = (intptr_t)gdata >> 16;
     Option * opt = dialogOptions[dlg] + n;
@@ -1447,12 +1452,12 @@ static void Pack(GtkWidget * hbox, GtkWidget * table, GtkWidget * entry, int lef
 
 int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass parent, int modal, int topLevel) {
     GtkWidget * dialog = NULL;
-    gint w;
     GtkWidget * label;
     GtkWidget * box;
     GtkWidget * checkbutton;
     GtkWidget * entry;
-    GtkWidget *oldHbox = NULL, *hbox = NULL;
+    GtkWidget * oldHbox = NULL;
+    GtkWidget * hbox = NULL;
     GtkWidget * pane = NULL;
     GtkWidget * button;
     GtkWidget * table;
@@ -1470,9 +1475,21 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
     GtkWidget * menuBar = NULL;
     GtkWidget * menu;
 
-    int i, j, arraysize, left, top, height = 999, width = 1, boxStart = 0, breakType = 0, r;
-    char def[MSG_SIZ], *msg, engineDlg = (currentCps != NULL && dlgNr != BrowserDlg);
-    gboolean expandable = FALSE;
+    int w;
+    int i;
+    int j;
+    int arraysize;
+    int left;
+    int top;
+    int height = 999;
+    int width = 1;
+    int boxStart = 0;
+    int breakType = 0;
+    int r;
+    char def[MSG_SIZ];
+    char * msg;
+    char engineDlg = (currentCps != NULL && dlgNr != BrowserDlg);
+    int expandable = FALSE;
 
     if (dlgNr < PromoDlg && shellUp[dlgNr]) {
         return 0;  // already up
@@ -1656,9 +1673,9 @@ tBox:
                     gtk_text_buffer_get_iter_at_offset(textbuffer, &iter, -1);
                     gtk_text_buffer_create_mark(textbuffer, "scrollmark", &iter, FALSE);  // permanent mark
                     if (option[i].choice) {  // textviews can request a handler for mouse events in the choice field
-                        g_signal_connect(textview, "button-press-event", G_CALLBACK(MemoEvent), (gpointer)&option[i]);
-                        g_signal_connect(textview, "button-release-event", G_CALLBACK(MemoEvent), (gpointer)&option[i]);
-                        g_signal_connect(textview, "motion-notify-event", G_CALLBACK(MemoEvent), (gpointer)&option[i]);
+                        g_signal_connect(textview, "button-press-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
+                        g_signal_connect(textview, "button-release-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
+                        g_signal_connect(textview, "motion-notify-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
                     }
                     break;
                 }
@@ -1682,7 +1699,7 @@ tBox:
                     gtk_container_add(GTK_CONTAINER(button), label);
                     label = button;
                     gtk_widget_add_events(GTK_WIDGET(label), GDK_BUTTON_PRESS_MASK);
-                    g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (gpointer)option[i].name);
+                    g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (void *)option[i].name);
                     gtk_widget_set_sensitive(label, TRUE);
                     gtk_table_attach(GTK_TABLE(table), label, left, left + 1, top, top + 1, GTK_FILL, GTK_FILL, 2,
                      1);  // leading names do not expand
@@ -1700,7 +1717,7 @@ tBox:
                     button = gtk_button_new_with_label(_("Browse"));
                     gtk_table_attach(GTK_TABLE(table), button, left + 2, left + r, top, top + 1, GTK_FILL, GTK_FILL, 2,
                      1);  // Browse button does not expand
-                    g_signal_connect(button, "clicked", G_CALLBACK(BrowseGTK), (gpointer)(intptr_t)i);
+                    g_signal_connect(button, "clicked", G_CALLBACK(BrowseGTK), (void *)(intptr_t)i);
                     option[i].handle = (void *)entry;
                 } else {
                     Pack(hbox, table, entry, left + (strcmp(option[i].name, "") != 0), left + r, top, 0);
@@ -1709,7 +1726,7 @@ tBox:
                 break;
             case CheckBox:
                 checkbutton = gtk_check_button_new_with_label(_(option[i].name));
-                g_signal_connect(checkbutton, "button-press-event", G_CALLBACK(HelpEvent), (gpointer)option[i].name);
+                g_signal_connect(checkbutton, "button-press-event", G_CALLBACK(HelpEvent), (void *)option[i].name);
                 if (!currentCps) {
                     option[i].value = *(Boolean *)option[i].target;
                 }
@@ -1741,9 +1758,9 @@ tBox:
                     label = button;
                     gtk_widget_add_events(GTK_WIDGET(label), GDK_BUTTON_PRESS_MASK);
                     if (option[i].target) {
-                        g_signal_connect(label, "button-press-event", G_CALLBACK(MemoEvent), (gpointer)&option[i]);
+                        g_signal_connect(label, "button-press-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
                     } else {
-                        g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (gpointer)option[i].name);
+                        g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (void *)option[i].name);
                     }
                     gtk_widget_set_sensitive(label, TRUE);
                 }
@@ -1797,13 +1814,13 @@ tBox:
 
                 Pack(hbox, table, button, left, left + 1, top, 0);
                 if (!strcmp(option[i].name, "D")) {  // color button
-                    g_signal_connect(button, "color-set", G_CALLBACK(ColorCallback), (gpointer)&option[i - 5]);
+                    g_signal_connect(button, "color-set", G_CALLBACK(ColorCallback), (void *)&option[i - 5]);
                 } else if (option[i].value == 666 && !strcmp(option[i].name, "*")) {  // font-assignment buttons
-                    g_signal_connect(button, "clicked", G_CALLBACK(FontCallback), (gpointer)&option[i - 5]);
+                    g_signal_connect(button, "clicked", G_CALLBACK(FontCallback), (void *)&option[i - 5]);
                 } else {
-                    g_signal_connect(button, "clicked", G_CALLBACK(GenericCallback), (gpointer)(intptr_t)i + (dlgNr << 16));
+                    g_signal_connect(button, "clicked", G_CALLBACK(GenericCallback), (void *)(intptr_t)i + (dlgNr << 16));
                 }
-                g_signal_connect(button, "button-press-event", G_CALLBACK(HelpEvent), (gpointer)option[i].name);
+                g_signal_connect(button, "button-press-event", G_CALLBACK(HelpEvent), (void *)option[i].name);
                 option[i].handle = (void *)button;
                 break;
             case ComboBox:
@@ -1814,7 +1831,7 @@ tBox:
                 gtk_container_add(GTK_CONTAINER(button), label);
                 label = button;
                 gtk_widget_add_events(GTK_WIDGET(label), GDK_BUTTON_PRESS_MASK);
-                g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (gpointer)option[i].name);
+                g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (void *)option[i].name);
                 gtk_widget_set_sensitive(label, TRUE);
                 gtk_table_attach(GTK_TABLE(table), label, left, left + 1, top, top + 1, GTK_FILL, GTK_FILL, 2, 1);
 
@@ -1848,7 +1865,7 @@ tBox:
                 gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), option[i].value);
 
                 Pack(hbox, table, combobox, left + 1, left + r, top, 0);
-                g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(ComboSelect), (gpointer)(intptr_t)(i + 256 * dlgNr));
+                g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(ComboSelect), (void *)(intptr_t)(i + 256 * dlgNr));
 
                 option[i].handle = (void *)combobox;
                 values[i] = option[i].value;
@@ -1879,7 +1896,7 @@ tBox:
                 gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_OUT);
 
                 if (option[i].textValue) {  // generic callback for double-clicking listbox item
-                    g_signal_connect(list, "button-press-event", G_CALLBACK(ListCallback), (gpointer)(intptr_t)(dlgNr << 16 | i));
+                    g_signal_connect(list, "button-press-event", G_CALLBACK(ListCallback), (void *)(intptr_t)(dlgNr << 16 | i));
                 }
 
                 /* never has label, so let listbox occupy all columns */
@@ -1889,12 +1906,12 @@ tBox:
             case Graph:
                 option[i].handle = (void *)(graph = gtk_drawing_area_new());
                 gtk_widget_set_size_request(graph, option[i].max, option[i].value);
-                g_signal_connect(graph, "expose-event", G_CALLBACK(GraphEventProc), (gpointer)&option[i]);
+                g_signal_connect(graph, "expose-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
                 gtk_widget_add_events(GTK_WIDGET(graph), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
-                g_signal_connect(graph, "button-press-event", G_CALLBACK(GraphEventProc), (gpointer)&option[i]);
-                g_signal_connect(graph, "button-release-event", G_CALLBACK(GraphEventProc), (gpointer)&option[i]);
-                g_signal_connect(graph, "motion-notify-event", G_CALLBACK(GraphEventProc), (gpointer)&option[i]);
-                g_signal_connect(graph, "scroll-event", G_CALLBACK(GraphEventProc), (gpointer)&option[i]);
+                g_signal_connect(graph, "button-press-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
+                g_signal_connect(graph, "button-release-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
+                g_signal_connect(graph, "motion-notify-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
+                g_signal_connect(graph, "scroll-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
                 if (option[i].min & FIX_H) {  // logo
                     GtkWidget * frame = gtk_aspect_frame_new(NULL, 0.5, 0.5, option[i].max / (float)option[i].value, FALSE);
                     gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
@@ -1995,10 +2012,10 @@ tBox:
 
         if (topLevel && !(option[i].min & NO_OK)) {  // buttons requested in top-level window
             button = gtk_button_new_with_label(_("OK"));
-            g_signal_connect(button, "clicked", G_CALLBACK(PopDownProxy), (gpointer)(intptr_t)dlgNr);
+            g_signal_connect(button, "clicked", G_CALLBACK(PopDownProxy), (void *)(intptr_t)dlgNr);
             if (!(option[i].min & NO_CANCEL)) {
                 GtkWidget * button2 = gtk_button_new_with_label(_("Cancel"));
-                g_signal_connect(button2, "clicked", G_CALLBACK(PopDownProxy), (gpointer)(intptr_t)dlgNr + 3000);
+                g_signal_connect(button2, "clicked", G_CALLBACK(PopDownProxy), (void *)(intptr_t)dlgNr + 3000);
                 if (!hbox) {
                     hbox = gtk_hbox_new(False, 0);
                     gtk_table_attach(
@@ -2040,10 +2057,10 @@ tBox:
                 gtk_widget_hide(button);
             }
             gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-            g_signal_connect(dialog, "response", G_CALLBACK(GenericPopDown), (gpointer)(intptr_t)dlgNr);
+            g_signal_connect(dialog, "response", G_CALLBACK(GenericPopDown), (void *)(intptr_t)dlgNr);
         }
 
-        g_signal_connect(dialog, "delete-event", G_CALLBACK(GenericPopDown), (gpointer)(intptr_t)dlgNr);
+        g_signal_connect(dialog, "delete-event", G_CALLBACK(GenericPopDown), (void *)(intptr_t)dlgNr);
         shellUp[dlgNr]++;
 
         if (dlgNr && wp[dlgNr]) {  // if persistent window-info available, reposition
