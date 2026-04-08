@@ -1,115 +1,116 @@
 # Serbian translation for xboard.
 # Copyright (C) 2014 Free Software Foundation, Inc.
 # This file is distributed under the same license as the xboard package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2014—2016.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2014—2016, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: xboard-4.9.0-pre2\n"
+"Project-Id-Version: xboard-4.9.2-pre2\n"
 "Report-Msgid-Bugs-To: bug-xboard@gnu.org\n"
-"POT-Creation-Date: 2016-04-03 13:44-0700\n"
-"PO-Revision-Date: 2016-06-02 06:03+0200\n"
+"POT-Creation-Date: 2026-03-21 18:29-0700\n"
+"PO-Revision-Date: 2026-04-04 13:09+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: args.h:851
+#: args.h:862
 #, c-format
 msgid "%s in settings file\n"
 msgstr "%s у датотеци подешавања\n"
 
-#: args.h:885
+#: args.h:896
 #, c-format
 msgid "Bad integer value %s"
 msgstr "Лоша вредност целог броја %s"
 
-#: args.h:991 args.h:1252
+#: args.h:1002 args.h:1309
 #, c-format
 msgid "Unrecognized argument %s"
 msgstr "Непознат аргумент „%s“"
 
-#: args.h:1022
+#: args.h:1033
 #, c-format
 msgid "No value provided for argument %s"
 msgstr "Није наведена вредност за аргумент „%s“"
 
-#: args.h:1082
+#: args.h:1093
 #, c-format
 msgid "Incomplete \\ escape in value for %s"
 msgstr "Непотпуна \\ промене реда у вредности за „%s“"
 
-#: args.h:1193
+#: args.h:1231
 #, c-format
 msgid "Failed to open indirection file %s"
 msgstr "Нисам успео да отворим датотеку усмерења „%s“"
 
-#: args.h:1210
+#: args.h:1248
 #, c-format
 msgid "Unrecognized boolean argument value %s"
 msgstr "Непозната вредност логичког аргумента %s"
 
-#. TRANSLATORS: "first" is the first of possible two chess engines. It is inserted into strings
-#. such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing
-#: backend.c:811
+#. TRANSLATORS: "first" is the first of possibly two chess engines.  It is inserted into strings
+#. such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing.
+#: backend.c:793
 msgid "first"
 msgstr "први"
 
-#. TRANSLATORS: "second" is the second of possible two chess engines. It is inserted into strings
-#. such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing
-#: backend.c:814
+#. TRANSLATORS: "second" is the second of possibly two chess engines.  It is inserted into strings
+#. such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing.
+#: backend.c:796
 msgid "second"
 msgstr "други"
 
-#: backend.c:897
+#: backend.c:879
 #, c-format
 msgid "protocol version %d not supported"
 msgstr "издање протокола %d није подржано"
 
-#: backend.c:1004
+#: backend.c:1029
 msgid "You did not specify the engine executable"
 msgstr "Нисте навели извршног погона"
 
-#: backend.c:1062
+#: backend.c:1067
 #, c-format
 msgid "bad timeControl option %s"
 msgstr "лоша опција управљања временом „%s“"
 
-#: backend.c:1077
+#: backend.c:1082
 #, c-format
 msgid "bad searchTime option %s"
 msgstr "лоша опција времена претраге „%s“"
 
-#: backend.c:1183
+#: backend.c:1196
 #, c-format
 msgid "Variant %s supported only in ICS mode"
 msgstr "Варијанта „%s“ је подржана само у ИШС режиму"
 
-#: backend.c:1201
+#: backend.c:1214
 #, c-format
 msgid "Unknown variant name %s"
 msgstr "Непознат назив варијанте „%s“"
 
-#: backend.c:1456
+#: backend.c:1471
 msgid "Starting chess program"
 msgstr "Покрећем шаховски програм"
 
-#: backend.c:1479
+#: backend.c:1494
 msgid "Bad game file"
 msgstr "Лоша датотека игре"
 
-#: backend.c:1486
+#: backend.c:1501
 msgid "Bad position file"
 msgstr "Лоша датотека положаја"
 
-#: backend.c:1500
+#: backend.c:1515
 msgid "Pick new game"
 msgstr "Изаберите нову игру"
 
-#: backend.c:1569
+#: backend.c:1587
 msgid ""
 "You restarted an already completed tourney.\n"
 "One more cycle will now be added to it.\n"
@@ -119,124 +120,124 @@ msgstr ""
 "Још један круг ће бити додат у њега.\n"
 "Игре почињу за 10 сек."
 
-#: backend.c:1576
+#: backend.c:1594
 #, c-format
 msgid "All games in tourney '%s' are already played or playing"
 msgstr "Све игре на турниру „%s“ су већ одигране или су у току"
 
-#: backend.c:1583
+#: backend.c:1601
 msgid "Can't have a match with no chess programs"
 msgstr "Не могу играти партију без шаховских програма"
 
-#: backend.c:1637
+#: backend.c:1654
 #, c-format
 msgid "Could not open comm port %s"
 msgstr "Не могу да отворим прикључник коминикације %s"
 
-#: backend.c:1640
+#: backend.c:1657
 #, c-format
 msgid "Could not connect to host %s, port %s"
 msgstr "Не могу да се повежем на домаћина „%s“, прикључник %s"
 
-#: backend.c:1696
+#: backend.c:1713
 #, c-format
 msgid "Unknown initialMode %s"
 msgstr "Непознат режим почетка „%s“"
 
-#: backend.c:1722
+#: backend.c:1739
 msgid "AnalyzeFile mode requires a game file"
 msgstr "Режим анализе датотеке захтева датотеку игре"
 
-#: backend.c:1755
+#: backend.c:1772
 msgid "Analysis mode requires a chess engine"
 msgstr "Режим анализе захтева шаховски погон"
 
-#: backend.c:1759
+#: backend.c:1776
 msgid "Analysis mode does not work with ICS mode"
 msgstr "Режим анализе не ради са ИШС режимом"
 
-#: backend.c:1770
+#: backend.c:1787
 msgid "MachineWhite mode requires a chess engine"
 msgstr "Режим машинског белог захтева шаховски погон"
 
-#: backend.c:1775
+#: backend.c:1792
 msgid "MachineWhite mode does not work with ICS mode"
 msgstr "Режим машинског белог не ради са ИШС режимом"
 
-#: backend.c:1782
+#: backend.c:1799
 msgid "MachineBlack mode requires a chess engine"
 msgstr "Режим машинског црног захтева шаховски погон"
 
-#: backend.c:1787
+#: backend.c:1804
 msgid "MachineBlack mode does not work with ICS mode"
 msgstr "Режим машинског црног не ради са ИШС режимом"
 
-#: backend.c:1794
+#: backend.c:1811
 msgid "TwoMachines mode requires a chess engine"
 msgstr "Режим две машине захтева шаховски погон"
 
-#: backend.c:1799
+#: backend.c:1816
 msgid "TwoMachines mode does not work with ICS mode"
 msgstr "Режим две машине не ради са ИШС режимом"
 
-#: backend.c:1810
+#: backend.c:1827
 msgid "Training mode requires a game file"
 msgstr "Режим увежбавања захтева датотеку игре"
 
-#: backend.c:1973 backend.c:2028 backend.c:2051 backend.c:2453
+#: backend.c:1990 backend.c:2045 backend.c:2068 backend.c:2470
 msgid "Error writing to ICS"
 msgstr "Грешка писања у ИШС"
 
-#: backend.c:1988
+#: backend.c:2005
 msgid "Error reading from keyboard"
 msgstr "Грешка читања са тастатуре"
 
-#: backend.c:1991
+#: backend.c:2008
 msgid "Got end of file from keyboard"
 msgstr "Добих крај датотеке са тастатуре"
 
-#: backend.c:2299
+#: backend.c:2316
 #, c-format
 msgid "Unknown wild type %d"
 msgstr "Непозната дивља врста „%d“"
 
-#: backend.c:2370 usystem.c:317
+#: backend.c:2387 usystem.c:302
 msgid "Error writing to display"
 msgstr "Грешка писања на приказ"
 
-#. TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers
-#: backend.c:3138
+#. TRANSLATORS: to 'kibitz' is to send a message to all players and the game observers.
+#: backend.c:3156
 #, c-format
 msgid "your opponent kibitzes: %s"
 msgstr "ваш противник кибицује: %s"
 
-#: backend.c:3677
+#: backend.c:3696
 msgid "Error gathering move list: two headers"
 msgstr "Грешка прикупљања списка потеза: два заглавља"
 
-#: backend.c:3724
+#: backend.c:3743
 msgid "Error gathering move list: nested"
 msgstr "Грешка прикупљања списка потеза: угнежден"
 
-#: backend.c:3828 backend.c:4254 backend.c:4458 backend.c:5017 backend.c:5021
-#: backend.c:7292 backend.c:13054 backend.c:14805 backend.c:14882
-#: backend.c:14928 backend.c:14934 backend.c:14939 backend.c:14944
+#: backend.c:3847 backend.c:4276 backend.c:4480 backend.c:5045 backend.c:5049
+#: backend.c:7418 backend.c:13513 backend.c:15294 backend.c:15381
+#: backend.c:15430 backend.c:15436 backend.c:15441 backend.c:15446
 msgid "vs."
 msgstr "против"
 
-#: backend.c:3956
+#: backend.c:3975
 msgid "Illegal move (rejected by ICS)"
 msgstr "Недозвољен потез (одбацио га је ИШС)"
 
-#: backend.c:4302
+#: backend.c:4324
 msgid "Connection closed by ICS"
 msgstr "Везу је затворио ИШС"
 
-#: backend.c:4304
+#: backend.c:4326
 msgid "Error reading from ICS"
 msgstr "Грешка читања са ИШС-а"
 
-#: backend.c:4381
+#: backend.c:4403
 #, c-format
 msgid ""
 "Failed to parse board string:\n"
@@ -245,132 +246,166 @@ msgstr ""
 "Нисам успео да обрадим ниску табле:\n"
 "„%s“"
 
-#: backend.c:4390 backend.c:10628
+#: backend.c:4412 backend.c:11013
 msgid "Game too long; increase MAX_MOVES and recompile"
 msgstr "Игра је предуга; повећајте НАЈВИШЕ_ПОТЕЗА и поново преведите"
 
-#: backend.c:4509
+#: backend.c:4531
 msgid "Error gathering move list: extra board"
 msgstr "Грешка прикупљања списка потеза: додатна табла"
 
-#: backend.c:4941 backend.c:4963
+#: backend.c:4969 backend.c:4991
 #, c-format
 msgid "Couldn't parse move \"%s\" from ICS"
 msgstr "Не могу да обрадим потез „%s“ из ИШС-а"
 
-#: backend.c:5228
+#: backend.c:5262
 #, c-format
 msgid "say Internal error; bad moveType %d (%d,%d-%d,%d)"
 msgstr "реци унутрашња грешка; лоша врста потеза %d (%d,%d-%d,%d)"
 
-#: backend.c:5299
+#: backend.c:5333
 msgid "You cannot do this while you are playing or observing"
 msgstr "Не можете да урадите ово док играте или посматрате"
 
-#: backend.c:6359
+#: backend.c:6411
 msgid "Recompile to support this BOARD_RANKS or BOARD_FILES!"
 msgstr "Поново преведите да подржите ове РЕДОВЕ_ТАБЛЕ или ЛИНИЈЕ_ТАБЛЕ!"
 
-#: backend.c:6851
+#: backend.c:6949
 msgid "You are playing Black"
 msgstr "Играте црним"
 
-#: backend.c:6860 backend.c:6888
+#: backend.c:6958 backend.c:6986
 msgid "You are playing White"
 msgstr "Играте белим"
 
-#: backend.c:6870 backend.c:6896 backend.c:7018 backend.c:7043 backend.c:7059
-#: backend.c:15645
+#: backend.c:6968 backend.c:6994 backend.c:7116 backend.c:7141 backend.c:7157
+#: backend.c:16241
 msgid "It is White's turn"
 msgstr "Бели је на потезу"
 
-#: backend.c:6874 backend.c:6900 backend.c:7026 backend.c:7049 backend.c:7081
-#: backend.c:15637
+#: backend.c:6972 backend.c:6998 backend.c:7124 backend.c:7147 backend.c:7179
+#: backend.c:16233
 msgid "It is Black's turn"
 msgstr "Црни је на потезу"
 
-#: backend.c:6913
+#: backend.c:7011
 msgid "Displayed position is not current"
 msgstr "Приказани положај није тренутни"
 
-#: backend.c:7116
+#: backend.c:7214
 msgid "rights granted"
 msgstr "права су остварена"
 
-#: backend.c:7116
+#: backend.c:7214
 msgid "rights revoked"
 msgstr "права су повучена"
 
-#: backend.c:7169
+#: backend.c:7269
 msgid "Illegal move"
 msgstr "Недозвољени потез"
 
-#: backend.c:7249
+#: backend.c:7364
 msgid "End of game"
 msgstr "Крај игре"
 
-#: backend.c:7252
+#: backend.c:7367
 msgid "Incorrect move"
 msgstr "Неисправан потез"
 
-#: backend.c:7655 backend.c:7811
+#: backend.c:7849 backend.c:8004
 msgid "Pull pawn backwards to under-promote"
 msgstr "Повуците пешака уназад до унапређења"
 
-#: backend.c:7772
+#: backend.c:7966
 msgid "only marked squares are legal"
 msgstr "само означена поља су дозвољена"
 
-#: backend.c:8093
+#: backend.c:8201
+msgid ""
+"To edit the position you can:\n"
+"* Move pieces around with left mouse button\n"
+"* Copy pieces by moving with Ctrl key pressed\n"
+"   OR by starting the move with a double-click\n"
+"* Click a K, R or P a second time to toggle its rights\n"
+"* 'Lift' a piece with right-click for multi-dropping\n"
+"* Drop a piece of the lifted type by left-click on empty\n"
+"* Right-click on empty to finish dropping\n"
+"* Adjust the type of a dropped piece by clicking it again\n"
+"* Click the active clock (repeatedly) to clear the board\n"
+"* Click the inactive clock to change the side to move"
+msgstr ""
+"Да уредите позицију можете да:\n"
+"* Померате фигуре унаоколо левим дугметом миша\n"
+"* Умножите фигуре померањем са притиснутим Ктрл тастером\n"
+"   ИЛИ да започнете потез двоструким кликом\n"
+"* Кликнете K, R или P по други пут да окинете његова права\n"
+"* „Подигнете“ фигуру десним клоком за вишеструко пуштање\n"
+"* Спустите фигуру подигнутог типа левим кликом на празно\n"
+"* Кликнете десним тастером на празно да завршите спуштање\n"
+"* Подесите врсту спуштене фигуре поновним кликом на њу\n"
+"* Кликнете на активни сат (пнављајући) да очистите таблу\n"
+"* Кликнете на неактиван сат да измените страну за потез"
+
+#: backend.c:8217
+msgid "white"
+msgstr "бели"
+
+#: backend.c:8217
+msgid "black"
+msgstr "црни"
+
+#: backend.c:8340
 msgid "Swiss tourney finished"
 msgstr "Швајцарски турнир је завршен"
 
-#: backend.c:8609
+#: backend.c:8882
 msgid "could not load EGBB library"
 msgstr "не могу да учитам ЕГББ библиотеку"
 
-#: backend.c:8612
+#: backend.c:8885
 msgid "wrong EGBB version"
 msgstr "погрешно издање ЕГББ-а"
 
-#: backend.c:8725
+#: backend.c:8998
 msgid "Invalid pairing from pairing engine"
 msgstr "Неисправно упаривање из погона упаривања"
 
-#: backend.c:8892
+#: backend.c:9173
 #, c-format
 msgid "Illegal move \"%s\" from %s machine"
 msgstr "Недозвољени потез „%s“ %s машине"
 
-#: backend.c:9179
+#: backend.c:9510
 msgid "Bad FEN received from engine"
 msgstr "Лош ФЕН је примљен од погона"
 
-#: backend.c:9280
+#: backend.c:9616
 msgid "Engine did not send setup for non-standard variant"
 msgstr "Погон није послао подешавање за неуобичајену варијанту"
 
-#: backend.c:9358 backend.c:14667 backend.c:14735
+#: backend.c:9700 backend.c:15148 backend.c:15216
 #, c-format
 msgid "%s does not support analysis"
 msgstr "„%s“ не подржава анализу"
 
-#: backend.c:9424
+#: backend.c:9766
 #, c-format
 msgid "Illegal move \"%s\" (rejected by %s chess program)"
 msgstr "Недозвољени потез „%s“ (одбацио га је „%s“ шаховски програм)"
 
-#: backend.c:9455
+#: backend.c:9797
 #, c-format
 msgid "Failed to start %s chess program %s on %s: %s\n"
 msgstr "Нисам успео да покренем %s шаховски програм %s на %s: %s\n"
 
-#: backend.c:9476
+#: backend.c:9819
 #, c-format
 msgid "Hint: %s"
 msgstr "Савет: %s"
 
-#: backend.c:9481
+#: backend.c:9824
 #, c-format
 msgid ""
 "Illegal hint move \"%s\"\n"
@@ -379,11 +414,11 @@ msgstr ""
 "Недозвољени потез савета „%s“\n"
 "шаховског програма „%s“"
 
-#: backend.c:9656
+#: backend.c:9999
 msgid "Machine accepts your draw offer"
 msgstr "Рачунар прхвата вашу понуду ремија"
 
-#: backend.c:9659
+#: backend.c:10002
 msgid ""
 "Machine offers a draw.\n"
 "Select Action / Draw to accept."
@@ -391,53 +426,53 @@ msgstr ""
 "Рачунар нуди реми.\n"
 "Изаберите „Радња / Реми“ да прихватите."
 
-#. TRANSLATORS: PV = principal variation, the variation the chess engine thinks is the best for everyone
-#: backend.c:9777
+#. TRANSLATORS: PV = principal variation, the variation the chess engine thinks is the best for everyone.
+#: backend.c:10123
 msgid "failed writing PV"
 msgstr "нисам успео да запишем ПВ"
 
-#: backend.c:10083
+#: backend.c:10431
 #, c-format
 msgid "Ambiguous move in ICS output: \"%s\""
 msgstr "Нејасан потез у излазу ИШС-а: %s"
 
-#: backend.c:10093
+#: backend.c:10441
 #, c-format
 msgid "Illegal move in ICS output: \"%s\""
 msgstr "Недозвољени потез у излазу ИШС-а: %s"
 
-#: backend.c:10104
+#: backend.c:10452
 msgid "Gap in move list"
 msgstr "Јаз у списку потеза"
 
-#: backend.c:10782
+#: backend.c:11170
 #, c-format
 msgid "Variant %s not supported by %s"
 msgstr "Варијанту „%s“ не подржава %s"
 
-#: backend.c:10789
+#: backend.c:11177
 #, c-format
 msgid ", but %s is"
 msgstr ", али „%s“ је"
 
-#: backend.c:10945
+#: backend.c:11351
 #, c-format
 msgid "Startup failure on '%s'"
 msgstr "Неуспех покретања на „%s“"
 
-#: backend.c:10976
+#: backend.c:11382
 msgid "Waiting for first chess program"
 msgstr "Чекам први шаховски програм"
 
-#: backend.c:10981 backend.c:14953
+#: backend.c:11387 backend.c:15455
 msgid "Waiting for second chess program"
 msgstr "Чекам други шаховски програм"
 
-#: backend.c:11030
+#: backend.c:11436
 msgid "Could not write on tourney file"
 msgstr "Не могу да пишем у датотеку турнира"
 
-#: backend.c:11104
+#: backend.c:11512
 msgid ""
 "You cannot replace an engine while it is engaged!\n"
 "Terminate its game first."
@@ -445,11 +480,11 @@ msgstr ""
 "Не можете да замените погон док је заузет!\n"
 "Прво завршите његову игру."
 
-#: backend.c:11118
+#: backend.c:11526
 msgid "No engine with the name you gave is installed"
 msgstr "Ниједан погон са називом који сте дали није инсталиран"
 
-#: backend.c:11120
+#: backend.c:11528
 msgid ""
 "First change an engine by editing the participants list\n"
 "of the Tournament Options dialog"
@@ -457,16 +492,16 @@ msgstr ""
 "Прво измените погон уредивши списак учесника\n"
 "у прозорчету опција турнира"
 
-#: backend.c:11121
+#: backend.c:11529
 msgid "You can only change one engine at the time"
 msgstr "Можете да измените само један погон одједном"
 
-#: backend.c:11136 backend.c:11285
+#: backend.c:11544 backend.c:11722
 #, c-format
 msgid "No engine %s is installed"
 msgstr "Ниједан погон „%s“ није инсталиран"
 
-#: backend.c:11156
+#: backend.c:11564
 msgid ""
 "You must supply a tournament file,\n"
 "for storing the tourney progress"
@@ -474,130 +509,130 @@ msgstr ""
 "Морате да доставите датотеку редоследа,\n"
 "да сачувате напредовање турнира"
 
-#: backend.c:11166
+#: backend.c:11574
 msgid "Not enough participants"
 msgstr "Нема довољно учесника"
 
-#: backend.c:11369
+#: backend.c:11807
 msgid "Bad tournament file"
 msgstr "Лоша датотека редоследа"
 
-#: backend.c:11381
+#: backend.c:11819
 msgid "Waiting for other game(s)"
 msgstr "Чекам на другу игру"
 
-#: backend.c:11394
+#: backend.c:11832
 msgid "No pairing engine specified"
 msgstr "Није наведен погон упаривања"
 
-#: backend.c:11879
+#: backend.c:12319
 #, c-format
 msgid "Average solving time %4.2f sec (total time %4.2f sec) "
 msgstr "Просечно време решавања %4.2f сек. (укупно време %4.2f сек.) "
 
-#: backend.c:11881
+#: backend.c:12321
 #, c-format
 msgid "%d avoid-moves played "
 msgstr "%d потеза избегавања је одиграно"
 
-#: backend.c:11883
+#: backend.c:12323
 #, c-format
 msgid "Solved %d out of %d (%3.1f%%) "
 msgstr "Решених %d од %d (%3.1f%%) "
 
-#: backend.c:11886
+#: backend.c:12326
 #, c-format
 msgid "Match %s vs. %s: final score %d-%d-%d"
 msgstr "Меч %s против %s: крајњи резултат је %d-%d-%d"
 
-#: backend.c:12363 backend.c:12399
+#: backend.c:12822 backend.c:12858
 #, c-format
 msgid "Illegal move: %d.%s%s"
 msgstr "Недозвољени потез: %d.%s%s"
 
-#: backend.c:12388
+#: backend.c:12847
 #, c-format
 msgid "Ambiguous move: %d.%s%s"
 msgstr "Нејасан потез: %d.%s%s"
 
-#: backend.c:12442 backend.c:13495 backend.c:13695 backend.c:14065
+#: backend.c:12901 backend.c:13955 backend.c:14155 backend.c:14530
 #, c-format
 msgid "Can't open \"%s\""
 msgstr "Не могу да отворим „%s“"
 
-#: backend.c:12454 menus.c:118
+#: backend.c:12913 menus.c:109
 msgid "Cannot build game list"
 msgstr "Не могу да изградим списак игре"
 
-#: backend.c:12539
+#: backend.c:12998
 msgid "No more games in this message"
 msgstr "Нема више игара у овој поруци"
 
-#: backend.c:12579
+#: backend.c:13038
 msgid "No game has been loaded yet"
 msgstr "Ниједна игра још није учитана"
 
-#: backend.c:12583 backend.c:13476 ngamelist.c:129
+#: backend.c:13042 backend.c:13936 ngamelist.c:120
 msgid "Can't back up any further"
 msgstr "Не могу више да се повучем"
 
-#: backend.c:13030
+#: backend.c:13489
 msgid "Game number out of range"
 msgstr "Број игре је ван опсега"
 
-#: backend.c:13041
+#: backend.c:13500
 msgid "Can't seek on game file"
 msgstr "Не могу да премотам датотеку игре"
 
-#: backend.c:13099
+#: backend.c:13558
 msgid "Game not found in file"
 msgstr "Нисам нашао игру у датотеци"
 
-#: backend.c:13230 backend.c:13573
+#: backend.c:13690 backend.c:14033
 msgid "Bad FEN position in file"
 msgstr "Лош ФЕН положај у датотеци"
 
-#: backend.c:13388
+#: backend.c:13848
 msgid "No moves in game"
 msgstr "Нема потеза у игри"
 
-#: backend.c:13472
+#: backend.c:13932
 msgid "No position has been loaded yet"
 msgstr "Ниједан положај још није учитан"
 
-#: backend.c:13533 backend.c:13544
+#: backend.c:13993 backend.c:14004
 msgid "Can't seek on position file"
 msgstr "Не могу да премотам датотеку положаја"
 
-#: backend.c:13551 backend.c:13563
+#: backend.c:14011 backend.c:14023
 msgid "Position not found in file"
 msgstr "Нисам пронашао положај у датотеци"
 
-#: backend.c:13610
+#: backend.c:14070
 msgid "Black to play"
 msgstr "Црни да игра"
 
-#: backend.c:13613
+#: backend.c:14073
 msgid "White to play"
 msgstr "Бели да игра"
 
-#: backend.c:13700 backend.c:14070
+#: backend.c:14160 backend.c:14535
 msgid "Waiting for access to save file"
 msgstr "Чекам на приступ да сачувам датотеку"
 
-#: backend.c:13702
+#: backend.c:14162
 msgid "Saving game"
 msgstr "Чувам игру"
 
-#: backend.c:13703
+#: backend.c:14163
 msgid "Bad Seek"
 msgstr "Лош премотај"
 
-#: backend.c:14072
+#: backend.c:14537
 msgid "Saving position"
 msgstr "Чувам положај"
 
-#: backend.c:14198
+#: backend.c:14665
 msgid ""
 "You have edited the game history.\n"
 "Use Reload Same Game and make your move again."
@@ -605,7 +640,7 @@ msgstr ""
 "Уредили сте историјат игре.\n"
 "Користите „Поново учитај исту игру“ и повуците ваш потез опет."
 
-#: backend.c:14203
+#: backend.c:14670
 msgid ""
 "You have entered too many moves.\n"
 "Back up to the correct position and try again."
@@ -613,7 +648,7 @@ msgstr ""
 "Унели сте превише потеза.\n"
 "Вратите се на прави положај и покушајте опет."
 
-#: backend.c:14208
+#: backend.c:14675
 msgid ""
 "Displayed position is not current.\n"
 "Step forward to the correct position and try again."
@@ -621,11 +656,11 @@ msgstr ""
 "Приказани положај није тренутни.\n"
 "Идите напред до правог положаја и покушајте опет."
 
-#: backend.c:14255
+#: backend.c:14722
 msgid "You have not made a move yet"
 msgstr "Још увек нисте повукли потез"
 
-#: backend.c:14276
+#: backend.c:14743
 msgid ""
 "The cmail message is not loaded.\n"
 "Use Reload CMail Message and make your move again."
@@ -633,11 +668,11 @@ msgstr ""
 "Порука цпоште није учитана.\n"
 "Користите „Поново учитај поруку Цпоште“ и повуците ваш потез опет."
 
-#: backend.c:14281
+#: backend.c:14748
 msgid "No unfinished games"
 msgstr "Нема недовршених игара"
 
-#: backend.c:14287
+#: backend.c:14754
 #, c-format
 msgid ""
 "You have already mailed a move.\n"
@@ -652,78 +687,70 @@ msgstr ""
 "„cmail -remail -game %s“\n"
 "на линији наредби."
 
-#: backend.c:14302
+#: backend.c:14769
 msgid "Failed to invoke cmail"
 msgstr "Нисам успео да призовем цпошту"
 
-#: backend.c:14364
+#: backend.c:14831
 #, c-format
 msgid "Waiting for reply from opponent\n"
 msgstr "Чекам на одговор противника\n"
 
-#: backend.c:14386
+#: backend.c:14853
 #, c-format
 msgid "Still need to make move for game\n"
 msgstr "Још увек треба повући потез за игру\n"
 
-#: backend.c:14390
+#: backend.c:14857
 #, c-format
 msgid "Still need to make moves for both games\n"
 msgstr "Још увек треба повући потезе за обе игре\n"
 
-#: backend.c:14394
+#: backend.c:14861
 #, c-format
 msgid "Still need to make moves for all %d games\n"
 msgstr "Још увек треба повући потезе за %d игре\n"
 
-#: backend.c:14401
+#: backend.c:14868
 #, c-format
 msgid "Still need to make a move for game %s\n"
 msgstr "Још увек треба повући потез за игру %s\n"
 
-#: backend.c:14407
+#: backend.c:14874
 #, c-format
 msgid "No unfinished games\n"
 msgstr "Нема недовршених игара\n"
 
-#: backend.c:14409
+#: backend.c:14876
 #, c-format
 msgid "Ready to send mail\n"
 msgstr "Спреман сам да пошаљем пошту\n"
 
-#: backend.c:14414
+#: backend.c:14881
 #, c-format
 msgid "Still need to make moves for games %s\n"
 msgstr "Још увек треба повући потезе за игре %s\n"
 
-#: backend.c:14617
+#: backend.c:15091
 msgid "Edit comment"
 msgstr "Уредите напомену"
 
-#: backend.c:14619
+#: backend.c:15093
 #, c-format
 msgid "Edit comment on %d.%s%s"
 msgstr "Уредите напомену на %d.%s%s"
 
-#: backend.c:14674
+#: backend.c:15155
 #, c-format
 msgid "You are not observing a game"
 msgstr "Ви не посматрате игру"
 
-#: backend.c:14785
-msgid "It is not White's turn"
-msgstr "Није бели на потезу"
-
-#: backend.c:14866
-msgid "It is not Black's turn"
-msgstr "Није црни на потезу"
-
-#: backend.c:14974
+#: backend.c:15476
 #, c-format
 msgid "Starting %s chess program"
 msgstr "Покрећем „%s“ шаховски програм"
 
-#: backend.c:15002 backend.c:16189
+#: backend.c:15504 backend.c:16785
 msgid ""
 "Wait until your turn,\n"
 "or select 'Move Now'."
@@ -731,453 +758,482 @@ msgstr ""
 "Сачекајте ваш ред,\n"
 "или изаберите „Помери сада“."
 
-#: backend.c:15145
+#: backend.c:15647
 msgid "Training mode off"
 msgstr "Режим увежбавања је искључен"
 
-#: backend.c:15153
+#: backend.c:15655
 msgid "Training mode on"
 msgstr "Режим увежбавања је укључен"
 
-#: backend.c:15156
+#: backend.c:15658
 msgid "Already at end of game"
 msgstr "Већ на крају игре"
 
-#: backend.c:15246
+#: backend.c:15748
 msgid "Warning: You are still playing a game"
 msgstr "Упозорење: Још увек играте игру"
 
-#: backend.c:15249
+#: backend.c:15751
 msgid "Warning: You are still observing a game"
 msgstr "Упозорење: Још увек посматрате игру"
 
-#: backend.c:15252
+#: backend.c:15754
 msgid "Warning: You are still examining a game"
 msgstr "Упозорење: Још увек проучавате игру"
 
-#: backend.c:15322
-msgid "Click clock to clear board"
-msgstr "Притисните на сат да очистите таблу"
+#: backend.c:15805
+msgid "Set White to Move"
+msgstr "Постави белог за потез"
 
-#: backend.c:15332
+#: backend.c:15807
+msgid "Set Black to Move"
+msgstr "Постави црног за потез"
+
+#: backend.c:15846
+msgid "Keep Ctrl pressed to duplicate pieces"
+msgstr "Држите Ктрл притиснутим да удвостручите фигуре"
+
+#: backend.c:15847 backend.c:16080
+msgid "Clear Board"
+msgstr "Очисти таблу"
+
+#: backend.c:15858
 msgid "Close ICS engine analyze..."
 msgstr "Затвори анализу ИШС погона..."
 
-#: backend.c:15662
+#: backend.c:16051
+msgid "Clear More"
+msgstr "Очисти још"
+
+#: backend.c:16056
+msgid "Restore Position"
+msgstr "Поврати положај"
+
+#: backend.c:16074
+msgid "Resume Edit"
+msgstr "Настави уређивање"
+
+#: backend.c:16258
 msgid "That square is occupied"
 msgstr "То поље је заузето"
 
-#: backend.c:15686 backend.c:15712
+#: backend.c:16282 backend.c:16308
 msgid "There is no pending offer on this move"
 msgstr "Немазаказаних понуда на овом потезу"
 
-#: backend.c:15748 backend.c:15759
+#: backend.c:16344 backend.c:16355
 msgid "Your opponent is not out of time"
 msgstr "Вашем противнику није истекло време"
 
-#: backend.c:15827
+#: backend.c:16423
 msgid "You must make your move before offering a draw"
 msgstr "Морате да повучете потез пре него понудите реми"
 
-#: backend.c:16171
+#: backend.c:16767
 msgid "You are not examining a game"
 msgstr "Ви не проучавате игру"
 
-#: backend.c:16175
+#: backend.c:16771
 msgid "You can't revert while pausing"
 msgstr "Не можете да повратите док паузирате"
 
-#: backend.c:16229 backend.c:16236
+#: backend.c:16825 backend.c:16832
 msgid "It is your turn"
 msgstr "Ви сте на реду"
 
-#: backend.c:16287 backend.c:16294 backend.c:16380 backend.c:16387
+#: backend.c:16883 backend.c:16890 backend.c:16976 backend.c:16983
 msgid "Wait until your turn."
 msgstr "Сачекајте ваш ред."
 
-#: backend.c:16299
+#: backend.c:16895
 msgid "No hint available"
 msgstr "Нема доступног савета"
 
-#: backend.c:16314 backend.c:16345 ngamelist.c:365
+#: backend.c:16910 backend.c:16941 ngamelist.c:356
 msgid "Game list not loaded or empty"
 msgstr "Списак игара није учитан или је празан"
 
-#: backend.c:16352
+#: backend.c:16948
 msgid "Book file exists! Try again for overwrite."
 msgstr "Датотека књиге постоји! Покушајте поново да препишете."
 
-#: backend.c:16833
+#: backend.c:17433
 #, c-format
 msgid "Error writing to %s chess program"
 msgstr "Грешка писања у „%s“ шаховски програм"
 
-#: backend.c:16836 backend.c:16867
+#: backend.c:17436 backend.c:17467
 #, c-format
 msgid "%s program exits in draw position (%s)"
 msgstr "%s програм постоји  у положају ремија (%s)"
 
-#: backend.c:16862
+#: backend.c:17462
 #, c-format
 msgid "Error: %s chess program (%s) exited unexpectedly"
 msgstr "Грешка: %s шаховски програм (%s) је изашао неочекивано"
 
-#: backend.c:16880
+#: backend.c:17480
 #, c-format
 msgid "Error reading from %s chess program (%s)"
 msgstr "Грешка читања из „%s“ шаховског програма (%s)"
 
-#: backend.c:17312
+#: backend.c:17921
+msgid "Make Persistent (save)"
+msgstr "Учини трајним (сачувај)"
+
+#: backend.c:17935
 #, c-format
 msgid "%s engine has too many options\n"
 msgstr "%s погон има превише опција\n"
 
-#: backend.c:17468
+#: backend.c:18089
 msgid "Displayed move is not current"
 msgstr "Приказани потез није тренутни"
 
-#: backend.c:17477
+#: backend.c:18098
 msgid "Could not parse move"
 msgstr "Не могу да обрадим потез"
 
-#: backend.c:17602 backend.c:17624
+#: backend.c:18223 backend.c:18245
 msgid "Both flags fell"
 msgstr "Обе заставице су пале"
 
-#: backend.c:17604
+#: backend.c:18225
 msgid "White's flag fell"
 msgstr "Заставица белог је пала"
 
-#: backend.c:17626
+#: backend.c:18247
 msgid "Black's flag fell"
 msgstr "Заставица црног је пала"
 
-#: backend.c:17757
+#: backend.c:18378
 msgid "Clock adjustment not allowed in auto-flag mode"
 msgstr "Дотеривање сата није допуштено у режиму ауто-заставице"
 
-#: backend.c:18719
+#: backend.c:19384
 msgid "Bad FEN position in clipboard"
 msgstr "Лош ФЕН положај у остави"
 
-#: book.c:598 book.c:874
+#: book.c:618 book.c:898
 msgid "Polyglot book not valid"
 msgstr "Полиглотска књига није исправна"
 
-#: book.c:722
+#: book.c:742
 msgid "Book Fault"
 msgstr "Неуспех књиге"
 
-#: book.c:877
+#: book.c:901
 msgid "Hash keys are different"
 msgstr "Хеш кључеви се разликују"
 
-#: book.c:1053
+#: book.c:1082
 msgid "Could not create book"
 msgstr "Не могу да направим књигу"
 
-#: dialogs.c:286
+#: dialogs.c:278
 msgid "Tournament file:          "
 msgstr "Датотека редоследа:          "
 
-#: dialogs.c:287
+#: dialogs.c:279
 msgid "For concurrent playing of tourney with multiple XBoards:"
 msgstr "За истовремено играње турнира са више Х-табли:"
 
-#: dialogs.c:288
+#: dialogs.c:280
 msgid "Sync after round"
 msgstr "Усагласи након рунде"
 
-#: dialogs.c:289
+#: dialogs.c:281
 msgid "Sync after cycle"
 msgstr "Усагласи након круга"
 
-#: dialogs.c:290
+#: dialogs.c:282
 msgid "Tourney participants:"
 msgstr "Учесници турнира:"
 
-#: dialogs.c:291
+#: dialogs.c:283
 msgid "Select Engine:"
 msgstr "Изаберите погон:"
 
-#: dialogs.c:299
+#: dialogs.c:291
 msgid "Tourney type (0 = round-robin, 1 = gauntlet):"
 msgstr "Врста турнира (0 = свако са сваким, 1 = на испадање):"
 
-#: dialogs.c:300
+#: dialogs.c:292
 msgid "Number of tourney cycles (or Swiss rounds):"
 msgstr "Број кругова турнира (или швајцарске рунде):"
 
-#: dialogs.c:301
+#: dialogs.c:293
 msgid "Default Number of Games in Match (or Pairing):"
 msgstr "Основни број игара у мечу (или упаривању):"
 
-#: dialogs.c:302
+#: dialogs.c:294
 msgid "Pause between Match Games (msec):"
 msgstr "Пауза између игара меча (мсек):"
 
-#: dialogs.c:303
+#: dialogs.c:295
 msgid "Save Tourney Games on:"
 msgstr "Сачувај игре турнира на:"
 
-#: dialogs.c:304
+#: dialogs.c:296
 msgid "Game File with Opening Lines:"
 msgstr "Датотека игре са линијама отварања:"
 
-#: dialogs.c:305
+#: dialogs.c:297
 msgid "Game Number (-1 or -2 = Auto-Increment):"
 msgstr "Број игре (-1 или -2 = само-повећање):"
 
-#: dialogs.c:306
+#: dialogs.c:298
 msgid "File with Start Positions:"
 msgstr "Датотека са почетним положајима:"
 
-#: dialogs.c:307
+#: dialogs.c:299
 msgid "Position Number (-1 or -2 = Auto-Increment):"
 msgstr "Број положаја (-1 или -2 = само-повећање):"
 
-#: dialogs.c:308
+#: dialogs.c:300
 msgid "Rewind Index after this many Games (0 = never):"
 msgstr "Индекс враћања уназад након оволико игара (0 = никад):"
 
-#: dialogs.c:309
+#: dialogs.c:301
 msgid "Disable own engine books by default"
 msgstr "Искључи књиге сопственог погона по основи"
 
-#: dialogs.c:310 dialogs.c:1840
+#: dialogs.c:302 dialogs.c:1873
 msgid "Time Control"
 msgstr "Управљање временом"
 
-#: dialogs.c:311
+#: dialogs.c:303
 msgid "Common Engine"
 msgstr "Општи погон"
 
-#: dialogs.c:312 dialogs.c:446
+#: dialogs.c:304 dialogs.c:439
 msgid "General Options"
 msgstr "Опште опције"
 
-#: dialogs.c:313
+#: dialogs.c:305
 msgid "Continue Later"
 msgstr "Настави касније"
 
-#: dialogs.c:314
+#: dialogs.c:306
 msgid "Replace Engine"
 msgstr "Замени погон"
 
-#: dialogs.c:315
+#: dialogs.c:307
 msgid "Upgrade Engine"
 msgstr "Надогради погон"
 
-#: dialogs.c:316
+#: dialogs.c:308
 msgid "Clone Tourney"
 msgstr "Умножи турнир"
 
-#: dialogs.c:356
+#: dialogs.c:348
 msgid "First you must specify an existing tourney file to clone"
 msgstr "Прво морате да наведете постојећи турнир за умножавање"
 
-#: dialogs.c:372 dialogs.c:1549
+#: dialogs.c:364 dialogs.c:1556
 msgid "# no engines are installed"
 msgstr "# ниједан погон није инсталиран"
 
-#: dialogs.c:380
+#: dialogs.c:372
 msgid "Internal error: PARTICIPANTS set wrong"
 msgstr "Унутрашња грешка: скуп УЧЕСНИКА је погрешан"
 
-#: dialogs.c:388
+#: dialogs.c:380
 msgid "Tournament Options"
 msgstr "Опције турнира"
 
-#: dialogs.c:407
+#: dialogs.c:399
 msgid "Absolute Analysis Scores"
 msgstr "Резултати апсолутне анализе"
 
-#: dialogs.c:408
+#: dialogs.c:400
 msgid "Almost Always Queen (Detour Under-Promote)"
 msgstr "Скоро увек краљица (заобиђи унапређење)"
 
-#: dialogs.c:409 menus.c:729
+#: dialogs.c:401 menus.c:744
 msgid "Animate Dragging"
 msgstr "Анимирај превлачење"
 
-#: dialogs.c:410 menus.c:730
+#: dialogs.c:402 menus.c:745
 msgid "Animate Moving"
 msgstr "Анимирај потез"
 
-#: dialogs.c:411 menus.c:731
+#: dialogs.c:403 menus.c:746
 msgid "Auto Flag"
 msgstr "Ауто заставица"
 
-#: dialogs.c:412 menus.c:732
+#: dialogs.c:404 menus.c:747
 msgid "Auto Flip View"
 msgstr "Сам изврни преглед"
 
-#: dialogs.c:413 menus.c:733
+#: dialogs.c:405 menus.c:748
 msgid "Blindfold"
 msgstr "На слепо"
 
-#. TRANSLATORS: the drop menu is used to drop a piece, e.g. during bughouse or editing a position
-#: dialogs.c:415
+#. TRANSLATORS: The drop menu is used to drop a piece onto the board,
+#. e.g., while playing bughouse chess or editing a position.
+#: dialogs.c:408
 msgid "Drop Menu"
 msgstr "Изборник убацивања"
 
-#: dialogs.c:416
+#: dialogs.c:409
 msgid "Enable Variation Trees"
 msgstr "Укључи стабла варијације"
 
-#: dialogs.c:417
+#: dialogs.c:410
 msgid "Headers in Engine Output Window"
 msgstr "Заглавља у излазном прозору погона "
 
-#: dialogs.c:418
+#: dialogs.c:411
 msgid "Hide Thinking from Human"
 msgstr "Сакриј размишљање од људи"
 
-#: dialogs.c:419 menus.c:738
+#: dialogs.c:412 menus.c:753
 msgid "Highlight Last Move"
 msgstr "Истакни последњи потез"
 
-#: dialogs.c:420
+#: dialogs.c:413
 msgid "Highlight with Arrow"
 msgstr "Истакни стрелицом"
 
-#: dialogs.c:421 menus.c:741
+#: dialogs.c:414 menus.c:756
 msgid "One-Click Moving"
 msgstr "Потез једним притиском"
 
-#: dialogs.c:422
+#: dialogs.c:415
 msgid "Periodic Updates (in Analysis Mode)"
 msgstr "Повремена освежавања (у режиму анализе)"
 
-#: dialogs.c:424
+#: dialogs.c:417
 msgid "Play Move(s) of Clicked PV (Analysis)"
 msgstr "Играј потез(е) притиснутог ПВ-а (анализа)"
 
-#: dialogs.c:425 dialogs.c:626 menus.c:743
+#: dialogs.c:418 dialogs.c:621 menus.c:758
 msgid "Ponder Next Move"
 msgstr "Премисли следећи потез"
 
-#: dialogs.c:426
+#: dialogs.c:419
 msgid "Popup Exit Messages"
 msgstr "Прикажи поруке излаза"
 
-#: dialogs.c:427 menus.c:745
+#: dialogs.c:420 menus.c:760
 msgid "Popup Move Errors"
 msgstr "Прикажи грешке потеза"
 
-#: dialogs.c:428
+#: dialogs.c:421
 msgid "Scores in Move List"
 msgstr "Резултати у списку потеза"
 
-#: dialogs.c:429
+#: dialogs.c:422
 msgid "Show Coordinates"
 msgstr "Покажи координате"
 
-#: dialogs.c:430
+#: dialogs.c:423
 msgid "Show Target Squares"
 msgstr "Покажи циљна поља"
 
-#: dialogs.c:431
+#: dialogs.c:424
 msgid "Sticky Windows"
 msgstr "Лепљиви прозори"
 
-#: dialogs.c:432 menus.c:748
+#: dialogs.c:425 menus.c:763
 msgid "Test Legality"
 msgstr "Испробај исправност"
 
-#: dialogs.c:433
+#: dialogs.c:426
 msgid "Top-Level Dialogs"
 msgstr "Прозорчићи највишег нивоа"
 
-#: dialogs.c:434
+#: dialogs.c:427
 msgid "Flash Moves (0 = no flashing):"
 msgstr "Бљесни потезима (0 = без бљеска):"
 
-#: dialogs.c:435
+#: dialogs.c:428
 msgid "Flash Rate (high = fast):"
 msgstr "Проток бљеска (високо = брзо):"
 
-#: dialogs.c:436
+#: dialogs.c:429
 msgid "Animation Speed (high = slow):"
 msgstr "Брзина анимације (високо = споро):"
 
-#: dialogs.c:437
+#: dialogs.c:430
 msgid "Zoom factor in Evaluation Graph:"
 msgstr "Чинилац увеличања у графику процене:"
 
-#: dialogs.c:457
+#: dialogs.c:450
 msgid "Normal"
 msgstr "Уобичајено"
 
-#: dialogs.c:458
+#: dialogs.c:451
 msgid "Makruk"
 msgstr "Макрук"
 
-#: dialogs.c:459
+#: dialogs.c:452
 msgid "FRC"
 msgstr "ФРЦ"
 
-#: dialogs.c:460
+#: dialogs.c:453
 msgid "Shatranj"
 msgstr "Шатрањ"
 
-#: dialogs.c:461
+#: dialogs.c:454
 msgid "Wild castle"
 msgstr "Дивљи дворац"
 
-#: dialogs.c:462
+#: dialogs.c:455
 msgid "Knightmate"
 msgstr "Мат скакача"
 
-#: dialogs.c:463
+#: dialogs.c:456
 msgid "No castle"
 msgstr "Без дворца"
 
-#: dialogs.c:464
+#: dialogs.c:457
 msgid "Cylinder *"
 msgstr "Ваљак *"
 
-#: dialogs.c:465
+#: dialogs.c:458
 msgid "3-checks"
 msgstr "3-провере"
 
-#: dialogs.c:466
+#: dialogs.c:459
 msgid "berolina *"
 msgstr "беролина *"
 
-#: dialogs.c:467
+#: dialogs.c:460
 msgid "atomic"
 msgstr "атомски"
 
-#: dialogs.c:468
+#: dialogs.c:461
 msgid "two kings"
 msgstr "два краља"
 
-#: dialogs.c:469
+#: dialogs.c:462
 msgid " "
 msgstr " "
 
-#: dialogs.c:470
+#: dialogs.c:463
 msgid "Spartan"
 msgstr "Спартанац"
 
-#: dialogs.c:471
+#: dialogs.c:464
 msgid "Board size ( -1 = default for selected variant):"
 msgstr "Величина табле ( -1 = основно за изабрану варијанту):"
 
-#: dialogs.c:472
+#: dialogs.c:465
 msgid "Number of Board Ranks:"
 msgstr "Број редова табле:"
 
-#: dialogs.c:473
+#: dialogs.c:466
 msgid "Number of Board Files:"
 msgstr "Број линија табле:"
 
-#: dialogs.c:474
+#: dialogs.c:467
 msgid "Holdings Size:"
 msgstr "Величина закупа:"
 
-#: dialogs.c:476
+#: dialogs.c:469
 msgid ""
 "Variants marked with * can only be played\n"
 "with legality testing off."
@@ -1185,105 +1241,113 @@ msgstr ""
 "Варијанте означене * могу бити игране само\n"
 "са искљученим испробавањем исправности."
 
-#: dialogs.c:478
+#: dialogs.c:471
 msgid "ASEAN"
 msgstr "АСЕАН"
 
-#: dialogs.c:479
+#: dialogs.c:472
 msgid "Great Shatranj (10x8)"
 msgstr "Велики Шатрањ (10x8)"
 
-#: dialogs.c:480
+#: dialogs.c:473
 msgid "Seirawan"
 msgstr "Сеираван"
 
-#: dialogs.c:481
+#: dialogs.c:474
 msgid "Falcon (10x8)"
 msgstr "Фалкон (10x8)"
 
-#: dialogs.c:482
+#: dialogs.c:475
 msgid "Superchess"
 msgstr "Супер шах"
 
-#: dialogs.c:483
+#: dialogs.c:476
 msgid "Capablanca (10x8)"
 msgstr "Капабланка (10x8)"
 
-#: dialogs.c:484
+#: dialogs.c:477
 msgid "Crazyhouse"
 msgstr "Луда кућа"
 
-#: dialogs.c:485
+#: dialogs.c:478
 msgid "Gothic (10x8)"
 msgstr "Готски (10x8)"
 
-#: dialogs.c:486
+#: dialogs.c:479
 msgid "Bughouse"
 msgstr "Бубска кућа"
 
-#: dialogs.c:487
+#: dialogs.c:480
 msgid "Janus (10x8)"
 msgstr "Јанус (10x8)"
 
-#: dialogs.c:488
+#: dialogs.c:481
 msgid "Suicide"
 msgstr "Самоубиство"
 
-#: dialogs.c:489
+#: dialogs.c:482
 msgid "CRC (10x8)"
 msgstr "ЦРЦ (10x8)"
 
-#: dialogs.c:490
+#: dialogs.c:483
 msgid "give-away"
 msgstr "предај"
 
-#: dialogs.c:491
+#: dialogs.c:484
 msgid "grand (10x10)"
 msgstr "велик (10x10)"
 
-#: dialogs.c:492
+#: dialogs.c:485
 msgid "losers"
 msgstr "губитници"
 
-#: dialogs.c:493
+#: dialogs.c:486
 msgid "shogi (9x9)"
 msgstr "шоги (9x9)"
 
-#: dialogs.c:494
+#: dialogs.c:487
 msgid "fairy"
 msgstr "вила"
 
-#: dialogs.c:495
+#: dialogs.c:488
 msgid "xiangqi (9x10)"
 msgstr "ксјангки (9x10)"
 
-#: dialogs.c:496
+#: dialogs.c:489
 msgid "mighty lion"
 msgstr "моћни лав"
 
-#: dialogs.c:497
-msgid "courier (12x8)"
-msgstr "весник (12x8)"
+#: dialogs.c:490
+msgid "Janggi (9x10)"
+msgstr "Јангк (9x10)"
 
-#: dialogs.c:498
+#: dialogs.c:491
 msgid "elven chess (10x10)"
 msgstr "вилењача (10x10)"
 
-#: dialogs.c:499
+#: dialogs.c:492
+msgid "courier (12x8)"
+msgstr "весник (12x8)"
+
+#: dialogs.c:493
+msgid "Duck Chess"
+msgstr "Пачји шах"
+
+#: dialogs.c:495
 msgid "chu shogi (12x12)"
 msgstr "чу шоги (12x12)"
 
-#: dialogs.c:543
+#: dialogs.c:538
 #, c-format
 msgid "Warning: second engine (%s) does not support this!"
 msgstr "Упозорење: други погон (%s) не подржава ово!"
 
-#: dialogs.c:572
+#: dialogs.c:567
 #, c-format
 msgid "Only bughouse is not available in viewer mode."
 msgstr "Само бубска кућа није доступна у режиму прегледача."
 
-#: dialogs.c:573
+#: dialogs.c:568
 #, c-format
 msgid ""
 "All variants not supported by the first engine\n"
@@ -1292,263 +1356,263 @@ msgstr ""
 "Све варијанте нису подржане првим погоном\n"
 "(тренутно %s) су искључени."
 
-#: dialogs.c:595
+#: dialogs.c:590
 msgid "New Variant"
 msgstr "Нова варијанта"
 
-#: dialogs.c:627
+#: dialogs.c:622
 msgid "Maximum Number of CPUs per Engine:"
 msgstr "Највећи број процесора по погону:"
 
-#: dialogs.c:628
+#: dialogs.c:623
 msgid "Polygot Directory:"
 msgstr "Директоријум полигота:"
 
-#: dialogs.c:629
+#: dialogs.c:624
 msgid "Hash-Table Size (MB):"
 msgstr "Величина хеш-табеле (MB):"
 
-#: dialogs.c:630
+#: dialogs.c:625
 msgid "EGTB Path:"
 msgstr "ЕГТБ путања:"
 
-#: dialogs.c:631
+#: dialogs.c:626
 msgid "EGTB Cache Size (MB):"
 msgstr "Величина ЕГТБ оставе (MB):"
 
-#: dialogs.c:632
+#: dialogs.c:627
 msgid "Use GUI Book"
 msgstr "Користи ГУИ књигу"
 
-#: dialogs.c:633
+#: dialogs.c:628
 msgid "Opening-Book Filename:"
 msgstr "Назив датотеке књиге отварања:"
 
-#: dialogs.c:634
+#: dialogs.c:629
 msgid "Book Depth (moves):"
 msgstr "Дубина књиге (потези):"
 
-#: dialogs.c:635
+#: dialogs.c:630
 msgid "Book Variety (0) vs. Strength (100):"
 msgstr "Варијанта књиге (0) против снаге (100):"
 
-#: dialogs.c:636
+#: dialogs.c:631
 msgid "Engine #1 Has Own Book"
 msgstr "Погон бр. 1 има сопствену књигу"
 
-#: dialogs.c:637
+#: dialogs.c:632
 msgid "Engine #2 Has Own Book          "
 msgstr "Погон бр. 2 има сопствену књигу          "
 
-#: dialogs.c:648
+#: dialogs.c:643
 msgid "Common Engine Settings"
 msgstr "Подешавања општег погона"
 
-#: dialogs.c:654
+#: dialogs.c:649
 msgid "Detect all Mates"
 msgstr "Откриј сва матирања"
 
-#: dialogs.c:655
+#: dialogs.c:650
 msgid "Verify Engine Result Claims"
 msgstr "Провери потраживања резултата погона"
 
-#: dialogs.c:656
+#: dialogs.c:651
 msgid "Draw if Insufficient Mating Material"
 msgstr "Реми ако нема довољно материјала за матирање"
 
-#: dialogs.c:657
+#: dialogs.c:652
 msgid "Adjudicate Trivial Draws (3-Move Delay)"
 msgstr "Досуди површан реми (застој 3-потеза)"
 
-#: dialogs.c:658
+#: dialogs.c:653
 msgid "N-Move Rule:"
 msgstr "Правило н-потеза:"
 
-#: dialogs.c:659
+#: dialogs.c:654
 msgid "N-fold Repeats:"
 msgstr "Понављања N-савијања:"
 
-#: dialogs.c:660
+#: dialogs.c:655
 msgid "Draw after N Moves Total:"
 msgstr "Реми након укупно N потеза:"
 
-#: dialogs.c:661
+#: dialogs.c:656
 msgid "Win / Loss Threshold:"
 msgstr "Праг победе / губитка:"
 
-#: dialogs.c:662
+#: dialogs.c:657
 msgid "Negate Score of Engine #1"
 msgstr "Негирај резултат 1° погона"
 
-#: dialogs.c:663
+#: dialogs.c:658
 msgid "Negate Score of Engine #2"
 msgstr "Негирај резултат 2° погона"
 
-#: dialogs.c:670
+#: dialogs.c:665
 msgid "Adjudicate non-ICS Games"
 msgstr "Досуди не-ИШС игре"
 
-#: dialogs.c:683
+#: dialogs.c:678
 msgid "Auto-Kibitz"
 msgstr "Сам кибицуј"
 
-#: dialogs.c:684
+#: dialogs.c:679
 msgid "Auto-Comment"
 msgstr "Сам напомени"
 
-#: dialogs.c:685
+#: dialogs.c:680
 msgid "Auto-Observe"
 msgstr "Сам посматрај"
 
-#: dialogs.c:686
+#: dialogs.c:681
 msgid "Auto-Raise Board"
 msgstr "Сам издигни таблу"
 
-#: dialogs.c:687
+#: dialogs.c:682
 msgid "Auto-Create Logon Script"
 msgstr "Сам направи скрипту пријаве"
 
-#: dialogs.c:688
+#: dialogs.c:683
 msgid "Background Observe while Playing"
 msgstr "Позадинско посматрање за време играња"
 
-#: dialogs.c:689
+#: dialogs.c:684
 msgid "Dual Board for Background-Observed Game"
 msgstr "Двојна табла за позадинско-посматрану игру"
 
-#: dialogs.c:690
+#: dialogs.c:685
 msgid "Get Move List"
 msgstr "Добави списак потеза"
 
-#: dialogs.c:691
+#: dialogs.c:686
 msgid "Quiet Play"
 msgstr "Тихо играње"
 
-#: dialogs.c:692
+#: dialogs.c:687
 msgid "Seek Graph"
 msgstr "График премотавања"
 
-#: dialogs.c:693
+#: dialogs.c:688
 msgid "Auto-Refresh Seek Graph"
 msgstr "Сам освежи график премотавања"
 
-#: dialogs.c:694
+#: dialogs.c:689
 msgid "Auto-InputBox PopUp"
 msgstr "Облачић само-улазног поља"
 
-#: dialogs.c:695
+#: dialogs.c:690
 msgid "Quit after game"
 msgstr "Изађи након игре"
 
-#: dialogs.c:696
+#: dialogs.c:691
 msgid "Premove"
 msgstr "Предпотез"
 
-#: dialogs.c:697
+#: dialogs.c:692
 msgid "Premove for White"
 msgstr "Предпотез за белог"
 
-#: dialogs.c:698
+#: dialogs.c:693
 msgid "First White Move:"
 msgstr "Први потез белог:"
 
-#: dialogs.c:699
+#: dialogs.c:694
 msgid "Premove for Black"
 msgstr "Предпотез за црног"
 
-#: dialogs.c:700
+#: dialogs.c:695
 msgid "First Black Move:"
 msgstr "Први потез црног:"
 
-#: dialogs.c:702
+#: dialogs.c:697
 msgid "Alarm"
 msgstr "Аларм"
 
-#: dialogs.c:703
+#: dialogs.c:698
 msgid "Alarm Time (msec):"
 msgstr "Време аларма (msec):"
 
-#: dialogs.c:705
+#: dialogs.c:700
 msgid "Colorize Messages"
 msgstr "Обој поруке"
 
-#: dialogs.c:706
+#: dialogs.c:701
 msgid "Shout Text Colors:"
 msgstr "Боје текста усклика:"
 
-#: dialogs.c:707
+#: dialogs.c:702
 msgid "S-Shout Text Colors:"
 msgstr "Боје текста С-усклика:"
 
-#: dialogs.c:708
+#: dialogs.c:703
 msgid "Channel #1 Text Colors:"
 msgstr "Боје текста 1° канала:"
 
-#: dialogs.c:709
+#: dialogs.c:704
 msgid "Other Channel Text Colors:"
 msgstr "Боје текста других канала:"
 
-#: dialogs.c:710
+#: dialogs.c:705
 msgid "Kibitz Text Colors:"
 msgstr "Боје текста кобицовања:"
 
-#: dialogs.c:711
+#: dialogs.c:706
 msgid "Tell Text Colors:"
 msgstr "Боје текста објаве:"
 
-#: dialogs.c:712
+#: dialogs.c:707
 msgid "Challenge Text Colors:"
 msgstr "Боје текста изазова:"
 
-#: dialogs.c:713
+#: dialogs.c:708
 msgid "Request Text Colors:"
 msgstr "Боје текста захтева:"
 
-#: dialogs.c:714
+#: dialogs.c:709
 msgid "Seek Text Colors:"
 msgstr "Боје текста премотавања:"
 
-#: dialogs.c:715
+#: dialogs.c:710
 msgid "Other Text Colors:"
 msgstr "Боје другог текста:"
 
-#: dialogs.c:722
+#: dialogs.c:717
 msgid "ICS Options"
 msgstr "ИШС опције"
 
-#: dialogs.c:727
+#: dialogs.c:722
 msgid "Exact position match"
 msgstr "Поређење тачног положаја"
 
-#: dialogs.c:727
+#: dialogs.c:722
 msgid "Shown position is subset"
 msgstr "Приказани положај је подскуп"
 
-#: dialogs.c:727
+#: dialogs.c:722
 msgid "Same material with exactly same Pawn chain"
 msgstr "Исти материјал са тачно истим ланцем пешака"
 
-#: dialogs.c:728
+#: dialogs.c:723
 msgid "Same material"
 msgstr "Исти материјал"
 
-#: dialogs.c:728
+#: dialogs.c:723
 msgid "Material range (top board half optional)"
 msgstr "Опсег материјала (изборна половина горње табле)"
 
-#: dialogs.c:728
+#: dialogs.c:723
 msgid "Material difference (optional stuff balanced)"
 msgstr "Разлика материјала (уравнотежена изборна ствар)"
 
-#: dialogs.c:743
+#: dialogs.c:738
 msgid "Auto-Display Tags"
 msgstr "Ознаке само-приказа"
 
-#: dialogs.c:744
+#: dialogs.c:739
 msgid "Auto-Display Comment"
 msgstr "Напомена само-приказа"
 
-#: dialogs.c:745
+#: dialogs.c:740
 msgid ""
 "Auto-Play speed of loaded games\n"
 "(0 = instant, -1 = off):"
@@ -1556,11 +1620,11 @@ msgstr ""
 "Брзина самосталног играња учитаних игара\n"
 "(0 = тренутно, -1 = искључено):"
 
-#: dialogs.c:746
+#: dialogs.c:741
 msgid "Seconds per Move:"
 msgstr "Секунде по потезу:"
 
-#: dialogs.c:747
+#: dialogs.c:742
 msgid ""
 "\n"
 "options to use in game-viewer mode:"
@@ -1568,7 +1632,7 @@ msgstr ""
 "\n"
 "опције за коришћење у режиму прегледача игре:"
 
-#: dialogs.c:749
+#: dialogs.c:744
 msgid ""
 "\n"
 "Thresholds for position filtering in game list:"
@@ -1576,382 +1640,386 @@ msgstr ""
 "\n"
 "Размаци за издвајање положаја у списку игре:"
 
-#: dialogs.c:750
+#: dialogs.c:745
 msgid "Elo of strongest player at least:"
 msgstr "Рејтинг најачег играча:"
 
-#: dialogs.c:751
+#: dialogs.c:746
 msgid "Elo of weakest player at least:"
 msgstr "Рејтинг најслабијег играча:"
 
-#: dialogs.c:752
+#: dialogs.c:747
 msgid "No games before year:"
 msgstr "Нема игара пре године:"
 
-#: dialogs.c:753
+#: dialogs.c:748
 msgid "Minimum nr consecutive positions:"
 msgstr "Најмањи број узастопних положаја:"
 
-#: dialogs.c:755
+#: dialogs.c:750
 msgid "Search mode:"
 msgstr "Режим претраге:"
 
-#: dialogs.c:756
+#: dialogs.c:751
 msgid "Also match reversed colors"
 msgstr "Упореди такође обрнуте боје"
 
-#: dialogs.c:757
+#: dialogs.c:752
 msgid "Also match left-right flipped position"
 msgstr "Упореди такође лево-десно изврнути положај"
 
-#: dialogs.c:766
+#: dialogs.c:761
 msgid "Load Game Options"
 msgstr "Опције учитавања игре"
 
-#: dialogs.c:778
+#: dialogs.c:773
 msgid "Auto-Save Games"
 msgstr "Сам сачувај игре"
 
-#: dialogs.c:779
+#: dialogs.c:774
 msgid "Own Games Only"
 msgstr "Само сопствене игре"
 
-#: dialogs.c:780
+#: dialogs.c:775
 msgid "Save Games on File:"
 msgstr "Сачувај игре у датотеци:"
 
-#: dialogs.c:781
+#: dialogs.c:776
 msgid "Save Final Positions on File:"
 msgstr "Сачувај крајње положаје у датотеци:"
 
-#: dialogs.c:782
+#: dialogs.c:777
 msgid "PGN Event Header:"
 msgstr "Заглавље ПГН догађаја:"
 
-#: dialogs.c:783
+#: dialogs.c:778
 msgid "Old Save Style (as opposed to PGN)"
 msgstr "Стари изглед чувања (као супротно са ПГН)"
 
-#: dialogs.c:784
+#: dialogs.c:779
 msgid "Include Number Tag in tourney PGN"
 msgstr "Укључи ознаку броја у ПГН-у турнира"
 
-#: dialogs.c:785
+#: dialogs.c:780
 msgid "Save Score/Depth Info in PGN"
 msgstr "Сачувај податке резултата/дубине у ПГН-у"
 
-#: dialogs.c:786
+#: dialogs.c:781
 msgid "Save Out-of-Book Info in PGN           "
 msgstr "Сачувај податке ван-књиге у ПГН-у"
 
-#: dialogs.c:793
+#: dialogs.c:788
 msgid "Save Game Options"
 msgstr "Опције чувања игре"
 
-#: dialogs.c:802
+#: dialogs.c:797
 msgid "No Sound"
 msgstr "Без звука"
 
-#: dialogs.c:803
+#: dialogs.c:798
 msgid "Default Beep"
 msgstr "Основни писак"
 
-#: dialogs.c:804
+#: dialogs.c:799
 msgid "Above WAV File"
 msgstr "ВАВ датотека"
 
-#: dialogs.c:805
+#: dialogs.c:800
 msgid "Car Horn"
 msgstr "Сирена аута"
 
-#: dialogs.c:806
+#: dialogs.c:801
 msgid "Cymbal"
 msgstr "Чинела"
 
-#: dialogs.c:807
+#: dialogs.c:802
 msgid "Ding"
 msgstr "Звонце"
 
-#: dialogs.c:808
+#: dialogs.c:803
 msgid "Gong"
 msgstr "Гонг"
 
-#: dialogs.c:809
+#: dialogs.c:804
 msgid "Laser"
 msgstr "Ласер"
 
-#: dialogs.c:810
+#: dialogs.c:805
 msgid "Penalty"
 msgstr "Пенал"
 
-#: dialogs.c:811
+#: dialogs.c:806
 msgid "Phone"
 msgstr "Телефон"
 
-#: dialogs.c:812
+#: dialogs.c:807
 msgid "Pop"
 msgstr "Поп"
 
-#: dialogs.c:813
+#: dialogs.c:808
 msgid "Roar"
 msgstr "Рика"
 
-#: dialogs.c:814
+#: dialogs.c:809
 msgid "Slap"
 msgstr "Ћушка"
 
-#: dialogs.c:815
+#: dialogs.c:810
 msgid "Wood Thunk"
 msgstr "Звук дрвета"
 
-#: dialogs.c:817
+#: dialogs.c:812
 msgid "User File"
 msgstr "Корисникова датотека"
 
-#: dialogs.c:840
+#: dialogs.c:835
 msgid "User WAV File:"
 msgstr "Корисникова ВАВ датотека:"
 
-#: dialogs.c:841
+#: dialogs.c:836
 msgid "Sound Program:"
 msgstr "Програм звука:"
 
-#: dialogs.c:842
+#: dialogs.c:837
 msgid "Try-Out Sound:"
 msgstr "Звук покушаја:"
 
-#: dialogs.c:843
+#: dialogs.c:838
 msgid "Play"
 msgstr "Пусти"
 
-#: dialogs.c:844
+#: dialogs.c:839
 msgid "Move:"
 msgstr "Потез:"
 
-#: dialogs.c:845
+#: dialogs.c:840
 msgid "Win:"
 msgstr "Победа:"
 
-#: dialogs.c:846
+#: dialogs.c:841
 msgid "Lose:"
 msgstr "Пораз:"
 
-#: dialogs.c:847
+#: dialogs.c:842
 msgid "Draw:"
 msgstr "Реми:"
 
-#: dialogs.c:848
+#: dialogs.c:843
 msgid "Unfinished:"
 msgstr "Недовршена:"
 
-#: dialogs.c:849
+#: dialogs.c:844
 msgid "Alarm:"
 msgstr "Аларм:"
 
-#: dialogs.c:850
+#: dialogs.c:845
 msgid "Challenge:"
 msgstr "Изазов:"
 
-#: dialogs.c:852
+#: dialogs.c:847
 msgid "Sounds Directory:"
 msgstr "Директоријум звука:"
 
-#: dialogs.c:853
+#: dialogs.c:848
 msgid "Shout:"
 msgstr "Усклик:"
 
-#: dialogs.c:854
+#: dialogs.c:849
 msgid "S-Shout:"
 msgstr "С-усклик:"
 
-#: dialogs.c:855
+#: dialogs.c:850
 msgid "Channel:"
 msgstr "Канал:"
 
-#: dialogs.c:856
+#: dialogs.c:851
 msgid "Channel 1:"
 msgstr "1° канал:"
 
-#: dialogs.c:857
+#: dialogs.c:852
 msgid "Tell:"
 msgstr "Телефон:"
 
-#: dialogs.c:858
+#: dialogs.c:853
 msgid "Kibitz:"
 msgstr "Кибицовање:"
 
-#: dialogs.c:859
+#: dialogs.c:854
 msgid "Request:"
 msgstr "Захтев:"
 
-#: dialogs.c:860
+#: dialogs.c:855
 msgid "Lion roar:"
 msgstr "Лавља рика:"
 
-#: dialogs.c:861
+#: dialogs.c:856
 msgid "Seek:"
 msgstr "Премотај:"
 
-#: dialogs.c:877
+#: dialogs.c:874
 msgid "Sound Options"
 msgstr "Опције звука"
 
-#: dialogs.c:893
+#: dialogs.c:890
 msgid "Selectable themes:"
 msgstr "Изабирљиве теме:"
 
-#: dialogs.c:895
+#: dialogs.c:892
 msgid "New name for current theme:"
 msgstr "Нови назив за текућу тему:"
 
-#: dialogs.c:898
+#: dialogs.c:895
 msgid "White Piece Color:"
 msgstr "Боја беле фигуре:"
 
-#. TRANSLATORS: R = single letter for the color red
-#: dialogs.c:901 dialogs.c:910 dialogs.c:916 dialogs.c:922 dialogs.c:928
-#: dialogs.c:934
+#. TRANSLATORS: The role of R here is to be a single letter that represents the colour red.
+#: dialogs.c:898 dialogs.c:907 dialogs.c:913 dialogs.c:919 dialogs.c:925
+#: dialogs.c:931
 msgid "R"
 msgstr "Ц"
 
-#. TRANSLATORS: G = single letter for the color green
-#: dialogs.c:903 dialogs.c:911 dialogs.c:917 dialogs.c:923 dialogs.c:929
-#: dialogs.c:935
+#. TRANSLATORS: The role of G here is to be a single letter that represents the colour green.
+#: dialogs.c:900 dialogs.c:908 dialogs.c:914 dialogs.c:920 dialogs.c:926
+#: dialogs.c:932
 msgid "G"
 msgstr "З"
 
-#. TRANSLATORS: B = single letter for the color blue
-#: dialogs.c:905 dialogs.c:912 dialogs.c:918 dialogs.c:924 dialogs.c:930
-#: dialogs.c:936 dialogs.c:1650 dialogs.c:1656 dialogs.c:1662 dialogs.c:1668
-#: dialogs.c:1674 dialogs.c:1680 dialogs.c:1686
+#. TRANSLATORS: The role of B here is to be a single letter that represents the colour blue.
+#: dialogs.c:902 dialogs.c:909 dialogs.c:915 dialogs.c:921 dialogs.c:927
+#: dialogs.c:933 dialogs.c:1680 dialogs.c:1686 dialogs.c:1692 dialogs.c:1698
+#: dialogs.c:1704 dialogs.c:1710 dialogs.c:1716
 msgid "B"
 msgstr "П"
 
-#. TRANSLATORS: D = single letter to make a color darker
-#: dialogs.c:907 dialogs.c:913 dialogs.c:919 dialogs.c:925 dialogs.c:931
-#: dialogs.c:937
+#. TRANSLATORS: The role of D here is to be a single letter that represents making a colour darker.
+#: dialogs.c:904 dialogs.c:910 dialogs.c:916 dialogs.c:922 dialogs.c:928
+#: dialogs.c:934
 msgid "D"
 msgstr "Т"
 
-#: dialogs.c:908
+#: dialogs.c:905
 msgid "Black Piece Color:"
 msgstr "Боја црне фигуре:"
 
-#: dialogs.c:914
+#: dialogs.c:911
 msgid "Light Square Color:"
 msgstr "Боја светлог поља:"
 
-#: dialogs.c:920
+#: dialogs.c:917
 msgid "Dark Square Color:"
 msgstr "Боја тамног поља:"
 
-#: dialogs.c:926
+#: dialogs.c:923
 msgid "Highlight Color:"
 msgstr "Боја истицања:"
 
-#: dialogs.c:932
+#: dialogs.c:929
 msgid "Premove Highlight Color:"
 msgstr "Боја истицања предпотеза:"
 
-#: dialogs.c:938
+#: dialogs.c:935
 msgid "Flip Pieces Shogi Style        (Colored buttons restore default)"
 msgstr "Изврни фигуре Шоги стила       (Обојена дугмад враћа основно)"
 
-#: dialogs.c:940
+#: dialogs.c:937
 msgid "Mono Mode"
 msgstr "Моно режим"
 
-#: dialogs.c:941
+#: dialogs.c:938
 msgid "Logo Size (0=off, requires restart):"
 msgstr "Величина логотипа (0=искљ., захтева поновно покретање):"
 
-#: dialogs.c:942
+#: dialogs.c:939
 msgid "Line Gap (-1 = default for board size):"
 msgstr "Јаз реда (-1 = основно за величину табле):"
 
-#: dialogs.c:943
+#: dialogs.c:940
 msgid "Use Board Textures"
 msgstr "Користи исцртавања табле"
 
-#: dialogs.c:944
-msgid "Light-Squares Texture File:"
-msgstr "Датотека исцртавања светлих поља:"
-
-#: dialogs.c:945
+#: dialogs.c:941
 msgid "Dark-Squares Texture File:"
 msgstr "Датотека исцртавања тамних поља:"
 
-#: dialogs.c:946
+#: dialogs.c:942
+msgid "Light-Squares Texture File:"
+msgstr "Датотека исцртавања светлих поља:"
+
+#: dialogs.c:943
 msgid "Use external piece bitmaps with their own colors"
 msgstr "Користи спољне битмапе фигуре са њиховим сопственим бојама"
 
-#: dialogs.c:947
+#: dialogs.c:944
 msgid "Directory with Pieces Images:"
 msgstr "Директоријум са сликама фигура:"
 
-#: dialogs.c:1018
+#: dialogs.c:1015
 msgid "# no themes are defined"
 msgstr "# ниједна тема није одређена"
 
-#: dialogs.c:1030
+#: dialogs.c:1027
 msgid "Board Options"
 msgstr "Опције табле"
 
-#: dialogs.c:1101 menus.c:646
+#: dialogs.c:1099 menus.c:662
 msgid "ICS text menu"
 msgstr "Приручни изборник ИШС-а"
 
-#: dialogs.c:1130
+#: dialogs.c:1128
 msgid "clear"
 msgstr "очисти"
 
-#: dialogs.c:1131
+#: dialogs.c:1129
 msgid "save changes"
 msgstr "сачувај измене"
 
-#: dialogs.c:1229
+#: dialogs.c:1227
 msgid "add next move"
 msgstr "додај нови потез"
 
-#: dialogs.c:1230
+#: dialogs.c:1228
 msgid "commit changes"
 msgstr "предај измене"
 
-#: dialogs.c:1253
+#: dialogs.c:1249
 msgid "Edit book"
 msgstr "Уреди књигу"
 
-#: dialogs.c:1270 dialogs.c:1277 menus.c:648
+#: dialogs.c:1266 dialogs.c:1273 menus.c:658
 msgid "Tags"
 msgstr "Ознаке"
 
-#: dialogs.c:1285
-msgid "Registered Engines"
-msgstr "Забележени погони"
-
-#: dialogs.c:1401
+#: dialogs.c:1397
 msgid "ICS input box"
 msgstr "Поље уноса ИШС-а"
 
-#: dialogs.c:1433
+#: dialogs.c:1429
 msgid "Type a move"
 msgstr "Укуцајте потез"
 
-#: dialogs.c:1459
+#: dialogs.c:1455
 msgid "Engine has no options"
 msgstr "Погон нема опција"
 
-#: dialogs.c:1461
+#: dialogs.c:1457
 msgid "Engine Settings"
 msgstr "Подешавања погона"
 
-#: dialogs.c:1502
+#: dialogs.c:1500
 msgid "Select engine from list:"
 msgstr "Изаберите погон са списка:"
 
-#: dialogs.c:1505
+#: dialogs.c:1503
 msgid "or specify one below:"
 msgstr "или испод наведите један:"
+
+#: dialogs.c:1504
+msgid "Engine Command:"
+msgstr "Наредба погона:"
+
+#: dialogs.c:1505
+msgid "------------- User preferences (optional) ---------------"
+msgstr "------------- Корисничке поставке (опционално) ---------------"
 
 #: dialogs.c:1506
 msgid "Nickname (optional):"
@@ -1962,122 +2030,114 @@ msgid "Use nickname in PGN player tags of engine-engine games"
 msgstr "Користи надимак у ПГН ознакама играча уграма погон-погон"
 
 #: dialogs.c:1508
-msgid "Engine Directory:"
-msgstr "Директоријум погона:"
-
-#: dialogs.c:1509
-msgid "Engine Command:"
-msgstr "Наредба погона:"
-
-#: dialogs.c:1510
-msgid "(Directory will be derived from engine path when empty)"
-msgstr "(Директоријум ће бити узет из путање погона када је празан)"
-
-#: dialogs.c:1511
-msgid "UCI"
-msgstr "УЦИ"
-
-#: dialogs.c:1512
-msgid "USI/UCCI (uses specified -uxiAdapter)"
-msgstr "УСИ/УЦЦИ (користи наведени „-uxiAdapter“)"
-
-#: dialogs.c:1513
-msgid "WB protocol v1 (do not wait for engine features)"
-msgstr "ВБ протокол в1 (не чекај на функције погона)"
-
-#: dialogs.c:1514
-msgid "Must not use GUI book"
-msgstr "Не сме користити ГКС књигу"
-
-#: dialogs.c:1515
-msgid "Add this engine to the list"
-msgstr "Додај овај погон на списак"
-
-#: dialogs.c:1516
 msgid "Force current variant with this engine"
 msgstr "Приморај текућу варијанту овим погоном"
 
-#: dialogs.c:1570
+#: dialogs.c:1509
+msgid "Must not use GUI book"
+msgstr "Не сме користити ГКС књигу"
+
+#: dialogs.c:1510
+msgid "Add this engine to the list"
+msgstr "Додај овај погон на списак"
+
+#: dialogs.c:1511
+msgid "--------- Advanced (only change in exceptional cases) ----------"
+msgstr "--------- Напредно (мења се само у нарочитим случајевима) ----------"
+
+#: dialogs.c:1512
+msgid "Engine Protocol:"
+msgstr "Протокол погона:"
+
+#: dialogs.c:1513
+msgid "Engine Directory:"
+msgstr "Директоријум погона:"
+
+#: dialogs.c:1514
+msgid "(Directory will be derived from engine path when empty)"
+msgstr "(Директоријум ће бити узет из путање погона када је празан)"
+
+#: dialogs.c:1580
 msgid "Load first engine"
 msgstr "Учитајте први погон"
 
-#: dialogs.c:1576
+#: dialogs.c:1586
 msgid "Load second engine"
 msgstr "Учитајте други погон"
 
-#: dialogs.c:1599
+#: dialogs.c:1609
 msgid "shuffle"
 msgstr "измешај"
 
-#: dialogs.c:1600
+#: dialogs.c:1610
 msgid "Fischer castling"
 msgstr "Фишерова рокада"
 
-#: dialogs.c:1601
+#: dialogs.c:1611
 msgid "Start-position number:"
 msgstr "Број почетног положаја:"
 
-#: dialogs.c:1602
+#: dialogs.c:1612
 msgid "randomize"
 msgstr "насумично"
 
-#: dialogs.c:1603
+#: dialogs.c:1613
 msgid "pick fixed"
 msgstr "изабери сталне"
 
-#: dialogs.c:1620
+#: dialogs.c:1630
 msgid "New Shuffle Game"
 msgstr "Нова насумична игра"
 
-#: dialogs.c:1647
+#: dialogs.c:1677
 msgid "Clocks (requires restart):"
 msgstr "Сатови (захтева поновно покретање):"
 
-#: dialogs.c:1648 dialogs.c:1654 dialogs.c:1660 dialogs.c:1666 dialogs.c:1672
-#: dialogs.c:1678 dialogs.c:1684
+#: dialogs.c:1678 dialogs.c:1684 dialogs.c:1690 dialogs.c:1696 dialogs.c:1702
+#: dialogs.c:1708 dialogs.c:1714
 msgid "+"
 msgstr "+"
 
-#: dialogs.c:1649 dialogs.c:1655 dialogs.c:1661 dialogs.c:1667 dialogs.c:1673
-#: dialogs.c:1679 dialogs.c:1685
+#: dialogs.c:1679 dialogs.c:1685 dialogs.c:1691 dialogs.c:1697 dialogs.c:1703
+#: dialogs.c:1709 dialogs.c:1715
 msgid "-"
 msgstr "-"
 
-#: dialogs.c:1651 dialogs.c:1657 dialogs.c:1663 dialogs.c:1669 dialogs.c:1675
-#: dialogs.c:1681 dialogs.c:1687
+#: dialogs.c:1681 dialogs.c:1687 dialogs.c:1693 dialogs.c:1699 dialogs.c:1705
+#: dialogs.c:1711 dialogs.c:1717
 msgid "I"
 msgstr "И"
 
-#: dialogs.c:1652 dialogs.c:1658 dialogs.c:1664 dialogs.c:1670 dialogs.c:1676
-#: dialogs.c:1682 dialogs.c:1688
+#: dialogs.c:1682 dialogs.c:1688 dialogs.c:1694 dialogs.c:1700 dialogs.c:1706
+#: dialogs.c:1712 dialogs.c:1718
 msgid "*"
 msgstr "*"
 
-#: dialogs.c:1653
+#: dialogs.c:1683
 msgid "Message (above board):"
 msgstr "Порука (изнад табле):"
 
-#: dialogs.c:1659
+#: dialogs.c:1689
 msgid "ICS Chat/Console:"
 msgstr "ИШС ћаскање/Конзола:"
 
-#: dialogs.c:1665
+#: dialogs.c:1695
 msgid "Edit tags / book / engine list:"
 msgstr "Ознаке уређивања / књига / списак погона:"
 
-#: dialogs.c:1671
+#: dialogs.c:1701
 msgid "Edit comments:"
 msgstr "Уреди напомене:"
 
-#: dialogs.c:1677
+#: dialogs.c:1707
 msgid "Move history / Engine Output:"
 msgstr "Историјат потеза / Излаз погона:"
 
-#: dialogs.c:1683
+#: dialogs.c:1713
 msgid "Game list:"
 msgstr "Списак игара:"
 
-#: dialogs.c:1689
+#: dialogs.c:1719
 msgid ""
 "\n"
 "The * buttons will set the font to the one selected below:"
@@ -2085,318 +2145,318 @@ msgstr ""
 "\n"
 "Дугмад * ће поставити изглед слова на онај изабран испод:"
 
-#: dialogs.c:1743
+#: dialogs.c:1773
 msgid "This only works in the GTK build"
 msgstr "Ово ради само у Гтк изградњи"
 
-#: dialogs.c:1744
+#: dialogs.c:1774
 msgid "Fonts"
 msgstr "Изглед слова"
 
-#: dialogs.c:1764
+#: dialogs.c:1797
 msgid "classical"
 msgstr "уобичајено"
 
-#: dialogs.c:1765
+#: dialogs.c:1798
 msgid "incremental"
 msgstr "растуће"
 
-#: dialogs.c:1766
+#: dialogs.c:1799
 msgid "fixed max"
 msgstr "стални максимум"
 
-#: dialogs.c:1767
+#: dialogs.c:1800
 msgid "Divide entered times by 60"
 msgstr "Подели читава времена са 60"
 
-#: dialogs.c:1768
+#: dialogs.c:1801
 msgid "Moves per session:"
 msgstr "Потеза по сесији:"
 
-#: dialogs.c:1769
+#: dialogs.c:1802
 msgid "Initial time (min):"
 msgstr "Почетно време (min):"
 
-#: dialogs.c:1770
+#: dialogs.c:1803
 msgid "Increment or max (sec/move):"
 msgstr "Повећање или највише (сек/потезу):"
 
-#: dialogs.c:1771
+#: dialogs.c:1804
 msgid "Time-Odds factors:"
 msgstr "Чиниоци вишка времена:"
 
-#: dialogs.c:1772
+#: dialogs.c:1805
 msgid "Engine #1"
 msgstr "1° погон"
 
-#: dialogs.c:1773
+#: dialogs.c:1806
 msgid "Engine #2 / Human"
 msgstr "2° погон / човек"
 
-#: dialogs.c:1814 dialogs.c:1817 dialogs.c:1822 dialogs.c:1823
-#: gtk/xoptions.c:183
+#: dialogs.c:1847 dialogs.c:1850 dialogs.c:1855 dialogs.c:1856
+#: gtk/xoptions.c:174
 msgid "Unused"
 msgstr "Некоришћено"
 
-#: dialogs.c:1832
+#: dialogs.c:1865
 msgid "Changing time control during a game is not implemented"
 msgstr "Промена времена за време игре није могућа"
 
-#: dialogs.c:1869
+#: dialogs.c:1902
 msgid "Error writing to chess program"
 msgstr "Грешка писања у шаховски програм"
 
-#: dialogs.c:1937 gtk/xoptions.c:1775 xaw/xoptions.c:1341
+#: dialogs.c:1970 gtk/xoptions.c:1803 xaw/xoptions.c:1336
 msgid "Cancel"
 msgstr "Поништи"
 
-#: dialogs.c:1942 dialogs.c:2695 dialogs.c:2699
+#: dialogs.c:1975 dialogs.c:2732 dialogs.c:2736
 msgid "King"
 msgstr "Краљ"
 
-#: dialogs.c:1945
+#: dialogs.c:1978
 msgid "Captain"
 msgstr "Капетан"
 
-#: dialogs.c:1946
+#: dialogs.c:1979
 msgid "Lieutenant"
 msgstr "Поручник"
 
-#: dialogs.c:1947
+#: dialogs.c:1980
 msgid "General"
 msgstr "Генерал"
 
-#: dialogs.c:1948
+#: dialogs.c:1981
 msgid "Warlord"
 msgstr "Господар рата"
 
-#: dialogs.c:1950 dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
+#: dialogs.c:1983 dialogs.c:2731 dialogs.c:2735 dialogs.c:2754
 msgid "Knight"
 msgstr "Скакач"
 
-#: dialogs.c:1951 dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
+#: dialogs.c:1984 dialogs.c:2731 dialogs.c:2735 dialogs.c:2754
 msgid "Bishop"
 msgstr "Ловац"
 
-#: dialogs.c:1952 dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
+#: dialogs.c:1985 dialogs.c:2731 dialogs.c:2735 dialogs.c:2754
 msgid "Rook"
 msgstr "Кула"
 
-#: dialogs.c:1956 dialogs.c:2696 dialogs.c:2700
+#: dialogs.c:1989 dialogs.c:2733 dialogs.c:2737
 msgid "Archbishop"
 msgstr "Архиепископ"
 
-#: dialogs.c:1957 dialogs.c:2696 dialogs.c:2700
+#: dialogs.c:1990 dialogs.c:2733 dialogs.c:2737
 msgid "Chancellor"
 msgstr "Канцелар"
 
-#: dialogs.c:1959 dialogs.c:2695 dialogs.c:2699 dialogs.c:2717
+#: dialogs.c:1992 dialogs.c:2732 dialogs.c:2736 dialogs.c:2754
 msgid "Queen"
 msgstr "Краљица"
 
-#: dialogs.c:1961
+#: dialogs.c:1994
 msgid "Lion"
 msgstr "Лав"
 
-#: dialogs.c:1965
+#: dialogs.c:1998
 msgid "Defer"
 msgstr "Одгоди"
 
-#: dialogs.c:1966 dialogs.c:2696 dialogs.c:2700
+#: dialogs.c:1999 dialogs.c:2733 dialogs.c:2737
 msgid "Promote"
 msgstr "Унапреди"
 
-#: dialogs.c:2023
+#: dialogs.c:2056
 msgid "Chats:"
 msgstr "Ћаскања:"
 
-#: dialogs.c:2024 dialogs.c:2025 dialogs.c:2026 dialogs.c:2027 dialogs.c:2028
-#: dialogs.c:2134 dialogs.c:2199 dialogs.c:2231
+#: dialogs.c:2057 dialogs.c:2058 dialogs.c:2059 dialogs.c:2060 dialogs.c:2061
+#: dialogs.c:2167 dialogs.c:2234 dialogs.c:2266
 msgid "New Chat"
 msgstr "Нови чат"
 
-#: dialogs.c:2031
+#: dialogs.c:2064
 msgid "Chat partner:"
 msgstr "Партнер ћаскања:"
 
-#: dialogs.c:2032
+#: dialogs.c:2065
 msgid "End Chat"
 msgstr "Заврши чат"
 
-#: dialogs.c:2033
+#: dialogs.c:2066
 msgid "Hide"
 msgstr "Сакриј"
 
-#: dialogs.c:2260
+#: dialogs.c:2295
 msgid "ICS Interaction"
 msgstr "ИШС међудејство"
 
-#: dialogs.c:2345
+#: dialogs.c:2380
 msgid "factory"
 msgstr "фабричка"
 
-#: dialogs.c:2346
+#: dialogs.c:2381
 msgid "up"
 msgstr "горе"
 
-#: dialogs.c:2347
+#: dialogs.c:2382
 msgid "down"
 msgstr "доле"
 
 # bug: plural-forms
-#: dialogs.c:2366
+#: dialogs.c:2401
 msgid "No tag selected"
 msgstr "Није изабрана ознака"
 
-#: dialogs.c:2397
+#: dialogs.c:2432
 msgid "Game-list options"
 msgstr "Опције списка игара"
 
-#: dialogs.c:2475 dialogs.c:2489
+#: dialogs.c:2510 dialogs.c:2524
 msgid "Error"
 msgstr "Грешка"
 
-#: dialogs.c:2518
+#: dialogs.c:2553
 msgid "Fatal Error"
 msgstr "Кобна грешка"
 
-#: dialogs.c:2518
+#: dialogs.c:2553
 msgid "Exiting"
 msgstr "Излазим"
 
-#: dialogs.c:2529
+#: dialogs.c:2564
 msgid "Information"
 msgstr "Обавештење"
 
-#: dialogs.c:2536
+#: dialogs.c:2571
 msgid "Note"
 msgstr "Напомена"
 
-#: dialogs.c:2694 dialogs.c:2987 dialogs.c:2990
+#: dialogs.c:2731 dialogs.c:3027 dialogs.c:3030
 msgid "White"
 msgstr "Бели"
 
-#: dialogs.c:2694 dialogs.c:2698 dialogs.c:2717
+#: dialogs.c:2731 dialogs.c:2735 dialogs.c:2754
 msgid "Pawn"
 msgstr "Пешак"
 
-#: dialogs.c:2695 dialogs.c:2699
+#: dialogs.c:2732 dialogs.c:2736
 msgid "Elephant"
 msgstr "Слон"
 
-#: dialogs.c:2695 dialogs.c:2699
+#: dialogs.c:2732 dialogs.c:2736
 msgid "Cannon"
 msgstr "Топ"
 
-#: dialogs.c:2696 dialogs.c:2700
+#: dialogs.c:2733 dialogs.c:2737
 msgid "Demote"
 msgstr "Деградирај"
 
-#: dialogs.c:2697 dialogs.c:2701
+#: dialogs.c:2734 dialogs.c:2738
 msgid "Empty square"
 msgstr "Празно поље"
 
-#: dialogs.c:2697 dialogs.c:2701
+#: dialogs.c:2734 dialogs.c:2738
 msgid "Clear board"
 msgstr "Очисти таблу"
 
-#: dialogs.c:2698 dialogs.c:2999 dialogs.c:3002
+#: dialogs.c:2735 dialogs.c:3040 dialogs.c:3043
 msgid "Black"
 msgstr "Црни"
 
-#: dialogs.c:2798
+#: dialogs.c:2835
 msgid "_File"
 msgstr "_Датотека"
 
-#: dialogs.c:2799
+#: dialogs.c:2836
 msgid "_Edit"
 msgstr "_Уређивање"
 
-#: dialogs.c:2800
+#: dialogs.c:2837
 msgid "_View"
 msgstr "_Преглед"
 
-#: dialogs.c:2801
+#: dialogs.c:2838
 msgid "_Mode"
 msgstr "_Режим"
 
-#: dialogs.c:2802
+#: dialogs.c:2839
 msgid "_Action"
 msgstr "_Радња"
 
-#: dialogs.c:2803
+#: dialogs.c:2840
 msgid "E_ngine"
 msgstr "По_гон"
 
-#: dialogs.c:2804
+#: dialogs.c:2841
 msgid "_Options"
 msgstr "_Опције"
 
-#: dialogs.c:2805
+#: dialogs.c:2842
 msgid "_Help"
 msgstr "По_моћ"
 
-#: dialogs.c:2815
+#: dialogs.c:2852
 msgid "<<"
 msgstr "<<"
 
-#: dialogs.c:2816
+#: dialogs.c:2853
 msgid "<"
 msgstr "<"
 
-#: dialogs.c:2818
+#: dialogs.c:2855
 msgid ">"
 msgstr ">"
 
-#: dialogs.c:2819
+#: dialogs.c:2856
 msgid ">>"
 msgstr ">>"
 
-#: dialogs.c:3107
+#: dialogs.c:3153
 msgid "Directories:"
 msgstr "Директоријуми:"
 
-#: dialogs.c:3108
+#: dialogs.c:3154
 msgid "Files:"
 msgstr "Датотеке:"
 
-#: dialogs.c:3109
+#: dialogs.c:3155
 msgid "by name"
 msgstr "по називу"
 
-#: dialogs.c:3110
+#: dialogs.c:3156
 msgid "by type"
 msgstr "по врсти"
 
-#: dialogs.c:3113
+#: dialogs.c:3159
 msgid "Filename:"
 msgstr "Назив датотеке:"
 
-#: dialogs.c:3114
+#: dialogs.c:3160
 msgid "New directory"
 msgstr "Нови директоријум"
 
-#: dialogs.c:3115
+#: dialogs.c:3161
 msgid "File type:"
 msgstr "Врста датотеке:"
 
-#: dialogs.c:3190
+#: dialogs.c:3236
 msgid "Contents of"
 msgstr "Садржај"
 
-#: dialogs.c:3216
+#: dialogs.c:3262
 msgid "  next page"
 msgstr "  следеће странице"
 
-#: dialogs.c:3233
+#: dialogs.c:3279
 msgid "FIRST TYPE DIRECTORY NAME HERE"
 msgstr "ПРВО ОВДЕ УКУЦАЈТЕ НАЗИВ ДИРЕКТОРИЈУМА"
 
-#: dialogs.c:3234
+#: dialogs.c:3280
 msgid "TRY ANOTHER NAME"
 msgstr "ПРОБАЈТЕ ДРУГИ НАЗИВ"
 
-#: draw.c:405
+#: draw.c:429
 msgid ""
 "No default pieces installed!\n"
 "Select your own using '-pieceImageDirectory'."
@@ -2404,12 +2464,12 @@ msgstr ""
 "Нису инсталиране основне фигуре!\n"
 "Изаберите ваше сопствене користећи „-pieceImageDirectory“."
 
-#: engineoutput.c:112 menus.c:642
+#: engineoutput.c:103 menus.c:653
 #, c-format
 msgid "Engine Output"
 msgstr "Излаз погона"
 
-#: engineoutput.c:122
+#: engineoutput.c:113
 #, c-format
 msgid "%s (%d reversible ply)"
 msgid_plural "%s (%d reversible plies)"
@@ -2417,91 +2477,95 @@ msgstr[0] "%s (%d повратан потез)"
 msgstr[1] "%s (%d повратна потеза)"
 msgstr[2] "%s (%d повратних потеза)"
 
-#: engineoutput.c:565 engineoutput.c:568 nengineoutput.c:83 nengineoutput.c:91
+#: engineoutput.c:556 engineoutput.c:559 nengineoutput.c:74 nengineoutput.c:82
 msgid "NPS"
 msgstr "НПС"
 
-#: gamelist.c:379
+#: gamelist.c:371
 #, c-format
 msgid "Reading game file (%d)"
 msgstr "Читам датотеку игре (%d)"
 
-#: gtk/xboard.c:979 xaw/xboard.c:1074
+#: gtk/xboard.c:980 xaw/xboard.c:1063
 #, c-format
 msgid "%s: can't cd to CHESSDIR: "
 msgstr "%s: не могу да променим директоријум у ДИРШАХА: "
 
-#: gtk/xboard.c:988 xaw/xboard.c:1083
+#: gtk/xboard.c:989 xaw/xboard.c:1072
 #, c-format
 msgid "Failed to open file '%s'\n"
 msgstr "Нисам успео да отворим датотеку „%s“\n"
 
-#: gtk/xboard.c:1003 xaw/xboard.c:1092
+#: gtk/xboard.c:1004 xaw/xboard.c:1081
 msgid "Recompile with larger BOARD_RANKS or BOARD_FILES to support this size"
 msgstr "Поново преведите са већим РЕДОВИМА_ТАБЛЕ или ЛИНИЈАМА_ТАБЛЕ да подржавају ову величину"
 
-#: gtk/xboard.c:1022 xaw/xboard.c:1124
+#: gtk/xboard.c:1023 xaw/xboard.c:1113
 #, c-format
 msgid "%s: bad boardSize syntax %s\n"
 msgstr "%s: лоша синтакса величине табле „%s“\n"
 
-#: gtk/xboard.c:1063 xaw/xboard.c:1163
+#: gtk/xboard.c:1064 xaw/xboard.c:1152
 #, c-format
 msgid "%s: unrecognized boardSize name %s\n"
 msgstr "%s: непознат назив величине табле „%s“\n"
 
-#: gtk/xboard.c:1107 xaw/xboard.c:1200
+#: gtk/xboard.c:1108 xaw/xboard.c:1189
 #, c-format
 msgid "%s: too few colors available; trying monochrome mode\n"
 msgstr "%s: доступно је премало боја; покушавам једнобојни режим\n"
 
-#: gtk/xboard.c:1421 xaw/xboard.c:1492
+#: gtk/xboard.c:1423 xaw/xboard.c:1481
 #, c-format
 msgid "Unable to create font set for %s.\n"
 msgstr "Не могу да направим скуп писама за „%s“.\n"
 
-#: gtk/xboard.c:1446 xaw/xboard.c:1515
+#: gtk/xboard.c:1448 xaw/xboard.c:1504
 #, c-format
 msgid "%s: no fonts match pattern %s\n"
 msgstr "%s: нема писама која одговарају обрасцу „%s“\n"
 
-#: gtk/xboard.c:1914 xaw/xboard.c:2007
+#: gtk/xboard.c:1950 xaw/xboard.c:1996
 msgid "Can't open temp file"
 msgstr "Не могу да отворим привремену датотеку"
 
-#: gtk/xboard.c:2422
+#: gtk/xboard.c:2476
 msgid "Failed to open file"
 msgstr "Нисам успео да отворим датотеку"
 
-#: gtk/xoptions.c:1498
+#: gtk/xoptions.c:1180
+msgid "*** Board window shows preview of selection ***"
+msgstr "*** Прозор табле приказује претпреглед избора ***"
+
+#: gtk/xoptions.c:1529
 msgid "Browse"
 msgstr "Разгледај"
 
-#: gtk/xoptions.c:1772 xaw/xoptions.c:1337
+#: gtk/xoptions.c:1800 xaw/xoptions.c:1332
 msgid "OK"
 msgstr "У реду"
 
-#: menus.c:136
+#: menus.c:127
 msgid "Load game file name?"
 msgstr "Да ли да учитам назив датотеке игре?"
 
-#: menus.c:183
+#: menus.c:174
 msgid "Load position file name?"
 msgstr "Да ли да учитам назив датотеке положаја?"
 
-#: menus.c:189 menus.c:582
+#: menus.c:180 menus.c:593
 msgid "Save game file name?"
 msgstr "Да ли да сачувам назив датотеке игре?"
 
-#: menus.c:198
+#: menus.c:189
 msgid "Save position file name?"
 msgstr "Да ли да сачувам назив датотеке положаја?"
 
-#: menus.c:355
+#: menus.c:346
 msgid " (with Zippy code)"
 msgstr " (са Зипи кодом)"
 
-#: menus.c:360
+#: menus.c:351
 #, c-format
 msgid ""
 "%s%s\n"
@@ -2533,456 +2597,480 @@ msgstr ""
 "Грешке пријавите ел. поштом на: <bug-xboard@gnu.org>\n"
 "\n"
 
-#: menus.c:371 menus.c:765
+#: menus.c:362 menus.c:780
 msgid "About XBoard"
 msgstr "О Х-табли"
 
-#: menus.c:593
+#: menus.c:382
+msgid "Registered Engines"
+msgstr "Забележени погони"
+
+#: menus.c:388
+msgid "Predefined Themes"
+msgstr "Предодређене теме"
+
+#: menus.c:394
+msgid "ICS Text-Menu Definition"
+msgstr "ICS дефиниција текст-изборник"
+
+#: menus.c:604
 msgid "New Game"
 msgstr "Нова игра"
 
-#: menus.c:594
+#: menus.c:605
 msgid "New Shuffle Game..."
 msgstr "Нова насумична игра..."
 
-#: menus.c:595
+#: menus.c:606
 msgid "New Variant..."
 msgstr "Нова варијанта..."
 
-#: menus.c:597
+#: menus.c:608
 msgid "Load Game"
 msgstr "Учитај игру"
 
-#: menus.c:598
+#: menus.c:609
 msgid "Load Position"
 msgstr "Учитај положај"
 
-#: menus.c:599
+#: menus.c:610
 msgid "Next Position"
 msgstr "Следећи положај"
 
-#: menus.c:600
+#: menus.c:611
 msgid "Prev Position"
 msgstr "Претходни положај"
 
-#: menus.c:602
+#: menus.c:613
 msgid "Save Game"
 msgstr "Сачувај игру"
 
-#: menus.c:603
+#: menus.c:614
 msgid "Save Position"
 msgstr "Сачувај положај"
 
-#: menus.c:604
+#: menus.c:615
 msgid "Save Selected Games"
 msgstr "Сачувај изабране игре"
 
-#: menus.c:605
+#: menus.c:616
 msgid "Save Games as Book"
 msgstr "Сачувај игре као књигу"
 
-#: menus.c:607
+#: menus.c:618
 msgid "Mail Move"
 msgstr "Пошаљи поштом потез"
 
-#: menus.c:608
+#: menus.c:619
 msgid "Reload CMail Message"
 msgstr "Поново учитај поруку Цпоште"
 
-#: menus.c:610
+#: menus.c:621
 msgid "Quit "
 msgstr "Изађи"
 
-#: menus.c:615
+#: menus.c:626
 msgid "Copy Game"
 msgstr "Умножи игру"
 
-#: menus.c:616
+#: menus.c:627
 msgid "Copy Position"
 msgstr "Умножи положај"
 
-#: menus.c:617
+#: menus.c:628
 msgid "Copy Game List"
 msgstr "Умножи списак игара"
 
-#: menus.c:619
+#: menus.c:630
 msgid "Paste Game"
 msgstr "Убаци игру"
 
-#: menus.c:620
+#: menus.c:631
 msgid "Paste Position"
 msgstr "Убаци положај"
 
-#: menus.c:622 menus.c:665
+#: menus.c:633 menus.c:678
 msgid "Edit Game"
 msgstr "Уреди игру"
 
-#: menus.c:623 menus.c:666
+#: menus.c:634 menus.c:679
 msgid "Edit Position"
 msgstr "Уреди положај"
 
-#: menus.c:624
+#: menus.c:635
 msgid "Edit Tags"
 msgstr "Уреди ознаку"
 
-#: menus.c:625
+#: menus.c:636
 msgid "Edit Comment"
 msgstr "Уреди напомену"
 
-#: menus.c:626
+#: menus.c:637
 msgid "Edit Book"
 msgstr "Уреди књигу"
 
-#: menus.c:628
+#: menus.c:639
 msgid "Revert"
 msgstr "Врати"
 
-#: menus.c:629
+#: menus.c:640
 msgid "Annotate"
 msgstr "Прибележи"
 
-#: menus.c:630
+#: menus.c:641
 msgid "Truncate Game"
 msgstr "Скрати игру"
 
-#: menus.c:632
+#: menus.c:643
 msgid "Backward"
 msgstr "Назад"
 
-#: menus.c:633
+#: menus.c:644
 msgid "Forward"
 msgstr "Напред"
 
-#: menus.c:634
+#: menus.c:645
 msgid "Back to Start"
 msgstr "Назад на почетак"
 
-#: menus.c:635
+#: menus.c:646
 msgid "Forward to End"
 msgstr "Напред на крај"
 
-#: menus.c:640
+#: menus.c:651
 msgid "Flip View"
 msgstr "Изврни преглед"
 
-#: menus.c:643
+#: menus.c:654
 msgid "Move History"
 msgstr "Историјат потеза"
 
-#: menus.c:644
+#: menus.c:655
 msgid "Evaluation Graph"
 msgstr "График процене"
 
-#: menus.c:645
+#: menus.c:656
 msgid "Game List"
 msgstr "Списак игара"
 
-#: menus.c:649
+#: menus.c:659
 msgid "Comments"
 msgstr "Напомене"
 
-#: menus.c:650
+#: menus.c:660
 msgid "ICS Input Box"
 msgstr "Поље уноса ИШС-а"
 
-#: menus.c:651
+#: menus.c:661
 msgid "ICS/Chat Console"
 msgstr "Конзола ИШС-а/Ћаскања"
 
-#: menus.c:653
+#: menus.c:663
+msgid "Edit ICS menu..."
+msgstr "Уреди ICS изборник..."
+
+#: menus.c:665
+msgid "Edit Theme List..."
+msgstr "Уреди списак тема..."
+
+#: menus.c:666
 msgid "Board..."
 msgstr "Табла..."
 
-#: menus.c:654
+#: menus.c:667
 msgid "Fonts..."
 msgstr "Слова..."
 
-#: menus.c:655
+#: menus.c:668
 msgid "Game List Tags..."
 msgstr "Ознаке списка игара..."
 
-#: menus.c:660
+#: menus.c:673
 msgid "Machine White"
 msgstr "Машински бели"
 
-#: menus.c:661
+#: menus.c:674
 msgid "Machine Black"
 msgstr "Машински црни"
 
-#: menus.c:662
+#: menus.c:675
 msgid "Two Machines"
 msgstr "Две машине"
 
-#: menus.c:663
+#: menus.c:676
 msgid "Analysis Mode"
 msgstr "Режим анализе"
 
-#: menus.c:664
+#: menus.c:677
 msgid "Analyze Game"
 msgstr "Анализирај игру"
 
-#: menus.c:667
+#: menus.c:680
 msgid "Training"
 msgstr "Увежбавање"
 
-#: menus.c:668
+#: menus.c:681
 msgid "ICS Client"
 msgstr "ИШС клијент"
 
-#: menus.c:670
+#: menus.c:683
 msgid "Machine Match"
 msgstr "Машински меч"
 
-#: menus.c:671
+#: menus.c:684
 msgid "Pause"
 msgstr "Заустави"
 
-#: menus.c:676
+#: menus.c:689
 msgid "Accept"
 msgstr "Прихвати"
 
-#: menus.c:677
+#: menus.c:690
 msgid "Decline"
 msgstr "Одбиј"
 
-#: menus.c:678
+#: menus.c:691
 msgid "Rematch"
 msgstr "Поново играј"
 
-#: menus.c:680
+#: menus.c:693
 msgid "Call Flag"
 msgstr "Заставица позива"
 
-#: menus.c:681
+#: menus.c:694
 msgid "Draw"
 msgstr "Реми"
 
-#: menus.c:682
+#: menus.c:695
 msgid "Adjourn"
 msgstr "Одложи"
 
-#: menus.c:683
+#: menus.c:696
 msgid "Abort"
 msgstr "Прекини"
 
-#: menus.c:684
+#: menus.c:697
 msgid "Resign"
 msgstr "Предај се"
 
-#: menus.c:686
+#: menus.c:699
 msgid "Stop Observing"
 msgstr "Прекини посматрање"
 
-#: menus.c:687
+#: menus.c:700
 msgid "Stop Examining"
 msgstr "Прекини испитивање"
 
-#: menus.c:688
+#: menus.c:701
 msgid "Upload to Examine"
 msgstr "Отпреми на испитивање"
 
-#: menus.c:690
+#: menus.c:703
 msgid "Adjudicate to White"
 msgstr "Досуди белом"
 
-#: menus.c:691
+#: menus.c:704
 msgid "Adjudicate to Black"
 msgstr "Досуди црном"
 
-#: menus.c:692
+#: menus.c:705
 msgid "Adjudicate Draw"
 msgstr "Досуди реми"
 
-#: menus.c:697
+#: menus.c:710
 msgid "Edit Engine List..."
 msgstr "Измени списак погона..."
 
-#: menus.c:699
+#: menus.c:712
 msgid "Load New 1st Engine..."
 msgstr "Учитај нови 1° погон..."
 
-#: menus.c:700
+#: menus.c:713
 msgid "Load New 2nd Engine..."
 msgstr "Учитај нови 2° погон..."
 
-#: menus.c:702
+#: menus.c:715
 msgid "Engine #1 Settings..."
 msgstr "Подешавања 1° погона..."
 
-#: menus.c:703
+#: menus.c:716
 msgid "Engine #2 Settings..."
 msgstr "Подешавања 2° погона..."
 
-#: menus.c:704
+#: menus.c:717
 msgid "Common Settings..."
 msgstr "Општа подешавања..."
 
-#: menus.c:706
+#: menus.c:719
 msgid "Hint"
 msgstr "Савет"
 
-#: menus.c:707
+#: menus.c:720
 msgid "Book"
 msgstr "Књига"
 
-#: menus.c:709
+#: menus.c:722
 msgid "Move Now"
 msgstr "Одиграј сада"
 
-#: menus.c:710
+#: menus.c:723
 msgid "Retract Move"
 msgstr "Повуци потез"
 
-#: menus.c:716
+#: menus.c:728
+msgid "Mute all Sounds"
+msgstr "Утишај све звуке"
+
+#: menus.c:731
 msgid "General..."
 msgstr "Опште..."
 
-#: menus.c:718
+#: menus.c:733
 msgid "Time Control..."
 msgstr "Управљање временом..."
 
-#: menus.c:719
+#: menus.c:734
 msgid "Adjudications..."
 msgstr "Додељивања..."
 
-#: menus.c:720
+#: menus.c:735
 msgid "ICS..."
 msgstr "ИШС..."
 
-#: menus.c:721
+#: menus.c:736
 msgid "Tournament..."
 msgstr "Турнир..."
 
-#: menus.c:722
+#: menus.c:737
 msgid "Load Game..."
 msgstr "Учитај игру..."
 
-#: menus.c:723
+#: menus.c:738
 msgid "Save Game..."
 msgstr "Сачувај игру..."
 
-#: menus.c:724
+#: menus.c:739
 msgid "Game List..."
 msgstr "Списак игара..."
 
-#: menus.c:725
+#: menus.c:740
 msgid "Sounds..."
 msgstr "Звуци..."
 
-#: menus.c:728
+#: menus.c:743
 msgid "Always Queen"
 msgstr "Увек краљица"
 
-#: menus.c:734
+#: menus.c:749
 msgid "Flash Moves"
 msgstr "Бљесни потезима"
 
-#: menus.c:736
+#: menus.c:751
 msgid "Highlight Dragging"
 msgstr "Истакни превлачење"
 
-#: menus.c:739
+#: menus.c:754
 msgid "Highlight With Arrow"
 msgstr "Истакни стрелицом"
 
-#: menus.c:740
+#: menus.c:755
 msgid "Move Sound"
 msgstr "Звук потеза"
 
-#: menus.c:742
+#: menus.c:757
 msgid "Periodic Updates"
 msgstr "Повремена освежења"
 
-#: menus.c:744
+#: menus.c:759
 msgid "Popup Exit Message"
 msgstr "Прикажи поруку излаза"
 
-#: menus.c:746
+#: menus.c:761
 msgid "Show Coords"
 msgstr "Прикажи кординате"
 
-#: menus.c:747
+#: menus.c:762
 msgid "Hide Thinking"
 msgstr "Сакриј размишљање"
 
-#: menus.c:751
+#: menus.c:766
 msgid "Save Settings Now"
 msgstr "Сачувај подешавања сада"
 
-#: menus.c:752
+#: menus.c:767
 msgid "Save Settings on Exit"
 msgstr "Сачувај подешавања на изласку"
 
-#: menus.c:757
+#: menus.c:772
 msgid "Info XBoard"
 msgstr "Подаци о Х-табли"
 
-#: menus.c:758
+#: menus.c:773
 msgid "Man XBoard"
 msgstr "Приручник Х-табле"
 
-#: menus.c:760
+#: menus.c:775
 msgid "XBoard Home Page"
 msgstr "Матична страница Х-табле"
 
-#: menus.c:761
+#: menus.c:776
 msgid "On-line User Guide"
 msgstr "Корисничко упутство на мрежи"
 
-#: menus.c:762
+#: menus.c:777
 msgid "Development News"
 msgstr "Новости о развоју"
 
-#: menus.c:763
+#: menus.c:778
 msgid "e-Mail Bug Report"
 msgstr "Пошаљи извештај о грешци"
 
-#: menus.c:802
+#: menus.c:817
 msgid "File"
 msgstr "Датотека"
 
-#: menus.c:803
+#: menus.c:818
 msgid "Edit"
 msgstr "Уреди"
 
-#: menus.c:804
+#: menus.c:819
 msgid "View"
 msgstr "Преглед"
 
-#: menus.c:805
+#: menus.c:820
 msgid "Mode"
 msgstr "Режим"
 
-#: menus.c:806
+#: menus.c:821
 msgid "Action"
 msgstr "Радња"
 
-#: menus.c:807
+#: menus.c:822
 msgid "Engine"
 msgstr "Погон"
 
-#: menus.c:808
+#: menus.c:823
 msgid "Options"
 msgstr "Опције"
 
-#: menus.c:809
+#: menus.c:824
 msgid "Help"
 msgstr "Помоћ"
 
-#: nengineoutput.c:79 nengineoutput.c:87
+#: nengineoutput.c:70 nengineoutput.c:78
 msgid "engine name"
 msgstr "назив погона"
 
-#. TRANSLATORS: noun, as in "the move Nf3"
-#: nengineoutput.c:82 nengineoutput.c:90
+#. TRANSLATORS: Here, "move" is used as a noun, e.g., "the move Nf3".
+#: nengineoutput.c:73 nengineoutput.c:81
 msgid "move"
 msgstr "потез"
 
-#: nengineoutput.c:156
+#: nengineoutput.c:147
 msgid "Engine output"
 msgstr "Излаз погона"
 
-#: nengineoutput.c:160
+#: nengineoutput.c:151
 msgid ""
 "Mismatch of STRIDE in nengineoutput.c\n"
 "Change and recompile!"
@@ -2990,77 +3078,77 @@ msgstr ""
 "Неподудара се „STRIDE“ у „nengineoutput.c“\n"
 "Промрните и поново преведите!"
 
-#: nevalgraph.c:69
+#: nevalgraph.c:60
 msgid "Evaluation graph"
 msgstr "График процене"
 
-#: nevalgraph.c:69
+#: nevalgraph.c:60
 msgid "Blunder graph"
 msgstr "График погрешака"
 
-#: nevalgraph.c:107
+#: nevalgraph.c:98
 msgid "Blunder"
 msgstr "Погрешке"
 
-#: nevalgraph.c:107
+#: nevalgraph.c:98
 msgid "Eval"
 msgstr "Процена"
 
-#: ngamelist.c:87
+#: ngamelist.c:78
 msgid "find position"
 msgstr "нађи положај"
 
-#: ngamelist.c:88
+#: ngamelist.c:79
 msgid "narrow"
 msgstr "уско"
 
-#: ngamelist.c:89
+#: ngamelist.c:80
 msgid "thresholds"
 msgstr "осетљивост"
 
-#: ngamelist.c:90
+#: ngamelist.c:81
 msgid "tags"
 msgstr "ознаке"
 
-#: ngamelist.c:91
+#: ngamelist.c:82
 msgid "next"
 msgstr "следеће"
 
-#: ngamelist.c:92
+#: ngamelist.c:83
 msgid "close"
 msgstr "затвори"
 
-#: ngamelist.c:116
+#: ngamelist.c:107
 msgid "No game selected"
 msgstr "Није изабрана игра"
 
-#: ngamelist.c:122
+#: ngamelist.c:113
 msgid "Can't go forward any further"
 msgstr "Не могу да идем више напред"
 
-#: ngamelist.c:192
+#: ngamelist.c:183
 #, c-format
 msgid "Scanning through games (%d)"
 msgstr "Претражујем игре (%d)"
 
-#: ngamelist.c:211
+#: ngamelist.c:202
 msgid "previous page"
 msgstr "претходна страница"
 
-#: ngamelist.c:214
+#: ngamelist.c:205
 msgid "next page"
 msgstr "следећа страница"
 
-#: ngamelist.c:217
+#: ngamelist.c:208
 msgid "no games matched your request"
 msgstr "ниједна игра не одговара вашем захтеву"
 
-#: ngamelist.c:219
+#: ngamelist.c:210
 #, c-format
 msgid "%s - %d/%d games (%d-%d-%d)"
 msgstr "%s — %d/%d игре (%d-%d-%d)"
 
-#: ngamelist.c:284
+#: ngamelist.c:275
 msgid "There is no game list"
 msgstr "Нема списка игара"
 
@@ -3068,54 +3156,72 @@ msgstr "Нема списка игара"
 msgid "Move list"
 msgstr "Списак потеза"
 
-#: usystem.c:223
+#: usystem.c:208
 #, c-format
 msgid "%s: unrecognized color %s\n"
 msgstr "%s: непозната боја „%s“\n"
 
-#: usystem.c:231
+#: usystem.c:216
 #, c-format
 msgid "%s: can't parse foreground color in '%s'\n"
 msgstr "%s: не могу да обрадим боју прочеља у „%s“\n"
 
-#: usystem.c:260
+#: usystem.c:245
 #, c-format
 msgid "%s: can't parse color names; disabling colorization\n"
 msgstr "%s: не могу да обрадим називе боја; искључујем обојавање\n"
 
-#: usystem.c:362
+#: usystem.c:347
 #, c-format
 msgid "ERROR: Unknown user %s (in path %s)\n"
 msgstr "Грешка: Непознат корисник „%s“ (у путањи „%s“)\n"
 
-#: usystem.c:564
+#: usystem.c:556
 msgid "Socket support is not configured in"
 msgstr "Подршка прикључнице није подешена"
 
-#: usystem.c:653
+#: usystem.c:645
 msgid "internal rcmd not implemented for Unix"
 msgstr "унутрашња „rcmd“ није примењена за Јуникс"
 
-#: xaw/xboard.c:1206
+#: xaw/xboard.c:1195
 #, c-format
 msgid "white pixel = 0x%lx, black pixel = 0x%lx\n"
 msgstr "беле тачкице = 0x%lx, црне тачкице = 0x%lx\n"
 
-#: xaw/xoptions.c:378 xaw/xoptions.c:1082
+#: xaw/xoptions.c:369 xaw/xoptions.c:1077
 msgid "browse"
 msgstr "разгледај"
 
-#: xaw/xoptions.c:444 xaw/xoptions.c:445
+#: xaw/xoptions.c:435 xaw/xoptions.c:436
 msgid "Ctrl"
 msgstr "Ктрл"
 
-#: xaw/xoptions.c:450 xaw/xoptions.c:451
+#: xaw/xoptions.c:441 xaw/xoptions.c:442
 msgid "Alt"
 msgstr "Алт"
 
-#: xaw/xoptions.c:456 xaw/xoptions.c:457
+#: xaw/xoptions.c:447 xaw/xoptions.c:448
 msgid "Shift"
 msgstr "Помак"
+
+#~ msgid "It is not White's turn"
+#~ msgstr "Није бели на потезу"
+
+#~ msgid "It is not Black's turn"
+#~ msgstr "Није црни на потезу"
+
+#~ msgid "Click clock to clear board"
+#~ msgstr "Притисните на сат да очистите таблу"
+
+#~ msgid "UCI"
+#~ msgstr "УЦИ"
+
+#~ msgid "USI/UCCI (uses specified -uxiAdapter)"
+#~ msgstr "УСИ/УЦЦИ (користи наведени „-uxiAdapter“)"
+
+#~ msgid "WB protocol v1 (do not wait for engine features)"
+#~ msgstr "ВБ протокол в1 (не чекај на функције погона)"
 
 #~ msgid "Common Engine..."
 #~ msgstr "Општи погон..."
