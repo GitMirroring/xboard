@@ -59,7 +59,6 @@
 
 #include <cairo/cairo.h>
 #include <librsvg/rsvg.h>
-#include <librsvg/rsvg-cairo.h>
 #include <pango/pangocairo.h>
 
 #if ENABLE_NLS

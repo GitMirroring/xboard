@@ -53,6 +53,8 @@
 #include "menus.h"
 #include "gettext.h"
 
+#include "gtk/button_labels.h"
+
 #ifdef ENABLE_NLS
 # define _(s) gettext(s)
 # define N_(s) gettext_noop(s)
@@ -1242,8 +1244,12 @@ void BrowseGTK(GtkWidget * widget, void * gdata) {
         fc_action = GTK_FILE_CHOOSER_ACTION_OPEN;
     }
 
-    dialog = gtk_file_chooser_dialog_new(
-     "Open File", NULL, fc_action, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+    char * cancel_c_str = cancel_button_c_str();
+    char * open_c_str = open_button_c_str();
+    dialog = gtk_file_chooser_dialog_new("Open File", NULL, fc_action, cancel_c_str, GTK_RESPONSE_CANCEL, open_c_str,
+     GTK_RESPONSE_ACCEPT, NULL);
+    free(cancel_c_str);
+    free(open_c_str);
 
     if (*chessDir && (!(p = strstr(chessDir, "/home/")) || strchr(p + 6, '/'))) {
         gtk_file_chooser_add_shortcut_folder(GTK_FILE_CHOOSER(dialog), chessDir, NULL);
@@ -1545,9 +1551,12 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
         box = gtk_vbox_new(FALSE, 0);
         gtk_container_add(GTK_CONTAINER(dialog), box);
     } else {
-        dialog = gtk_dialog_new_with_buttons(title, GTK_WINDOW(shells[parent]),
-         GTK_DIALOG_DESTROY_WITH_PARENT | (modal ? GTK_DIALOG_MODAL : 0), GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
-         GTK_RESPONSE_REJECT, NULL);
+        char * cancel_c_str = cancel_button_c_str();
+        char * ok_c_str = ok_button_c_str();
+        dialog = gtk_dialog_new_with_buttons(title, GTK_WINDOW(shells[parent]), GTK_DIALOG_DESTROY_WITH_PARENT
+         | (modal ? GTK_DIALOG_MODAL : 0), ok_c_str, GTK_RESPONSE_ACCEPT, cancel_c_str, GTK_RESPONSE_REJECT, NULL);
+        free(cancel_c_str);
+        free(ok_c_str);
         box = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     }
 

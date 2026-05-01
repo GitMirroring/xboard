@@ -151,6 +151,8 @@
 #include "gettext.h"
 #include "draw.h"
 
+#include "gtk/button_labels.h"
+
 #ifdef OSXAPP
 # include <gtkmacintegration/gtkosxapplication.h>
 // prevent pathname of positional file argument provided by OS X being be mistaken for option name
@@ -2473,6 +2475,9 @@ void FileNamePopUpWrapper(
     char * result = NULL;
     char * cp;
     char curDir[MSG_SIZ];
+    char * cancel_c_str = cancel_button_c_str();
+    char * open_c_str = open_button_c_str();
+    char * save_c_str = save_button_c_str();
 
     StartDir(filter, NULL);  // change to start directory for this file type
 
@@ -2505,11 +2510,11 @@ void FileNamePopUpWrapper(
     gtk_file_filter_set_name(gtkfilter, filter);
 
     if (openMode[0] == 'r') {
-        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_OPEN, cancel_c_str, GTK_RESPONSE_CANCEL,
+         open_c_str, GTK_RESPONSE_ACCEPT, NULL);
     } else {
-        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-         GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_SAVE, cancel_c_str, GTK_RESPONSE_CANCEL,
+         save_c_str, GTK_RESPONSE_ACCEPT, NULL);
         /* add filename suggestions */
         if (strlen(def) > 0) {
             gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), def);
@@ -2554,5 +2559,8 @@ void FileNamePopUpWrapper(
     }
 
     free(cp);
+    free(cancel_c_str);
+    free(open_c_str);
+    free(save_c_str);
     return;
 }
