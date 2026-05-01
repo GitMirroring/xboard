@@ -301,7 +301,6 @@ void SetIconName(DialogClass dlg, char * name) {
     int j = 0;
     XtSetArg(args[j], XtNiconName, (XtArgVal)name);
     j++;
-    //	XtSetArg(args[j], XtNtitle, (XtArgVal) name);  j++;
     XtSetValues(shells[dlg], args, j);
 }
 
@@ -883,7 +882,8 @@ static void GraphEventProc(Widget widget, caddr_t client_data, XEvent * event) {
     }
     button *= f;
     opt = userHandler(button, w, h);
-    if (opt) {  // user callback specifies a context menu; pop it up
+    if (opt) {
+        /* The user callback specifies a context menu.  Pop it up! */
         XUngrabPointer(xDisplay, CurrentTime);
         XtCallActionProc(widget, "XawPositionSimpleMenu", event, &(opt->name), 1);
         XtPopupSpringLoaded(opt->handle);

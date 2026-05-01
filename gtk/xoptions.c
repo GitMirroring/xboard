@@ -63,7 +63,7 @@
 # define N_(s) s
 #endif
 
-// [HGM] the following code for makng menu popups was cloned from the FileNamePopUp routines
+// [HGM] The following code for making menu popups was cloned from the FileNamePopUp routines.
 
 #ifdef TODO_GTK
 static Widget previous = NULL;
@@ -232,7 +232,13 @@ void SetWidgetFont(GtkWidget * w, char ** s) {
         return;  // uses no font, no font spec or empty font spec
     }
     pfd = pango_font_description_from_string(*s);
+#if API_USED_FOR_DRAWING_GUI == 3
+    gtk_widget_override_font(w, pfd);
+#elif API_USED_FOR_DRAWING_GUI == 2
     gtk_widget_modify_font(w, pfd);
+#else
+# error Not implemented.
+#endif
 }
 
 void ApplyFont(Option * opt, char * font) {
@@ -379,7 +385,6 @@ void SetIconName(DialogClass dlg, char * name) {
     int j = 0;
     XtSetArg(args[j], XtNiconName, (XtArgVal)name);
     j++;
-    //	XtSetArg(args[j], XtNtitle, (XtArgVal) name);  j++;
     XtSetValues(shells[dlg], args, j);
 #endif
 }
@@ -758,8 +763,8 @@ static int GameListEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
     return TRUE;
 }
 
-static int MemoEvent(
- GtkWidget * widget, GdkEvent * event, void * gdata) {  // handle mouse clicks on text widgets that need it
+/* Handle mouse clicks on text widgets that need it. */
+static int MemoEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
     int w;
     int h;
     int button = 10;
@@ -776,14 +781,15 @@ static int MemoEvent(
     int x;
     int y;
 
-    switch (event->type) {  // figure out what's up
+    switch (event->type) {
     case GDK_MOTION_NOTIFY:
         f = 0;
         w = mevent->x;
         h = mevent->y;
         break;
     case GDK_BUTTON_RELEASE:
-        f = -1;  // release indicated by negative button numbers
+        /* Button releases are indicated by using negative values. */
+        f = -1;
         w = bevent->x;
         h = bevent->y;
         button = bevent->button;
@@ -840,12 +846,13 @@ void AddHandler(Option * opt, DialogClass dlg, int nr) {
         break;
     case 3:  // input box
         icsBox = opt;
+        /* Intentionally fall through. */
     case 2:  // move type-in
-        g_signal_connect(
-         opt->handle, "key-press-event", G_CALLBACK(TypeInProc), (void *)(dlg << 16 | (opt - dialogOptions[dlg])));
+        g_signal_connect(opt->handle, "key-press-event", G_CALLBACK(TypeInProc), (void *)(dlg << 16 | (opt - dialogOptions[dlg])));
         break;
     case 5:  // game list
         g_signal_connect(opt->handle, "button-press-event", G_CALLBACK(GameListEvent), (void *)0);
+        /* Intentionally fall through. */
     case 4:  // game-list filter
         g_signal_connect(opt->handle, "key-press-event", G_CALLBACK(GameListEvent), (void *)(intptr_t)nr);
         break;
@@ -1039,8 +1046,8 @@ static void ExposeDraw(Option * graph, GdkEventExpose * eevent) {
     cairo_destroy(cr);
 }
 
-static void GraphEventProc(
- GtkWidget * widget, GdkEvent * event, void * gdata) {  // handle expose and mouse events on Graph widget
+/* Handle expose and mouse events for the Graph widget. */
+static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
     int w, h;
     int button = 10, f = 1, sizing = 0;
     Option *opt, *graph = (Option *)gdata;
@@ -1090,25 +1097,25 @@ static void GraphEventProc(
             graph->textValue = (char *)cairo_xlib_surface_create(xDisplay, XtWindow(widget), DefaultVisual(xDisplay, 0), w, h);
         }
 #endif
-        if (sizing) {  // the memory buffer was already created in GenericPopup(),
-                       // to give drawing routines opportunity to use it before first expose event
-                       // (which are only processed when main gets to the event loop, so after all init!)
-                       // so only change when size is no longer good
-            //		NewCanvas(graph);
-            graph->min |= REPLACE;  // defer making new canvas
+        if (sizing) {
+            /* The memory buffer was already created in GenericPopUp() in order to give drawing routines the opportunity to use it
+               prior to the first expose event (which will not be processed until main reaches the event loop, after all
+               initialization has completed).  So, only trigger a redraw when the size is no longer good. */
+            graph->min |= REPLACE;
             break;
         }
         ExposeDraw(graph, eevent);
     default:
         return;
     case GDK_SCROLL:
+        w = 0;
+        h = 0;
         if (sevent->direction == GDK_SCROLL_UP) {
             button = 4;
         }
         if (sevent->direction == GDK_SCROLL_DOWN) {
             button = 5;
         }
-        w = h = 0;  // to keep Clang happy
         break;
     case GDK_MOTION_NOTIFY:
         f = 0;
@@ -1116,7 +1123,9 @@ static void GraphEventProc(
         h = mevent->y;
         break;
     case GDK_BUTTON_RELEASE:
-        f = -1;  // release indicated by negative button numbers
+        /* Button releases are indicated by using negative values. */
+        f = -1;
+        /* Intentionally fall through. */
     case GDK_BUTTON_PRESS:
         w = bevent->x;
         h = bevent->y;
@@ -1128,7 +1137,8 @@ static void GraphEventProc(
 
     opt = userHandler(button, w, h);
 #ifdef TODO_GTK
-    if (opt) {  // user callback specifies a context menu; pop it up
+    if (opt) {
+        /* The user callback specifies a context menu.  Pop it up! */
         XUngrabPointer(xDisplay, CurrentTime);
         XtCallActionProc(widget, "XawPositionSimpleMenu", event, &(opt->name), 1);
         XtPopupSpringLoaded(opt->handle);
@@ -1520,16 +1530,29 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
 
     if (engineDlg) {  // Settings popup for engine: format through heuristic
         int n = currentCps->nrOptions;
-        // if(n > 50) width = 4; else if(n>24) width = 2; else width = 1;
+        /*
+        if (n > 50) {
+            width = 4;
+        } else if (n > 24) {
+            width = 2;
+        } else {
+            width = 1;
+        }
+        */
         width = n / 20 + 1;
         height = n / width + 1;
         if (appData.debugMode) {
             printf("n=%d, h=%d, w=%d\n", n, height, width);
         }
-        //	if(n && (currentOption[n-1].type == Button || currentOption[n-1].type == SaveButton)) currentOption[n].min =
-        //SAME_ROW; // OK on same line
+        /*
+        if (n && (currentOption[n-1].type == Button || currentOption[n-1].type == SaveButton)) {
+            currentOption[n].min = SAME_ROW;
+        }
+        */
+
+        /* Indicate the end of the list. */
         currentOption[n].type = EndMark;
-        currentOption[n].target = NULL;  // delimit list by callback-less end mark
+        currentOption[n].target = NULL;
     }
 
     parents[dlgNr] = parent;
@@ -1625,6 +1648,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
                 option[i].value = *(int *)option[i].target;
             }
             snprintf(def, MSG_SIZ, "%d", option[i].value);
+            /* Intentionally fall through. */
         case TextBox:
         case FileName:
         case PathName:
@@ -1954,8 +1978,12 @@ tBox:
                     msg = def;
                 }
 #endif
-                //	    XtSetArg(args[j], XtNmenuName, XtNewString(option[i].name));  j++;
-                //	    XtSetArg(args[j], XtNlabel, msg);  j++;
+                /*
+                XtSetArg(args[j], XtNmenuName, XtNewString(option[i].name));
+                j++;
+                XtSetArg(args[j], XtNlabel, msg);
+                j++;
+                */
                 option[i].handle = (void *)(menuButton = gtk_menu_item_new_with_mnemonic(msg));
                 gtk_widget_show(menuButton);
                 option[i].textValue = (char *)(menu = CreateMenuPopup(option + i, i + 256 * dlgNr, -1));
@@ -1997,8 +2025,8 @@ tBox:
 #endif
                 break;
             case BoxEnd:
-                //	    XtManageChildren(&form, 1);
-                //	    SqueezeIntoBox(&option[boxStart], i-boxStart, option[boxStart].max);
+                // XtManageChildren(&form, 1);
+                // SqueezeIntoBox(&option[boxStart], i-boxStart, option[boxStart].max);
                 hbox = oldHbox;
                 top--;
                 if (option[i].target) {
