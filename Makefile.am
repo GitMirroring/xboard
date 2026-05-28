@@ -26,27 +26,33 @@ xaw_dependent_front_end_sources = \
     xaw/xhistory.h \
     xaw/xoptions.c
 
-### XBoard front-end source code that uses GTK 2.x.
+### XBoard front-end source code that uses GTK 2 or 3.
 
-gtk_2_dependent_front_end_sources = \
+gtk_dependent_front_end_sources = \
+    gtk/button_labels.c \
+    gtk/button_labels.h \
     gtk/xboard.c \
     gtk/xboard.h \
     gtk/xoptions.c \
     gtk/xtimer.c \
     gtk/xengineoutput.c
 
-if USING_GTK_2_FRONT_END
-    front_end_sources = $(gtk_2_dependent_front_end_sources)
+if USING_GTK_FRONT_END
+    front_end_sources = $(gtk_dependent_front_end_sources)
     front_end_extras = $(xaw_dependent_front_end_sources)
-    # Using all of these -D flags is recommended by https://docs.gtk.org/gtk3/migrating-2to3.html.
-    # TODO: Also use -DGSEAL_ENABLE.
-    front_end_flags = -Igtk -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
+    # Using all of these -D flags is recommended by
+    # https://docs.gtk.org/gtk3/migrating-2to3.html.
+    front_end_flags = -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE
+    # N.B.  Using -DGTK_DISABLE_DEPRECATED is also recommended by that
+    # webpage as well, but doing so also causes GtkAttachOptions,
+    # which we currently rely upon, to no longer be visible in later
+    # versions of GTK 3, because it was removed from GTK 4.
 endif
 
 if USING_X11_FRONT_END
     front_end_sources = $(xaw_dependent_front_end_sources)
-    front_end_extras = $(gtk_2_dependent_front_end_sources)
-    front_end_flags = -Ixaw -DX11
+    front_end_extras = $(gtk_dependent_front_end_sources)
+    front_end_flags = -DX11
 endif
 
 xboard_SOURCES = \

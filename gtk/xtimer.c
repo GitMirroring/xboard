@@ -91,10 +91,10 @@
 # define usleep(t) _sleep2(((t) + 500) / 1000)
 #endif
 
-guint delayedEventTimerTag = 0;
+unsigned int delayedEventTimerTag = 0;
 DelayedEventCallback delayedEventCallback = 0;
 
-void FireDelayedEvent(gpointer data) {
+void FireDelayedEvent(void * data) {
     g_source_remove(delayedEventTimerTag);
     delayedEventTimerTag = 0;
     delayedEventCallback();
@@ -126,7 +126,7 @@ void CancelDelayedEvent(void) {
 }
 
 
-guint loadGameTimerTag = 0;
+unsigned int loadGameTimerTag = 0;
 
 int LoadGameTimerRunning(void) { return loadGameTimerTag != 0; }
 
@@ -140,7 +140,7 @@ int StopLoadGameTimer(void) {
     }
 }
 
-void LoadGameTimerCallback(gpointer data) {
+void LoadGameTimerCallback(void * data) {
     g_source_remove(loadGameTimerTag);
     loadGameTimerTag = 0;
     AutoPlayGameLoop();
@@ -148,9 +148,9 @@ void LoadGameTimerCallback(gpointer data) {
 
 void StartLoadGameTimer(long millisec) { loadGameTimerTag = g_timeout_add(millisec, (GSourceFunc)LoadGameTimerCallback, NULL); }
 
-guint analysisClockTag = 0;
+unsigned int analysisClockTag = 0;
 
-int AnalysisClockCallback(gpointer data) {
+int AnalysisClockCallback(void * data) {
     if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || appData.icsEngineAnalyze) {  // [DM]
         AnalysisPeriodicEvent(0);
     }
@@ -159,7 +159,7 @@ int AnalysisClockCallback(gpointer data) {
 
 void StartAnalysisClock(void) { analysisClockTag = g_timeout_add(2000, (GSourceFunc)AnalysisClockCallback, NULL); }
 
-guint clockTimerTag = 0;
+unsigned int clockTimerTag = 0;
 
 int ClockTimerRunning(void) { return clockTimerTag != 0; }
 
@@ -173,7 +173,7 @@ int StopClockTimer(void) {
     }
 }
 
-void ClockTimerCallback(gpointer data) {
+void ClockTimerCallback(void * data) {
     /* remove timer */
     g_source_remove(clockTimerTag);
     clockTimerTag = 0;

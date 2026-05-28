@@ -66,7 +66,7 @@ static Widget memoWidget;
 #endif
 static GdkPixbuf * iconsGTK[8];
 
-static void ReadIcon(gchar * svgFilename, int iconNr) { iconsGTK[iconNr] = LoadIconFile(svgFilename); }
+static void ReadIcon(char * svgFilename, int iconNr) { iconsGTK[iconNr] = LoadIconFile(svgFilename); }
 
 void InitEngineOutput(Option * opt, Option * memo2) {  // front-end, because it must have access to the pixmaps
 #ifdef TODO_GTK

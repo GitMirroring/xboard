@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * The following terms apply to Digital Equipment Corporation's copyright
  * interest in XBoard:
@@ -153,6 +151,8 @@
 #include "gettext.h"
 #include "draw.h"
 
+#include "gtk/button_labels.h"
+
 #ifdef OSXAPP
 # include <gtkmacintegration/gtkosxapplication.h>
 // prevent pathname of positional file argument provided by OS X being be mistaken for option name
@@ -205,12 +205,12 @@ char * FindFont(char * pattern, int targetPxlSize);
 void DelayedDrag(void);
 void ICSInputBoxPopUp(void);
 void MoveTypeInProc(GdkEventKey * eventkey);
-gboolean KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, gpointer data);
+int KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, void * data);
 Boolean TempBackwardActive = False;
 void DisplayMove(int moveNumber);
 void update_ics_width(void);
 int CopyMemoProc(void);
-static gboolean EventProc(GtkWidget * widget, GdkEvent * event, gpointer g);
+static int EventProc(GtkWidget * widget, GdkEvent * event, void * g);
 static int FindLogo(char * place, char * name, char * buf);
 
 #ifdef TODO_GTK
@@ -812,7 +812,7 @@ void SlaveResize(Option * opt) {
     gtk_window_resize(GTK_WINDOW(shells[DummyDlg]), slaveW + opt->max, slaveH + opt->value);
 }
 
-GdkPixbuf * LoadIconFile(gchar * svgFilename) {
+GdkPixbuf * LoadIconFile(char * svgFilename) {
     char buf[MSG_SIZ];
 
     snprintf(buf, MSG_SIZ, "%s/%s" IMG, svgDir, svgFilename);
@@ -823,16 +823,20 @@ GdkPixbuf * LoadIconFile(gchar * svgFilename) {
 static char clickedFile[MSG_SIZ];
 TimeMark started;
 
-static gboolean StartNewXBoard(GtkosxApplication * app, gchar * path,
- gpointer user_data) {  // handler of OSX OpenFile signal, which sends us the filename of clicked file or first argument
+static int StartNewXBoard(GtkosxApplication * app, char * path, void * user_data) {
+    /* handler of macOS OpenFile signal, which sends us the filename of clicked file or first argument */
     TimeMark now;
     GetTimeMark(&now);
-    if (1000 * now.sec + now.ms - 1000 * started.sec - started.ms < 1000) {  // received during first second
-        strncpy(clickedFile, path, MSG_SIZ);  // remember file name, but otherwise ignore
-    } else {  // we are running something presumably useful
+    if (1000 * now.sec + now.ms - 1000 * started.sec - started.ms < 1000) {
+        /* received during first second */
+        /* remember file name, but otherwise ignore */
+        strncpy(clickedFile, path, MSG_SIZ);
+    } else {
+        /* we are running something presumably useful */
         char buf[MSG_SIZ];
         snprintf(buf, MSG_SIZ, "open -n -a \"xboard\" --args \"%s\"", path);
-        system(buf);  // start new instance on this file
+        /* start new instance on this file */
+        system(buf);
     }
     return TRUE;
 }
@@ -1059,8 +1063,8 @@ int main(int argc, char ** argv) {
         if (*appData.boardSize == NULLCHAR) {
             // GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainwindow)); // TODO: this does not work, as no mainwindow yet
             GdkScreen * screen = gdk_screen_get_default();
-            guint screenwidth = gdk_screen_get_width(screen);
-            guint screenheight = gdk_screen_get_height(screen);
+            unsigned int screenwidth = gdk_screen_get_width(screen);
+            unsigned int screenheight = gdk_screen_get_height(screen);
             while (screenwidth < (szd->minScreenSize * BOARD_WIDTH + 4) / 8 ||
              screenheight < (szd->minScreenSize * BOARD_HEIGHT + 4) / 8) {
                 szd++;
@@ -1507,10 +1511,17 @@ char * FindFont(char * pattern, int targetPxlSize) {
 #endif
 
 void MarkMenuItem(char * menuRef, int state) {
-    MenuItem * item = MenuNameToItem(menuRef);
+    unsigned int signal_id;
+    unsigned long handler_id;
+    MenuItem * item;
 
+    item = MenuNameToItem(menuRef);
     if (item && item->handle) {
-        GTK_CHECK_MENU_ITEM(item->handle)->active = state;
+        signal_id = g_signal_lookup("activate", GTK_TYPE_MENU_ITEM);
+        handler_id = g_signal_handler_find(item->handle, G_SIGNAL_MATCH_ID, signal_id, 0, NULL, NULL, NULL);
+        g_signal_handler_block(item->handle, handler_id);
+        gtk_check_menu_item_set_active(item->handle, state);
+        g_signal_handler_unblock(item->handle, handler_id);
     }
     SYNC_MENUBAR;
 }
@@ -1538,7 +1549,7 @@ void SetMenuEnables(Enables * enab) {
     }
 }
 
-gboolean KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, gpointer data) {
+int KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, void * data) {
     MoveTypeInProc(eventkey);  // pop up for typed in moves
 
 #ifdef TODO_GTK
@@ -1551,7 +1562,7 @@ gboolean KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, gpointer data)
         break;
     }
 #endif
-    return False;
+    return FALSE;
 }
 #ifdef TODO_GTK
 void KeyBindingProc(Widget w, XEvent * event, String * prms,
@@ -1791,7 +1802,7 @@ void ReSize(WindowPlacement * wp) {
     }
 }
 
-static guint delayedDragTag = 0;
+static unsigned int delayedDragTag = 0;
 
 void DragProc(void) {
     static int busy;
@@ -1846,7 +1857,7 @@ void DelayedDrag(void) {
     // printf("new timr = %d\n", delayedDragTag);
 }
 
-static gboolean EventProc(GtkWidget * widget, GdkEvent * event, gpointer g) {
+static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
     // printf("event proc (%d,%d) %dx%d\n", event->configure.x, event->configure.y, event->configure.width,
     // event->configure.height);
     //  immediately
@@ -1928,8 +1939,8 @@ void ModeHighlight(void) {
  * Button/menu procedures
  */
 
-void CopyFileToClipboard(gchar * filename) {
-    gchar * selection_tmp;
+void CopyFileToClipboard(char * filename) {
+    char * selection_tmp;
     GtkClipboard * cb;
 
     // read the file
@@ -1983,7 +1994,7 @@ void CopySomething(char * src) {
 void PastePositionProc(void) {
     GdkDisplay * gdisp = gdk_display_get_default();
     GtkClipboard * cb;
-    gchar * fenstr;
+    char * fenstr;
 
     if (gdisp == NULL) {
         return;
@@ -1998,9 +2009,9 @@ void PastePositionProc(void) {
 }
 
 void PasteGameProc(void) {
-    gchar * text = NULL;
+    char * text = NULL;
     GtkClipboard * cb;
-    guint len = 0;
+    unsigned int len = 0;
     int flip = appData.flipView;
     FILE * f;
 
@@ -2257,12 +2268,12 @@ typedef struct {
     int lineByLine;
     char * unused;
     InputCallback func;
-    guint sid;
+    unsigned int sid;
     char buf[INPUT_SOURCE_BUF_SIZE];
     void * closure;
 } InputSource;
 
-gboolean DoInputCallback(GIOChannel * io, GIOCondition cond, gpointer * data) {
+int DoInputCallback(GIOChannel * io, GIOCondition cond, void ** data) {
     /* read input from one of the input source (for example a chess program, ICS, etc).
      * and call a function that will handle the input
      */
@@ -2283,10 +2294,10 @@ gboolean DoInputCallback(GIOChannel * io, GIOCondition cond, gpointer * data) {
              shells[ChatDlg]) {  // [HGM] absence of terminal is no error if ICS Console present
                 RemoveInputSource(is);  // cease reading stdin
                 stdoutClosed = TRUE;  // suppress future output
-                return True;
+                return TRUE;
             }
             (is->func)(is, is->closure, is->buf, count, count ? errno : 0);
-            return True;
+            return TRUE;
         }
         is->unused += count;
         p = is->buf;
@@ -2320,7 +2331,7 @@ gboolean DoInputCallback(GIOChannel * io, GIOCondition cond, gpointer * data) {
         }
         (is->func)(is, is->closure, is->buf, count, error);
     }
-    return True;  // Must return true or the watch will be removed
+    return TRUE;  // Must return true or the watch will be removed
 }
 
 InputSourceRef AddInputSource(ProcRef pr, int lineByLine, InputCallback func, void * closure) {
@@ -2464,6 +2475,9 @@ void FileNamePopUpWrapper(
     char * result = NULL;
     char * cp;
     char curDir[MSG_SIZ];
+    char * cancel_c_str = cancel_button_c_str();
+    char * open_c_str = open_button_c_str();
+    char * save_c_str = save_button_c_str();
 
     StartDir(filter, NULL);  // change to start directory for this file type
 
@@ -2496,11 +2510,11 @@ void FileNamePopUpWrapper(
     gtk_file_filter_set_name(gtkfilter, filter);
 
     if (openMode[0] == 'r') {
-        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_OPEN, cancel_c_str, GTK_RESPONSE_CANCEL,
+         open_c_str, GTK_RESPONSE_ACCEPT, NULL);
     } else {
-        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-         GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+        dialog = gtk_file_chooser_dialog_new(label, NULL, GTK_FILE_CHOOSER_ACTION_SAVE, cancel_c_str, GTK_RESPONSE_CANCEL,
+         save_c_str, GTK_RESPONSE_ACCEPT, NULL);
         /* add filename suggestions */
         if (strlen(def) > 0) {
             gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), def);
@@ -2545,5 +2559,8 @@ void FileNamePopUpWrapper(
     }
 
     free(cp);
+    free(cancel_c_str);
+    free(open_c_str);
+    free(save_c_str);
     return;
 }

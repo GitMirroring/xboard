@@ -116,7 +116,7 @@ AH_TEMPLATE(
 
 AH_TEMPLATE(
     [API_USED_FOR_DRAWING_GUI],
-    [The API used for drawing the graphical user interface: 0 = X11; 1 = Windows; 2 = GTK 2.x.]
+    [The API used for drawing the graphical user interface: 0 = X11; 1 = Windows; 2 = GTK 2.24.33; 3 = GTK 3.24.52.]
 )
 
 AC_PROG_CC
@@ -157,48 +157,37 @@ PKG_CHECK_MODULES([CAIRO], [cairo >= 1.2.0 pangocairo librsvg-2.0 >= 2.14.0])
 AC_SUBST(CAIRO_CFLAGS)
 AC_SUBST(CAIRO_LIBS)
 
-dnl| Ascertain which front end to use.
-dnl| First, check for GTK (currently, only version 2 is supported).
-dnl| Then, check for Xaw3d.
-dnl| Finally, check for Xaw.
+dnl| Determine which front end to use.
 AC_ARG_VAR(FRONTEND_CFLAGS)
 AC_ARG_VAR(FRONTEND_LIBS)
 FRONTEND_CFLAGS=""
 FRONTEND_LIBS=""
 
 AC_ARG_WITH(
-    [gtk],
+    [gui-drawing-api],
     [AS_HELP_STRING(
-        [--with-gtk],
-        [use GTK 2 front-end (default, and preferred)]
+        [--with-gui-drawing-api],
+        [Which API to use for drawing the GUI: 0 = X11, 1 = Win32, 2 = GTK 2 (default), 3 = GTK 3 (experimental).]
     )],
-    [with_GTK="$withval"],
-    [with_GTK=yes]
+    [with_gui_drawing_api="$withval"],
+    [
+        AS_IF(
+            [test "x$with_Xaw3d" = xyes],
+            [with_gui_drawing_api="0"],
+            [with_gui_drawing_api="2"]
+        )
+    ]
 )
 
 AC_ARG_WITH(
     [Xaw3d],
     [AS_HELP_STRING(
         [--with-Xaw3d],
-        [use Xaw3d front-end]
+        [use the 3-D X Athena Widget library (only when using X11 API)]
     )],
     [with_Xaw3d="$withval"],
     [with_Xaw3d=no]
 )
-dnl| If Xaw3d is selected, then deselect GTK.
-AS_IF([test "x$with_Xaw3d" = xyes], [with_GTK="no"])
-
-AC_ARG_WITH(
-    [Xaw],
-    [AS_HELP_STRING(
-        [--with-Xaw],
-        [use Xaw front-end]
-    )],
-    [with_Xaw="$withval"],
-    [with_Xaw="no"]
-)
-dnl| If Xaw is selected, then deselect GTK.
-AS_IF([test "x$with_Xaw" = xyes], [with_GTK="no"])
 
 AC_ARG_WITH(
     [iconsdir],
@@ -278,7 +267,7 @@ AS_IF(
     [
         prefix=`pwd`/XBoard.app/Contents
         AC_DEFINE([OSXAPP], [1], [Force many settings when building for macOS])
-        with_GTK="yes"
+        with_gui_drawing_api="2"
         enable_mimedb="no"
         datarootdir='$(prefix)/Resources'
         datadir='$(datarootdir)/share'
@@ -311,80 +300,99 @@ AC_SUBST(DESKTOPDIR)
 AC_SUBST(MIMEDIR)
 AC_SUBST(GAMEDATADIR)
 
-dnl| Check for some required libraries when GTK is used.
-AS_IF([test "x$with_GTK" = xyes], [
-    PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16.0 gmodule-2.0])
-    FRONTEND_CFLAGS=$GTK_CFLAGS
-    FRONTEND_LIBS=$GTK_LIBS
-    with_Xaw="no"
-    AC_DEFINE([API_USED_FOR_DRAWING_GUI], [2])
-])
+dnl| Check for some required libraries when GTK 3.24.52+ is used.
+AS_IF(
+    [test "x$with_gui_drawing_api" = x3],
+    [
+        PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.24.52 gmodule-2.0])
+        FRONTEND_CFLAGS=$GTK_CFLAGS
+        FRONTEND_LIBS=$GTK_LIBS
+        AC_DEFINE([API_USED_FOR_DRAWING_GUI], [3])
+    ]
+)
 
-AS_IF([test "x$with_GTK" = xno], [
+dnl| Check for some required libraries when GTK 2.24.33+ is used.
+AS_IF(
+    [test "x$with_gui_drawing_api" = x2],
+    [
+        PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.24.33 gmodule-2.0])
+        FRONTEND_CFLAGS=$GTK_CFLAGS
+        FRONTEND_LIBS=$GTK_LIBS
+        AC_DEFINE([API_USED_FOR_DRAWING_GUI], [2])
+    ]
+)
+
 dnl| general check for Xaw and Xaw3d
-    AC_PATH_XTRA
-    AS_IF(
-        [test "x$no_x" = xyes],
-        [AC_MSG_ERROR(
-            ["$PACKAGE" requires the X Window System header files and libraries, but they were not found on your system.  See FAQ topic C.2.]
-        )]
-    )
-    save_cflags="$CFLAGS"
-    save_cppflags="$CPPFLAGS"
-    CFLAGS="$CFLAGS $X_CFLAGS"
-    CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-    AC_CHECK_HEADER([X11/Intrinsic.h], [xt="yes"], [xt="no"])
-    AS_IF(
-        [test "x$xt" = xno],
-        [AC_MSG_ERROR([The Xt headers were not found.  Please ensure that they are properly installed.])]
-    )
-    CFLAGS="$save_cflags"
-    CPPFLAGS="$save_cppflags"
+AS_IF(
+    [test "x$with_gui_drawing_api" = x0],
+    [
+        AC_PATH_XTRA
+        AS_IF(
+            [test "x$no_x" = xyes],
+            [AC_MSG_ERROR(
+                ["$PACKAGE" requires the X Window System header files and libraries, but they were not found on your system.  See FAQ topic C.2.]
+            )]
+        )
+        save_cflags="$CFLAGS"
+        save_cppflags="$CPPFLAGS"
+        CFLAGS="$CFLAGS $X_CFLAGS"
+        CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+        AC_CHECK_HEADER([X11/Intrinsic.h], [xt=yes], [xt=no])
+        AS_IF(
+            [test "x$xt" = xno],
+            [AC_MSG_ERROR([The Xt headers were not found.  Please ensure that they are properly installed.])]
+        )
+        CFLAGS="$save_cflags"
+        CPPFLAGS="$save_cppflags"
 
 dnl| check availability of Xaw3d
-    FRONTEND_LIBS=
-    AS_IF(
-        [test "x$with_Xaw3d" != xno],
-        [AC_CHECK_LIB(
-            [Xaw3d],
-            [XawTextReplace],
-            [
-                FRONTEND_LIBS="-lXaw3d"
-                AC_DEFINE([API_USED_FOR_DRAWING_GUI], [0])
-                AC_DEFINE([USE_XAW3D], [1])
-            ],
-            [AC_MSG_ERROR(
-                [The configure option --with-Xaw3d was given, but the test for Xaw3d failed.  Ensure that you have Xaw3d installed, or alternatively, you might try using --without-Xaw3d instead.]
-            )],
-            [-lXaw]
-        )]
-    )
+        FRONTEND_LIBS=
+        AS_IF(
+            [test "x$with_Xaw3d" != xno],
+            [AC_CHECK_LIB(
+                [Xaw3d],
+                [XawTextReplace],
+                [
+                    FRONTEND_LIBS="-lXaw3d"
+                    AC_DEFINE([API_USED_FOR_DRAWING_GUI], [0])
+                    AC_DEFINE([USE_XAW3D], [1])
+                ],
+                [AC_MSG_ERROR(
+                    [The configure option --with-Xaw3d was given, but the test for Xaw3d failed.  Ensure that you have Xaw3d installed.]
+                )],
+                [-lXaw]
+            )]
+        )
 
 dnl| no Xaw3d, check for Xaw; make it the default
-    AS_IF(
-        [test "x$with_Xaw3d" = xno],
-        [
-            with_Xaw=yes
-            save_cflags="$CFLAGS"
-            save_cppflags="$CPPFLAGS"
-            CFLAGS="$CFLAGS $X_CFLAGS"
-            CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-            AC_CHECK_HEADER([X11/Xaw/Dialog.h], [xaw_headers="yes"], [xaw_headers="no"])
-            AS_IF(
-                [test "x$xaw_headers" = xno],
-                [AC_MSG_ERROR([The Xaw headers were not found.  Please ensure that they are properly installed.])],
-                [AC_DEFINE([API_USED_FOR_DRAWING_GUI], [0])]
-            )
-            CFLAGS="$save_cflags"
-            CPPFLAGS="$save_cppflags"
-            FRONTEND_LIBS="-lXaw"
-        ]
-    )
-])
+        AS_IF(
+            [test "x$with_Xaw3d" = xno],
+            [
+                with_Xaw=yes
+                save_cflags="$CFLAGS"
+                save_cppflags="$CPPFLAGS"
+                CFLAGS="$CFLAGS $X_CFLAGS"
+                CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+                AC_CHECK_HEADER([X11/Xaw/Dialog.h], [xaw_headers=yes], [xaw_headers=no])
+                AS_IF(
+                    [test "x$xaw_headers" = xno],
+                    [AC_MSG_ERROR([The Xaw headers were not found.  Please ensure that they are properly installed.])],
+                    [
+                        AC_DEFINE([API_USED_FOR_DRAWING_GUI], [0])
+                    ]
+                )
+                CFLAGS="$save_cflags"
+                CPPFLAGS="$save_cppflags"
+                FRONTEND_LIBS="-lXaw"
+            ]
+        )
+    ]
+)
 
 dnl| make results available in Makefile.am
-AM_CONDITIONAL([USING_GTK_2_FRONT_END], [test "x$with_GTK" = xyes])
-AM_CONDITIONAL([USING_X11_FRONT_END], [test "x$with_Xaw3d" = xyes || test "x$with_Xaw" = xyes])
+AM_CONDITIONAL([USING_GTK_FRONT_END], [test "x$with_gui_drawing_api" = x2 || test "x$with_gui_drawing_api" = x3])
+AM_CONDITIONAL([USING_WIN32_FRONT_END], [test "x$with_gui_drawing_api" = x1])
+AM_CONDITIONAL([USING_X11_FRONT_END], [test "x$with_gui_drawing_api" = x0])
 
 dnl| end Front-end check
 
@@ -658,7 +666,7 @@ AC_ARG_ENABLE(
         [support interfacing a chess program to FICS (default)]
     )],
     [],
-    [enable_zippy="no"]
+    [enable_zippy=no]
 )
 
 AS_IF(
@@ -713,13 +721,12 @@ svgiconsdir=${SVGICONSDIR}; \
 infodir=${infodir}; \
 sysconfigdir=${sysconfigdir}; \
 update_mimedb=${enable_mimedb}; \
-NLS=${USE_NLS}; \
-GTK=${with_GTK}; \
-Xaw3d=${with_Xaw3d}; \
-Xaw=${with_Xaw}; \
-ptys=${enable_ptys}; \
-zippy=${enable_zippy}; \
-sigint=${enable_sigint}"
+USE_NLS=${USE_NLS}; \
+with_gui_drawing_api=${with_gui_drawing_api}; \
+with_Xaw3d=${with_Xaw3d}; \
+enable_ptys=${enable_ptys}; \
+enable_zippy=${enable_zippy}; \
+enable_sigint=${enable_sigint}"
 
 AC_SUBST(CONFIGURE_OPTIONS)
 
@@ -752,9 +759,8 @@ Configuration summary:
 
     NLS support:     ${USE_NLS}
 
-    GTK:             ${with_GTK}
+    GUI drawing API: ${with_gui_drawing_api}
     Xaw3d:           ${with_Xaw3d}
-    Xaw:             ${with_Xaw}
 
     ptys:            ${enable_ptys}
     zippy:           ${enable_zippy}
