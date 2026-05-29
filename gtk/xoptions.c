@@ -283,11 +283,25 @@ void FontCallback(GtkWidget * widget, void * gdata) {
 
 void ColorCallback(GtkWidget * widget, void * gdata) {
     Option * opt = (Option *)gdata;
-    GdkColor rgba;
     char buf[MSG_SIZ];
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+    GdkRGBA rgba;
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(widget), &rgba);
+    snprintf(
+        buf, MSG_SIZ, "#%02x%02x%02x",
+        (unsigned int)(rgba.red   * 255.0 + 0.5),
+        (unsigned int)(rgba.green * 255.0 + 0.5),
+        (unsigned int)(rgba.blue  * 255.0 + 0.5));
+    gtk_widget_override_background_color(
+        GTK_WIDGET(opt[1].handle), GTK_STATE_FLAG_NORMAL, &rgba);
+#else
+    GdkColor rgba;
     gtk_color_button_get_color(GTK_COLOR_BUTTON(widget), &rgba);
     snprintf(buf, MSG_SIZ, "#%02x%02x%02x", rgba.red >> 8, rgba.green >> 8, rgba.blue >> 8);
     gtk_widget_modify_bg(GTK_WIDGET(opt[1].handle), GTK_STATE_NORMAL, &rgba);
+#endif
+
     SetWidgetText(opt, buf, TransientDlg);
 }
 
@@ -1011,11 +1025,18 @@ int AppendText(Option * opt, char * s) {
 }
 
 void SetColor(char * colorName, Option * box) {  // sets the color of a widget
+#if GTK_CHECK_VERSION(3, 0, 0)
+    GdkRGBA color;
+
+    gdk_rgba_parse(&color, colorName);
+    gtk_widget_override_background_color(GTK_WIDGET(box->handle), GTK_STATE_NORMAL, &color);
+#else
     GdkColor color;
 
     /* set the colour of the colour button to the colour that will be used */
     gdk_color_parse(colorName, &color);
     gtk_widget_modify_bg(GTK_WIDGET(box->handle), GTK_STATE_NORMAL, &color);
+#endif
 }
 
 #ifdef TODO_GTK
