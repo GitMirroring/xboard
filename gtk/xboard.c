@@ -769,7 +769,10 @@ void PrintOptions(void) {
             p++;
             continue;
         }  // XBoard has no comm port
-        snprintf(buf + len, MSG_SIZ, "-%s%s", p->argName, PrintArg(p->argType));
+
+        if (len < MSG_SIZ)
+            snprintf(buf + len, MSG_SIZ - len, "-%s%s", p->argName, PrintArg(p->argType));
+
         if (p->save) {
             strcat(buf + len, "*");
         }
