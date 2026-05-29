@@ -844,6 +844,36 @@ static int StartNewXBoard(GtkosxApplication * app, char * path, void * user_data
 GtkosxApplication * theApp;
 #endif
 
+static void get_default_monitor_size(unsigned int *width, unsigned int *height) {
+#if GTK_CHECK_VERSION(3,22,0)
+    GdkDisplay *display = gdk_display_get_default();
+    GdkMonitor *monitor = NULL;
+    GdkRectangle geometry;
+
+    if (display)
+        monitor = gdk_display_get_primary_monitor(display);
+    if (!monitor && display)
+        monitor = gdk_display_get_monitor(display, 0);
+
+    if (monitor) {
+        gdk_monitor_get_geometry(monitor, &geometry);
+        *width = geometry.width;
+        *height = geometry.height;
+        return;
+    }
+#else
+    GdkScreen *screen = gdk_screen_get_default();
+
+    if (screen) {
+        *width = gdk_screen_get_width(screen);
+        *height = gdk_screen_get_height(screen);
+    } else {
+        *width = 0;
+        *height = 0;
+    }
+#endif
+}
+
 int main(int argc, char ** argv) {
     int i, clockFontPxlSize, coordFontPxlSize, fontPxlSize;
     int boardWidth, w, h;  //, boardHeight;
@@ -1062,9 +1092,9 @@ int main(int argc, char ** argv) {
         SizeDefaults * szd = sizeDefaults;
         if (*appData.boardSize == NULLCHAR) {
             // GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainwindow)); // TODO: this does not work, as no mainwindow yet
-            GdkScreen * screen = gdk_screen_get_default();
-            unsigned int screenwidth = gdk_screen_get_width(screen);
-            unsigned int screenheight = gdk_screen_get_height(screen);
+            unsigned int screenwidth, screenheight;
+            get_default_monitor_size(&screenwidth, &screenheight);
+
             while (screenwidth < (szd->minScreenSize * BOARD_WIDTH + 4) / 8 ||
              screenheight < (szd->minScreenSize * BOARD_HEIGHT + 4) / 8) {
                 szd++;
