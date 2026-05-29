@@ -7,11 +7,10 @@
 
 char * cancel_button_c_str(void) {
 #if API_USED_FOR_DRAWING_GUI == 3
-    static char const gtk_3_c_str[8] = "_Cancel";
 # if ENABLE_NLS
-    return gettext(gtk_3_c_str);
+    return strdup(gettext("_Cancel"));
 # else
-    return strdup(gtk_3_c_str);
+    return strdup("_Cancel");
 # endif
 #elif API_USED_FOR_DRAWING_GUI == 2
     return strdup("gtk-cancel");
@@ -22,11 +21,10 @@ char * cancel_button_c_str(void) {
 
 char * ok_button_c_str(void) {
 #if API_USED_FOR_DRAWING_GUI == 3
-    static char const gtk_3_c_str[4] = "_OK";
 # if ENABLE_NLS
-    return gettext(gtk_3_c_str);
+    return strdup(gettext("_OK"));
 # else
-    return strdup(gtk_3_c_str);
+    return strdup("_OK");
 # endif
 #elif API_USED_FOR_DRAWING_GUI == 2
     return strdup("gtk-ok");
@@ -37,11 +35,10 @@ char * ok_button_c_str(void) {
 
 char * open_button_c_str(void) {
 #if API_USED_FOR_DRAWING_GUI == 3
-    static char const gtk_3_c_str[6] = "_Open";
 # if ENABLE_NLS
-    return gettext(gtk_3_c_str);
+    return strdup(gettext("_Open"));
 # else
-    return strdup(gtk_3_c_str);
+    return strdup("_Open");
 # endif
 #elif API_USED_FOR_DRAWING_GUI == 2
     return strdup("gtk-open");
@@ -52,11 +49,10 @@ char * open_button_c_str(void) {
 
 char * save_button_c_str(void) {
 #if API_USED_FOR_DRAWING_GUI == 3
-    static char const gtk_3_c_str[6] = "_Save";
 # if ENABLE_NLS
-    return gettext(gtk_3_c_str);
+    return strdup(gettext("_Save"));
 # else
-    return strdup(gtk_3_c_str);
+    return strdup("_Save");
 # endif
 #elif API_USED_FOR_DRAWING_GUI == 2
     return strdup("gtk-save");
