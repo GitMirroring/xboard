@@ -692,7 +692,7 @@ void AppendColorized(Option * opt, char * s, int count) {
         font = gtk_text_buffer_create_tag(opt->handle, NULL, "font", appData.icsFont, NULL);
 #if GTK_CHECK_VERSION(3, 0, 0)
         gtk_widget_override_background_color(
-            GTK_WIDGET(opt->textValue), GTK_STATE_NORMAL, &backgroundColor);
+            GTK_WIDGET(opt->textValue), GTK_STATE_FLAG_NORMAL, &backgroundColor);
 #else
         gtk_widget_modify_base(GTK_WIDGET(opt->textValue), GTK_STATE_NORMAL, &backgroundColor);
 #endif
@@ -1042,7 +1042,8 @@ void SetColor(char * colorName, Option * box) {  // sets the color of a widget
     GdkRGBA color;
 
     gdk_rgba_parse(&color, colorName);
-    gtk_widget_override_background_color(GTK_WIDGET(box->handle), GTK_STATE_NORMAL, &color);
+    gtk_widget_override_background_color(
+        GTK_WIDGET(box->handle), GTK_STATE_FLAG_NORMAL, &color);
 #else
     GdkColor color;
 
@@ -1853,6 +1854,11 @@ tBox:
                 break;
             case SaveButton:
             case Button:
+#if GTK_CHECK_VERSION(3, 0, 0)
+                GdkRGBA color;
+#else
+                GdkColor color;
+#endif
                 if (!strcmp(option[i].name, "fontsel")) {
                     option[i].handle = (void *)(fbutton = gtk_font_button_new());
                     Pack(hbox, table, fbutton, left, left + r, top, 0);
@@ -1862,11 +1868,15 @@ tBox:
                  !strcmp(option[i].name, "B") && !strcmp(option[i + 1].name, "D")) {
                     break;
                 } else if (!strcmp(option[i].name, "D")) {
-                    GdkColor color;
                     char * name;
                     GetWidgetText(&option[i - 5], &name);
+#if GTK_CHECK_VERSION(3, 0, 0)
+                    gdk_rgba_parse(&color, name);
+                    option[i].handle = (void *)(button = gtk_color_button_new_with_rgba(&color));
+#else
                     gdk_color_parse(name, &color);
                     option[i].handle = (void *)(button = gtk_color_button_new_with_color(&color));
+#endif
                 } else {
                     button = gtk_button_new_with_label(_(option[i].name));
                 }
@@ -1874,8 +1884,14 @@ tBox:
 
                 /* set button color on view board dialog */
                 if (option[i].choice && ((char *)option[i].choice)[0] == '#' && !currentCps) {
+#if GTK_CHECK_VERSION(3, 0, 0)
+                    gdk_rgba_parse(&color, *(char **)option[i - 1].target);
+                    gtk_widget_override_background_color(
+                        GTK_WIDGET(button), GTK_STATE_FLAG_NORMAL, &color);
+#else
                     gdk_color_parse(*(char **)option[i - 1].target, &color);
                     gtk_widget_modify_bg(GTK_WIDGET(button), GTK_STATE_NORMAL, &color);
+#endif
                 }
 
                 /* set button color on new variant dialog */
@@ -1885,8 +1901,14 @@ tBox:
                     if (n >= 0) {
                         v = VariantName(n), p = strstr(first.variants, v);
                     }
+#if GTK_CHECK_VERSION(3, 0, 0)
+                    gdk_rgba_parse(&color, option[i].textValue);
+                    gtk_widget_override_background_color(
+                        GTK_WIDGET(button), GTK_STATE_FLAG_NORMAL, &color);
+#else
                     gdk_color_parse(option[i].textValue, &color);
                     gtk_widget_modify_bg(GTK_WIDGET(button), GTK_STATE_NORMAL, &color);
+#endif
                     gtk_widget_set_sensitive(button,
                      option[i].value >= 0 &&
                       (appData.noChessProgram || p && (!*v || strlen(p) == strlen(v) || p[strlen(v)] == ',')));
