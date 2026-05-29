@@ -653,7 +653,11 @@ void HighlightText(Option * opt, int from, int to, Boolean highlight) {
 
 static char ** names;
 static int curFG, curBG, curAttr;
+#if GTK_CHECK_VERSION(3, 0, 0)
+static GdkRGBA backgroundColor;
+#else
 static GdkColor backgroundColor;
+#endif
 
 void SetTextColor(char ** cnames, int fg, int bg, int attr) {
     if (fg < 0) {
@@ -666,7 +670,11 @@ void SetTextColor(char ** cnames, int fg, int bg, int attr) {
     curFG = fg;
     curBG = bg, curAttr = attr;
     if (attr == -2) {  // background color of ICS console.
+#if GTK_CHECK_VERSION(3, 0, 0)
+        gdk_rgba_parse(&backgroundColor, cnames[bg & 7]);
+#else
         gdk_color_parse(cnames[bg & 7], &backgroundColor);
+#endif
         curAttr = 0;
     }
 }
@@ -682,7 +690,12 @@ void AppendColorized(Option * opt, char * s, int count) {
 
     if (!font) {
         font = gtk_text_buffer_create_tag(opt->handle, NULL, "font", appData.icsFont, NULL);
+#if GTK_CHECK_VERSION(3, 0, 0)
+        gtk_widget_override_background_color(
+            GTK_WIDGET(opt->textValue), GTK_STATE_NORMAL, &backgroundColor);
+#else
         gtk_widget_modify_base(GTK_WIDGET(opt->textValue), GTK_STATE_NORMAL, &backgroundColor);
+#endif
     }
 
     gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(opt->handle), &end);
