@@ -1571,7 +1571,11 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
     if (topLevel) {
         dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(dialog), title);
+#if GTK_CHECK_VERSION(3, 0, 0)
+        box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         box = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_container_add(GTK_CONTAINER(dialog), box);
     } else {
         char * cancel_c_str = cancel_button_c_str();
@@ -1611,7 +1615,11 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
                     pane = gtk_hbox_new(FALSE, 0);
 #endif
                 } else {
+#if GTK_CHECK_VERSION(3, 0, 0)
+                    pane = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
                     pane = gtk_vbox_new(FALSE, 0);
+#endif
                 }
                 gtk_box_set_spacing(GTK_BOX(pane), 5 + 5 * breakType);
                 gtk_box_pack_start(GTK_BOX(/*GTK_DIALOG (dialog)->vbox*/ box), pane, TRUE, TRUE, 0);
