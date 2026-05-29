@@ -1938,9 +1938,16 @@ void ModeHighlight(void) {
             /* Always toggle, don't set.  Previous code messes up when
                invoked while the button is pressed, as releasing it
                toggles the state again. */
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+            GdkRGBA color;
+            gdk_rgba_parse(&color, pausing ? "#808080" : "#F0F0F0");
+            gtk_widget_override_background_color(GTK_WIDGET(optList[W_PAUSE].handle), GTK_STATE_NORMAL, &color);
+#else
             GdkColor color;
             gdk_color_parse(pausing ? "#808080" : "#F0F0F0", &color);
             gtk_widget_modify_bg(GTK_WIDGET(optList[W_PAUSE].handle), GTK_STATE_NORMAL, &color);
+#endif
         }
     }
 
@@ -2230,7 +2237,6 @@ void LockBoardSize(int after) {
 void DisplayTimerLabel(Option * opt, char * color, long timer, int highlight) {
     static int twoLines = -1;
     GtkWidget * w = (GtkWidget *)opt->handle;
-    GdkColor col;
     char buf[MSG_SIZ], *p, *markup, two = (appData.logoSize != 0);
     char bgcolor[10];
     char fgcolor[10];
@@ -2259,8 +2265,16 @@ void DisplayTimerLabel(Option * opt, char * color, long timer, int highlight) {
         LockBoardSize(2);  // lock board size if clock height changes
     }
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+    GdkRGBA rgba;
+    gdk_rgba_parse(&rgba, bgcolor);
+    gtk_widget_override_background_color(
+        gtk_widget_get_parent(opt->handle), GTK_STATE_NORMAL, &rgba);
+#else
+    GdkColor col;
     gdk_color_parse(bgcolor, &col);
     gtk_widget_modify_bg(gtk_widget_get_parent(opt->handle), GTK_STATE_NORMAL, &col);
+#endif
 
     p = strchr(buf, '_');
     if (p) {
