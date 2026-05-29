@@ -2013,7 +2013,11 @@ tBox:
             case Graph:
                 option[i].handle = (void *)(graph = gtk_drawing_area_new());
                 gtk_widget_set_size_request(graph, option[i].max, option[i].value);
+#if GTK_CHECK_VERSION(3, 0, 0)
+                g_signal_connect(graph, "draw", G_CALLBACK(GraphEventProc), (void *)&option[i]);
+#else
                 g_signal_connect(graph, "expose-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
+#endif
                 gtk_widget_add_events(GTK_WIDGET(graph), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
                 g_signal_connect(graph, "button-press-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
                 g_signal_connect(graph, "button-release-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
