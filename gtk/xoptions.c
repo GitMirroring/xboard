@@ -1605,7 +1605,11 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
             gtk_table_resize(GTK_TABLE(table), top - (breakType != 0), r);
             if (!pane) {  // multi-column: put tables in intermediate hbox
                 if (breakType & SAME_ROW || engineDlg) {
+#if GTK_CHECK_VERSION(3, 0, 0)
+                    pane = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
                     pane = gtk_hbox_new(FALSE, 0);
+#endif
                 } else {
                     pane = gtk_vbox_new(FALSE, 0);
                 }
@@ -1621,8 +1625,14 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
             if (SameRow(&option[i + 1]) ||
              topLevel && option[i].type == Button && option[i + 1].type == EndMark && option[i + 1].min & SAME_ROW) {
                 GtkAttachOptions x = GTK_FILL;
+#if GTK_CHECK_VERSION(3, 0, 0)
+                hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
                 // make sure hbox is always available when we have more options on same row
-                hbox = gtk_hbox_new(option[i].type == Button && option[i].textValue || option[i].type == Graph, 0);
+                hbox = gtk_hbox_new(
+                    option[i].type == Button && option[i].textValue || option[i].type == Graph, 0);
+#endif
+
                 if (!currentCps && option[i].value > 80 && option[i].type == TextBox) {
                     x |= GTK_EXPAND;  // only vertically extended widgets should size vertically
                 }
@@ -1998,7 +2008,11 @@ tBox:
             case BoxBegin:
                 option[i + 1].min |= SAME_ROW;  // kludge to suppress allocation of new hbox
                 oldHbox = hbox;
+#if GTK_CHECK_VERSION(3, 0, 0)
+                option[i].handle = (void *)(hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));  // hbox to collect buttons
+#else
                 option[i].handle = (void *)(hbox = gtk_hbox_new(FALSE, 0));  // hbox to collect buttons
+#endif
                 gtk_box_pack_start(
                  GTK_BOX(oldHbox), hbox, FALSE, TRUE, 0);  // *** Beware! Assumes button bar always on same row with other! ***
                 // gtk_table_attach(GTK_TABLE(table), hbox, left+2, left+3, top, top+1, GTK_FILL | GTK_SHRINK, GTK_FILL, 2, 1);
@@ -2054,7 +2068,11 @@ tBox:
                 GtkWidget * button2 = gtk_button_new_with_label(_("Cancel"));
                 g_signal_connect(button2, "clicked", G_CALLBACK(PopDownProxy), (void *)(intptr_t)dlgNr + 3000);
                 if (!hbox) {
+#if GTK_CHECK_VERSION(3, 0, 0)
+                    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
                     hbox = gtk_hbox_new(False, 0);
+#endif
                     gtk_table_attach(
                      GTK_TABLE(table), hbox, left, left + r, top + 1, top + 2, GTK_FILL | GTK_EXPAND, GTK_FILL, 2, 1);
                 }
@@ -2067,7 +2085,11 @@ tBox:
 
         gtk_table_resize(GTK_TABLE(table), top + 1, r);
         if (dlgNr == BoardWindow && appData.fixedSize) {  // inhibit sizing
+#if GTK_CHECK_VERSION(3, 0, 0)
+            GtkWidget * h = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
             GtkWidget * h = gtk_hbox_new(FALSE, 0);
+#endif
             gtk_box_pack_start(GTK_BOX(h), table, TRUE, FALSE, 2);
             table = h;
         }
