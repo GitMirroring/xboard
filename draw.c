@@ -456,7 +456,9 @@ static void ScaleOnePiece(int color, int piece, char * pieceDir) {
     cairo_surface_t *img, *cs;
     cairo_t * cr;
 
+#if !GLIB_CHECK_VERSION(2,36,0)
     g_type_init();
+#endif
 
     svgPieces[color][piece] =
      LoadSVG("", color, piece, 0);  // this fills pngPieceImages if we had cached svg with bitmap of wanted size
