@@ -212,6 +212,9 @@ void update_ics_width(void);
 int CopyMemoProc(void);
 static int EventProc(GtkWidget * widget, GdkEvent * event, void * g);
 static int FindLogo(char * place, char * name, char * buf);
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data);
+#endif
 
 #ifdef TODO_GTK
 # if ENABLE_NLS
@@ -1192,6 +1195,12 @@ int main(int argc, char ** argv) {
     shellWidget = shells[BoardWindow];
     currBoard = &optList[W_BOARD];
     boardWidget = optList[W_BOARD].handle;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), NULL);
+    gtk_widget_set_app_paintable(boardWidget, TRUE);
+#endif
+
     menuBarWidget = optList[W_MENU].handle;
     dropMenu = optList[W_DROP].handle;
     titleWidget = optList[optList[W_TITLE].type != Skip ? W_TITLE : W_SMALL].handle;
@@ -1874,7 +1883,11 @@ void DragProc(void) {
             }
         }
         wpMain = wpNew;
+#if GTK_CHECK_VERSION(3, 0, 0)
+        gtk_widget_queue_draw(boardWidget);
+#else
         DrawPosition(True, NULL);
+#endif
         if (busy > 2) {
             busy = 2;  // if multiple events were backlogged, only do one more
         }
@@ -1902,6 +1915,13 @@ static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
     DelayedDrag();  // as long as events keep coming in faster than 50 msec, they destroy each other
     return FALSE;
 }
+
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data) {
+    DrawPosition(True, NULL);
+    return FALSE;
+}
+#endif
 
 
 /* Disable all user input other than deleting the window */
