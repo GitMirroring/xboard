@@ -1198,7 +1198,6 @@ int main(int argc, char ** argv) {
 
 #if GTK_CHECK_VERSION(3,0,0)
     g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), NULL);
-    gtk_widget_set_app_paintable(boardWidget, TRUE);
 #endif
 
     menuBarWidget = optList[W_MENU].handle;
@@ -1838,7 +1837,11 @@ void ReSize(WindowPlacement * wp) {
         DoEvents();  // calls SlaveResize, kludge to force assigning new canvas
         partnerUp = !partnerUp;
         flipView = !flipView;
+#if GTK_CHECK_VERSION(3, 0, 0)
+        gtk_widget_queue_draw(boardWidget);
+#else
         DrawPosition(True, NULL);
+#endif
         partnerUp = !partnerUp;
         flipView = !flipView;
     }
