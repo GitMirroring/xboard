@@ -57,6 +57,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if API_USED_FOR_DRAWING_GUI == 3
+#include <gtk/gtk.h>
+#endif
+
 #include <cairo/cairo.h>
 #include <librsvg/rsvg.h>
 #include <pango/pangocairo.h>
@@ -242,12 +246,17 @@ void InitDrawingSizes(
 }
 
 void ExposeRedraw(Option * graph, int x, int y, int w, int h) {  // copy a selected part of the buffer bitmap to the display
+#if API_USED_FOR_DRAWING_GUI == 3
+    if (graph && graph->handle && GTK_IS_WIDGET(graph->handle))
+        gtk_widget_queue_draw_area(GTK_WIDGET(graph->handle), x, y, w, h);
+#else
     cairo_t * cr = cairo_create((cairo_surface_t *)graph->textValue);
     cairo_set_source_surface(cr, (cairo_surface_t *)graph->choice, 0, 0);
     cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
     cairo_rectangle(cr, x, y, w, h);
     cairo_fill(cr);
     cairo_destroy(cr);
+#endif
 }
 
 static int modV[2], modH[2];

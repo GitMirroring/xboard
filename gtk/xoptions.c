@@ -1183,15 +1183,22 @@ static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
 }
 
 void GraphExpose(Option * opt, int x, int y, int w, int h) {
+    if (!opt || !opt->handle)
+        return;
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+    if (!GTK_IS_WIDGET(opt->handle))
+        return;
+
+    gtk_widget_queue_draw_area(GTK_WIDGET(opt->handle), x, y, w, h);
+#else
 #if 0
   GdkRectangle r;
   r.x = x; r.y = y; r.width = w; r.height = h;
   gdk_window_invalidate_rect(((GtkWidget *)(opt->handle))->window, &r, FALSE);
 #endif
     GdkEventExpose e;
-    if (!opt->handle) {
-        return;
-    }
+
     e.area.x = x;
     e.area.y = y;
     e.area.width = w;
@@ -1199,6 +1206,7 @@ void GraphExpose(Option * opt, int x, int y, int w, int h) {
     e.count = -1;
     e.type = GDK_EXPOSE;  // count = -1: kludge to suppress sizing
     ExposeDraw(opt, &e);  // fake expose event
+#endif
 }
 
 void GenericCallback(GtkWidget * widget, void * gdata) {

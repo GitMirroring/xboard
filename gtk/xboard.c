@@ -1837,10 +1837,9 @@ void ReSize(WindowPlacement * wp) {
         DoEvents();  // calls SlaveResize, kludge to force assigning new canvas
         partnerUp = !partnerUp;
         flipView = !flipView;
+        DrawPosition(True, NULL);
 #if GTK_CHECK_VERSION(3, 0, 0)
         gtk_widget_queue_draw(boardWidget);
-#else
-        DrawPosition(True, NULL);
 #endif
         partnerUp = !partnerUp;
         flipView = !flipView;
@@ -1886,10 +1885,9 @@ void DragProc(void) {
             }
         }
         wpMain = wpNew;
+        DrawPosition(True, NULL);
 #if GTK_CHECK_VERSION(3, 0, 0)
         gtk_widget_queue_draw(boardWidget);
-#else
-        DrawPosition(True, NULL);
 #endif
         if (busy > 2) {
             busy = 2;  // if multiple events were backlogged, only do one more
@@ -1919,10 +1917,17 @@ static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
     return FALSE;
 }
 
-#if GTK_CHECK_VERSION(3,0,0)
+#if GTK_CHECK_VERSION(3, 0, 0)
 static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data) {
-    DrawPosition(True, NULL);
-    return FALSE;
+    Option *opt = &mainOptions[W_BOARD];
+
+    if (!opt->choice)
+        return TRUE;
+
+    cairo_set_source_surface(cr, (cairo_surface_t *)opt->choice, 0, 0);
+    cairo_paint(cr);
+
+    return TRUE;
 }
 #endif
 
