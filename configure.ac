@@ -167,14 +167,14 @@ AC_ARG_WITH(
     [gui-drawing-api],
     [AS_HELP_STRING(
         [--with-gui-drawing-api],
-        [Which API to use for drawing the GUI: 0 = X11, 1 = Win32, 2 = GTK 2 (default), 3 = GTK 3 (experimental).]
+        [Which API to use for drawing the GUI: 0 = X11, 1 = Windows, 2 = GTK 2.24.33, 3 = GTK 3.24.52 (experimental default).]
     )],
     [with_gui_drawing_api="$withval"],
     [
         AS_IF(
             [test "x$with_Xaw3d" = xyes],
             [with_gui_drawing_api="0"],
-            [with_gui_drawing_api="2"]
+            [with_gui_drawing_api="3"]
         )
     ]
 )
