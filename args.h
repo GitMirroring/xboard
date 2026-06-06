@@ -938,8 +938,11 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
     ok = MySearchPath(installDir, name, fullname);
     if (!ok && strchr(name, '.') == NULL) {  // append default file-name extension '.ini' when needed
         len = snprintf(buf, MSG_SIZ, "%s.ini", name);
-        if ((len >= MSG_SIZ) && appData.debugMode) {
-            fprintf(debugFP, "ParseSettingsFile: buffer truncated. Input: name=%s \n", name);
+        if ((len < 0 || len >= MSG_SIZ) && appData.debugMode) {
+            fprintf(
+                debugFP,
+                "ParseSettingsFile: buffer truncated. Input: name=%s \n",
+                name);
         }
 
         ok = MySearchPath(installDir, buf, fullname);
@@ -948,14 +951,30 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
         f = fopen(fullname, "r");
 #ifdef DATADIR
         if (f == NULL && *fullname != '/' && !addr) {  // when a relative name did not work
-            char buf[MSG_SIZ];
-            snprintf(buf, MSG_SIZ, "~/.xboard/themes/conf/%s", name);
-            MySearchPath(installDir, buf, fullname);  // first look in user's own files
-            f = fopen(fullname, "r");
-            if (f == NULL) {
-                snprintf(buf, MSG_SIZ, "%s/themes/conf", dataDir);
-                MySearchPath(buf, name, fullname);  // also look in standard place
+            len = snprintf(buf, MSG_SIZ, "~/.xboard/themes/conf/%s", name);
+            if ((len < 0 || len >= MSG_SIZ) && appData.debugMode) {
+                fprintf(
+                    debugFP,
+                    "ParseSettingsFile: buffer truncated. Input: name=%s \n",
+                    name);
+            }
+
+            ok = MySearchPath(installDir, buf, fullname);  // first look in user's own files
+            if (ok)
                 f = fopen(fullname, "r");
+
+            if (f == NULL) {
+                len = snprintf(buf, MSG_SIZ, "%s/themes/conf", dataDir);
+                if ((len < 0 || len >= MSG_SIZ) && appData.debugMode) {
+                    fprintf(
+                        debugFP,
+                        "ParseSettingsFile: buffer truncated. Input: dataDir=%s \n",
+                        dataDir);
+                }
+
+                ok = MySearchPath(buf, name, fullname);  // also look in standard place
+                if (ok)
+                    f = fopen(fullname, "r");
             }
         }
 #endif
