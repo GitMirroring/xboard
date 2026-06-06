@@ -2022,6 +2022,18 @@ tBox:
                 option[i].handle = (void *)(graph = gtk_drawing_area_new());
                 gtk_widget_set_size_request(graph, option[i].max, option[i].value);
 #if GTK_CHECK_VERSION(3, 0, 0)
+                {
+                    /* Override any background colours or images that are being set on the drawing area by the GTK theme in use.
+                       (Before this code block was added, whether the chessboard actually was drawn on the screen or not depended
+                       upon which GTK_THEME was in use.  "Breeze" was one theme that triggered the problem.) */
+                    GtkStyleContext * style_context = gtk_widget_get_style_context(graph);
+                    GtkCssProvider * css_provider = gtk_css_provider_new();
+                    gtk_css_provider_load_from_data(css_provider,
+                     "drawingarea { background-color: transparent; background-image: none; }", -1, NULL);
+                    gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider),
+                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+                    g_object_unref(css_provider);
+                }
                 g_signal_connect(graph, "draw", G_CALLBACK(GraphEventProc), (void *)&option[i]);
 #else
                 g_signal_connect(graph, "expose-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
