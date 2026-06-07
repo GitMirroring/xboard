@@ -1919,7 +1919,7 @@ static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
 
 #if GTK_CHECK_VERSION(3, 0, 0)
 static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data) {
-    Option *opt = &mainOptions[W_BOARD];
+    Option *opt = &optList[W_BOARD];
 
     if (!opt->choice)
         return TRUE;
