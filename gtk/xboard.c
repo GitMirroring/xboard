@@ -1197,7 +1197,7 @@ int main(int argc, char ** argv) {
     boardWidget = optList[W_BOARD].handle;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), NULL);
+    g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), &optList[W_BOARD]);
 #endif
 
     menuBarWidget = optList[W_MENU].handle;
@@ -1919,7 +1919,7 @@ static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
 
 #if GTK_CHECK_VERSION(3, 0, 0)
 static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data) {
-    Option *opt = &mainOptions[W_BOARD];
+    Option *opt = (Option *) data;
 
     if (!opt->choice)
         return TRUE;
