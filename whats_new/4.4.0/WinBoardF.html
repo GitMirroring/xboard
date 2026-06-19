@@ -1,36 +1,56 @@
 <!--#include virtual="/server/html5-header.html" -->
 <title>XBoard - GNU Project - Free Software Foundation - NEWS</title>
+<link rel="stylesheet" type="text/css" href="../whats_new.css" media="print,screen" />
 <!--#include virtual="/server/banner.html" -->
-<h2>WinBoard / XBoard 4.4.0 features ported from WinBoard 4.3</h2>
+<h2>WinBoard&nbsp;/ XBoard&nbsp;4.4.0 features ported from WinBoard&nbsp;4.3</h2>
 
- <table cellpadding="20"><tr valign="top"><td>
-  <h4>New Features</h4>
+<div class="whatsnew-nav">
+ <div class="other-releases">
+  <img src="../4.5.0/winboardF.png" alt=" [XBoard logo] " />
   <ul>
-   <li><a href="#tag-B1">Castling awareness</a></li>
-   <li><a href="#tag-B2">Extensions of WB protocol</a></li>
-   <li><a href="#tag-A1">Support for unorthodox pieces</a></li>
-   <li><a href="#tag-A2">Configuring the board format</a></li>
-   <li><a href="#tag-A3">SAN and FEN with fairy pieces</a></li>
-   <li><a href="#tag-A4">Support of complete chess variants</a></li>
-   <li><a href="#tag-A5">Bughouse piece drops and holdings display</a></li>
-   <li><a href="#tag-A6">Distinguishing promoted pieces in Bughouse</a></li>
-   <li><a href="#tag-A7">Displaying player logos</a></li>
-   <li><a href="#tag-A8">Japanese Shogi bitmaps</a></li>
-   <li><a href="#tag-C1">Added command-line options</a></li>
-
+   <li><a href="index.html">Follow-up release (4.4.0)</a></li>
+   <li><a href="Winboard_x.html">Preceding fork (Winboard_x)</a></li>
   </ul>
- </td><td valign="top">
-  <img src="../4.5.0/winboardF.png">
- </td><td valign="top">
-  <p>
-   <a href="index.html">Follow-up release (4.4.0)</a>
-  </p>
-  <p>
-   <a href="Winboard_x.html">Preceding fork (Winboard_x)</a>
-  </p>
- </td></tr></table>
+ </div>
 
-  <h3><a name="tag-B1">Treating castling and e.p. rights seriously</a></h3>
+ <div class="list-container">
+  <dl class="feature-list">
+   <dt><a href="#tag-A">New features</a></dt>
+   <dd><ul>
+    <li><a href="#tag-B1">Castling awareness</a></li>
+    <li><a href="#tag-B2">Extensions of WB protocol</a></li>
+    <li><a href="#tag-A1">Support for unorthodox pieces</a></li>
+    <li><a href="#tag-A2">Configuring the board format</a></li>
+    <li><a href="#tag-A3">SAN and FEN with fairy pieces</a></li>
+    <li><a href="#tag-A4">Support of complete chess variants</a></li>
+    <li><a href="#tag-A5">Bughouse piece drops and holdings display</a></li>
+    <li><a href="#tag-A6">Distinguishing promoted pieces in Bughouse</a></li>
+    <li><a href="#tag-A7">Displaying player logos</a></li>
+    <li><a href="#tag-A8">Japanese Shogi bitmaps</a></li>
+   </ul></dd>
+  </dl>
+
+  <dl class="feature-list">
+   <dt><a href="#tag-C1">Overview of new options</a></dt>
+   <dd><ul>
+    <li><a href="#t1">Engine-engine adjudication</a></li>
+    <li><a href="#t2">Time-control and timing</a></li>
+    <li><a href="#t3">Display-look options</a></li>
+    <li><a href="#t4">(UCI) engine options</a></li>
+    <li><a href="#t5">Chess-variant options</a></li>
+    <li><a href="#t6">PGN file options</a></li>
+    <li><a href="#t7">User-interface and window control</a></li>
+    <li><a href="#t8">ICS options</a></li>
+    <li><a href="#t9">Miscellaneous</a></li>
+   </ul></dd>
+  </dl>
+ </div>
+</div>
+
+<h3 id="tag-A" class="emph">New features</h3>
+
+<div class="feature">
+  <h4 id="tag-B1">Treating castling and e.p. rights seriously</h4>
   <p>
    One of the most important changes betwen WinBoard 3.4 and predecessors is that it is fully aware of the game state.
    That is, it keeps track of castling rights and e.p. status,
@@ -39,11 +59,15 @@
    forfeit engines that do illegal moves, or make false result claims,
    and terminate the game on 3-fold repetition of due to the 50-move rule.
   </p>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <h3><a name="tag-A1">Supporting fairy pieces</a></h3>
+<div class="feature">
+  <h4 id="tag-A1">Supporting fairy pieces</h4>
+  <div class="pict medium">
+    <a href="fairies.png"><img src="fairies.png" alt="" /></a>
+  </div>
   <p>
-   WinBoard F does not only support the six piece types of orthdox chess,
+   WinBoard F does not only support the six piece types of orthodox chess,
    but expanded the number to 22.
    Most of these have well-specified moves known to WinBoard,
    such as the Archbishop (a B+N compound) and the Chancellor (R+N) of Capablanca Chess.
@@ -57,14 +81,13 @@
    were added to the piece menu in Edit Position mode,
    while others can be made by 'promoting' or 'demoting' the more common ones.
   </p>
- </td><td valign="top">
-  <img src="fairies.png">
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <img src="couriersmall.gif">
- </td><td valign="top">
-  <h3><a name="tag-A2">Configurable and non-square board formats</a></h3>
+<div class="feature">
+  <h4 id="tag-A2">Configurable and non-square board formats</h4>
+  <div class="pict wide left">
+    <a href="couriersmall.gif"><img src="couriersmall.gif" alt="" /></a>
+  </div>
   <p>
    WinBoard F allows the use of other boards than 8x8.
    In particular, the number of ranks does not have to be equal to the number of files.
@@ -72,9 +95,12 @@
    but a value -1 for these options means WinBoard will use the default size for the
    variant you are playing (so 8x8 for normal chess or suicide).
   </p>
-  <h3><a name="tag-A3">Piece-ID letters in SAN and FEN</a></h3>
+</div>
+
+<div class="feature">
+  <h4 id="tag-A3">Piece-ID letters in SAN and FEN</h4>
   <p>
-   Unfortunately the names of fairy pieces are not as standardized as they are in orthodoc chess:
+   Unfortunately the names of fairy pieces are not as standardized as they are in orthodox chess:
    a piece that moves in the same way can be called Marshall in one variant, Chancellor in another,
    and Champion in a third.
    This affects the single-letter abbreviation one would use for writing SAN moves in notations for these variants.
@@ -83,10 +109,13 @@
    This can also used to disable pieces, by setting their character to a period.
    For each of the predefined variants, WinBoard has a default table, and uses that as soon as you select the variant.
   </p>
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <h3><a name="tag-A4">Predefined variants</a></h3>
+<div class="feature">
+  <h4 id="tag-A4">Predefined variants</h4>
+  <div  class="pict medium">
+    <a href="WinBoardXQ2.png"><img src="WinBoardXQ2.png" alt="" /></a>
+  </div>
   <p>
    With the unorthodox piece types and board formats WinBoard F can support a large number of chess variants.
    Some of these variants are pre-defined:
@@ -122,18 +151,17 @@
    But the almost infinite configurability of the WinBoard look
    through board textures and font-based rendering
    does allow you to perfectly mimic traditional representation of Asian variants, for example.
-   On the right you see how suppressing the grid that normally separates the squares,
-   and using a drawing of a Xiangqi board and the XIANGQI font for piece rendering
+   On the screenshot above, you see how suppressing the grid that normally separates the squares,
+   and using a drawing of a Xiangqi board and the XIANGQI font for piece rendering,
    can give a very good looking Xiangqi interface.
   </p>
- </td><td valign="top">
-  <img src="WinBoardXQ2.png">
- </td></tr></table>
+</div>
 
- <h3><a name="tag-A5">Dragging and dropping from displayed holdings in Bughouse</a></h3>
- <table cellpadding="20"><tr><td valign="top">
-  <img src="crazy.gif">
- </td><td valign="top">
+<div class="feature">
+ <h4 id="tag-A5">Dragging and dropping from displayed holdings in Bughouse</h4>
+  <div class="pict wide left">
+    <a href="crazy.gif"><img src="crazy.gif" alt=""  /></a>
+  </div>
   <p>
    Drop variants like Bughouse and Crazyhouse used to keep track of the holdings as text in the title bar,
    and required a drop menu to select dropped pieces from.
@@ -151,7 +179,10 @@
    (Beware: for practical reasons this cannot be larger than the number of board ranks!)
    Piece types for which no space is reserved will revert to Pawn oon capture.
   </p>
-  <h3><a name="tag-A6">Promoted Pawn or primordial piece?</a></h3>
+</div>
+
+<div class="feature">
+  <h4 id="tag-A6">Promoted Pawn or primordial piece?</h4>
   <p>
    In Bughouse promoted Pawns revert to Pawn on capture, and are thus in principle different pieces
    than the primordial pieces of the same type.
@@ -159,10 +190,13 @@
    In sizes where these are available, fairy pieces are used;
    in other sizes a slightly smaller representation of the normal chess piece.
   </p>
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <h3><a name="tag-A7">Displaying engine logos</a></h3>
+<div class="feature">
+  <h4 id="tag-A7">Displaying engine logos</h4>
+  <div class="pict medium">
+    <a href="marble.png"><img src="marble.png" alt="" /></a>
+  </div>
   <p>
    WinBoard F offers the possibility to display logos of the playing engines next to the clock.
    The options -firstLogo, -secondLogo allow you to explicitly specify bitmap files for those.
@@ -175,7 +209,10 @@
    In ICS mode this option makes WinBoard look for a logo of the ICS in the logos folder,
    e.g. freechess.org.bmp for FICS.
   </p>
-  <h3><a name="tag-B2">Modernizing WinBoard protocol</a></h3>
+</div>
+
+<div class="feature">
+  <h4 id="tag-B2">Modernizing WinBoard protocol</h4>
   <p>
    WinBoard protocol lacked commands to control the engine's hash-table size and number of CPUs it could use.
    This was of course because such things did not exist at the time when it was devised.
@@ -187,44 +224,45 @@
    Of course this only works on engines that actually support these features.
    But (through Polyglot) all UCI engines do, so the dialogs to set these options were useful from the beginning.
   </p>
- </td><td valign="top">
-  <img src="marble.png">
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <img src="Shogi.png">
- </td><td valign="top">
-  <h3><a name="tag-A8">Bitmaps for traditional Japanese Shogi pieces</a></h3>
+<div class="feature">
+  <h4 id="tag-A8">Bitmaps for traditional Japanese Shogi pieces</h4>
+  <div class="pict wide left">
+    <a href="Shogi.png"><img src="Shogi.png" alt="" /></a>
+  </div>
   <p>
    As an extra service to Japanese users, board size 'moderate' (58) uses a complete set of traditional Shogi pieces in variant shogi.
    To properly use them, the options -allWhite and -flipBlack were added, and have to be set to true.
    Other board sizes (i.e. middling and bulky) use the normal chess-style bitmaps,
    except that special forms of the Gold are used to indicate some promoted pieces.
   </p>
- </td></tr></table>
+</div>
 
-<h3><a name="tag-C1">Overview of new command-line options</a></h3>
+<h3 id="tag-C1" class="emph">Overview of new command-line options</h3>
 <p>
-Below follows a table that lists the new features, 
+Below follow tables that list the new features, 
 the command-line option needed to control them,
 and if there is a menu provided that can switch the option while WinBoard is running
 (command-line options exert their effect only at startup).
 Note that, unlike WinBoard 4.2.7, the WinBoard 4.3 series is fully castling and e.p. aware,
 and handles the castling, e.p. and 50-move field in FENs on input and output as should be expected.
 </p>
-<table cellpadding="3" border="1"><tr><td width="310">
-      <h3>command-line option</h3>
-    </td><td>
-      <h3>description</h3>
-    </td><td width="250">
-      <h3>menu</h3>
-  </td></tr><tr><td>
+
+<table id="t1" class="options">
+  <caption>
+      <strong>ENGINE-ENGINE ADJUDICATION OPTIONS</strong>
+  </caption>
       
-    </td><td bgcolor="lightblue">
-      <strong>ENGINE-ENGINE ADJUDICATION OPTIONS<strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -adjudicateLossThreshold 0 (*x)
     </td><td>
       adjudicates engine-engine game based on score
@@ -274,7 +312,7 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Options -> Engine.. (x)
   </td></tr><tr><td>
       -firstScoreAbs false (x)
-      <br>
+      <br />
       -secondScoreAbs false (x)
     </td><td>
       Engine indicates score for white, even when playing black
@@ -286,19 +324,29 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Adjudicate the game in progress as win to white, win to black, or draw
     </td><td>
       Action -> Adjudicate to White
-      <br>
+      <br />
       Action -> Adjudicate to Black
-      <br>
+      <br />
       Action -> Adjudicate Draw
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t2" class="options">
+  <caption>
       <strong>TIME-CONTROL AND TIMING OPTIONS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -firstTimeOdds 1 (x)
-      <br>
+      <br />
       -secondTimeOdds 1 (x)
     </td><td>
       reduce the thinking time of the mentioned engine by the given factor
@@ -312,7 +360,7 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Options -> Engine Settings.. (xboard only)
   </td></tr><tr><td>
       -firstNPS -1 (x)
-      <br>
+      <br />
       -secondNPS -1 (x)
     </td><td>
       engine must use node count for its time control, as if running at specified rate
@@ -326,7 +374,7 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       -
   </td></tr><tr><td>
       -delayBeforeQuit 0 (*x)
-      <br>
+      <br />
       -delayAfterQuit 0 (*x)
     </td><td>
       timing parameter specifying how to terminate the engine processes
@@ -344,19 +392,29 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       lower the CPU priority of the engines
     </td><td>
       -
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t3" class="options">
+  <caption>
       <strong>DISPLAY-LOOK OPTIONS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+    
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -liteBackTextureFile "" (*)
-      <br>
+      <br />
       -darkBackTextureFile "" (*)
-      <br>
+      <br />
       -liteBackTextureMode 1 (*)
-      <br>
+      <br />
       -darkBackTextureMode 1 (*)
     </td><td>
       Allows you to use any bitmap picture for displaying the board square
@@ -382,11 +440,11 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       -
   </td></tr><tr><td>
       -fontPieceBackColorWhite #0 (*)
-      <br>
+      <br />
       -fontPieceForeColorWhite #0 (*)
-      <br>
+      <br />
       -fontPieceBackColorBlack #0 (*)
-      <br>
+      <br />
       -fontPieceForeColorBlack #0 (*)
     </td><td>
       control piece colors in font-based rendering
@@ -412,9 +470,9 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       -
   </td></tr><tr><td>
       -autoLogo false (*)
-      <br>
+      <br />
       -firstLogo ""
-      <br>
+      <br />
       -secondLogo ""
     </td><td>
       causes WinBoard to display player logos above the board, next to the clocks.
@@ -426,13 +484,23 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Swap white and black clock
     </td><td>
       Options -> Swap Clocks
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table  id="t4" class="options">
+  <caption>
       <strong>(UCI) ENGINE OPTIONS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -polyglotDir "" (*x)
     </td><td>
       tells WinBoard where you installed Polyglot, for automatic invocation with UCI engines
@@ -470,11 +538,11 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Options -> Global Settings... (x)
   </td></tr><tr><td>
       -firstIsUCI false (x)
-      <br>
+      <br />
       -secondIsUCI false (x)
-      <br>
+      <br />
       -fUCI (x)
-      <br>
+      <br />
       -sUCI (x)
     </td><td>
       tells WinBoard the corresponding engine should be run through Polyglot
@@ -482,15 +550,15 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       -
   </td></tr><tr><td>
       -firstHasOwnBookUCI true (x)
-      <br>
+      <br />
       -secondHasOwnBookUCI true (x)
-      <br>
+      <br />
       -fNoOwnBookUCI true (x)
-      <br>
+      <br />
       -sNoOwnBookUCI true (x)
-      <br>
+      <br />
       -firstXBook (x)
-      <br>
+      <br />
       -secondXBook (x)
     </td><td>
       tells WinBoard (or Polyglot) if the engine should use its own opening book
@@ -513,33 +581,43 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       -
   </td></tr><tr><td>
       -firstOptions "" (x)
-      <br>
+      <br />
       -secondOptions "" (x)
     </td><td>
       sets engine-defined options of UCI engines and WinBoard engines that support the option feature.
     </td><td>
       Options -> Engine #1 Settings... (x)
-      <br>
+      <br />
       Options -> Engine #2 Settings... (x)
   </td></tr><tr><td>
       -firstNeedsNoncompliantFEN "" (x)
-      <br>
+      <br />
       -secondNeedsNoncompliantFEN "" (x)
     </td><td>
       directly specifies castling and e.p. field to be used in all FENs sent to mentioned engine
     </td><td>
       -
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t5" class="options"> 
+  <caption>
       <strong>CHESS-VARIANT OPTIONS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -boardHeight -1 (*x)
-      <br>
+      <br />
       -boardWidth -1 (*x)
-      <br>
+      <br />
       -holdingsSize -1 (*x)
     </td><td>
       specifies the board format and nr of piece types that can be dropped,
@@ -578,20 +656,30 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       use white bitmaps (with black outline) also for display of black pieces (for Shogi)
     </td><td>
       Options -> Board...
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t6" class="options">
+  <caption>
       <strong>PGN FILE OPTIONS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -pgnExtendedInfo false (*x)
     </td><td>
       save engine output (depth, score time) in PGN
     </td><td>
       Options->General...
   </td></tr><tr><td>
-      -pgnEventHeader </br>"Computer Chess Game" (*x)
+      -pgnEventHeader <br />"Computer Chess Game" (*x)
     </td><td>
       specify the event for the PGN event tag
     </td><td>
@@ -601,7 +689,7 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
     </td><td>
       include an 'annotator' tag in the PGN file
     </td><td>
-      
+      &nbsp;
   </td></tr><tr><td>
       -hideThinkingFromHuman false (*x)
     </td><td>
@@ -615,21 +703,31 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       sets the name of the human player
     </td><td>
       Mode -> Enter Username... (x)
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t7" class="options">
+  <caption>
       <strong>USER-INTERFACE OPTIONS AND WINDOW CONTROL</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -moveHistoryUp true (*)
-      <br>
+      <br />
       -moveHistoryX 0 (*)
-      <br>
+      <br />
       -moveHistoryY 0 (*)
-      <br>
+      <br />
       -moveHistoryW 0 (*)
-      <br>
+      <br />
       -moveHistoryH 0 (*)
     </td><td>
       controls opening, placement and size of a window containing the moves of the current game
@@ -638,13 +736,13 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Mode -> Show Move History (x)
   </td></tr><tr><td>
       -evalGraphUp true (*)
-      <br>
+      <br />
       -evalGraphX 0 (*)
-      <br>
+      <br />
       -evalGraphY 0 (*)
-      <br>
+      <br />
       -evalGraphW 0 (*)
-      <br>
+      <br />
       -evalGraphH 0 (*)
     </td><td>
       controls opening, placement and size of a window containing a graph of the
@@ -653,13 +751,13 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Mode -> Show Evaluation Graph
   </td></tr><tr><td>
       -engineOutputUp true (*)
-      <br>
+      <br />
       -engineOutputX 0 (*)
-      <br>
+      <br />
       -engineOutputY 0 (*)
-      <br>
+      <br />
       -engineOutputW 0 (*)
-      <br>
+      <br />
       -engineOutputH 0 (*)
     </td><td>
       controls opening, placement and size of a window containing the thinking output of the engine(s)
@@ -679,7 +777,7 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       Options -> General...
   </td></tr><tr><td>
       -evalHistColorWhite #FFFFB0 (*)
-      <br>
+      <br />
       -evalHistColorBlack #AD5D3D (*)
     </td><td>
       determines the color of the eval-score comments in the move-history window
@@ -709,13 +807,23 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       suppress update of display on all machine and ICS moves (moves, clocks, icon)
     </td><td>
       -
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t8" class="options">
+  <caption>
       <strong>ICS OPTIONS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -autoKibitz (x)
     </td><td>
       kibitz engine Thinking Output to ICS, and capture opponent kibitz for in PGN
@@ -727,15 +835,25 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       ban opponents on ICS that abort without playing
     </td><td>
       -
-  </td></tr><tr><td>
-      
-    </td><td bgcolor="lightblue">
+    </td></tr>
+</table>
+
+<table id="t9" class="options">
+  <caption>
       <strong>MISCELLANEOUS</strong>
-    </td><td>
-      
-  </td></tr><tr><td>
+  </caption>
+
+  <tr><th style="width:300px">
+      command-line option
+    </th><th>
+      description
+    </th><th style="width:250px">
+      menu
+    </th></tr>
+
+  <tr><td>
       -debugFile "winboard.debug" (x)
-      <br>
+      <br />
       -nameOfDebugFile "winboard.debug" (x)
     </td><td>
       allows you to specify an alternative name for saving the debug information
@@ -783,7 +901,9 @@ and handles the castling, e.p. and 50-move field in FENs on input and output as 
       play a match, but without alternating the colors (overrules -matchGames)
     </td><td>
       -
-</td></tr></table>
+  </td></tr>
+</table>
+
 <p>
 The value with which the option is listed is the default value.
 If it is false or true, it is a Boolean option, a number implies an integer option.
@@ -805,7 +925,7 @@ Broken links and other corrections or suggestions can be sent to
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -819,7 +939,7 @@ Commons Attribution-NoDerivs 3.0 United States License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2017/04/16 17:51:26 $
+$Date: 2020/09/16 15:34:28 $
 <!-- timestamp end -->
 </p>
 </div>

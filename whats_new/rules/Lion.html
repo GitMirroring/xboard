@@ -1,25 +1,25 @@
 <!--#include virtual="/server/html5-header.html" -->
   <title>Mighty Lion Chess</title>
-  <link rel="StyleSheet" href="./moves.css" type="text/css">
+  <link rel="StyleSheet" href="./moves.css" type="text/css" />
   <script type="text/javascript" src="chu.js">
 </script>
 <!--#include virtual="/server/banner.html" -->
 
   <h1>Mighty Lion Chess</h1>
 
-  <table cellpadding="20">
+  <table class="setup">
     <tr>
-      <td><img src="Lion.png"></td>
+      <td><img src="Lion.png" alt="" /></td>
 
       <td>
         <h3>Initial setup</h3>
 
-        <p>e1, e8: King<br>
-        b1, b8: Lion<br>
-        d1, d8: Queen<br>
-        a1, a8, h1, h8: Rook<br>
-        c1, c8, f1, f8: Bishop<br>
-        g1, g8: Knight<br>
+        <p>e1, e8: King<br />
+        b1, b8: Lion<br />
+        d1, d8: Queen<br />
+        a1, a8, h1, h8: Rook<br />
+        c1, c8, f1, f8: Bishop<br />
+        g1, g8: Knight<br />
         a2-h2, a7-h7: Pawns</p>
       </td>
     </tr>
@@ -34,7 +34,7 @@
       <td class="h" id="sq0x9"></td>
 
       <td class="n" id="sq1x9" onmousedown="down_click(1,9)"
-      onmouseup="up_click()"><img src="sym/BlackRook.png"></td>
+      onmouseup="up_click()"><img src="sym/BlackRook.png" alt="" /></td>
 
       <td class="n" id="sq2x9"></td>
 
@@ -43,22 +43,22 @@
       <td class="n" id="sq4x9"></td>
 
       <td class="n" id="sq5x9" onmousedown="down_click(5,9)"
-      onmouseup="up_click()"><img src="sym/BlackKing.png"></td>
+      onmouseup="up_click()"><img src="sym/BlackKing.png" alt="" /></td>
 
       <td class="n" id="sq6x9"></td>
 
       <td class="n" id="sq7x9"></td>
 
       <td class="n" id="sq8x9" onmousedown="down_click(8,9)"
-      onmouseup="up_click()"><img src="sym/BlackRook.png"></td>
+      onmouseup="up_click()"><img src="sym/BlackRook.png" alt="" /></td>
 
       <td class="h" id="sq9x9"></td>
 
-      <td class="h"><img src="sym/yellow.png"></td>
+      <td class="h"><img src="sym/yellow.png" alt="" /></td>
 
-      <td class="w" rowspan="2" valign="top">
-        <p>Sliding capture or non-capture,<br>
-        can be blocked on any square along the ray</p>
+      <td class="w" rowspan="2" style="vertical-align:top">
+        Sliding capture or non-capture,<br />
+        can be blocked on any square along the ray
       </td>
     </tr>
 
@@ -105,7 +105,7 @@
 
       <td class="h" id="sq9x7"></td>
 
-      <td class="h"><img src="sym/orange.png"></td>
+      <td class="h"><img src="sym/orange.png" alt="" /></td>
 
       <td class="w">Unblockable leap (capture or non-capture)</td>
     </tr>
@@ -124,7 +124,7 @@
       <td class="n" id="sq5x6"></td>
 
       <td class="n" id="sq6x6" onmousedown="down_click(6,6)"
-      onmouseup="up_click()"><img src="sym/WhiteKing.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKing.png" alt="" /></td>
 
       <td class="n" id="sq7x6"></td>
 
@@ -132,7 +132,7 @@
 
       <td class="h" id="sq9x6"></td>
 
-      <td class="h"><img src="sym/green.png"></td>
+      <td class="h"><img src="sym/green.png" alt="" /></td>
 
       <td class="w">Non-capture only</td>
     </tr>
@@ -153,13 +153,13 @@
       <td class="n" id="sq6x5"></td>
 
       <td class="n" id="sq7x5" onmousedown="down_click(7,5)"
-      onmouseup="up_click()"><img src="sym/WhiteRook.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteRook.png" alt="" /></td>
 
       <td class="n" id="sq8x5"></td>
 
       <td class="h" id="sq9x5"></td>
 
-      <td class="h"><img src="sym/red.png"></td>
+      <td class="h"><img src="sym/red.png" alt="" /></td>
 
       <td class="w">Capture only</td>
     </tr>
@@ -174,37 +174,37 @@
       <td class="n" id="sq3x4"></td>
 
       <td class="n" id="sq4x4" onmousedown="down_click(4,4)"
-      onmouseup="up_click()"><img src="sym/WhiteLion.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteLion.png" alt="" /></td>
 
       <td class="n" id="sq5x4" onmousedown="down_click(5,4)"
-      onmouseup="up_click()"><img src="sym/WhiteQueen.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteQueen.png" alt="" /></td>
 
       <td class="n" id="sq6x4"></td>
 
       <td class="n" id="sq7x4" onmousedown="down_click(7,4)"
-      onmouseup="up_click()"><img src="sym/WhiteBishop.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteBishop.png" alt="" /></td>
 
       <td class="n" id="sq8x4"></td>
 
       <td class="h" id="sq9x4"></td>
 
-      <td class="h"><img src="sym/cyan.png"></td>
+      <td class="h"><img src="sym/cyan.png" alt="" /></td>
 
-      <td class="w" rowspan="2" valign="top">Captured while passing
+      <td class="w" rowspan="2" style="vertical-align:top">Captured while passing
       through the square to another destination</td>
     </tr>
 
     <tr>
       <td class="h" id="sq0x3"></td>
 
-      <td class="n" id="sq1x3"><img src="sym/BlackPawn.png"></td>
+      <td class="n" id="sq1x3"><img src="sym/BlackPawn.png" alt="" /></td>
 
       <td class="n" id="sq2x3"></td>
 
       <td class="n" id="sq3x3"></td>
 
       <td class="n" id="sq4x3" onmousedown="down_click(4,-3)"
-      onmouseup="up_click()"><img src="sym/WhiteKnight.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKnight.png" alt="" /></td>
 
       <td class="n" id="sq5x3"></td>
 
@@ -233,7 +233,7 @@
       <td class="n" id="sq6x2"></td>
 
       <td class="n" id="sq7x2" onmousedown="down_click(7,2)"
-      onmouseup="up_click()"><img src="sym/WhitePawn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td class="n" id="sq8x2"></td>
 
@@ -246,7 +246,7 @@
       <td class="n" id="sq1x1"></td>
 
       <td class="n" id="sq2x1" onmousedown="down_click(2,1)"
-      onmouseup="up_click()"><img src="sym/WhitePawn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td class="n" id="sq3x1"></td>
 
@@ -286,12 +286,12 @@
     </tr>
   </table>
 
-  <p id="piece" height="20">:<br>
-  :<br>
-  :<br>
+  <p id="piece">:<br />
+  :<br />
+  :<br />
   :</p>
 
-  <table cellpadding="5" border="1">
+  <table class="moves">
     <tr>
       <td>Piece</td>
 

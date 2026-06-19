@@ -1,8 +1,17 @@
+table.setup td {
+ vertical-align: top;
+ padding: 1.25em;
+ border: none;
+}
+table.setup h3 {
+ margin-top: .6em;
+}
 table.board {
  border-collapse: collapse;
  overflow: hide;
 }
 table.board td {
+  border: none;
   width: 36px; height: 36px; vertical-align: center;
   text-align: center;
 }
@@ -32,4 +41,15 @@ table.board td.h {
 table.board td.n {
  background: #C0C0C0; color: black; height: 36px; width: 36px;
  border: 1px solid black;
+}
+table.moves {
+ border: 2px solid #bbb;
+}
+table.moves tr:first-child {
+}
+table.moves td {
+ padding: .5em 1em;
+}
+p#piece {
+ line-height: 1.25em;
 }

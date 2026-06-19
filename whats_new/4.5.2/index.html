@@ -1,14 +1,41 @@
 <!--#include virtual="/server/html5-header.html" -->
 <title>XBoard - GNU Project - Free Software Foundation - NEWS</title>
-<style type="text/css">body{max-width:100em !important;}</style>
+<link rel="stylesheet" type="text/css" href="../whats_new.css" media="print,screen" />
+<style type="text/css" media="print,screen">
+.other-releases { max-width: 18em; }
+.feature-list {
+  width: auto;
+  padding: .2em 1em .4em;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+@media (min-width: 40em) {
+  .other-releases { display: table-cell; }
+  .feature-list { width: auto; }
+}
+@media (min-width: 60em) {
+  .other-releases { display: inline-block; }
+}
+</style>
 <!--#include virtual="/server/banner.html" -->
-<h2>What is new in WinBoard / XBoard 4.5.2?</h2>
-<table cellpadding="20"><tr valign="top"><td>
+<h2>What is new in WinBoard&nbsp;/ XBoard&nbsp;4.5.2?</h2>
 
-<ul><li>
+<div class="whatsnew-nav">
+ <div class="other-releases">
+  <img src="winboardF.png" alt="Xboard logo" />
+  <ul>
+   <li><a href="../4.5.3/index.html">Follow-up release (4.5.3)</a></li>
+   <li><a href="../4.5.2a/index.html">Minor bug fixes (4.5.2a)</a></li>
+   <li><a href="../4.5.0/index.html">Preceding release (4.5.0)</a></li>
+  </ul>
+ </div>
+
+<dl class="feature-list">
+<dt>New features</dt>
+<dd><ul><li>
 <a href="#tag-A1">A universal dialog constructor</a>
 </li><li>
-<a href="#tag-A2">Re-organization of the Options menu</a>
+<a href="#tag-A2">Reorganization of the Options menu</a>
 </li><li>
 <a href="#tag-A3">Installing sounds with XBoard</a>
 </li><li>
@@ -25,31 +52,14 @@
 <a href="#tag-A7">Filtering files by extension</a>
 </li><li>
 <a href="#tag-C8">Operating scroll bars with the mouse wheel</a>
-</li></ul>
-</td><td>
+</li></ul></dd>
+</dl>
+</div>
 
-<img src="winboardF.png">
-</td><td>
-<p>
-<a href="../4.5.3/index.html">Follow-up release (4.5.3)</a>
-</p>
-<p>
-<a href="../4.5.2a/index.html">Minor bug fixes (4.5.2a)</a>
-</p>
-<p>
-<a href="../4.5.0/index.html">Preceding release (4.5.0)</a>
-</p>
-</td></tr></table>
+<h3 class="no-display">New features</h3>
 
-
-<table cellpadding="20" valign="top"><tr><td align="center">
-<p>
-<img src="LoadOpt.png">
-</p><p>
-<img src="SaveOpt.png">
-</p>
-</td><td valign="top">
-<h3><a name="tag-A1">New dialogs through a universal dialog constructor</a></h3>
+<div class="feature">
+<h4 id="tag-A1">New dialogs through a universal dialog constructor</h4>
 <p>
 XBoard did already have a 'universal' dialog constructor,
 for creating the Engine #N Settings popup based on the list of options sent by the engine.
@@ -65,7 +75,14 @@ Because it is now totally trivial to add a new option to an existing dialog
 (just add one line in the table specifying the options),
 the Save-Options dialog has also be made to include the -savePositionFile.
 </p>
-<h3><a name="tag-A6">A browse button with file or path-name options</a></h3>
+<div class="pict">
+  <a href="LoadOpt.png" class="twin" style="width: 16em"><img src="LoadOpt.png" alt="" /></a>
+  <a href="SaveOpt.png" class="twin" style="width: 24em"><img src="SaveOpt.png" alt="" /></a>
+</div>
+</div>
+
+<div class="feature">
+<h4 id="tag-A6">A browse button with file or path-name options</h4>
 <p>
 Note that the dialog constructor now supports browse buttons next to text
 fields that are intended for entering a file or path name.
@@ -76,9 +93,13 @@ There have been other small improvements in the operation of the dialogs as well
 like checkboxes reacting to clicking on the accompanying text,
 positioning the cursor in clicked text edits, and such.
 </p>
-</td></tr></table>
+</div>
 
-<h3><a name="tag-A2">Reorganiation of the XBoard Options menu</a></h3>
+<div class="feature">
+<h4 id="tag-A2">Reorganization of the XBoard Options menu</h4>
+<div class="pict medium">
+  <a href="GenOpt.png" style="width:15em"><img src="GenOpt.png" alt="" /></a>
+</div>
 <p>
 The XBoard 'Options' main menu used to hold all items to set options,
 where a checkmark indicated the current stateof the option.
@@ -86,20 +107,22 @@ Apart from the fact that this obviously would not work for numeric or text optio
 the number of options was growing so large that this became a bit of a clutter.
 The univeral dialog constructor was used to group the actual items
 sets of dialogs, which are then summoned from the Options main menu.
-</p>
-<table cellpadding="20" valign="top"><tr><td>
-<p>
+</p><p>
 The existing items roughly came in two kinds:
 those that could always be used,
 and those that only affected behavior in ICS play.
 The latter were greyed-out from the menu in local modes.
 The generally useful options were all moved to a "General Options" dialog,
 except for "Ponder Next Move", which was really an engine-related option,
-and was already contained as a duplicat in the "Common Engine" dialog.
+and was already contained as a duplicate in the "Common Engine" dialog.
 The better capabilities of a dialog compared to a simple menu
 were used to allow better specification of the "Flash Moves" option:
 one can now actually enter the -flashRate and -flashCount settings through a spin control.
-</p><p>
+</p>
+<div class="pict">
+  <a href="ICSOpt.png" class="twin" style="width:35em"><img src="ICSOpt.png" alt="" /></a>
+</div>
+<p>
 The ICS-related options were all moved to an "ICS Options" dialog,
 which is then greyed-out as a whole in the main Options menu.
 The new capabilities of the dialog were exploited for adding
@@ -107,21 +130,18 @@ options to set intial black and white premove texts,
 the ICS Alarm setting,
 and the text colorization in the ICS console.
 </p>
-<img src="ICSOpt.png">
-</td><td valign="top">
-<img src="GenOpt.png">
-</td></tr></table>
+</div>
 
-
-<table cellpadding="20" valign="top"><tr><td>
-<img src="SoundOpt.png">
-</td><td>
-<h3><a name="tag-A3">Sounds and XBoard</a></h3>
+<div class="feature">
+<h4 id="tag-A3">Sounds and XBoard</h4>
+<div class="pict narrow left">
+  <a href="SoundOpt.png"><img src="SoundOpt.png" alt="" /></a>
+</div>
 <p>
-The sounds in XBoards were a bit of a neglected feature.
-Binary distribtions (such as Debian, Ubuntu) often did not even contain any sounds,
+The sounds in XBoard were a bit of a neglected feature.
+Binary distributions (such as Debian, Ubuntu) often did not even contain any sounds,
 and a normal 'make install' from source left the sound files untouched in the source directory.
-Configuring XBoard to use the sounds was therefore cumbersome, through many command-line options
+Configuring XBoard to use the sounds was therefore cumbersome, through many command-line options,
 not in the least because an external sound player is needed.
 </p><p>
 The new Sound Options dialog changes all that!
@@ -131,7 +151,7 @@ or a user-specified file (in a text edit at the top of the dialog).
 A new option -soundDirectory has been added, which can also be set from the dialog,
 where all the standard sounds will be sought.
 (So if you just build XBoard and the binary is still sitting in the source directory,
-setting the sound directory to "sounds"makes all the WAV files with the standard sounds
+setting the sound directory to "sounds" makes all the WAV files with the standard sounds
 distributed in this subdirectory available.)
 </p><p>
 An extra combobox plus a 'Play' button for trying out a sound has been incorporated
@@ -139,10 +159,13 @@ in the dialog as well.
 It still has to be decided if in the future sound files will be shipped with XBoard,
 and if so, which will be included in the standard package.
 </p>
-</td></tr></table>
+</div>
 
-<table cellpadding="20" valign="top"><tr><td>
-<h3><a name="tag-A4">Conducting engine matches interactively</a></h3>
+<div class="feature">
+<h4 id="tag-A4">Conducting engine matches interactively</h4>
+<div class="pict medium">
+  <a href="MatchOpt.png"><img src="MatchOpt.png" alt="" /></a>
+</div>
 <p>
 A menu item has been added in XBoard to start an engine match. (WinBoard already had this.)
 Formerly this was only possible by using the -mm (-matchMode) and -mg (-matchGames) on the comamand line,
@@ -157,14 +180,13 @@ As in the command-line option, a value of -1 for the index will specify it shoul
 (always starting at 1), and -2 after every 2 games.
 The value at which the index should 'rewind' to 1 can also be given, all through spin controls.
 </p>
-</td><td>
-<img src="MatchOpt.png">
-</td></tr></table>
+</div>
 
-<table cellpadding="20" valign="top"><tr><td>
-<img src="NewVar.png">
-</td><td>
-<h3><a name="tag-A5">Redesigning existing dialogs</a></h3>
+<div class="feature">
+<h4 id="tag-A5">Redesigning existing dialogs</h4>
+<div class="pict narrow left">
+  <a href="NewVar.png"><img src="NewVar.png" alt="" /></a>
+</div>
 <p>
 Some of the existing dialogs (Common Engine, Adjudication Options, New Variant) have been redesigned, 
 to simplify the XBoard code, and to make use of the new features offered by the universal dialog constructor.
@@ -175,20 +197,27 @@ rather than selection buttons that you have to OK afterwards.
 Clicking a variant now imemdiately selects it and closes the dialog.
 </p><p>
 The Common Engine settings and Adjudication Options dialogs now can use spin controls 
-rather than simple text edits for the numeric values.
+rather than simple text edits for the numerical values.
 </p>
-<pre>
-<img src="ComOpt.png">     <img src="AdjuOpt.png">
-</pre>
-</td></tr></table>
-<table cellpadding="20" valign="top"><tr><td>
-<h3><a name="tag-A7">Selecting files of a given type only</a></h3>
+<div class="pict">
+ <span style="display: inline-block; width: 40em; max-width: 100%">
+  <a href="ComOpt.png" class="twin" style="width: 20em"><img src="ComOpt.png" alt="" /></a>
+  <a href="AdjuOpt.png" class="twin" style="width: 17.75em"><img src="AdjuOpt.png" alt="" /></a>
+ </span>
+</div>
+</div>
+
+<div class="feature">
+<h4 id="tag-A7">Selecting files of a given type only</h4>
+<div class="pict wide">
+  <a href="Browse.png"><img src="Browse.png" alt="" /></a>
+</div>
 <p>
 The file-selection dialog of XBoard now has the capability
 to filter the files it displays by extension.
 This is useful, as typically you are only interested in *.fen or *.epd
 files when you are browsing for the purpose of opening a position file.
-Without this feature the files you are looking for would easily drawn
+Without this feature, the files you are looking for would easily be drawn
 in the background of other files.
 </p><p>
 The file-selection dialog now has an extra text field where you can
@@ -200,36 +229,38 @@ the file selector.
 E.g. Load Game will ask for *.pgn and *.game files,
 Load Position for *.fen, *.epd and *.pos files,
 Save Game for *.pgn or *.pos files
-(depending on if you have selected "old save style" or not), etc.
+(depending whether you have selected "old save style" or not), etc.
 </p><p>
-When the file selector is invoked through a browse buttonin another dialog,
+When the file selector is invoked through a browse button in another dialog,
 it selects those files with the same extenstion as what is currently
 in the field that you are selecting for.
 Of course you can change the extension field by erasing what is there,
 or typing your own extensions.
 To have such a change take effect, you should type &lt;Enter> while in this field.
 </p>
-<h3><a name="tag-C8">Using the mouse wheel</a></h3>
+</div>
+
+<div class="feature">
+<h4 id="tag-C8">Using the mouse wheel</h4>
 <p>
 An experimental feature in the file browser is the use of the mouse wheel.
 Because of the way scroll bars work in X-applications,
 they are rather hard to operate if you do not have a middle mouse button.
 Laptops nowadays often use the right edge of the mouse touch pad
 as mouse wheel, however.
-Therefore operaton of the mouse wheel in the area of the file lists
+Therefore operation of the mouse wheel in the area of the file lists
 or vertical scroll bars are made to scroll these lists.
 Other refinements of the file-browse dialog are that double-clicking a filename counts as if you pressed 'OK',
-as does typing &lt;Enter> in the filename field.
-Typing &lt;Esc> there is equivaent to pressing 'cancel'.
+as does typing &lt;Enter&gt; in the filename field.
+Typing &lt;Esc&gt; there is equivalent to pressing 'cancel'.
 </p>
-</td><td>
-<image src="Browse.png">
-</td></tr></table>
+</div>
 
-<table cellpadding="20" valign="top"><tr><td>
-<img src="BoardOpt.png">
-</td><td>
-<h3><a name="tag-C3">Configuring the board look from the menu</a></h3>
+<div class="feature">
+<h4 id="tag-C3">Configuring the board look from the menu</h4>
+<div class="pict medium left">
+  <a href="BoardOpt.png"><img src="BoardOpt.png" alt="" /></a>
+</div>
 <p>
 There also has been created a new XBoard dialog for setting the Board Options,
 such as square and piece colors (in the View menu).
@@ -252,9 +283,13 @@ Text-edits are provided to specify filenames for board texture,
 and the directories with alternate piece images 
 (corresponding to the -bitmapDirectory and -pixmapDirectory command-line options).
 </p>
-</td></tr></table>
-<table cellpadding="20" valign="top"><tr><td>
-<h4><a name="tag-C4">Sending prepared commands to an ICS</a></h3>
+</div>
+
+<div class="feature">
+<h4 id="tag-C4">Sending prepared commands to an ICS</h4>
+<div class="pict narrow">
+  <a href="TextMenu.png"><img src="TextMenu.png" alt="" /></a>
+</div>
 <p>
 This is an attempt to equip XBoard with something similar to the
 WinBoard ICS context menu.
@@ -268,7 +303,7 @@ in which case they will be placed in the ICS Input Box,
 with the cursor at the place where the $input was
 (which is deleted).
 The user can then type something to complete the command,
-and press &lt;Enter> to send it.
+and press &lt;Enter&gt; to send it.
 E.g. "shout $input".
 </p><p>
 It is also possible to let the command contain something you select
@@ -282,9 +317,7 @@ by having it start with $add.
 This can be useful for bughouse players,
 to quickly ask for a list of pieces.
 </p>
-</td><td>
-<img src="TextMenu.png">
-</td></tr></table>
+</div>
 
 </div><!-- for id="content", starts in the include above -->
 <!--#include virtual="/server/footer.html" -->
@@ -300,7 +333,7 @@ Broken links and other corrections or suggestions can be sent to
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -314,7 +347,7 @@ Commons Attribution-NoDerivs 3.0 United States License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2017/04/16 17:51:27 $
+$Date: 2020/09/16 13:39:39 $
 <!-- timestamp end -->
 </p>
 </div>

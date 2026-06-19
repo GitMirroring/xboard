@@ -1,0 +1,180 @@
+/*
+Stylesheet for https://www.gnu.org/software/xboard/whats_new/, to be used
+with the main www.gnu.org stylesheet (https://www.gnu.org/layout.css).
+Created September 15, 2020.
+This file is in the public domain.
+*/
+
+/* NAVIGATION */
+
+.whatsnew-nav {
+  margin: 2.5em 0;
+}
+.feature-list, .other-releases,
+.other-releases img, .other-releases ul {
+  display: inline-block;
+  vertical-align: top;
+}
+.other-releases {
+  margin-bottom: 1em;
+}
+.other-releases img {
+  width: 14em; max-width: 100%;
+  margin: 0 .5em .6em 0; 
+}
+.other-releases ul {
+  text-align: left;
+  margin: .3em 0 .6em;
+}
+.whatsnew-nav ul li {
+  margin-top: .2em;
+}
+.list-container {
+  display: inline-block;
+  width: auto;
+  padding: .2em 0;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+.feature-list {
+  text-align: left;
+  padding: 0 1em;
+  margin: 0;
+}
+.feature-list dt {
+  padding: .5em 0;
+  margin: 0;
+}
+.feature-list dd {
+  margin: 0;
+}
+.feature-list ul {
+  margin: 0 0 .8em 0;
+}
+.whatsnew-nav a[href]:link, .whatsnew-nav a[href]:visited {
+  color: #049;
+  text-decoration: none;
+}
+
+@media (max-width: 39.95em) {
+  .whatsnew-nav, h2 {
+    text-align: center;
+  }
+  .other-releases ul {
+    max-width: 90%;
+  }
+  .other-releases img {
+    width: 12em;
+  }
+  .list-container {
+    text-align: left;
+    width: 31em; max-width: 100%;
+  }
+}
+@media (min-width: 40em) {
+  .list-container {
+    display: table;
+  }
+  .feature-list {
+    display: table-cell;
+    width: 50%;
+  }
+}
+@media (min-width: 60em) {
+  .whatsnew-nav {
+    display: table;
+  }
+  .other-releases {
+    display: table-cell;
+    max-width: 18em;
+    padding-right: 1em;
+    margin: 0;
+  }
+  .feature-list {
+    width: auto;
+  }
+}
+
+/* TEXT */
+
+h3.emph {
+  color: #af2b00;
+}
+.feature:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+table.options {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid #999;
+  margin: 2em 0;
+}
+table.options caption {
+  padding: .7em 0 .5em;
+  background: lightblue;
+  margin: 0;
+}
+
+/* IMAGES */
+/*
+To resize images, it's better to use a container (div, span, a, etc.)
+Otherwise, some browsers will do weird things.
+
+The 'pict' class is defined in https://www.gnu.org/layout.css
+It resizes images, centers them, and adds top and bottom margins.
+To make images float on wide screens, use it with one these 4 classes:
+'wide' (27em), 'medium' (20em), 'narrow' (15em), or 'narrower' (11em).
+These determine the breakpoint between floating and centered display.
+The actual width of the 'pict' element may be specified in a style
+attribute, but should remain within the same range.
+If you don't want the images to float, don't use the width classes
+with 'pict'.
+'pict' may also contain a caption (<p> only).
+*/
+
+.pict {
+  text-align: center;
+}
+.pict a {
+  display: inline-block;
+  width: 100%;
+  margin: .3em 0 .7em;
+}
+.pict .twin {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 98%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+.narrower { width: 11em; } /* the other 3 are defined in /layout.css */
+
+/* layout.css only defines right-floating images. */
+@media (min-width: 41em) {
+   .pict.narrower {
+       max-width: 45%;
+       float:right; margin: .3em 0 1em 2em;
+   }
+   .pict.narrower.left {
+       float:left; margin: .3em 2em 1em 0;
+   }
+}
+@media (min-width: 45em) {
+   .pict.narrow.left {
+       float:left; margin: .3em 2em 1em 0;
+   }
+}
+@media (min-width: 50em) {
+   .pict.medium.left {
+       float:left; margin: .3em 2em 1em 0;
+   }
+}
+@media (min-width: 57em) {
+   .pict.wide.left {
+       float:left; margin: .3em 2em 1em 0;
+   }
+}

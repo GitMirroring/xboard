@@ -1,40 +1,55 @@
 <!--#include virtual="/server/html5-header.html" -->
 <title>XBoard - GNU Project - Free Software Foundation - NEWS</title>
-<style type="text/css">body{max-width:100em !important;}</style>
+<link rel="stylesheet" type="text/css" href="../whats_new.css" media="print,screen" />
+<style type="text/css" media="print,screen">
+.other-releases { max-width: 18em; }
+.feature-list {
+  width: auto;
+  padding: .2em 1em .4em;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+@media (min-width: 40em) {
+  .other-releases { display: table-cell; }
+  .feature-list { width: auto; }
+}
+@media (min-width: 60em) {
+  .other-releases { display: inline-block; }
+}
+</style>
 <!--#include virtual="/server/banner.html" -->
-<h2>What is new in WinBoard / XBoard 4.4.0?</h2>
 
- <table cellpadding="20"><tr valign="top"><td>
-  <h4>New Features</h4>
+<h2>What is new in WinBoard&nbsp;/ XBoard&nbsp;4.4.0?</h2>
+
+<div class="whatsnew-nav">
+ <div class="other-releases">
+  <img src="../4.5.0/winboardF.png" alt=" [XBoard logo] " />
   <ul>
+   <li><a href="../4.5.0/index.html">Follow-up release (4.5.0)</a></li>
+   <li><a href="../4.4.0/index.html">Preceding release (4.2.7)</a></li>
+   <li><a href="../4.4.0/WinBoardF.html">WinBoard_F fork (4.3.x)</a></li>
+   <li><a href="../4.4.0/Winboard_x.html">Winboard_x fork</a></li>
+  </ul>
+ </div>
+
+ <dl class="feature-list">
+  <dt>New features</dt>
+  <dd><ul>
    <li><a href="#tag-A1">Improvements of the WinBoard front-end</a></li>
    <li><a href="#tag-A2">Support for chess variants</a></li>
    <li><a href="#tag-A3">Display of engine-output</a></li>
    <li><a href="#tag-A4">Menu dialogs in XBoard</a></li>
    <li><a href="#tag-A5">Setting engine options through the GUI</a></li>
-  </ul>
- </td><td valign="top">
-  <img src="../4.5.0/winboardF.png">
- </td><td valign="top">
-  <p>
-   <a href="../4.5.0/index.html">Follow-up release (4.5.0)</a>
-  </p>
-  <p>
-   <a href="../4.4.1/index.html">Minor bug-fixes (4.4.1)</a>
-  </p>
-  <p>
-   <a href="../4.4.0/index.html">Preceding release (4.2.7)</a>
-  </p>
-  <p>
-   <a href="../4.4.0/WinBoardF.html">WinBoard_F fork (4.3.x)</a>
-  </p>
-  <p>
-   <a href="../4.4.0/Winboard_x.html">Winboard_x fork</a>
-  </p>
- </td></tr></table>
+  </ul></dd>
+ </dl>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <h3><a name="tag-A1">Incorporating the Winboard_x fork</a></h3>
+<h3 class="no-display">Description</h3>
+<div class="feature">
+  <h4 id="tag-A1">Incorporating the Winboard_x fork</h4>
+  <div class="pict" style="width: 40em">
+    <a href="petite.gif"><img src="petite.gif" alt="" /></a>
+  </div>
   <p>
    When official development of XBoard stalled after release of 4.2.7,
    unofficial forks emerged further developing WinBoard without paying attention to XBoard.
@@ -52,20 +67,20 @@
    For further details, see the page on
    <a href="../4.4.0/Winboard_x.html">Winboard_x</a>.
   </p>
- </td><td valign="top">
-  <img src="petite.gif">
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <img src="couriersmall.gif">
- </td><td valign="top">
-  <h3><a name="tag-A2">Different board formats and unorthodox pieces</a></h3>
+<div class="feature">
+  <h4 id="tag-A2">Different board formats and unorthodox pieces</h4>
+  <div  class="pict medium">
+    <a href="couriersmall.gif"><img src="couriersmall.gif" alt="" /></a>
+  </div>
   <p>
    XBoard 4.4.0 also inorporates the enhancements of the WinBoard 4.3 fork (aka WinBoard F) by H.G.Muller.
    This fork itself was built on Winboard_x.
    At the later stages of this fork (from 4.3.14 on) the compatibility with XBoard was restored,
    and they came with a working XBoard that could benefit from the enhancements in the common back-end.
    These included:
+  </p>
   <ul>
    <li>Full awareness of castling and en-passant rights</li>
    <li>Configurable board formats (e.g. 9x10 for Chinese chess)</li>
@@ -77,10 +92,13 @@
    For further details of the back-end enhancements, see the page on
    <a href="../4.4.0/WinBoardF.html">WinBoard 4.3</a>.
   </p>
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <h3><a name="tag-A3">Improved analysis window</a></h3>
+<div class="feature">
+  <h4 id="tag-A3">Improved analysis window</h4>
+  <div  class="pict wide left">
+    <a href="EngOutXB.png"><img src="EngOutXB.png" alt="" /></a>
+  </div>
   <p>
    One of the first Winboad_x front-end features we ported to XBoard was the engine-output window,
    which is an enhanced version of the old analysis window.
@@ -98,21 +116,18 @@
    so you can see the output of both engines.
    An icon above each pane indicates whether the engine producing that output is thinking or pondering.
   </p>
- </td><td valign="top">
-  <img src="EngOutXB.png">
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <table cellpadding="5"><tr><td>
-   <img src="TCold.png">
-  </td></tr><tr><td>
-   <img src="CommonOld.png">
-  </td></tr></table>
- </td><td valign="center">
-  <img src="AdjuOld.png">
- </td><td valign="top">
-  <h3><a name="tag-A4">Some new menu dialogs</a></h3>
-  <p>
+<div class="feature">
+  <h4 id="tag-A4">Some new menu dialogs</h4>
+  <div class="pict">
+   <span class="twin" style="width:27em">
+    <a href="TCold.png"><img src="TCold.png" alt="" /></a>
+    <a href="CommonOld.png"><img src="CommonOld.png" alt="" /></a>
+   </span>
+   <a href="AdjuOld.png" class="twin" style="width:16em"><img src="AdjuOld.png" alt="" /></a>
+  </div>
+  <p style="clear: both">
    Previous versions of XBoard were sorely lacking in menu dialogs,
    and had to be controlled almost entirely through command-line options.
    Only options that had a simple on/off setting could be controlled through the Options menu.
@@ -126,10 +141,16 @@
    as reliable adjudication of games only became possible when XBoard was fully aware of castling and en-passant rights.
    The general engine settings apply mainly to UCI engines supported through Polyglot.
   </p>
- </td></tr></table>
+</div>
 
- <table cellpadding="20"><tr><td valign="top">
-  <h3><a name="tag-A5">Configuring an engine through the GUI</a></h3>
+<div class="feature">
+  <h4 id="tag-A5">Configuring an engine through the GUI</h4>
+  <div class="pict" style="width: 38em">
+    <a href="settings.png"><img src="settings.png" alt="" /></a>
+  </div>
+  <div class="pict medium">
+    <a href="EngineSet.png"><img src="EngineSet.png" alt="" /></a>
+  </div>
   <p>
    An entirely new feature is a dialog through which you can interactively set the private options of engines.
    Especially UCI engines have many options, but this feature can work for native XBoard engines as well,
@@ -143,10 +164,7 @@
   <p>
    Shown are the Engine Settings dialogs for Glaurung 2.2 and Fairy-Max 4.8o
   </p>
-  <img src="EngineSet.png">
- </td><td valign="top">
-  <img src="settings.png">
- </td></tr></table>
+</div>
 
 </div><!-- for id="content", starts in the include above -->
 <!--#include virtual="/server/footer.html" -->
@@ -162,7 +180,7 @@ Broken links and other corrections or suggestions can be sent to
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -176,7 +194,7 @@ Commons Attribution-NoDerivs 3.0 United States License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2017/04/16 17:51:26 $
+$Date: 2020/09/16 13:39:38 $
 <!-- timestamp end -->
 </p>
 </div>

@@ -1,6 +1,6 @@
 <!--#include virtual="/server/html5-header.html" -->
   <title>Xiangqi</title>
-  <link rel="StyleSheet" href="./moves.css" type="text/css">
+  <link rel="StyleSheet" href="./moves.css" type="text/css" />
   <script type="text/javascript" src="spartan.js">
 </script>
 <!--#include virtual="/server/banner.html" -->
@@ -15,19 +15,19 @@
   their own board half, and thus can be used to defend but not to
   attack or to trade for the opponent's defenders.</p>
 
-  <table cellpadding="20">
+  <table class="setup">
     <tr>
-      <td><img src="Xiangqi.png"></td>
+      <td><img src="Xiangqi.png" alt="" /></td>
 
       <td>
         <h3>Initial setup</h3>
 
-        <p>e0, e9: King<br>
-        a0, a9, i0, i9: Rook<br>
-        b2, b7, h2, h7: Cannon<br>
-        b0, b9, h0, h9: Horse<br>
-        d0, d9, f0, f9: Advisor<br>
-        c0, c9, g0, g9: Elephant<br>
+        <p>e0, e9: King<br />
+        a0, a9, i0, i9: Rook<br />
+        b2, b7, h2, h7: Cannon<br />
+        b0, b9, h0, h9: Horse<br />
+        d0, d9, f0, f9: Advisor<br />
+        c0, c9, g0, g9: Elephant<br />
         a3, c3, e3, g3, i3, a6, c6, e6, g6, i6: Pawns</p>
       </td>
     </tr>
@@ -54,17 +54,17 @@
 
       <td class="n" id="sq6x9"></td>
 
-      <td class="n" id="sq7x9"><img src="sym/BlackRook.png"></td>
+      <td class="n" id="sq7x9"><img src="sym/BlackRook.png" alt="" /></td>
 
       <td class="n" id="sq8x9"></td>
 
       <td class="n" id="sq9x9"></td>
 
-      <td class="h"><img src="sym/yellow.png"></td>
+      <td class="h"><img src="sym/yellow.png" alt="" /></td>
 
-      <td class="w" rowspan="2" valign="top">
-        <p>Sliding capture or non-capture,<br>
-        can be blocked on any square along the ray</p>
+      <td class="w" rowspan="2" style="vertical-align:top">
+        Sliding capture or non-capture,<br />
+        can be blocked on any square along the ray
       </td>
     </tr>
 
@@ -111,7 +111,7 @@
 
       <td class="n" id="sq9x7"></td>
 
-      <td class="h"><img src="sym/green.png"></td>
+      <td class="h"><img src="sym/green.png" alt="" /></td>
 
       <td class="w">Non-capture only</td>
     </tr>
@@ -131,13 +131,13 @@
 
       <td class="n" id="sq6x6"></td>
 
-      <td class="n" id="sq7x6"><img src="sym/BlackKnight.png"></td>
+      <td class="n" id="sq7x6"><img src="sym/BlackKnight.png" alt="" /></td>
 
       <td class="n" id="sq8x6"></td>
 
       <td class="n" id="sq9x6"></td>
 
-      <td class="h"><img src="sym/red.png"></td>
+      <td class="h"><img src="sym/red.png" alt="" /></td>
 
       <td class="w">Capture only</td>
     </tr>
@@ -148,18 +148,18 @@
       <td class="n" id="sq1x5"></td>
 
       <td class="n" id="sq2x5" onmousedown="down_click(2,5)"
-      onmouseup="up_click()"><img src="sym/WhitePawn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td class="n" id="sq3x5"></td>
 
       <td class="n" id="sq4x5" onmousedown="down_click(-4,5)"
-      onmouseup="up_click()"><img src="sym/WhiteAdvisor.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteAdvisor.png" alt="" /></td>
 
       <td class="n" id="sq5x5" onmousedown="down_click(5,-5)"
-      onmouseup="up_click()"><img src="sym/WhiteElephant.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteElephant.png" alt="" /></td>
 
       <td class="n" id="sq6x5" onmousedown="down_click(6,-5)"
-      onmouseup="up_click()"><img src="sym/WhiteGold.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteGold.png" alt="" /></td>
 
       <td class="n" id="sq7x5"></td>
 
@@ -167,9 +167,9 @@
 
       <td class="n" id="sq9x5"></td>
 
-      <td class="h"><img src="sym/open.png"></td>
+      <td class="h"><img src="sym/open.png" alt="" /></td>
 
-      <td class="w" rowspan="2" valign="top">Unreachable square
+      <td class="w" rowspan="2" style="vertical-align:top">Unreachable square
       where move to other square can be blocked</td>
     </tr>
 
@@ -207,10 +207,10 @@
       <td class="n" id="sq2x3"></td>
 
       <td class="n" id="sq3x3" onmousedown="down_click(3,3)"
-      onmouseup="up_click()"><img src="sym/WhiteRook.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteRook.png" alt="" /></td>
 
       <td class="n" id="sq4x3" onmousedown="down_click(-4,3)"
-      onmouseup="up_click()"><img src="sym/WhiteKnight.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKnight.png" alt="" /></td>
 
       <td class="n" id="sq5x3"></td>
 
@@ -226,10 +226,10 @@
     <tr>
       <td class="n" id="sq0x2"></td>
 
-      <td class="n" id="sq1x2"><img src="sym/BlackRook.png"></td>
+      <td class="n" id="sq1x2"><img src="sym/BlackRook.png" alt="" /></td>
 
       <td class="n" id="sq2x2" onmousedown="down_click(2,2)"
-      onmouseup="up_click()"><img src="sym/WhitePawn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td class="n" id="sq3x2"></td>
 
@@ -240,7 +240,7 @@
       <td class="n" id="sq6x2"></td>
 
       <td class="n" id="sq7x2" onmousedown="down_click(7,2)"
-      onmouseup="up_click()"><img src="sym/WhiteCanon.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteCanon.png" alt="" /></td>
 
       <td class="n" id="sq8x2"></td>
 
@@ -292,12 +292,12 @@
     </tr>
   </table>
 
-  <p id="piece" height="20">:<br>
-  :<br>
-  :<br>
+  <p id="piece">:<br />
+  :<br />
+  :<br />
   :</p>
 
-  <table cellpadding="5" border="1">
+  <table class="moves">
     <tr>
       <td>Piece</td>
 

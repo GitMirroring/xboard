@@ -1,30 +1,35 @@
-<!--#include virtual="/server/header.html" -->
-<!-- Parent-Version: 1.79 -->
+<!--#include virtual="/server/html5-header.html" -->
+<!-- Parent-Version: 1.92 -->
+<!-- This page is derived from /server/standards/boilerplate.html -->
 <title>Chess Engine Communication Protocol
 - GNU Project - Free Software Foundation</title>
 <style type="text/css"><!--
-  .version1 { color: red;}
-  .version43 { color: green;}
+  .version1 { color: red; }
+  .version43 { color: green; }
   .version44 { color: blue; }
   .version47 { color: purple; }
   .version48 { color: brown; }
-
+  .limited-width { width: 55em; max-width: 100%; margin: auto; }
+  .authors { font-size: 1.2em; font-weight: bold; }
+  .authors a[href] { color: #505050; text-decoration-color: #777; }
+  .summary ol { text-align: left; font-size: .94em; margin: 0 1em; }
+  .summary > ol > li { margin-top: 0; padding-bottom: .1em; }
+  @media (min-width:48em) { .summary { margin-top: .7em; }}
+  h3 { text-transform: uppercase; }
+  h4 { font-size: 1.4em }
+  dt { font-weight: bold; margin: 0; }
+  table th { background: #f3f3f3; }
   table tr { text-align: left}
-  tr > td:first-child { font-weight:bold;}
-  dt { font-weight:bold;}
-
-  p.authors { font-size: 1.4em; font-weight: bold; }
-  #content div.summary { margin-top: 1.2em; }
-  #content div.summary ol li { margin-top: .4em; margin-bottom: .4em; }
-  #content h3 { text-transform: uppercase; }
-  #content h4 { font-size: 1.4em !important; }
+  tr > td:first-child { font-weight:bold; }
 --></style>
 <!--#include virtual="/server/gnun/initial-translations-list.html" -->
 <!--#include virtual="/server/banner.html" -->
+<div class="limited-width">
 
 <div class="header">
 <h2>Chess Engine Communication Protocol</h2>
-<p class="authors"><a href="http://www.tim-mann.org/">Tim Mann</a> &amp; <a href="http://home.hccnet.nl/h.g.muller/winboardF.html">H.G.Muller</a></p>
+<address class="authors"><a href="https://www.tim-mann.org/">Tim Mann</a> &amp;
+<a href="https://home.hccnet.nl/h.g.muller/winboardF.html">H.G.Muller</a></address>
 <p>
 Version 2; implemented in xboard/WinBoard 4.2.1 and later. (Sept 3, 2009)<br />
 Changes since version 1 are indicated in <span class="version1">red</span>.<br />
@@ -33,7 +38,7 @@ Changes for WinBoard 4.4.xx are indicated in <span class="version44">blue</span>
 </p>
 </div>
 
-<hr />
+<hr class="thin" />
 <div class="summary">
 <ol>
 <li><a href="#1">Introduction</a></li>
@@ -50,10 +55,10 @@ Changes for WinBoard 4.4.xx are indicated in <span class="version44">blue</span>
 <li><a href="#12">Analyze Mode</a></li>
 <li><a href="#13">Idioms and backward compatibility features</a></li>
 </ol>
-<hr  class="no-display" />
 </div>
+<hr class="no-display" />
 
-<h3><a name="1">1. Introduction</a></h3>
+<h3 id="1">1. Introduction</h3>
 
 <p>
 This document is a set of rough notes on the protocol that xboard and
@@ -76,9 +81,9 @@ interface it to the Internet Chess Server.</li>
 
 <p>
 In case (2), if you are using xboard, you will need to configure the
-"Zippy" code into it, but WinBoard includes this code already.  See
-the file <a
-href="http://www.tim-mann.org/xboard/zippy.README">zippy.README</a>
+"Zippy" code into it, but <a
+href="https://www.tim-mann.org/zippy.html">WinBoard includes this code</a>
+already.  See the file zippy.README
 in the xboard or WinBoard distribution for more information.
 </p>
 
@@ -93,8 +98,8 @@ I'd like to hear from everyone who is trying to interface their own
 chess engine to xboard/WinBoard. Please join the mailing list for
 authors of xboard/WinBoard compatible chess engines and post a message
 about what you're doing. The list is now hosted by Yahoo Groups; you
-can join at <a href="http://groups.yahoo.com/group/chess-engines"
->http://groups.yahoo.com/group/chess-engines</a>, or you can read the
+can join the <a href="https://groups.yahoo.com/group/chess-engines"
+>chess-engines group</a>, or you can read the
 list there without joining.  The list is filtered to prevent spam.
 </p>
 
@@ -106,7 +111,7 @@ report them in the appropriate section of the
 <a href="http://www.open-aurec.com/wbforum/">WinBoard forum</a>.
 </p>
 
-<h3><a name="2">2. Connection</a></h3>
+<h3 id="2">2. Connection</h3>
 
 <p>
 An xboard chess engine runs as a separate process from xboard itself,
@@ -130,7 +135,7 @@ standard input and writes to its standard output.  See sections
 <a href="#5">5</a> and <a href="#6">6</a> below for additional details.
 </p>
 
-<h3><a name="3">3. Debugging</a></h3>
+<h3 id="3">3. Debugging</h3>
 
 <p>
 To diagnose problems in your engine's interaction with xboard, use the
@@ -156,7 +161,7 @@ Ctrl+Alt is used in place of Alt; this had to be changed due to a conflict
 with typing the @-sign on some European keyboards.
 </p>
 
-<h3><a name="4">4. How it got this way</a></h3>
+<h3 id="4">4. How it got this way</h3>
 
 <p>
 Originally, xboard was just trying to talk to the existing
@@ -219,7 +224,7 @@ of having engines dump debug messages on WinBoard in an unprotected way,
 as usually you get away with that.
 </p>
 
-<h3><a name="5">5. WinBoard requires Win32 engines</a></h3>
+<h3 id="5">5. WinBoard requires Win32 engines</h3>
 
 <p>
 Due to some Microsoft brain damage that I don't understand, WinBoard
@@ -227,18 +232,18 @@ does not work with chess engines that were compiled to use a DOS
 extender for 32-bit addressing.  (Probably not with 16-bit DOS or
 Windows programs either.)  WinBoard works only with engines that are
 compiled for the Win32 API.  You can get a free compiler that targets
-the Win32 API from <a href="http://sources.redhat.com/cygwin/"
->http://sources.redhat.com/cygwin/</a>.  I think DJGPP 2.x should also
+the Win32 API from the <a href="https://www.sourceware.org/cygwin/">
+Cygwin project</a>.  I think DJGPP 2.x should also
 work if you use the RSXNTDJ extension, but I haven't tried it.  Of
 course, Microsoft Visual C++ will work.  Most likely the other
 commercial products that support Win32 will work too (Borland, etc.),
 but I have not tried them.  Delphi has been successfully used to write
 engines for WinBoard; if you want to do this, Tony Werten has donated
-some <a href="http://www.tim-mann.org/winboard/delphi.txt" >sample
+some <a href="https://www.tim-mann.org/winboard/delphi.txt" >sample
 code</a> that should help you get started.
 </p>
 
-<h3><a name="6">6. Hints on input/output</a></h3>
+<h3 id="6">6. Hints on input/output</h3>
 
 <p>
 Beware of using buffered I/O in your chess engine.  The C stdio
@@ -248,7 +253,7 @@ when your engine tries to write some characters to xboard, the library
 stashes them in an internal buffer and does not actually write them to
 the pipe connected to xboard until either the buffer fills up or you
 call a special library routine asking for it to be flushed.  (In C
-stdio, this routine is named <tt>fflush</tt>.)  Second, when your engine tries
+stdio, this routine is named <code>fflush</code>.)  Second, when your engine tries
 to read some characters from xboard, the library does not read just
 the characters you asked for -- it reads all the characters that are
 currently available (up to some limit) and stashes any characters you
@@ -270,23 +275,23 @@ delivered.
 <p>
 You can usually fix the output buffering problem by asking for the
 buffering to be turned off.  In C stdio, you do this by calling
-<tt>setbuf(stdout, NULL)</tt>.  A more laborious and error-prone
-method is to carefully call <tt>fflush(stdout)</tt> after every line
+<code>setbuf(stdout, NULL)</code>.  A more laborious and error-prone
+method is to carefully call <code>fflush(stdout)</code> after every line
 you output; I don't recommend this.  In C++, you can try
-<tt>cout.setf(ios::unitbuf)</tt>, which is documented in current
+<code>cout.setf(ios::unitbuf)</code>, which is documented in current
 editions of "The C++ Programming Language," but not older ones.
 Another C++ method that might work is
-<tt>cout.rdbuf()-&gt;setbuf(NULL, 0)</tt>.  Alternatively, you can
-carefully call <tt>cout.flush()</tt> after every line you output;
+<code>cout.rdbuf()-&gt;setbuf(NULL, 0)</code>.  Alternatively, you can
+carefully call <code>cout.flush()</code> after every line you output;
 again, I don't recommend this.
 </p>
 
 <p>
 Another way to fix the problem is to use unbuffered operating system
 calls to write directly to the file descriptor for standard output.
-On Unix, this means <tt>write(1, ...)</tt> -- see the man page for write(2).
-On Win32, you can use either the Unix-like <tt>_write(1, ...)</tt> or Win32
-native routines like <tt>WriteFile</tt>.
+On Unix, this means <code>write(1, ...)</code> -- see the man page for write(2).
+On Win32, you can use either the Unix-like <code>_write(1, ...)</code> or Win32
+native routines like <code>WriteFile</code>.
 </p>
 
 <p>
@@ -305,21 +310,21 @@ must stop your search if there are <em>either</em> characters in the buffer
 <p>
 The most direct way to fix this problem is to use unbuffered operating
 system calls to read (and poll) the underlying file descriptor
-directly.  On Unix, use <tt>read(0, ...)</tt> to read from standard input, and
-use <tt>select()</tt> to poll it.  See the man pages read(2) and select(2).
+directly.  On Unix, use <code>read(0, ...)</code> to read from standard input, and
+use <code>select()</code> to poll it.  See the man pages read(2) and select(2).
 (Don't follow the example of GNU Chess 4 and use the FIONREAD ioctl to
 poll for input.  It is not very portable; that is, it does not exist
 on all versions of Unix, and is broken on some that do have it.)  On
-Win32, you can use either the Unix-like <tt>_read(0, ...)</tt> or the native
-Win32 <tt>ReadFile()</tt> to read.  Unfortunately, under Win32, the function to
+Win32, you can use either the Unix-like <code>_read(0, ...)</code> or the native
+Win32 <code>ReadFile()</code> to read.  Unfortunately, under Win32, the function to
 use for polling is different depending on whether the input device is
 a pipe, a console, or something else.  (More Microsoft brain damage
 here -- did they never hear of device independence?)  For pipes, you
-can use <tt>PeekNamedPipe</tt> to poll (even when the pipe is unnamed).
+can use <code>PeekNamedPipe</code> to poll (even when the pipe is unnamed).
 For consoles,
-you can use <tt>GetNumberOfConsoleInputEvents</tt>.  For sockets only, you can
-use <tt>select()</tt>.  It might be possible to use
-<tt>WaitForSingleObject</tt> more
+you can use <code>GetNumberOfConsoleInputEvents</code>.  For sockets only, you can
+use <code>select()</code>.  It might be possible to use
+<code>WaitForSingleObject</code> more
 generally, but I have not tried it.  Some code to do these things can
 be found in Crafty's utility.c, but I don't guarantee that it's all
 correct or optimal.
@@ -329,12 +334,12 @@ correct or optimal.
 A second way to fix the problem might be to ask your I/O library not
 to buffer on input.  It should then be safe to poll the underlying
 file descriptor as described above.  With C, you can try calling
-<tt>setbuf(stdin, NULL)</tt>.  However, I have never tried this.  Also, there
-could be problems if you use <tt>scanf()</tt>, at least with certain patterns,
-because <tt>scanf()</tt> sometimes needs to read one extra character and "push
+<code>setbuf(stdin, NULL)</code>.  However, I have never tried this.  Also, there
+could be problems if you use <code>scanf()</code>, at least with certain patterns,
+because <code>scanf()</code> sometimes needs to read one extra character and "push
 it back" into the buffer; hence, there is a one-character pushback
 buffer even if you asked for stdio to be unbuffered.  With C++, you
-can try <tt>cin.rdbuf()-&gt;setbuf(NULL, 0)</tt>, but again, I have never tried
+can try <code>cin.rdbuf()-&gt;setbuf(NULL, 0)</code>, but again, I have never tried
 this.
 </p>
 
@@ -342,7 +347,7 @@ this.
 A third way to fix the problem is to check whether there are
 characters in the buffer whenever you poll.  C I/O libraries generally
 do not provide any portable way to do this.  Under C++, you can use
-<tt>cin.rdbuf()-&gt;in_avail()</tt>.  This method has been reported to
+<code>cin.rdbuf()-&gt;in_avail()</code>.  This method has been reported to
 work with
 EXchess.  Remember that if there are no characters in the buffer, you
 still have to poll the underlying file descriptor too, using the
@@ -362,10 +367,10 @@ timestamp and FICS timeseal use threads to handle multiple input
 sources.
 </p>
 
-<h3><a name="7">7. Signals</a></h3>
+<h3 id="7">7. Signals</h3>
 
 <p>Engines that run on Unix need to be concerned with two Unix
-signals: <tt>SIGTERM</tt> and <tt>SIGINT</tt>.  This applies both to
+signals: <code>SIGTERM</code> and <code>SIGINT</code>.  This applies both to
 engines that run under xboard and (the unusual case of) engines that
 WinBoard remotely runs on a Unix host using the -firstHost or
 -secondHost feature.  It does not apply to engines that run on
@@ -378,13 +383,13 @@ signals.  See the "feature" command in <a href="#6">section 9</a> below.
 </p>
 
 <p>First, when an engine is sent the "quit" command, it is also given
-a <tt>SIGTERM</tt> signal shortly afterward to make sure it goes away.
+a <code>SIGTERM</code> signal shortly afterward to make sure it goes away.
 If your engine reliably responds to "quit", and the signal causes
 problems for you, you should either ignore it by calling
-<tt>signal(SIGTERM, SIG_IGN)</tt> at the start of your program,
+<code>signal(SIGTERM, SIG_IGN)</code> at the start of your program,
 or disable it with the "feature" command.</p>
 
-<p>Second, xboard will send an interrupt signal (<tt>SIGINT</tt>) at
+<p>Second, xboard will send an interrupt signal (<code>SIGINT</code>) at
 certain times when it believes the engine may not be listening to user
 input (thinking or pondering).  WinBoard currently does this only when
 the engine is running remotely using the -firstHost or -secondHost
@@ -394,37 +399,37 @@ way.
 </p>
 
 <p>
-The <tt>SIGINT</tt>s are basically tailored to the needs of GNU Chess 4
+The <code>SIGINT</code>s are basically tailored to the needs of GNU Chess 4
 on systems where its input polling code is broken or disabled.
 Because they work in a rather peculiar way, it is recommended that you
-either ignore <tt>SIGINT</tt> by having your engine call
-<tt>signal(SIGINT, SIG_IGN)</tt>, or disable it with the "feature"
+either ignore <code>SIGINT</code> by having your engine call
+<code>signal(SIGINT, SIG_IGN)</code>, or disable it with the "feature"
 command.</p>
 
 <p>
 Here are details for the curious.  If xboard needs to send a command
 when it is the chess engine's move (such as before the "?" command),
-it sends a <tt>SIGINT</tt> first.  If xboard needs to send commands when it is
+it sends a <code>SIGINT</code> first.  If xboard needs to send commands when it is
 not the chess engine's move, but the chess engine may be pondering
 (thinking on its opponent's time) or analyzing (analysis or analyze
-file mode), xboard sends a <tt>SIGINT</tt> before the first such command only.
-Another <tt>SIGINT</tt> is not sent until another move is made, even if xboard
+file mode), xboard sends a <code>SIGINT</code> before the first such command only.
+Another <code>SIGINT</code> is not sent until another move is made, even if xboard
 issues more commands.  This behavior is necessary for GNU Chess 4.  The
-first <tt>SIGINT</tt> stops it from pondering until the next move, but on some
-systems, GNU Chess 4 will die if it receives a <tt>SIGINT</tt> when not
+first <code>SIGINT</code> stops it from pondering until the next move, but on some
+systems, GNU Chess 4 will die if it receives a <code>SIGINT</code> when not
 actually thinking or pondering.
 </p>
 
 <p>
 There are two reasons why WinBoard does not send the Win32 equivalent
-of <tt>SIGINT</tt> (which is called <tt>CTRL_C_EVENT</tt>) to local
+of <code>SIGINT</code> (which is called <code>CTRL_C_EVENT</code>) to local
 engines.  First, the Win32 GNU Chess 4 port does not need it.  Second, I
 could not find a way to get it to work.  Win32 seems to be designed
 under the assumption that only console applications, not windowed
-applications, would ever want to send a <tt>CTRL_C_EVENT</tt>.
+applications, would ever want to send a <code>CTRL_C_EVENT</code>.
 </p>
 
-<h3><a name="8">8. Commands from xboard to the engine</a></h3>
+<h3 id="8">8. Commands from xboard to the engine</h3>
 
 <p>
 All commands from xboard to the engine end with a newline (\n), even
@@ -806,7 +811,7 @@ You can use this command to trigger learning.  RESULT is either 1-0,
 was a draw, or the game was unfinished.  The COMMENT string is purely
 a human-readable comment; its content is unspecified and subject to
 change.  In ICS mode, it is passed through from ICS uninterpreted.
-Example: <pre>result 1-0 {White mates}</pre>
+Example: <pre class="emph-box">result 1-0 {White mates}</pre>
 <p>
 Here are some notes on interpreting the "result" command.  Some apply
 only to playing on ICS ("Zippy" mode).
@@ -887,7 +892,7 @@ ChessBase's implementation of the protocol.
 <p>The edit command does not change the side to move.  To set up a
 black-on-move position, xboard uses the following command sequence:
 </p>
-<pre>
+<pre class="emph-box">
     new
     force
     a2a3
@@ -998,7 +1003,7 @@ either opponent is not rated, his rating is given as 0.
 In the future this command may also be used in other modes, if ratings
 are known.
 </span>
-Example: <pre>rating 2600 1500</pre>
+Example: <pre class="emph-box">rating 2600 1500</pre>
 </dd>
 
 <dt><span class="version1">ics HOSTNAME</span></dt>
@@ -1162,7 +1167,7 @@ be added in the future.
 
 <dl>
 <dt>partner &lt;player&gt;</dt>
-<dd>&lt;player&gt; is now your partner for future games.  Example: <pre>partner mann</pre>
+<dd>&lt;player&gt; is now your partner for future games.  Example: <pre class="emph-box">partner mann</pre>
 </dd>
 
 <dt>partner</dt>
@@ -1175,14 +1180,14 @@ be added in the future.
 
 <dt>holding [&lt;white&gt;] [&lt;black&gt;]</dt>
 <dd>White currently holds &lt;white&gt;; black currently holds &lt;black&gt;.
-  Example: <pre>holding [PPPRQ] []</pre></dd>
+Example: <pre class="emph-box">holding [PPPRQ] []</pre></dd>
 
 <dt>holding [&lt;white&gt;] [&lt;black&gt;] &lt;color&gt;&lt;piece&gt;</dt>
 <dd>White currently holds &lt;white&gt;; black currently holds &lt;black&gt;, after
-  &lt;color&gt; acquired &lt;piece&gt;.   Example: <pre>holding [PPPRQ] [R] BR</pre></dd>
+  &lt;color&gt; acquired &lt;piece&gt;.   Example: <pre class="emph-box">holding [PPPRQ] [R] BR</pre></dd>
 </dl>
 
-<h3><a name="9">9. Commands from the engine to xboard</a></h3>
+<h3 id="9">9. Commands from the engine to xboard</h3>
 
 <p class="version1">
 In general, an engine should not send any output to xboard that is not
@@ -1201,8 +1206,8 @@ features.  Feature settings are written as FEATURE=VALUE, where
 FEATURE is a name from the list below and VALUE is the value to be
 assigned.  Features can take string, integer, or boolean values; the
 type of value is listed for each feature.  String values are written
-in double quotes (for example, <tt>feature myname="Miracle Chess
-0.9"</tt>), integers are written in decimal, and boolean values are
+in double quotes (for example, <code>feature myname="Miracle Chess
+0.9"</code>), integers are written in decimal, and boolean values are
 written as 0 for false, 1 for true.  Any number of features can be set
 in one feature command, or multiple feature commands can be given.</p>
 
@@ -1555,7 +1560,7 @@ error message in one of the above formats so that xboard can pass the
 error on to the user and retract the move.  The (REASON) is entirely
 optional.  Examples:
 
-<pre>
+<pre class="emph-box">
   Illegal move: e2e4
   Illegal move (in check): Nf3
   Illegal move (moving into check): e1g1
@@ -1571,7 +1576,7 @@ or an Error message.
 <dd>If your engine receives a command it does not understand or does
 not implement, it should print an error message in the above format so
 that xboard can parse it.  Examples:
-<pre>
+<pre class="emph-box">
   Error (ambiguous move): Nf3
   Error (unknown command): analyze
   Error (command not legal now): undo
@@ -1630,7 +1635,7 @@ happened on the board.  In normal chess, this includes checkmate,
 stalemate, triple repetition, the 50 move rule, or insufficient
 material; it does not include loss on time or the like.
 Examples:
-<pre>
+<pre class="emph-box">
   0-1 {Black mates}
   1-0 {White mates}
   1/2-1/2 {Draw by repetition}
@@ -1808,7 +1813,7 @@ The engine can then specify board size, participating pieces, initial setup,
 and other rule details (inherited from the parent variant),
 saving the user the trouble to configure the GUI for this non-standard variant.
 Example:</p>
-<pre>
+<pre class="emph-box">
   setup (PN.RQKpn.rqk) 6x6+0_fairy rnqknr/pppppp/6/6/PPPPPP/RNQKNR w - - 0 1
 </pre>
 <p>could be used by an engine for Los-Alamos Chess in response to 'variant losalamos',
@@ -1877,7 +1882,7 @@ It can also be used to implement side effects of the move the GUI would not know
 </dd>
 </dl>
 
-<h3><a name="10">10. Thinking Output</a></h3>
+<h3 id="10">10. Thinking Output</h3>
 
 <p>
 If the user asks your engine to "show thinking", xboard sends your
@@ -1889,7 +1894,7 @@ PV (principal variation) changes or the depth changes.  The thinking
 output should be in the following format:
 </p>
 
-<pre>ply score time nodes pv</pre>
+<pre class="emph-box">ply score time nodes pv</pre>
 
 <p>Where:</p>
 <table>
@@ -1937,13 +1942,13 @@ and -100000 - N for "mated in N moves".
 Example:
 </p>
 
-<pre>  9 156 1084 48000 Nf3 Nc6 Nc3 Nf6</pre>
+<pre class="emph-box">  9 156 1084 48000 Nf3 Nc6 Nc3 Nf6</pre>
 
 <p>
 Meaning:
 </p>
 
-<pre>
+<pre class="emph-box">
 9 ply, score=1.56, time = 10.84 seconds, nodes=48000, PV = "Nf3 Nc6 Nc3 Nf6"
 </pre>
 
@@ -1951,7 +1956,7 @@ Meaning:
 Longer example from actual Crafty output:
 </p>
 
-<pre>
+<pre class="emph-box">
   4    109      14   1435  1. e4 d5 2. Qf3 dxe4 3. Qxe4 Nc6
   4    116      23   2252  1. Nf3 Nc6 2. e4 e6
   4    116      27   2589  1. Nf3 Nc6 2. e4 e6
@@ -1966,7 +1971,7 @@ book.  In situations like this where your engine is not really
 searching, start the PV with a '(' character:
 </p>
 
-<pre>
+<pre class="emph-box">
   0      0       0      0  (e4 64%, d4 24%)
 </pre>
 
@@ -1978,7 +1983,7 @@ extra character and takes it as a flag indicating the different time
 units.  Example:
 </p>
 
-<pre>
+<pre class="emph-box">
  2.     14    0       38   d1d2  e8e7
  3+     78    0       65   d1d2  e8e7  d2d3
  3&amp;     14    0       89   d1d2  e8e7  d2d3
@@ -2012,7 +2017,7 @@ from the thinking lines <em>if and only if</em> it sends xboard the move in
 the usual "Hint: xxx" format before sending the first line.
 </p>
 
-<h3><a name="11">11. Time control</a></h3>
+<h3 id="11">11. Time control</h3>
 
 <p>
 xboard supports three styles of time control: conventional chess clocks,
@@ -2033,7 +2038,7 @@ though.
 The command to set a conventional time control looks like this:
 </p>
 
-<pre>
+<pre class="emph-box">
   level 40 5 0
   level 40 0:30 0
 </pre>
@@ -2065,7 +2070,7 @@ but engines with advanced time management might want to plan for this in advance
 The command to set an incremental time control looks like this:
 </p>
 
-<pre>
+<pre class="emph-box">
   level 0 2 12
 </pre>
 
@@ -2126,7 +2131,7 @@ odds.  Time odds games are always unrated.
 The command to set an exact number of seconds per move looks like this:
 </p>
 
-<pre>
+<pre class="emph-box">
   st 30
 </pre>
 
@@ -2135,7 +2140,7 @@ This means that each move must be made in at most 30 seconds.  Time not used
 on one move does not accumulate for use on later moves.
 </p>
 
-<h3><a name="12">12. Analyze Mode</a></h3>
+<h3 id="12">12. Analyze Mode</h3>
 
 <p>xboard supports analyzing fresh games, edited positions, and games
 from files.  However, all of these look the same from the chess
@@ -2184,7 +2189,7 @@ last PV received began with a '(' character.
 The chess engine should respond to ".\n" with a line like this:
 </p>
 
-<pre>
+<pre class="emph-box">
 stat01: time nodes ply mvleft mvtot <span class="version1">mvname</span>
 </pre>
 
@@ -2202,7 +2207,7 @@ added in protocol version 2.</td></tr>
 <p>
 Examples:
 </p>
-<pre>
+<pre class="emph-box">
   stat01: 1234 30000 7 5 30
   stat01: 1234 30000 7 5 30 Nf3
 </pre>
@@ -2232,7 +2237,7 @@ else to say "Okay, I'm not failing high/low anymore."  xboard will
 figure this out itself.
 </p>
 
-<h3><a name="13">13. Idioms and backward compatibility features</a></h3>
+<h3 id="13">13. Idioms and backward compatibility features</h3>
 
 <p>
 Some engines have variant interpretations of the force/go/white/black,
@@ -2443,6 +2448,8 @@ coordinate notation (e.g., e2e4) is accepted in the move command.  A
 patch to correct this should be available from The Learning Company
 (makers of CM8000) in February 2001.
 </p>
+
+</div>
 </div><!-- for id="content", starts in the include above -->
 <!--#include virtual="/server/footer.html" -->
 <div id="footer">
@@ -2456,7 +2463,7 @@ to <a href="mailto:bug-xboard@gnu.org">&lt;bug-xboard@gnu.org&gt;</a>.</p>
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -2487,7 +2494,7 @@ Commons Attribution-NoDerivatives 4.0 International License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2016/05/15 17:44:19 $
+$Date: 2021/08/16 09:35:01 $
 <!-- timestamp end -->
 </p>
 </div>

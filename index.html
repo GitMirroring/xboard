@@ -1,39 +1,64 @@
 <!--#include virtual="/server/header.html" -->
-<!-- Parent-Version: 1.79 -->
+<!-- Parent-Version: 1.92 -->
+<!-- This page is derived from /server/standards/boilerplate.html -->
 <title>XBoard - GNU Project - Free Software Foundation</title>
-<style type="text/css">
-<!--
-.examples { float: left; width: 48em; max-width: 100%; }
-.examples p {
-   float: left; text-align: center;
+<style type="text/css"><!--
+.limited-width { width: 55em; max-width: 100%; margin: auto; }
+h3 { color: #af2b00; }
+.examples {
+   text-align: center;
+   margin: auto;
+}
+.examples .left, .examples .right {
+   display: inline-block;
+   vertical-align: top;
+   width: 25em; max-width: 100%;
+   margin: .6em .3em 0 0;
+}
+.examples img { width: 98%; }
+.examples p { padding: 0; }
+ul.columns {
+   text-align: left;
    width: 20em; max-width: 100%;
-   margin-top: .6em;
+   margin: auto;
+   column-count: 1;
 }
-.examples p img { width: 98%; }
-.more { clear: left; }
-.more ul { margin-top: 0; margin-bottom: 0; }
-.more ul:after {
-   clear: both; content: ""; display: block;
-   height: 0px; visibility: hidden; width: 0px;
+ul.columns li { list-style: none; }
+ul.columns li:first-child { margin-top: 0; }
+
+.screenshots { text-align: center; }
+.screenshots a {
+   display: inline-block;
+   height: 10em;
+   margin: 1%;
 }
-.more li { margin-top: .2em; margin-bottom: .2em; }
-.screenshots img { height: 12.5em; }
+.screenshots a img { height: 100%; }
 
 @media (min-width: 30em) {
-   .examples p { width: 50%; }
-   .column { float: left; width: 50%; }
+   .examples { padding-right: 4em; }
+   ul.columns {
+      width: 35em;
+      column-count: 2;
+   }
+   .screenshots a { height: 15em; }
 }
-@media (min-width: 69em) {
-   .examples { float: right; margin-left: 1.5em; }
-   .more { clear: none; }
-   .column { float: none; width: 100%; }
+@media (min-width: 50em) {
+   .examples .left img { width:90.5%; }
+   ul.columns {
+      width: 50em;
+      column-count: 3;
+      padding-left: .5em;
+   }
+   .screenshots a { height: 21em; }
 }
--->
-</style>
+--></style>
 <!--#include virtual="/server/gnun/initial-translations-list.html" -->
 <!--#include virtual="/server/banner.html" -->
+<div class="limited-width">
+
 <h2>XBoard</h2>
-<hr />
+<hr class="thin" />
+
 <p>XBoard is a graphical user interface for chess in all its major
 forms, including international chess, xiangqi (Chinese chess),
 shogi (Japanese chess) and Makruk, in addition to many minor variants such as
@@ -60,19 +85,18 @@ chosen it.</li>
 System. </p>
 
 <div class="examples">
-<p>
- <img src="whats_new/4.5.0/Spartan.png" alt=" [XBoard - chess variant] " />
- <br />XBoard, playing some Chess variant
-</p>
-<p>
- <img src="whats_new/4.4.0/marble.png" alt=" [WinBoard - marble board] " />
- <br />WinBoard, configured with marble board
-</p>
+ <div class="left">
+  <img src="whats_new/SpartanGTK.png" alt=" [XBoard - chess variant] " />
+  <p><i>XBoard GTK build, playing some Chess variant</i></p>
+ </div>
+ <div class="right">
+  <img src="whats_new/4.4.0/marble.png" alt=" [WinBoard - marble board] " />
+  <p><i>WinBoard, configured with marble board</i></p>
+ </div>
 </div>
-<div class="more">
- <h4>More...</h4>
- <ul>
- <div class="column">
+
+<h3>More...</h3>
+<ul class="columns">
   <li><a href="#tag-A1">WinBoard</a> (MS Windows port)</li>
   <li><a href="#download">Downloading</a></li>
   <li><a href="#tag-A4">Documentation</a></li>
@@ -84,8 +108,6 @@ System. </p>
   <li><a href="whats_new/4.7.2/index.html">What's New in 4.7.2?</a></li>
   <li><a href="whats_new/4.7.1/index.html">What's New in 4.7.1?</a></li>
   <li><a href="whats_new/4.7.0/index.html">What's New in 4.7.0?</a></li>
- </div>
- <div class="column">
   <li><a href="whats_new/4.6.2/index.html">What's New in 4.6.2?</a></li>
   <li><a href="whats_new/4.6.1/index.html">What's New in 4.6.1?</a> (faulty)</li>
   <li><a href="whats_new/4.6.0/index.html">What's New in 4.6.0?</a></li>
@@ -96,225 +118,279 @@ System. </p>
   <li><a href="whats_new/4.4.0/index.html">What's New in 4.4.x?</a></li>
   <li><a href="#tag-A3">How can you help us?</a></li>
   <li><a href="FAQ.html">Frequently Asked Questions</a></li>
-  </div>
- </ul>
-</div>
+</ul>
 
 <div style="clear:right"></div>
 
-<h3><a id="tag-A1">Winboard</h3>
 
-<p>The project also includes a port to MicroSoft-Windows systems called
+<h3 id="tag-A1">WinBoard</h3>
+
+<p>The project also includes a port to Microsoft Windows systems called
 WinBoard.</p>
 
-<p>You can find the downloads for binaries and preconfigured installer packages of Winboard at
-the <a href="http://www.open-aurec.com/wbforum/viewforum.php?f=19">Winboard Forum</a>,
-where yo can also report problems, get help from other WinBoard users or discuss feature requests.
-Windows builds of development versions or installers for special configuartions
-can be found at <a href="http://hgm.nubati.net/">HGM's web page</a>.</p>
+<p>You can find the downloads for binaries and preconfigured installer packages of WinBoard at
+<a href="http://hgm.nubati.net/downloads.html">HGM's download page</a>.
+Also see <a href="http://hgm.nubati.net/">HGM's web page</a>.</p>
 
-<p>Development for Winboard, reporting bugs and any other requests can
-also be done at the same places as for XBoard (see below).</p>
+<p>Development for WinBoard, reporting bugs and any other requests can
+be done at the same places as for XBoard (see below).</p>
 
-<h3><a id="download"></a>Downloading XBoard</h3>
 
-<h4>stable version (4.9.0)</h4>
+<h3 id="download">Downloading XBoard</h3>
 
-<p>Sources of current stable version can be found on the main GNU ftp server:
-<a href="http://ftp.gnu.org/gnu/xboard/">http://ftp.gnu.org/gnu/xboard/</a> (via http) and
+<h4>Stable version (4.9.0)</h4>
 
-<a href="ftp://ftp.gnu.org/gnu/xboard/">ftp://ftp.gnu.org/gnu/xboard/</a> (via ftp).
-It can also be found on one of the <a href="/prep/ftp.html">mirrors
-of ftp.gnu.org</a>;
-please <a href="http://ftpmirror.gnu.org/xboard">use a mirror</a> if
-possible.</p>
+<p>Sources of the current stable version are available from the main GNU
+download server
+(<a href="https://ftp.gnu.org/gnu/xboard/">HTTPS</a>,&nbsp;
+<a href="http://ftp.gnu.org/gnu/xboard/">HTTP</a>,&nbsp;
+<a href="ftp://ftp.gnu.org/gnu/xboard/">FTP</a>) and its
+<a href="/prep/ftp.html">mirrors</a>; please
+<a href="https://ftpmirror.gnu.org/xboard">use a mirror</a> if possible.</p>
 
 <p>Precompiled versions are available
-for <a href="http://download.opensuse.org/repositories/openSUSE:/Factory:/Contrib/">openSUSE</a>
-and <a href="http://packages.debian.org/sid/xboard">debian-sid</a>
-
+for <a href="https://software.opensuse.org/package/xboard">openSUSE</a>
+and <a href="https://packages.debian.org/search?keywords=xboard">Debian</a>
 (if you know of other distribution that package it, please let us
 know).</p>
 
-<h4>Mac OSX Intel 10.6+ App</h4>
-<p>A preconfigured app bundle of Xboard for Mac OSX can also be found at the <a href="http://www.open-aurec.com/wbforum/viewtopic.php?f=19&t=53680">Winboard Forum</a>.</p>
+<h4>Mac OS X Intel 10.6+ App</h4>
 
+<h4>Development version</h4>
 
-<h4>development version</h4>
+<p class="announcement">For information about development, please see
+the <a href="https://savannah.gnu.org/projects/xboard/">XBoard project
+page</a> at <a href="https://savannah.gnu.org">savannah.gnu.org</a>.</p>
 
-<p>We regularly do so called 'developer releases', which include the newest and the latest we are working on.
-If you want to <a href="#tag-A3">help us</a> test, or just want to use the new features, you might prefer to use those over the stable version.
+<p>We regularly do so-called "developer releases", which include
+the newest and the latest we are working on.
+If you want to <a href="#tag-A3">help us</a> test, or just want to use the
+new features, you might prefer to use those over the stable version.
 </p>
 
-<p>At the <a href="http://download.opensuse.org/repositories/home:/apersaud:/xboard">Open Build Server</a> we provide packages that can be installed in parallel to the normal xboard version. To do this the programs are renamed to xboardnext (latest from the v4.9.x branch in git) and xboardgit (latest version from the master branch in git). Packages are available for: Debian 6.0, Fedora 17/18, RedHat RHEL 6, opensuse 12.1/12.2/12.3/Tumbleweed/Factory, Centos 6, Arch, Ubunutu 10.04/12.04/12.10. These packages are generated automatically and are for testing purposes only. Please let us know if you have any problems related to XBoard or package dependencies.</p>
+<p>At the <a
+href="https://download.opensuse.org/repositories/home:/apersaud:/xboard/">
+Open Build Server</a> we provide packages that can be installed in parallel
+to the normal xboard version. To do this the programs are renamed to
+xboardnext (latest from the v4.9.x branch in Git) and xboardgit (latest
+version from the master branch in Git). Packages are available for:
+Debian&nbsp;6.0, Fedora&nbsp;17/18, RedHat RHEL 6,
+openSUSE 12.1/12.2/12.3/Tumbleweed/Factory, CentOS&nbsp;6, Arch,
+Ubuntu&nbsp;10.04/12.04/12.10. These packages are generated automatically
+and are for testing purposes only. Please let us know if you have any
+problems related to XBoard or package dependencies.</p>
 
-<p> Windows builds of development version can often be found at <a href="http://hgm.nubati.net/ ">HGM's web page</a>.</p>
+<p> Windows builds of development versions can often be found at <a
+href="http://hgm.nubati.net/">HGM's web page</a>.</p>
 
-<p>Furthermore we provide development versions (tagged commits in git):</p>
+<p>Furthermore we provide development versions (tagged commits in Git):</p>
 
 <ul>
-<li>A snapshot of the master branch is available: <a href="ftp://alpha.gnu.org/gnu/xboard/"> master-20130828</a>.</li>
-<li>A snapshot of the release branch is available: (no developer release available at the moment)</li>
+<li>a snapshot of the master branch: <a
+href="https://alpha.gnu.org/gnu/xboard/">master-20140119</a>;</li>
+<li>no developer release at the moment.</li>
 </ul>
 
 <h5>How to build the development version</h5>
 
-<h6>git version</h6>
+<dl>
+<dt>Git version</dt>
+<dd>
+<p>The <a href="https://git.savannah.gnu.org/cgit/xboard.git">Git
+repository</a> is on Savannah. All branches can be viewed on its web
+interface, which also provides tarballs of all tagged versions. These
+tarballs are different from the ones that you can download from the <a
+href="https://ftp.gnu.org/gnu/xboard/">GNU server</a>, and you will
+need to run <kbd>./autogen.sh</kbd> on them as described below.</p>
 
-<p> The <a href="http://git.savannah.gnu.org/cgit/xboard.git">git repository</a> is available on Savannah. All branches can be viewed there. The web page also provides tar-balls of all tagged versions, these tar-balls are different from the ones that you can download from the <a href="ftp://ftp.gnu.org/gnu/xboard/"> ftp-server </a> and you will need to run <code>./autogen.sh</code> on them as described below.</p>
+<p> If you want to get a copy of the repository, you can clone it using the following command:</p>
 
-<p> If you want to get a copy of the repository you can clone it using the command <code>"git clone http://git.savannah.gnu.org/r/xboard.git"</code>. For more information on how to use git, please visit the git home page.</p>
+<pre class="emph-box">git clone https://git.savannah.gnu.org/r/xboard.git</pre>
 
-<p> After cloning the git-repository or downloading and unpacking a snapshot tar-ball from the git repository,
-run <code>./autogen.sh</code>, <code>./configure</code> and then <code>make</code> and <code>make install</code>.</p>
+<p>For more information on how to use Git, please visit the <a
+href="https://git-scm.com/">Git home page</a>.</p>
 
-<h6>tar-balls (from the ftp-server)</h6>
-<p> Unpack the tar ball and do <code>./configure</code> followed by <code>make</code> and <code>make install</code>.</p>
+<p> After cloning the Git repository or downloading and unpacking a snapshot
+tarball from the Git repository,
+run <kbd>./autogen.sh</kbd>, <kbd>./configure</kbd>, and then <kbd>make</kbd>
+and <kbd>make install</kbd>.</p>
+</dd>
 
-<p>For development sources and other information, please see
-the <a href="http://savannah.gnu.org/projects/xboard/">XBoard project
-page</a> at <a href="http://savannah.gnu.org">savannah.gnu.org</a>.</p>
+<dt>Tarballs from the download server</dt>
+<dd>
+<p> Unpack the tarball and do <kbd>./configure</kbd> followed by
+<kbd>make</kbd> and <kbd>make install</kbd>.</p>
+</dd>
+</dl>
 
-<h4>archive</h4>
+<h4>Archive</h4>
 
-<p>You can also find an archive of old versions on <a href="ftp://ftp.gnu.org/old-gnu/xboard/">the ftp server</a>.</p>
+<p>You can also find an archive of old versions on <a
+href="https://ftp.gnu.org/old-gnu/xboard/">the FTP server</a>.</p>
 
-<h3><a id="tag-A4"></a>Documentation</h3>
+<h3 id="tag-A4">Documentation</h3>
 
 <p>The official <a href="manual/">manual page for XBoard</a> is available online,
 as is <a href="/manual/">documentation for most GNU software</a>.
 This discusses every feature XBoard has in detail.
 You may also find this information on your local system by
-running <em>info&nbsp;xboard</em> or <em>man&nbsp;xboard</em>, or by
-looking at <em>/usr/doc/xboard/</em>,
-<em>/usr/local/doc/xboard/</em>, or similar directories on your system.</p>
+running <kbd>info&nbsp;xboard</kbd> or <kbd>man&nbsp;xboard</kbd>, or by
+looking at <code>/usr/doc/xboard/</code>,
+<code>/usr/local/doc/xboard/</code>, or similar directories on your system.</p>
 
-<p>There now also exists an <a href="user_guide/UserGuide.html">XBoard User Guide</a>, which only presents the main features in a more pedestrian way.
+<p>There now also exists an <a href="user_guide/UserGuide.html">XBoard User
+Guide</a>, which only presents the main features in a more pedestrian way.
 This would be an excellent starting point if you are a novice XBoard user.
-If you have prior experience with XBoard, but just want to know what new features have been added since the version you were used to,
-the pages in the <a href="whats_new/index.html">What's New</a> section would be the place to go.
+If you have prior experience with XBoard, but just want to know what new
+features have been added since the version you were used to,
+the pages in the <a href="whats_new/index.html">What's New</a> section would
+be the place to go.
 </p>
 
-<p>A description of the Chess Engine Communication Protocol used by XBoard to communicate with Chess Engines can be found <a href="engine-intf.html">here</a>.</p>
+<p>A description of the <a href="engine-intf.html">Chess Engine Communication
+Protocol</a> used by XBoard to communicate with Chess Engines is also available.</p>
 
-<h3><a id="tag-A5"></a>Screenshots</h3>
+
+<h3 id="tag-A5">Screenshots</h3>
 
 <p>These are screenshots taken from version 4.4.0 (click to enlarge).</p>
+</div>
+
 <div class="screenshots">
 <a href="graphics/xboard-4.4.0.png"><img src="graphics/xboard-4.4.0.png" alt=" [screenshot normal game] " /></a>
 <a href="graphics/xboard-4.4.0-variant.png"><img src="graphics/xboard-4.4.0-variant.png" alt=" [screenshot bughouse game] " /></a>
+<a href="graphics/xboard-4.4.0-XQ.png"><img src="graphics/xboard-4.4.0-XQ.png" alt=" [screenshot xiangqi game] " /></a>
 <a href="graphics/xboard-4.4.0-showgi.png"><img src="graphics/xboard-4.4.0-showgi.png" alt=" [screenshot shogi game] " /></a>
 <a href="graphics/xboard-4.4.0-petite.png"><img src="graphics/xboard-4.4.0-petite.png" alt=" [screenshot auxiliary windows " /></a>
-<a href="graphics/xboard-4.4.0-XQ.png"><img src="graphics/xboard-4.4.0-XQ.png" alt=" [screenshot xiangqi game] " /></a>
 </div>
 
-<h3><a id="tag-A3"></a>Help needed</h3>
 
-<p>It would be great if people would like to help in the developing process. We can use all kinds of help, from people who just use the software and have a feature request (send them to developer mailing list), to people who can update/check the documentation and especially people who test development versions (send problems to the developer mailing list).
+<div class="limited-width">
+<h3 id="tag-A3">Help needed</h3>
+
+<p>It would be great if people would like to help in the developing process
+We can use all kinds of help, from people who just use the software and have
+a feature request (send them to developer mailing list), to people who can
+update/check the documentation and especially people who test development
+versions (send problems to the developer mailing list).
 Have a look at the following list in case you are interested:</p>
 
 <h4>Admin</h4>
-<p>A new project admin is needed. The person would manage the Savannah pages, membership to Savannah/git access, do releases, and manage the email list, etc. The job could also be split among several people.</p>
+<p>A new project admin is needed. The person would manage the Savannah
+pages, membership to Savannah/Git access, do releases, and manage the email
+list, etc. The job could also be split among several people.</p>
 
 <h4>Translators </h4>
-<p>We added support for different languages to XBoard and need people to translate it. The translation is handled by <a href="http://translationproject.org/html/welcome.html">the translation project</a>. You can check on the <a href="http://translationproject.org/domain/xboard.html">current status</a> and how to <a href="http://translationproject.org/html/translators.html">join the translation project</a>. </p>
+<p>We added support for different languages to XBoard and need people to
+translate it. The translation is handled by <a
+href="https://translationproject.org/html/welcome.html">the translation
+project</a>. You can check on the <a
+href="https://translationproject.org/domain/xboard.html">current status</a>
+and how to <a href="https://translationproject.org/html/translators.html">
+join the translation project</a>. </p>
 
 <h4>Testers </h4>
-<p> We are always looking for people who are willing to test the latest new features and give us feedback or new ideas. If you are interested, please send an email to our list at <a href="mailto:xboard-devel@gnu.org">&lt;xboard-devel@gnu.org&gt;</a> or just try out the program and reports bugs either to the email list or to the bug-tracker (see <a href="#download">below</a> for links).</p>
+<p> We are always looking for people who are willing to test the latest new
+features and give us feedback or new ideas. If you are interested, please
+send an email to our list at &lt;<a
+href="mailto:xboard-devel@gnu.org">xboard-devel@gnu.org</a>&gt; or just try
+out the program and reports bugs either to the email list or to the bug
+tracker (see <a href="#download">below</a> for links).</p>
 
 <h4>GTK developer needed</h4>
-<p> We are also working on merging Winboard and XBoard back into one version using a cross platform GTK-front end. This will help us clean up the code and make things like internationalization easier. We made some progress, if you know want to help out there are still lots of things waiting to be done. Email the <a href="mailto:xboard-devel@gnu.org">mailing list</a> for more information. There is already some unmerged code to port to gtk3.</p>
+<p> We are also working on merging WinBoard and XBoard back into one version
+using a cross platform GTK-front end. This will help us clean up the code
+and make things like internationalization easier. We made some progress, if
+you know want to help out there are still lots of things waiting to be done.
+Email the <a href="mailto:xboard-devel@gnu.org">mailing list</a> for more
+information. There is already some unmerged code to port to GTK3.</p>
 
 <h4>Update the help files</h4>
-<p>The help files for Xboard and Winboard could be merged into one document.</p>
+<p>The help files for Xboard and WinBoard could be merged into one document.</p>
 
 <h4>Update the webpage</h4>
 <p>The content of the webpage could be updated with screenshots from
 the latest version. We also have a new tutorial that could be
 integrated.</p>
 
+
 <h3>Links</h3>
 
 <ul>
-  <li> XBoard/Winboard
+  <li> XBoard/WinBoard
     <ul>
       <li> <a href="http://www.tim-mann.org/chess.html">Tim's original pages</a> are still available.</li>
       <li> XBoard can also run engines that use the UCI protocol, with
-	the aid of the Polyglot protocol adapter.  A new Polyglot
+        the aid of the <a href="https://github.com/flok99/polyglot">Polyglot
+        protocol adapter</a>.<!-- A new Polyglot
 	version, (1.4.67b), especially adapted to support the new
 	features of XBoard 4.4.0 and later, can be
-	found <a href="http://alpha.uhasselt.be/Research/Algebra/Toga/polyglot-release/">here</a>.</li>
-
+	found <a href="http://alpha.uhasselt.be/Research/Algebra/Toga/polyglot-release/">here</a>.--></li>
     </ul>
   </li>
   <li> Incomplete list of computer engines that work with XBoard
     <ul>
       <li><a href="/software/chess/">GNU chess</a></li>
-      <li><a href="http://home.hccnet.nl/h.g.muller/CVfairy.html">Fairy-Max</a></li>
+      <li><a href="https://home.hccnet.nl/h.g.muller/CVfairy.html">Fairy-Max</a></li>
       <li><a href="http://wbec-ridderkerk.nl/html/lastupdates.htm">A list with lots of engines</a></li>
-
-      <li><a href="http://home.hccnet.nl/h.g.muller/XQ.html">List of Xiangqi engines</a></li>
+      <li><a href="https://home.hccnet.nl/h.g.muller/XQ.html">List of Xiangqi engines</a></li>
       <li> other popular engines are crafty, phalanx, fruit, toga2, glaurung, ... </li>
     </ul>
   </li>
   <li> Chess server you can connect to using XBoard
     <ul>
-      <li> <a href="http://www.freechess.org"> Free Internet Chess Server (FICS) </a></li>
-
-      <li> <a href="http://www.chessclub.com/"> The Internet Chess Club </a> </li>
-
-      <li> <a href="http://80.100.28.169/"> The Variant ICS </a> </li>
+      <li> <a href="https://www.freechess.org">Free Internet Chess Server (FICS)</a></li>
+      <li> <a href="https://www.chessclub.com/">The Internet Chess Club</a> </li>
+      <li> <a href="http://hgm.nubati.net/VICS/">The Variant ICS</a> </li>
     </ul>
   </li>
   <li> Other interfaces
     <ul>
-      <li> <a href="http://www.bergo.eng.br/eboard/">eboard</a> </li>
-
+      <li> <a href="https://www.bergo.eng.br/eboard/">eboard</a> </li>
     </ul>
   </li>
 </ul>
 
-<h3>Frequently Asked Question(FAQ)</h3>
+
+<h3>Frequently Asked Question (FAQ)</h3>
 
 <p>If you have any questions, please check out our <a href="FAQ.html">FAQ</a>.</p>
 
 
-<h3>Mailing Lists and Discussion Forums</h3>
+<h3>Mailing Lists</h3>
 
-<h4>mailing lists</h4>
-
-<p>XBoard has two mailing lists:
-<a href="mailto:bug-xboard@gnu.org">&lt;bug-xboard@gnu.org&gt;</a> and
-<a href="mailto:xboard-devel@gnu.org">&lt;xboard-devel@gnu.org&gt;</a>.</p>
-
-<p>The main discussion list is
-<a href="mailto:xboard-devel@gnu.org">&lt;xboard-devel@gnu.org&gt;</a>,
-and is used to discuss most aspects of XBoard, including development
-and enhancement requests. Please send bug reports
-to <a href="mailto:bug-xboard@gnu.org">&lt;bug-xboard@gnu.org&gt;</a>.</p>
+<p>XBoard has two mailing lists:</p>
+<ul>
+  <li>&lt;<a href="mailto:xboard-devel@gnu.org">xboard-devel@gnu.org</a>&gt;
+  (<a href="https://lists.gnu.org/mailman/listinfo/xboard-devel">web interface</a>)
+  for discussing most aspects of XBoard, including development and
+  enhancement requests;</li>
+  <li>&lt;<a href="mailto:bug-xboard@gnu.org">bug-xboard@gnu.org</a>&gt;
+  (<a href="https://lists.gnu.org/mailman/listinfo/bug-xboard">web interface</a>)
+  for reporting bugs.</li>
+</ul>
 
 <p>Announcements about XBoard and most other GNU software are made on
-<a href="mailto:info-gnu@gnu.org">&lt;info-gnu@gnu.org&gt;</a>.</p>
+&lt;<a href="mailto:info-gnu@gnu.org">info-gnu@gnu.org</a>&gt;.</p>
 
 <p>To subscribe to these or any GNU mailing lists, please send an empty
-mail with a Subject: header of just <tt>subscribe</tt> to the relevant
--request list.  For example, to subscribe yourself to the GNU
-announcement list, you would send mail to <a
-href="mailto:info-gnu-request@gnu.org?Subject=subscribe">&lt;info-gnu-request@gnu.org&gt;</a>.
+mail with a <i>Subject:</i> header of just "subscribe" to the
+relevant <i>-request</i> list.  For example, to subscribe yourself to the
+GNU announcement list, you would send mail to &lt;<a
+href="mailto:info-gnu-request@gnu.org?Subject=subscribe">info-gnu-request@gnu.org</a>&gt;.
 Or you can use the <a
-href="http://lists.gnu.org/mailman/listinfo/info-gnu">mailing list web
+href="https://lists.gnu.org/mailman/listinfo/info-gnu">mailing list web
 interface</a>.</p>
-
-<h4>discussion forums</h4>
-
-<p>A very active forum is the <a href="http://www.open-aurec.com/wbforum/">WinBoard Forum</a> (where our current main developer HGM can be found).</p>
 
 <h3>Reporting Bugs and Requesting New Features</h3>
 
-<p> If you think you found a bug, please check the <a href="http://savannah.gnu.org/bugs/?group=xboard">bugtracker</a> for open and already closed bugs. If you found a new bug, please, file a bug-report either via our bug-related email list or in the <a href="http://savannah.gnu.org/bugs/?group=xboard">bugtracker</a>.</p>
+<p>If you think you found a bug, please check the <a
+href="https://savannah.gnu.org/bugs/?group=xboard">bugtracker</a> for open
+and already closed bugs. If you found a new bug, please, file a bug report
+either via our bug-related email list or in the bugtracker.</p>
 
-
-<p> For feature requests, please use our mailinglist: <a href="mailto:xboard-devel@gnu.org">&lt;xboard-devel@gnu.org&gt;</a>.</p>
+<p>For feature requests, please use our mailinglist: &lt;<a
+href="mailto:xboard-devel@gnu.org">xboard-devel@gnu.org</a>&gt;.</p>
 
 <!-- will be in one of the next releases
 -<h3>Translating XBoard</h3>
@@ -330,7 +406,7 @@ Project welcome page</a>.
 -->
 
 <p>Please remember that development of XBoard, and GNU in general, is a
-volunteer effort, and you also can contribute. For information, please
+volunteer effort; you too can contribute. For information, please
 read <a href="/help/">How to help GNU</a>.</p>
 
 
@@ -338,11 +414,12 @@ read <a href="/help/">How to help GNU</a>.</p>
 
 <p>XBoard
 is free software; you can redistribute it and/or modify it under the
-terms of the <a href="http://www.gnu.org/licenses/gpl.html"
+terms of the <a href="/licenses/gpl.html"
 rel="license">GNU General Public License</a> as published by the Free
 Software Foundation; either version&nbsp;3 of the License, or (at your
 option) any later version.</p>
 
+</div>
 </div><!-- for id="content", starts in the include above -->
 <!--#include virtual="/server/footer.html" -->
 <div id="footer">
@@ -356,7 +433,7 @@ to <a href="mailto:bug-xboard@gnu.org">&lt;bug-xboard@gnu.org&gt;</a>.</p>
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -387,7 +464,7 @@ Commons Attribution-NoDerivatives 4.0 International License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2017/04/16 17:51:40 $
+$Date: 2023/12/30 23:31:34 $
 <!-- timestamp end -->
 </p>
 </div>

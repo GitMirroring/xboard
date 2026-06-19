@@ -1,6 +1,6 @@
 <!--#include virtual="/server/html5-header.html" -->
   <title>Chu Shogi</title>
-  <link rel="StyleSheet" href="./moves.css" type="text/css">
+  <link rel="StyleSheet" href="./moves.css" type="text/css" />
   <script type="text/javascript" src="chu.js">
 </script>
 <!--#include virtual="/server/banner.html" -->
@@ -13,33 +13,33 @@
   popularity by modern Shogi. It is still widely played in Japan,
   though.</p>
 
-  <table cellpadding="20">
+  <table class="setup">
     <tr>
-      <td><img src="Chu.png"></td>
+      <td><img src="Chu.png" alt="" /></td>
 
       <td>
         <h3>Initial setup</h3>
 
-        <p>f0, g11: King<br>
-        f2, g9: Lion<br>
-        g2, f9: Queen (Free King)<br>
-        e2, e9, h2, h9: Dragon King<br>
-        d2, d9, i2, i9: Dragon Horse<br>
-        c2, c9, j2, j9: Rook<br>
-        c1, c10, j1, j10: Bishop<br>
-        b2, b9, k2, k9: Vertical Mover<br>
-        a2, a9, l2, l9: Side Mover<br>
-        a1, a10, l1, l10: Canon (Reverse Chariot)<br>
-        a0, a11, l0, l11: Lance<br>
-        f1, g10: Kylin<br>
-        g1, f10: Phoenix<br>
-        g0, f11: Elephant<br>
-        e1, e10, h1, h10: Blind Tiger<br>
-        e0, e11, h0, h11: Gold General<br>
-        d0, d11, i0, i11: Silver General<br>
-        c0, c11, j0, j11: Copper General<br>
-        b0, b11, k0, k11: Ferocious Leopard<br>
-        d4, d7, i4, i7: Cobra (Go Between)<br>
+        <p>f0, g11: King<br />
+        f2, g9: Lion<br />
+        g2, f9: Queen (Free King)<br />
+        e2, e9, h2, h9: Dragon King<br />
+        d2, d9, i2, i9: Dragon Horse<br />
+        c2, c9, j2, j9: Rook<br />
+        c1, c10, j1, j10: Bishop<br />
+        b2, b9, k2, k9: Vertical Mover<br />
+        a2, a9, l2, l9: Side Mover<br />
+        a1, a10, l1, l10: Canon (Reverse Chariot)<br />
+        a0, a11, l0, l11: Lance<br />
+        f1, g10: Kylin<br />
+        g1, f10: Phoenix<br />
+        g0, f11: Elephant<br />
+        e1, e10, h1, h10: Blind Tiger<br />
+        e0, e11, h0, h11: Gold General<br />
+        d0, d11, i0, i11: Silver General<br />
+        c0, c11, j0, j11: Copper General<br />
+        b0, b11, k0, k11: Ferocious Leopard<br />
+        d4, d7, i4, i7: Cobra (Go Between)<br />
         a3-l3, a8-l8: Pawns</p>
       </td>
     </tr>
@@ -72,11 +72,11 @@
 
       <td class="n" id="sq9x9"></td>
 
-      <td class="h"><img src="sym/yellow.png"></td>
+      <td class="h"><img src="sym/yellow.png" alt="" /></td>
 
-      <td class="w" rowspan="2" valign="top">
-        <p>Sliding capture or non-capture,<br>
-        can be blocked on any square along the ray</p>
+      <td class="w" rowspan="2" style="vertical-align:top">
+        Sliding capture or non-capture,<br />
+        can be blocked on any square along the ray
       </td>
     </tr>
 
@@ -110,13 +110,13 @@
       <td class="n" id="sq2x7"></td>
 
       <td class="n" id="sq3x7" onmousedown="down_click(3,7)"
-      onmouseup="up_click()"><img src="sym/WhiteGold.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteGold.png" alt="" /></td>
 
       <td class="n" id="sq4x7" onmousedown="down_click(4,7)"
-      onmouseup="up_click()"><img src="sym/WhiteAdvisor.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteAdvisor.png" alt="" /></td>
 
       <td class="n" id="sq5x7" onmousedown="down_click(5,7)"
-      onmouseup="up_click()"><img src="sym/WhiteCommoner.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteCommoner.png" alt="" /></td>
 
       <td class="n" id="sq6x7"></td>
 
@@ -126,7 +126,7 @@
 
       <td class="n" id="sq9x7"></td>
 
-      <td class="h"><img src="sym/orange.png"></td>
+      <td class="h"><img src="sym/orange.png" alt="" /></td>
 
       <td class="w">Unblockable leap (capture or non-capture)</td>
     </tr>
@@ -139,27 +139,27 @@
       <td class="n" id="sq2x6"></td>
 
       <td class="n" id="sq3x6" onmousedown="down_click(3,6)"
-      onmouseup="up_click()"><img src="sym/WhiteLeopard.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteLeopard.png" alt="" /></td>
 
       <td class="n" id="sq4x6" onmousedown="down_click(4,6)"
-      onmouseup="up_click()"><img src="sym/WhiteDolphin.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteDolphin.png" alt="" /></td>
 
       <td class="n" id="sq5x6" onmousedown="down_click(5,6)"
-      onmouseup="up_click()"><img src="sym/WhiteCanon.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteCanon.png" alt="" /></td>
 
       <td class="n" id="sq6x6" onmousedown="down_click(6,6)"
-      onmouseup="up_click()"><img src="sym/WhiteKing.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKing.png" alt="" /></td>
 
       <td class="n" id="sq7x6" onmousedown="down_click(7,6)"
-      onmouseup="up_click()"><img src="sym/WhiteElephant.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteElephant.png" alt="" /></td>
 
       <td class="n" id="sq8x6"></td>
 
       <td class="n" id="sq9x6"></td>
 
-      <td class="h"><img src="sym/cyan.png"></td>
+      <td class="h"><img src="sym/cyan.png" alt="" /></td>
 
-      <td class="w" rowspan="2" valign="top">Captured while passing
+      <td class="w" rowspan="2" style="vertical-align:top">Captured while passing
       through the square to another destination</td>
     </tr>
 
@@ -169,23 +169,23 @@
       <td class="n" id="sq1x5"></td>
 
       <td class="n" id="sq2x5" onmousedown="down_click(2,5)"
-      onmouseup="up_click()"><img src="sym/WhiteSword.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteSword.png" alt="" /></td>
 
       <td class="n" id="sq3x5" onmousedown="down_click(3,5)"
-      onmouseup="up_click()"><img src="sym/WhitePrincess.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePrincess.png" alt="" /></td>
 
       <td class="n" id="sq4x5" onmousedown="down_click(4,5)"
-      onmouseup="up_click()"><img src="sym/WhiteHawk.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteHawk.png" alt="" /></td>
 
       <td class="n" id="sq5x5" onmousedown="down_click(5,5)"
-      onmouseup="up_click()"><img src="sym/WhiteUnicorn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteUnicorn.png" alt="" /></td>
 
       <td class="n" id="sq6x5" onmousedown="down_click(6,5)"
       onmouseup="up_click()"><img src=
-      "sym/WhiteCrownedRook.png"></td>
+      "sym/WhiteCrownedRook.png" alt="" /></td>
 
       <td class="n" id="sq7x5" onmousedown="down_click(7,5)"
-      onmouseup="up_click()"><img src="sym/WhiteRook.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteRook.png" alt="" /></td>
 
       <td class="n" id="sq8x5"></td>
 
@@ -198,23 +198,23 @@
       <td class="n" id="sq1x4"></td>
 
       <td class="n" id="sq2x4" onmousedown="down_click(2,4)"
-      onmouseup="up_click()"><img src="sym/WhiteHSword.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteHSword.png" alt="" /></td>
 
       <td class="n" id="sq3x4" onmousedown="down_click(3,4)"
-      onmouseup="up_click()"><img src="sym/WhiteHCrown.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteHCrown.png" alt="" /></td>
 
       <td class="n" id="sq4x4" onmousedown="down_click(4,4)"
-      onmouseup="up_click()"><img src="sym/WhiteLion.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteLion.png" alt="" /></td>
 
       <td class="n" id="sq5x4" onmousedown="down_click(5,4)"
-      onmouseup="up_click()"><img src="sym/WhiteQueen.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteQueen.png" alt="" /></td>
 
       <td class="n" id="sq6x4" onmousedown="down_click(6,4)"
       onmouseup="up_click()"><img src=
-      "sym/WhiteCrownedBishop.png"></td>
+      "sym/WhiteCrownedBishop.png" alt="" /></td>
 
       <td class="n" id="sq7x4" onmousedown="down_click(7,4)"
-      onmouseup="up_click()"><img src="sym/WhiteBishop.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteBishop.png" alt="" /></td>
 
       <td class="n" id="sq8x4"></td>
 
@@ -227,21 +227,21 @@
       <td class="n" id="sq1x3"></td>
 
       <td class="n" id="sq2x3" onmousedown="down_click(2,3)"
-      onmouseup="up_click()"><img src="sym/WhiteCobra.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteCobra.png" alt="" /></td>
 
       <td class="n" id="sq3x3" onmousedown="down_click(3,3)"
-      onmouseup="up_click()"><img src="sym/WhiteMarshall.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteMarshall.png" alt="" /></td>
 
       <td class="n" id="sq4x3" onmousedown="down_click(4,3)"
-      onmouseup="up_click()"><img src="sym/WhiteKnight.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKnight.png" alt="" /></td>
 
       <td class="n" id="sq5x3" onmousedown="down_click(5,3)"
       onmouseup="up_click()"><img src=
-      "sym/WhiteChancellor.png"></td>
+      "sym/WhiteChancellor.png" alt="" /></td>
 
       <td class="n" id="sq6x3" onmousedown="down_click(6,3)"
       onmouseup="up_click()"><img src=
-      "sym/WhiteArchbishop.png"></td>
+      "sym/WhiteArchbishop.png" alt="" /></td>
 
       <td class="n" id="sq7x3"></td>
 
@@ -260,13 +260,13 @@
       <td class="n" id="sq3x2"></td>
 
       <td class="n" id="sq4x2" onmousedown="down_click(4,2)"
-      onmouseup="up_click()"><img src="sym/WhiteLance.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteLance.png" alt="" /></td>
 
       <td class="n" id="sq5x2" onmousedown="down_click(5,2)"
-      onmouseup="up_click()"><img src="sym/WhiteClaw.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteClaw.png" alt="" /></td>
 
       <td class="n" id="sq6x2" onmousedown="down_click(6,2)"
-      onmouseup="up_click()"><img src="sym/WhitePawn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td class="n" id="sq7x2"></td>
 
@@ -320,12 +320,12 @@
     </tr>
   </table>
 
-  <p id="piece" height="20">:<br>
-  :<br>
-  :<br>
+  <p id="piece">:<br />
+  :<br />
+  :<br />
   :</p>
 
-  <table cellpadding="5" border="1">
+  <table class="moves">
     <tr>
       <td><b>sym</b></td>
 
@@ -342,7 +342,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteKing.png"></td>
+      <td><img src="sym/WhiteKing.png" alt="" /></td>
 
       <td>King</td>
 
@@ -356,7 +356,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteLion.png"></td>
+      <td><img src="sym/WhiteLion.png" alt="" /></td>
 
       <td>Lion</td>
 
@@ -370,7 +370,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteQueen.png"></td>
+      <td><img src="sym/WhiteQueen.png" alt="" /></td>
 
       <td>Queen</td>
 
@@ -384,7 +384,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteCrownedRook.png"></td>
+      <td><img src="sym/WhiteCrownedRook.png" alt="" /></td>
 
       <td>Dragon(-King)</td>
 
@@ -398,7 +398,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteCrownedBishop.png"></td>
+      <td><img src="sym/WhiteCrownedBishop.png" alt="" /></td>
 
       <td>(Dragon-)Horse</td>
 
@@ -412,7 +412,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteRook.png"></td>
+      <td><img src="sym/WhiteRook.png" alt="" /></td>
 
       <td>Rook</td>
 
@@ -426,7 +426,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteBishop.png"></td>
+      <td><img src="sym/WhiteBishop.png" alt="" /></td>
 
       <td>Bishop</td>
 
@@ -440,7 +440,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteSword.png"></td>
+      <td><img src="sym/WhiteSword.png" alt="" /></td>
 
       <td>Vertical Mover</td>
 
@@ -454,7 +454,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteHSword.png"></td>
+      <td><img src="sym/WhiteHSword.png" alt="" /></td>
 
       <td>Side Mover</td>
 
@@ -468,7 +468,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteCanon.png"></td>
+      <td><img src="sym/WhiteCanon.png" alt="" /></td>
 
       <td>Canon</td>
 
@@ -482,7 +482,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteLance.png"></td>
+      <td><img src="sym/WhiteLance.png" alt="" /></td>
 
       <td>Lance</td>
 
@@ -496,7 +496,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteMarshall.png"></td>
+      <td><img src="sym/WhiteMarshall.png" alt="" /></td>
 
       <td>Kylin</td>
 
@@ -510,7 +510,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteArchbishop.png"></td>
+      <td><img src="sym/WhiteArchbishop.png" alt="" /></td>
 
       <td>Phoenix</td>
 
@@ -524,7 +524,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteElephant.png"></td>
+      <td><img src="sym/WhiteElephant.png" alt="" /></td>
 
       <td>Elephant</td>
 
@@ -538,7 +538,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteClaw.png"></td>
+      <td><img src="sym/WhiteClaw.png" alt="" /></td>
 
       <td>Blind Tiger</td>
 
@@ -552,7 +552,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteGold.png"></td>
+      <td><img src="sym/WhiteGold.png" alt="" /></td>
 
       <td>Gold</td>
 
@@ -566,7 +566,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteAdvisor.png"></td>
+      <td><img src="sym/WhiteAdvisor.png" alt="" /></td>
 
       <td>Silver</td>
 
@@ -580,7 +580,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteCommoner.png"></td>
+      <td><img src="sym/WhiteCommoner.png" alt="" /></td>
 
       <td>Copper</td>
 
@@ -594,7 +594,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteLeopard.png"></td>
+      <td><img src="sym/WhiteLeopard.png" alt="" /></td>
 
       <td>Ferocious Leopard</td>
 
@@ -608,7 +608,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteCobra.png"></td>
+      <td><img src="sym/WhiteCobra.png" alt="" /></td>
 
       <td>Cobra</td>
 
@@ -622,7 +622,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhitePawn.png"></td>
+      <td><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td>Pawn</td>
 
@@ -637,12 +637,12 @@
 
     <tr>
       <td colspan="6"><b>Promoted pieces (not initially present)
-      <?B>
+      <!-- &lt;?B&gt; -->
       </b></td>
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteHawk.png"></td>
+      <td><img src="sym/WhiteHawk.png" alt="" /></td>
 
       <td>Eagle</td>
 
@@ -657,7 +657,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteUnicorn.png"></td>
+      <td><img src="sym/WhiteUnicorn.png" alt="" /></td>
 
       <td>Unicorn</td>
 
@@ -672,7 +672,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhitePrincess.png"></td>
+      <td><img src="sym/WhitePrincess.png" alt="" /></td>
 
       <td>Narrow Queen</td>
 
@@ -686,7 +686,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteHCrown.png"></td>
+      <td><img src="sym/WhiteHCrown.png" alt="" /></td>
 
       <td>Sleeping Queen</td>
 
@@ -700,7 +700,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteChancellor.png"></td>
+      <td><img src="sym/WhiteChancellor.png" alt="" /></td>
 
       <td>Flying Stag</td>
 
@@ -714,7 +714,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteKnight.png"></td>
+      <td><img src="sym/WhiteKnight.png" alt="" /></td>
 
       <td>White Horse</td>
 
@@ -728,7 +728,7 @@
     </tr>
 
     <tr>
-      <td><img src="sym/WhiteDolphin.png"></td>
+      <td><img src="sym/WhiteDolphin.png" alt="" /></td>
 
       <td>Whale</td>
 

@@ -1,13 +1,24 @@
 <!--#include virtual="/server/html5-header.html" -->
 <title>XBoard - GNU Project - Free Software Foundation - NEWS</title>
-<style type="text/css">body{max-width:100em !important;}</style>
+<link rel="stylesheet" type="text/css" href="../whats_new.css" media="print,screen" />
 <!--#include virtual="/server/banner.html" -->
+<h2>What is new in XBoard&nbsp;/ WinBoard&nbsp;4.9.0?</h2>
 
-<h2>What is new in XBoard/WinBoard 4.9.0?</h2>
-<table cellpadding="20"><tr valign="top"><td>
+<div class="whatsnew-nav">
+ <div class="other-releases">
+  <img src="../4.5.0/winboardF.png" alt=" [XBoard logo] " />
+  <ul>
+   <li><a href="../4.9.0/index.html">Follow-up</a></li>
+   <li><a href="../4.8.0/index.html">Preceding release (4.8.0)</a></li>
+   <li><a href="http://hgm.nubati.net/news.html">Experimental and future stuff</a></li>
+  </ul>
+ </div>
 
-<a href="#tag-A"><h4>New features in this release</h4></a>
-<ul><li>
+<div class="list-container">
+<h3 class="no-display">In this release:</h3>
+<dl class="feature-list">
+<dt><a href="#tag-A">New features in this release</a></dt>
+<dd><ul><li>
 <a href="#tag-A5">Running EPD test suites</a>
 </li><li>
 <a href="#tag-A6">Getting instant help (XB)</a>
@@ -37,12 +48,12 @@
 <a href="#tag-A18">Instant preview of the board theme (XB)</a>
 </li><li>
 <a href="#tag-A19">Editing theme list or ICS text menu (XB)</a>
-</li></ul>
+</li></ul></dd>
+</dl>
 
-</td><td>
-
-<a href="#tag-B"><h4>New variant support</h4></a>
-<ul><li>
+<dl class="feature-list">
+<dt><a href="#tag-B">New variant support</a></dt>
+<dd><ul><li>
 <a href="#tag-B1">New piece types</a>
 </li><li>
 <a href="#tag-B2">Allowing more than 26 piece types</a>
@@ -60,27 +71,18 @@
 <a href="#tag-B5">Allow inaccessible squares</a>
 </li><li>
 <a href="#tag-B6">Load Shogi games in .kif format</a>
+</li></ul></dd>
+</dl>
+</div>
+</div>
 
-</li></ul>
+<h3 id="tag-A" class="emph">The following features are new in XBoard 4.9.0:</h3>
 
-</td><td>
-
-<img src="../4.5.0/winboardF.png">
-  <p>
-    <a href="../4.9.0/index.html">Follow-up</a>
-  </p>
-  <p>
-    <a href="../4.8.0/index.html">Preceding release (4.8.0)</a>
-  </p>
-  <p>
-    <a href="http://hgm.nubati.net/news.html">Experimental and future stuff</a>
-  </p>
-</td></tr></table>
-
-<a name="tag-A"><h2>The following features are new in XBoard 4.9.0:</h2></a>
-
-<img src="EPD.png" style="float:left;margin:20px">
-<h3><a name="tag-A5">EPD test suites</a></h3>
+<div class="feature">
+<h4 id="tag-A5">EPD test suites</h4>
+<div class="pict wide left">
+  <a href="EPD.png"><img src="EPD.png" alt="" /></a>
+</div>
 <p>
 A new volatile option <b>-epd</b> will switch XBoard in EPD mode for the duration of the session.
 In this mode all games will be terminated after a single move.
@@ -96,16 +98,20 @@ and as the 'match' result in the title bar:
 finding a correct best move will be counted as a win, playing an avoid move as a loss,
 and all other moves as draws.
 </p>
+</div>
 
-<h3><a name="tag-A7">Selecting a piece with the mouse wheel</a></h3>
+<div class="feature">
+<h4 id="tag-A7">Selecting a piece with the mouse wheel</h4>
 <p>
 In Edit Position mode, operating the mouse wheel above a square now creates a piece in that square,
 or changes the identity of that piece, making it run through the entire set of pieces participating in the current variant.
 This is especially useful in variants with many piece types,
 where sweep selection becomes problematic due to lack of space to move the mouse.
 </p>
+</div>
 
-<h3><a name="tag-A11">What if your mouse only has a single button?</a></h3>
+<div class="feature">
+<h4 id="tag-A11">What if your mouse only has a single button?</h4>
 <p>
 Setting up a position required the right mouse button ('button 3' in Linux) to put new pieces on the board.
 The option <b>-monoMouse</b> can allow XBoard to use the left button for this.
@@ -114,48 +120,62 @@ and will create a piece in that square.
 Clicking over an occupied square will select or grab the piece,
 as usual for left-clicks.
 </p>
+</div>
 
-<h3><a name="tag-A12">Your favorite starting positions</a></h3>
+<div class="feature">
+<h4 id="tag-A12">Your favorite starting positions</h4>
 <p>
 A new option <b>-positionDir</b> can force the file-selector dialog that pops up in response to Load Position
 to start browsing in the specified directory, rather than in the current directory.
 This can be useful when you have a favorite set of positions from which you often start games,
 e.g. for several material-odds positions.
 </p>
+</div>
 
-<img src="Help.png" style="float:right;margin:20px">
-<h3><a name="tag-A6">Clicking menus and dialog texts for instant help</a></h3>
+<div class="feature">
+<h4 id="tag-A6">Clicking menus and dialog texts for instant help</h4>
+<div class="pict medium">
+  <a href="Help.png"><img src="Help.png" alt="" /></a>
+</div>
 <p>
 All text labels in dialogs and the main pop-down menu items can now be right-clicked,
 in order to pop up a text box with the description of their function from the manual.
 The man page has been largely rewritten and re-organized to make sure most
 items produce satisfactory help this way.
 </p>
+</div>
 
-<h3><a name="tag-A9">Fractions in the time-control parameters</a></h3>
+<div class="feature">
+<h4 id="tag-A9">Fractions in the time-control parameters</h4>
 <p>
 The spin controls in the Time Control dialog of XBoard's GTK build do not allow entering non-integer values,
 which precluded setting base times like 0:30 (for 30 sec) or increments like 0.1 (sec).
 To work around that there now is a divide-by-60 checkbox in that dialog,
 which allows you to enter base times in seconds and increments in units of 1/60 seconds.
 </p>
+</div>
 
-<h3><a name="tag-A8">Engine Settings on the engine's demand</a></h3>
+<div class="feature">
+<h4 id="tag-A8">Engine Settings on the engine's demand</h4>
 <p>
 It was already possible for an engine to cause pop up of a message, or a simple question.
 Now engines can modify their settings dialog after startup, and force it to pop up.
 This is triggered by the 'feature done=N' command, where a meaning has been given to new values of N.
 XBoard will now erase the engine's option list on receiving done=0,
-so that the engine can redefine the settings, or even the options itself, by resending 'feature option' commands.
+so that the engine can redefine the settings, or the options itself, by resending 'feature option' commands.
 Ending such a resent option list with "feature done=1" will now cause the contents of an open settings dialog to be updated.
 Ending it with done=2 will alert XBoard that the list of options itself changed,
 and force it to close and re-open a dialog that was already open.
-Ending with done=3 will even open a redesigned dialog when no dialog was up before,
+Ending with done=3 will open a redesigned dialog when no dialog was up before,
 allowing the engine to ask for attention.
 </p>
+</div>
 
-<img src="Password.png" style="float:left; margin:20px">
-<h3><a name="tag-A13">Getting rid of the xterm window in ICS play</a></h3>
+<div class="feature">
+<h4 id="tag-A13">Getting rid of the xterm window in ICS play</h4>
+<div class="pict narrow left">
+  <a href="Password.png"><img src="Password.png" alt="" /></a>
+</div>
 <p>
 The console from which XBoard was started was historically used as text window to interact with the Internet Chess Server.
 But the ICS Chat/Console window now fulfills the same function.
@@ -164,9 +184,13 @@ and XBoard can be started in ICS mode without terminal, provided the ICS Chat/Co
 This window now also hides the password you are typing,
 and prevents you from recalling it with the arrow keys.
 </p>
+</div>
 
-<h3><a name="tag-A16">Controlling castling and e.p. rights in Edit Position mode</a></h3>
-<img src="Rights.png" style="float:right; margin:20px">
+<div class="feature">
+<h4 id="tag-A16">Controlling castling and e.p. rights in Edit Position mode</h4>
+<div class="pict narrower" style="width: 8.2em">
+  <a href="Rights.png"><img src="Rights.png" alt="" /></a>
+</div>
 <p>
 XBoard has long since been made castling-aware, but the castling rights could only be fully controlled by pasting a FEN.
 In Edit Position mode a simplistic heuristic was used to assign such rights:
@@ -185,17 +209,23 @@ and e.p. rights to capture it will be assigned to the position.
 Kings and Rooks created by a right-click in a square will be assumed to have rights based on the old heuristic,
 but Kings and Rooks put on their starting square by moving them there will be assumed to have moved.
 </p>
-<h3><a name="tag-A10">Auto-install of board themes</a></h3>
+</div>
+
+<div class="feature">
+<h4 id="tag-A10">Auto-install of board themes</h4>
 <p>
 A new option <b>-installTheme</b> has been added, which can be put into XBoard's master settings file
 when installing a package with new piece images and/or board textures,
 to make a selection item for this board theme automatically appear in XBoard's themes listbox.
 This opens the possibility for easy packaging and distribution of board themes.
 </p>
+</div>
 
-<img src="Fonts.png" style="float:left; margin:20px">
-
-<h3><a name="tag-A15">A dialog to alter XBoard's font settings interactively</a></h3>
+<div class="feature">
+<h4 id="tag-A15">A dialog to alter XBoard's font settings interactively</h4>
+<div class="pict wide">
+  <a href="Fonts.png"><img src="Fonts.png" alt="" /></a>
+</div>
 <p>
 In the GTK build fonts have names that can be handled by mortals, like "Sans Bold 10"
 for a 10-point bold sans-serif font.
@@ -214,15 +244,17 @@ so that the user can use a monospace font in windows where columnar output is ex
 (such as the ICS Chat/Console,
 use a figurine font where mostly moves are displayed (Engine Output or Move History), etc.
 </p>
+</div>
 
-<h3><a name="tag-A17">Persistent sizing and font selection in XBoard's GTK build</a></h3>
+<div class="feature">
+<h4 id="tag-A17">Persistent sizing and font selection in XBoard's GTK build</h4>
 <p>
 Sizing the window now not only affects the board part of XBoard's main window,
 but also the fonts chosen in clocks and message above the board, making the clock and message area size too.
 (Just like WinBoard has always been doing.)
 This also makes it possible to size the board much smaller than it initial size,
 as the default fonts get smaller as the board shrinks.
-This eventually makes the board look just as it would look when you would start it in the final size.
+Thistually makes the board look just as it would look when you would start it in the final size.
 This consistent board size is now saved in the settings file,
 so that next time you will indeed start up with almost the same board as the sized one
 (except some rounding of the square size to one of the 18 standard sizes).
@@ -239,8 +271,10 @@ Meaning that you would only have to select a new font for each window once,
 after which it will be kept no matter how you size the board.
 Unless you take explicit action to select a separate font for each board size.
 </p>
+</div>
 
-<h3><a name="tag-A14">Making a sound during analysis</a></h3>
+<div class="feature">
+<h4 id="tag-A14">Making a sound during analysis</h4>
 <p>
 The move sound can now also be played when a new PV arrives in Analyze mode
 (where normal moving does not take place).
@@ -249,10 +283,13 @@ and any line of engine thinking output that arrives after this delay
 will cause the move sound to be played.
 Setting the value to zero will disable move sounds during analysis.
 </p>
+</div>
 
-<img src="Places.png" style="float:left; margin:20px">
-
-<h3><a name="tag-A18">Preview of board and pieces while browsing</a></h3>
+<div class="feature">
+<h4 id="tag-A18">Preview of board and pieces while browsing</h4>
+<div class="pict wide left">
+  <a href="Places.png"><img src="Places.png" alt="" /></a>
+</div>
 <p>
 The GTK file chooser has been streamlined a bit.
 To easily reach the piece images and board textures that are installed with XBoard's standard packages,
@@ -269,8 +306,10 @@ the board will revert to the original color and pieces.
 So at all times you can be aware of exactly what you are OK-ing through the Board dialog.
 (But... be sure the popup dialogs do not cover the board!)
 </p>
+</div>
 
-<h3><a name="tag-A19">Tailoring board themes and the ICS Test Menu</a></h3>
+<div class="feature">
+<h4 id="tag-A19">Tailoring board themes and the ICS Test Menu</h4>
 <p>
 The Board dialog allows you to add the current combination of graphics settings
 (colors, textures, piece images)
@@ -289,14 +328,15 @@ to alter the ICS Text Menu, stored in the settings file as the -icsMenu option.
 This makes it a lot easier to add new buttons to it
 (or delete the buttons you never use).
 </p>
+</div>
 
+<h3 id="tag-B" class="emph">New variant support</h3>
 
-
-<a name="tag-B"><h2>New variant support</h2></a>
-
-<div>
-<img src="Pieces.png" style="float:right; margin:20px">
-<h3><a name="tag-B1">22 New piece types</a></h3>
+<div class="feature">
+<h4 id="tag-B1">22 New piece types</h4>
+<div class="pict wide">
+  <a href="Pieces.png"><img src="Pieces.png" alt="" /></a>
+</div>
 <p>
 The number of piece types in XBoard has been expanded from 44 to 66.
 The order of the pieces beyond the first 22 in the <b>-pieceToCharTable</b> option,
@@ -320,7 +360,7 @@ pieceNN_SSo.bmp, pieceNN_SSs.bmp, and pieceNN_SSw.bmp,
 (for the outline, solid and background image),
 with SS the square size (e.g. 49),
 and NN the number of the pieces in the pieceToCharTable ordering (0-65).
-Pieces shown in black in XBoard are duplicats of other pieces in the default piece theme,
+Pieces shown in black in XBoard are duplicates of other pieces in the default piece theme,
 but in principle have different names for their image files,
 so that in other themes they could be different.
 (This is useful in Shogi, where the same piece sometimes has a different name written on it.)
@@ -331,12 +371,12 @@ The Lance is considered an alternative Pawn, and thus is assumed to promote
 (with full promotion choice)
 when reaching last rank.
 The Lion is subject to rules that restrict its trading.
-The duplicats are added so that these pictograms can also be used for pieces not having this property.
+The duplicates are added so that these pictograms can also be used for pieces not having this property.
 </p>
 </div>
 
-<h3><a name="tag-B2">Beating the alphabet</a></h3>
-
+<div class="feature">
+<h4 id="tag-B2">Beating the alphabet</h4>
 <p>
 Some Shogi variants have (far) more than 26 piece types.
 This makes it impossible to assign a single letter as ID for the piece,
@@ -349,8 +389,10 @@ but at the moment having 3x26 = 78 possible IDs,
 still stretched more by the +L notation for promoted pieces,
 seems more than enough.
 </p>
+</div>
 
-<h3><a name="tag-B3">Promoting pieces, but to what?</a></h3>
+<div class="feature">
+<h4 id="tag-B3">Promoting pieces, but to what?</h4>
 <p>
 XBoard already supported Shogi-style promotion of pieces,
 where each piece promotes to a fixed 'partner'.
@@ -373,8 +415,10 @@ This allows many pieces to have the same promoted form,
 (as commonly occurs in large Shogi variants),
 without the need to have multiple representations for that promoted version.
 </p>
+</div>
 
-<h3><a name="tag-A2">Promotion choice, but with restrictions</a></h3>
+<div class="feature">
+<h4 id="tag-A2">Promotion choice, but with restrictions</h4>
 <p>
 XBoard assumes by default that Pawns can promote to any piece participating in the variant
 that is not a Pawn or King.
@@ -392,9 +436,13 @@ This 'choice' command conveys a list of piece IDs of possible promotion choices,
 to which XBoard then will limit the choice offered to the user.
 The first mentioned piece in this list will then be the default choice.
 </p>
+</div>
 
-<img src="Inscribe.png" style="float:left;margin:20px">
-<h3><a name="tag-A4">UTF8 text inscriptions on pieces</a></h3>
+<div class="feature">
+<h4 id="tag-A4">UTF8 text inscriptions on pieces</h4>
+<div class="pict medium left">
+  <a href="Inscribe.png"><img src="Inscribe.png" alt="" /></a>
+</div>
 <p>
 XBoard 4.9 has a new volatile option -inscriptions, which can define an UTF8 text string.
 The characters in this string correspond to pieces according to the same rules as the -pieceTCharTable option.
@@ -410,8 +458,10 @@ The -inscriptions argument then indicates what kanji should be written on which 
 The kanji are written in red when the piece was defined as a promoted one,
 and rendered upside-down for the side playing downward when pieces are flipped Shogi style.
 </p>
+</div>
 
-<h3><a name="tag-A3">New move-generator capabilities</a></h3>
+<div class="feature">
+<h4 id="tag-A3">New move-generator capabilities</h4>
 <p>
 XBoard 4.9 is capable to handle moves with two 'locust captures',
 i.e. where two pieces disappear on squares other than to which the moving piece goes.
@@ -435,9 +485,13 @@ it can be used on sliding continuation legs to indicate the move has to be equal
 as the preceding sliding leg ('i' standing for 'iso').
 This allows for instance definition of slider rifle captures.
 </p>
+</div>
 
-<img src="DarkSquares.png" style="float:right;margin:20px">
-<h3><a name="tag-B5">Non-rectangular boards, or boards with holes</a></h3>
+<div class="feature">
+<h4 id="tag-B5">Non-rectangular boards, or boards with holes</h4>
+<div class="pict narrow">
+  <a href="DarkSquares.png"><img src="DarkSquares.png" alt="" /></a>
+</div>
 <p>
 XBoard 4.9 supports inaccessible squares, displayed in black.
 These can be used as fillers to fit non-rectangular boards in the display of XBoard.
@@ -450,8 +504,10 @@ In Edit Position mode you can create inaccessible squares by dragging empty squa
 but you can also fill them again by moving pieces or empty squares to them.
 Clearing the board leaves the inaccessible squares as they are.
 </p>
+</div>
 
-<h3><a name="tag-B4">Command-line options to redefine game rules</a></h3>
+<div class="feature">
+<h4 id="tag-B4">Command-line options to redefine game rules</h4>
 <p>
 A new option <b>-fen</b> can define an alternative starting position
 (from which the board size will be deduced).
@@ -466,17 +522,23 @@ like Q:KGH;B:mBcaibB.
 Both the <b>-men</b> and <b>-fen</b> options are volatile,
 and apply only as long as the New Variant dialog is not used to select a variant.
 </p>
+</div>
 
-<h3><a name="tag-B6">Foreign game formats</a></h3>
+<div class="feature">
+<h4 id="tag-B6">Foreign game formats</h4>
 <p>
 XBoard's game parser should now understand traditional Shogi notation, as in .kif files.
 It would understand those both in UTF8 and Shift-JIS encoding.
 This allows you to directly paste Shogi games into XBoard.
 XBoard will always save games in PGN format, though.
 </p>
+</div>
 
-<h3><a name="tag-C">Fixed bugs</a></h3>
-<ul>
+<h3 id="tag-C" class="emph">Fixed bugs</h3>
+
+<div class="feature">
+<h4>General</h4>
+  <ul>
   <li>
 	Fix crash on using Game List Tags dialog when Game List was not up.
   </li>
@@ -528,7 +590,11 @@ XBoard will always save games in PGN format, though.
   <li>
 	Fix defaulting of second engine to first when UCI flag or directory specified (XB).
   </li>
-  <li><b>Cosmetic</b></li>
+  </ul>
+
+<h4>Cosmetic</h4>
+
+  <ul>
   <li>
 	Print mate scores in #N format also in message field.
   </li>
@@ -568,7 +634,11 @@ XBoard will always save games in PGN format, though.
   <li>
 	Ignore grabbing / selecting opponent pieces in Analyze mode.
   </li>
-  <li><b>GTK build</b></li>
+  </ul>
+
+<h4>GTK build</h4>
+
+  <ul>
   <li>
 	Provide OK and Cancel buttons in top-level windows (that want them) for GTK build.
   </li>
@@ -590,7 +660,11 @@ XBoard will always save games in PGN format, though.
   <li>
 	Remember last browsed folder per file type rather than globally in GTK build.
   </li>
-  <li><b>OSX App</b></li>
+  </ul>
+
+<h4>OSX App</h4>
+
+  <ul>
   <li>
 	Save settings on quitting through menu in OSX App.
   </li>
@@ -600,7 +674,11 @@ XBoard will always save games in PGN format, though.
   <li>
 	Fix creation of spurious XBoard instances on OS X.
   </li>
-  <li><b>ICS and zippy mode</b></li>
+  </ul>
+
+<h4>ICS and zippy mode</h4>
+
+  <ul>
   <li>
 	Fix crashing of Xaw build in ICS-zippy mode when opponent kibitzes and chat window is open.
   </li>
@@ -616,7 +694,11 @@ XBoard will always save games in PGN format, though.
   <li>
 	Prevent bell character from being printed in ICS Console window.
   </li>
-  <li><b>Variants</b></li>
+  </ul>
+
+ <h4>Variants</h4>
+
+  <ul>
   <li>
 	Fix behavior of engine-defined castling moves w.r.t. board holes and King rank.
   </li>
@@ -665,8 +747,8 @@ XBoard will always save games in PGN format, though.
   <li>
 	Fix variant switching triggered by engine load.
   </li>
-</ul>
-
+  </ul>
+</div>
 
 </div><!-- for id="content", starts in the include above -->
 <!--#include virtual="/server/footer.html" -->
@@ -682,7 +764,7 @@ Broken links and other corrections or suggestions can be sent to
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -696,7 +778,7 @@ Commons Attribution-NoDerivs 3.0 United States License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2017/04/16 17:51:28 $
+$Date: 2020/09/16 13:29:50 $
 <!-- timestamp end -->
 </p>
 </div>

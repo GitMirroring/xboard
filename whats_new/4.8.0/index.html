@@ -1,13 +1,24 @@
 <!--#include virtual="/server/html5-header.html" -->
 <title>XBoard - GNU Project - Free Software Foundation - NEWS</title>
-<style type="text/css">body{max-width:100em !important;}</style>
+<link rel="stylesheet" type="text/css" href="../whats_new.css" media="print,screen" />
 <!--#include virtual="/server/banner.html" -->
+<h2>What is new in XBoard&nbsp;/ WinBoard&nbsp;4.8.0?</h2>
 
-<h2>What is new in XBoard/WinBoard 4.8.0?</h2>
-<table cellpadding="20"><tr valign="top"><td>
+<div class="whatsnew-nav">
+ <div class="other-releases">
+  <img src="../4.5.0/winboardF.png" alt=" [XBoard logo] " />
+  <ul>
+   <li><a href="../4.9.0/index.html">Follow-up (4.9.0)</a></li>
+   <li><a href="../4.7.0/index.html">Preceding release (4.7.0)</a></li>
+   <li><a href="http://hgm.nubati.net/news.html">Experimental and future stuff</a></li>
+  </ul>
+ </div>
 
-<a href="#tag-A"><h4>New features in this release</h4></a>
-<ul><li>
+<div class="list-container">
+<h3 class="no-display">In this release:</h3>
+<dl class="feature-list">
+<dt><a href="#tag-A">New features in this release</a></dt>
+<dd><ul><li>
 <a href="#tag-A5">Resuming saved unfinished games</a>
 </li><li>
 <a href="#tag-A6">Setting up positions more easily</a>
@@ -31,12 +42,12 @@
 <a href="#tag-A14">Slicing up a PGN database</a>
 </li><li>
 <a href="#tag-A16">Auto-install of engines</a>
-</li></ul>
+</li></ul></dd>
+</dl>
 
-</td><td>
-
-<a href="#tag-B"><h4>New variant support</h4></a>
-<ul><li>
+<dl class="feature-list">
+<dt><a href="#tag-B">New variant support</a></dt>
+<dd><ul><li>
 <a href="#tag-B1">ASEAN Chess</a>
 </li><li>
 <a href="#tag-B2">Chu Shogi</a>
@@ -52,27 +63,16 @@
 <a href="#tag-B4">Fischer castling in any variant</a>
 </li><li>
 <a href="#tag-B5">Knowing the moves of unknown pieces</a>
+</li></ul></dd>
+</dl>
+</div>
+</div>
 
-</li></ul>
-
-</td><td>
-
-<img src="../4.5.0/winboardF.png">
-  <p>
-    <a href="../4.9.0/index.html">Follow-up (4.9.0)</a>
-  </p>
-  <p>
-    <a href="../4.7.0/index.html">Preceding release (4.7.0)</a>
-  </p>
-  <p>
-    <a href="http://hgm.nubati.net/news.html">Experimental and future stuff</a>
-  </p>
-</td></tr></table>
-
-<table cellpadding="20"><tr><td valign="top">
-<img src="XboardOSX2.png">
-</td><td valign="top">
-<h2>A stable GTK build and an OS X version</h2>
+<div class="feature">
+<h4>A stable GTK build and an OS X version</h4>
+<div class="pict medium left">
+  <a href="XboardOSX2.png"><img src="XboardOSX2.png" alt="" /></a>
+</div>
 <p>
 With XBoard 4.8.0 the GTK build can be considered as stable as the Xaw build.
 In some areas it might not be perfect yet in all areas,
@@ -84,11 +84,12 @@ The GTK build can also be interfaced with OS X through the GtkOsx library.
 So OS X is now amongst the officially supported platforms,
 and a special configure option is available to build XBoard as OS X App.
 </p>
-</td></tr></table>
+</div>
 
-<a name="tag-A"><h2>The following features are new in XBoard 4.8.0:</h2></a>
+<h3 id="tag-A" class="emph">The following features are new in XBoard 4.8.0:</h3>
 
-<h3><a name="tag-A5">Saving the clock settings with the game</a></h3>
+<div class="feature">
+<h4 id="tag-A5">Saving the clock settings with the game</h4>
 <p>
 When a (local, i.e. non-ICS) game still in progress is interrupted and saved,
 e.g. because you use the 'Abort' menu item, or close XBoard,
@@ -97,9 +98,10 @@ When you load an unfinished game with such saved times in it,
 it automatically restores the clocks to the values that were saved.
 This makes it easier to resume such a game.
 </p>
+</div>
 
-<table cellpadding="20"><tr><td valign="top">
-<h3><a name="tag-A6">Setting up positions</a></h3>
+<div class="feature">
+<h4 id="tag-A6">Setting up positions</h4>
 <p>
 In Edit Position mode the board can be cleared by clicking on the clock, or through a piece-menu item.
 Upto now this irreversibly destroyed whatever position existed before.
@@ -134,15 +136,17 @@ which is very useful in Shogi-like variants, where all pieces can promote,
 but the promoted versions are usually not present in the 'palette',
 as the latter is derived from the opening position.
 </p>
-</td><td valign="top">
-<img src="PiecePalette.png">
-</td></tr></table>
+</div>
 
-<h3><a name="tag-A7">Quickly finishing dead-drawn games</a></h3>
+<div class="feature">
+<h4 id="tag-A7">Quickly finishing dead-drawn games</h4>
+<div class="pict narrow" style="width: 17em">
+  <a href="PiecePalette.png"><img src="PiecePalette.png" alt="" /></a>
+</div>
 <p>
 In the late end-game (with 5 or fewer men on the board) of orthodox Chess
 there are nowadays tables available that show whether the game can be won against best defense (bitbases),
-and sometimes even how (tablebases).
+and sometimes how (tablebases).
 Engines that use tablebases can play instantly in such won or lost positions,
 as they can just play the best move indicated in the tablebase without any further search.
 When they get into a position that is a theoretical draw, however, they might still think as long as always.
@@ -152,7 +156,7 @@ any chances the engine might have had to win against imperfect defense.
 E.g. in a KBPPKB draw with unlike Bishops, the tablebase would not tell the engine that sacrificing BPP on the first 3 moves is not a good idea.
 So it is important to give the engine some time to select the reasonable drawing move and reject pointless sacrifices,
 in order to keep a fallible opponent under pressure.
-<p></p>
+</p><p>
 Very deep searches are hardly helpful, however, as the tablebase already guarantees us there is nothing to find.
 Just not blundering away material, and striving for good mobility, centralization and advancing of passers,
 while hoping for an opponent blunder
@@ -163,7 +167,7 @@ so that you know they can never blunder away the draw,
 don't want to agree to the inevitable draw (because of their contempt setting),
 but go on for 50 moves (or several times 50 moves, when they can drag it out with Pawn moves)
 in a futile attempt to swindle their opponent
-<p></p>
+</p><p>
 XBoard now has an option to avoid this,
 without corrupting test results for engines that do not use tablebases
 by awarding them wins they would never be able to find themselves,
@@ -182,7 +186,7 @@ by showing it can find the moves to secure the draw.
 And when the latter engine is in a won position, the option would be ineffective,
 but the tablebase user should be able to instantly play the best defense anyway,
 letting its opponent show he is able to win against that.
-<p></p>
+</p><p>
 To allow the option to work, XBoard can now interface to Scorpio bitbases.
 To this end it must know the path to the bitbase files,
 defined as "scorpio:PATHNAME" as (comma-separated) element in the -egtFormats option.
@@ -193,8 +197,10 @@ the DrawDepth options will cause them to be probed when there are 5 or fewer ort
 and an 'sd N' command will be sent to the corresponding engine just before it receives a move,
 in order to retrict its search depth.
 </p>
+</div>
 
-<h3><a name="tag-A8">Showing or hiding engine output</a></h3>
+<div class="feature">
+<h4 id="tag-A8">Showing or hiding engine output</h4>
 <p>
 XBoard used to preceed the PVs printed by the engines always with 4 colums:
 search depth, score, time and number of nodes searched.
@@ -202,19 +208,20 @@ The protocol specs have now been extended to allow engines to also send selectiv
 and for engines that send those, there can now be 7 columns of numeric data before the PV in the Engine Output window.
 (And because the latest Polyglot implements this protocol extension, this will include all UCI engines!)
 </p>
-<table cellpadding="20"><tr><td valign="top">
-<img src="TBhits.png">
-</td><td valign="top">
 <p>
 It can be annoying to have so many columns eating away space for the PV, however.
-Especially with data you might not want to see, or the engine might not even print.
+Especially with data you might not want to see, or the engine might not print.
 So and option -memoHeaders has been added with which you can print headers above the columns.
 Right-clicking these headers can then show or hide the corresponding column.
 Only the depth and PV will always be displayed.
 </p>
-</td></tr></table>
+<div class="pict" style="width: 40em">
+  <a href="TBhits.png"><img src="TBhits.png" alt="" /></a>
+</div>
+</div>
 
-<h3><a name="tag-A9">Combining ICS output, Input Box and Chat Window in the GTK version</a></h3>
+<div class="feature">
+<h4 id="tag-A9">Combining ICS output, Input Box and Chat Window in the GTK version</h4>
 <p>
 XBoard always printed the communication with the ICS in the terminal from which it was launched.
 This x-terminal allowed colorization of the ICS messages by kind,
@@ -278,14 +285,14 @@ clearly marked as broadcasts.
 That will not suppress the appearance of the broadcast in the chat
 you have open for that channel, or the ICS pane.
 </p>
+<div class="pict">
+  <a href="NewChat.png" class="twin" style="width:25em"><img src="NewChat.png" alt="" /></a>
+  <a href="NewICS.png" class="twin" style="width:25em"><img src="NewICS.png" alt="" /></a>
+</div>
+</div>
 
-<table cellpadding="20"><tr><td valign="top">
-<img src="NewChat.png">
-</td><td valign="top">
-<img src="NewICS.png">
-</td></tr></table>
-
-<h3><a name="tag-A10">Storing board settings, and recalling them with a mouse click</a></h3>
+<div class="feature">
+<h4 id="tag-A10">Storing board settings, and recalling them with a mouse click</h4>
 <p>
 The View->Board dialog of XBoard allowed the user to interactively set piece and square colors,
 define board textures or alternative piece images, and other graphical board roperties.
@@ -301,17 +308,20 @@ New themes can be created by defining a name for it in a textedit under this lis
 and OK-ing the dialog when such a name has been entered saves the currently specified board look as this theme,
 so that it can be recalled from the listbox later.
 </p>
+<div class="pict" style="width:40em">
+  <a href="ThemesXB.png"><img src="ThemesXB.png" alt="" /></a>
+</div>
+</div>
 
-<img src="ThemesXB.png">
-
-<h3><a name="tag-A11">Playing moves by clicking them in a text window</a></h3>
+<div class="feature">
+<h4 id="tag-A11">Playing moves by clicking them in a text window</h4>
 <p>
 XBoard already supported the possibility to play moves from the Engine Output window
 in analysis mode, by right-clicking on the PV they were part of.
 This was integrated with the possibility to walk through the PV
 by moving the mouse with the right button kept down,
 using the main board as a 'variation board'.
-This way you could even play a number of moves of the PV.
+This way you could play a number of moves of the PV.
 The PV-walk in analysis mode started at the position after the first move of it,
 so that a static click would play that move.
 If you would move to another position along the PV before releasing the button,
@@ -340,12 +350,13 @@ with a button in this window you can tell XBoard that
 the next move you are going to play on the board should not really be played,
 but added to the book (with a default weight of 1).
 </p>
+</div>
 
-<table cellpadding="20"><tr><td valign="top">
-<h3><a name="tag-A12">Fonts in the GTK build</a></h3>
+<div class="feature">
+<h4 id="tag-A12">Fonts in the GTK build</h4>
 <p>
 So far the font options were ignored in XBoard's GTK build.
-Now their number is even expanded:
+Now their number is expanded:
 next to the existing -clockFont, -messageFont and -coordFont there are now
 -icsFont, -tagsFont, -commentFont, -moveHistoryFont and -gameListFont.
 Font specifications are not compatible between Xaw and GTK;
@@ -369,11 +380,13 @@ at small square sizes.
 The tagsFont and commentFont similarly affect the text memos in the
 Edit Tags and Edit Comment dialogs, and are mainly supplied because WinBoard has those too.
 </p>
-</td><td valign="top">
-<img src="FontGTK.png">
-</td></tr></table>
+</div>
 
-<h3><a name="tag-A13">Using the mousewheel to step through the game</a></h3>
+<div class="feature">
+<h4 id="tag-A13">Using the mousewheel to step through the game</h4>
+<div class="pict wide left">
+  <a href="FontGTK.png"><img src="FontGTK.png" alt="" /></a>
+</div>
 <p>
 WinBoard already had this, but in XBoard you can now also use the mousewheel
 to step through the current game,
@@ -381,11 +394,13 @@ when the mouse pointer is above the board, irrespective of whether it has focus.
 (This according to GTK custom; in WinBoard it would work when the board had focus,
 irrespective of where the mouse was pointing.)
 </p>
+</div>
 
-<table cellpadding="20"><tr><td valign="top">
-<img src="Blunder.png">
-</td><td valign="top">
-<h3><a name="tag-A15">Enhanced funcionality of the Evaluation Graph</a></h3>
+<div class="feature">
+<h4 id="tag-A15">Enhanced functionality of the Evaluation Graph</h4>
+<div class="pict medium">
+  <a href="Blunder.png"><img src="Blunder.png" alt="" /></a>
+</div>
 <p>
 A new mode of displaying engine analysis of an entire game has been added,
 the so called blunder graph.
@@ -395,7 +410,7 @@ but the difference in evaluation on subsequent moves.
 such as after the use of Analyze Game.)
 This way poor moves, which cause a jump in evaluation, stick out more visibly.
 </p>
-</td></tr></table>
+
 <p>
 To toggle between normal evaluation display and blunder graph,
 you can right-click anywhere in the Eval Graph window.
@@ -404,8 +419,10 @@ The mouse wheel can now be used on the Eval Graph to zoom the [-1, 1] score rang
 which formerly would allow only non-interactive control through the -evalZoom
 command-line option.
 </p>
+</div>
 
-<h3><a name="tag-A14">Selecting from a PGN database</a></h3>
+<div class="feature">
+<h4 id="tag-A14">Selecting from a PGN database</h4>
 <p>
 There is a new item in the File menu: Save Selected Games.k
 This will cause all games currently selected for display in the Game List
@@ -416,8 +433,10 @@ The 'Save Games as Book' function will now also only take the games
 selected for display into account.
 This should offer you more control over what you include in the book.
 </p>
+</div>
 
-<h3><a name="tag-A15">Automatically adding new engines to XBoard's engine list</a></h3>
+<div class="feature">
+<h4 id="tag-A16">Automatically adding new engines to XBoard's engine list</h4>
 <p>
 To efficiently use engine, e.g. being able to select them from the Load Engine dialog's listbox,
 or as tournament participant, the engine had to be first installed in XBoard's engine list.
@@ -450,10 +469,12 @@ after having tried the configured -logoDir and the directory specified for the e
 (with -fd or -sd options; it searches for a file named logo.pgn there).
 For user logos it will also try ~/.logo.png.
 </p>
+</div>
 
-<a name="tag-B"><h2>New variants and general variant support</h2></a>
+<h3 id="tag-B" class="emph">New variants and general variant support</h3>
 
-<h3><a name="tag-B1">ASEAN Chess: a new Chess variant</a></h3>
+<div class="feature">
+<h4 id="tag-B1">ASEAN Chess: a new Chess variant</h4>
 <p>
 ASEAN Chess is a synthesis of Makruk and other South-East Asean Chess variants.
 It is very similar to Makruk, the main difference being that the count rules are simpler
@@ -461,21 +482,22 @@ It is very similar to Makruk, the main difference being that the count rules are
 and that promotion is only on last rank.
 This is now added as a new supported variant to XBoard.
 </p>
+</div>
 
-<h3><a name="tag-B2">Chu Shogi</a></h3>
-
+<div class="feature">
+<h4 id="tag-B2">Chu Shogi</h4>
 <p>
 Chu shogi is an ancient form of Japanese Chess on a 12x12 board, which was already documented in the year 1250.
 It has been the dominant form of Chess in Japan for many centuries, and is still quite popular,
 although it has been overtaken in popularity by the 9x9 game with piece drops in recent times.
 As there are no piece drops in Chu Shogi, it has a much more Chess-like feel than the modern game.
 </p>
-<table cellpadding="20"><tr><td valign="top">
+
 <p>
 Like other large Shogi variants, Chu Shogi is characterized by a very large number of piece types.
 Not only are there 46 pieces (12 of them Pawns) of 21 different types in the initial setup,
 but almost all pieces promote on reaching the last 4 ranks, often to pieces that move differently from all initially present pieces.
-(And even if they move the same, they are formally still different piece types, as they cannot promote a second time.)
+(And if they move the same, they are formally still different piece types, as they cannot promote a second time.)
 To implement a game with so many piece types in XBoard was a challenge,
 as upto now XBoard supported only 22 piece types (11 'basic' types, asn 11 promoted types).
 This has now been extended to 44, Chu shogi considering all 22 existing types as 'basic',
@@ -497,15 +519,14 @@ and has to on the engine (e.g. <a href="HaChu.html">HaChu</a>)
 for more accurate judging move legality and highlighting target squares.
 So it is advisable to play this game with legality testing off.
 </p>
-</td><td valign="top">
-<img src="XChu.png">
-</td></tr></table>
+</div>
 
-<table cellpadding="20"><tr><td valign="top">
-<img src="Mighty.png">
-</td><td valign="top">
-<h3><a name="tag-B3">Mighty-Lion and Elven Chess</a></h3>
-
+<div class="feature">
+<h4 id="tag-B3">Mighty-Lion and Elven Chess</h4>
+<div class="pict">
+  <a href="XChu.png" class="twin" style="width: 20em"><img src="XChu.png" alt="" /></a>
+  <a href="Mighty.png" class="twin" style="width: 19.8em"><img src="Mighty.png" alt="" /></a>
+</div>
 <p>
 To make the Chu-Shogi Lion a bit more accessible to Chess players,
 a newly designed variant 'Mighty-Lion Chess' was added to XBoard.
@@ -537,13 +558,15 @@ and when a non-Lion captures a Lion the opponent Lion is invulnerable ('iron') o
 That makes trading the Lions away a very uncommon occurence.
 </p>
 <p>
-For those that want even more excitement:
+For those that want more excitement:
 the same Lion piece also features in the newly added Elven Chess,
 next to three other new pieces on a 10x10 board.
 </p>
-</td></tr></table>
+</div>
 
-<h3><a name="tag-A2">Colored board markers applied by the engine</a></h3>
+<div class="feature">
+<h4 id="tag-A2">Colored board markers applied by the engine</h4>
+<p>
 With the option 'Show Target Squares', XBoard can be made to mark board squares where the 'lifted' piece can move to
 by fat yellow (non-captures) or red (captures) dots.
 This obviously can only work when XBoard knows the rules for moving the pieces,
@@ -578,17 +601,20 @@ even when it would otherwise not think so.
 This way engines can more flexibly implement variants the GUI knows nothing about,
 by modifing the GUI behavior through the color markers.
 </p>
+</div>
 
-<h3><a name="tag-A3">Let an engine click squares on behalf of the user</a></h3>
+<div class="feature">
+<h4 id="tag-A3">Let an engine click squares on behalf of the user</h4>
 <p>
 Another feature helpful in implementing strange variants is the 'click' command an engine can send to the GUI.
 This command will contain square coordinates, and the GUI should react to it as if the user would have clicked on the mentioned square.
 The engine can use this in response to the 'lift' command to implement one-click moving,
 even when the GUI has no idea what the rules for moving pieces are, and thus cannot know it.
 </p>
+</div>
 
-<table cellpadding="20"><tr><td valign="top">
-<h3><a name="tag-A4">Engine-defined variant names</a></h3>
+<div class="feature">
+<h4 id="tag-A4">Engine-defined variant names</h4>
 <p>
 Although XBoard knows many different Chess variants, there are far more it doesn't know.
 It still can play many of these, by using the board-size overrules in the New Variant dialog,
@@ -597,9 +623,9 @@ telling it which pieces participate, and how they are indicated in move and posi
 and switching legality checking off, so it doesn't complain if we use pieces in ways they were not intended.
 This requires a lot of massaging by the user, though.
 </p>
-</td><td valign="top">
-<img src="Defined.png">
-</td></tr></table>
+<div class="pict medium left">
+  <a href="Defined.png"><img src="Defined.png" alt="" /></a>
+</div>
 <p>
 The engine can now be made to do most of this.
 For one, the engine is allowed to use arbitrary names for variants, in the variants feature it sends as startup.
@@ -620,8 +646,10 @@ This means that almost everything the user had to configure to play a non-standa
 The only thing the user still has to do is control whether legality checking is on or off.
 (Some variants, although non-standard, use only pieces that XBoard knows, and those can be played with legality checking on.)
 </p>
+</div>
 
-<h3><a name="tag-B4">Fischer castling outside Chess960</a></h3>
+<div class="feature">
+<h4 id="tag-B4">Fischer castling outside Chess960</h4>
 <p>
 Upto now the ability to castle with Rooks not in a corner, or Kings not on the central files
 was a unique ability of FRC and (on 10x8 board) CRC.
@@ -649,8 +677,10 @@ This van be used to specify the starting position of Seirawan2880,
 where one of the three Queen, Elephant or Hawk will be on the board initially,
 and then shuffled with the other pieces in 960 possible ways.
 </p>
+</div>
 
-<h3><a name="tag-B5">Letting the engine configure the GUI's move generator</a></h3>
+<div class="feature">
+<h4 id="tag-B5">Letting the engine configure the GUI's move generator</h4>
 <p>
 XBoard protocol has been extended with a command to tell the GUI how pieces move.
 This allows XBoard to become fully aware of the rules of games it never heard of,
@@ -663,13 +693,15 @@ and cause inaccurate mate detection.
 When the engine sends 'piece' commands at the start of a game to (re)define the piece moves,
 all that functionality is restored.
 Legality testing will still have to be switched off (or the piece definitions would be ignored),
-but even then 'show target squares' would work, and XBoard would test move legality,
+but then 'show target squares' would work, and XBoard would test move legality,
 the GUI acting as a proxy for the engine.
 No sense in sending a move to the engine of which the engine told you in advance that it will reject it,
 so that the GUI would only have to take it back, after all.
 </p>
+</div>
 
-<h3><a name="tag-C">Fixed bugs</a></h3>
+<h3 id="tag-C" class="emph">Fixed bugs</h3>
+<div class="feature">
 <ul>
   <li>
 	Fix crash on using some Browse buttons in dialogs of the GTK build.
@@ -779,7 +811,7 @@ so that the GUI would only have to take it back, after all.
 	Fix adjudication of stalemates in variant Giveaway.
   </li>
 </ul>
-
+</div>
 
 </div><!-- for id="content", starts in the include above -->
 <!--#include virtual="/server/footer.html" -->
@@ -795,7 +827,7 @@ Broken links and other corrections or suggestions can be sent to
 
 <p>Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -809,7 +841,7 @@ Commons Attribution-NoDerivs 3.0 United States License</a>.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2017/04/16 17:51:28 $
+$Date: 2020/09/16 13:29:50 $
 <!-- timestamp end -->
 </p>
 </div>

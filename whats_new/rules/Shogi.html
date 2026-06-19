@@ -1,6 +1,6 @@
 <!--#include virtual="/server/html5-header.html" -->
   <title>Shogi</title>
-  <link rel="StyleSheet" href="./moves.css" type="text/css">
+  <link rel="StyleSheet" href="./moves.css" type="text/css" />
   <script type="text/javascript" src="chu.js">
 </script>
 <!--#include virtual="/server/banner.html" -->
@@ -16,20 +16,20 @@
   version, Sho Shogi (= small Shogi) was overwhelmed in popularity
   by the also dropless Chu Shogi (= middle Shogi).</p>
 
-  <table cellpadding="20">
+  <table class="setup">
     <tr>
-      <td><img src="Shogi.png"></td>
+      <td><img src="Shogi.png" alt="" /></td>
 
       <td>
         <h3>Initial setup</h3>
 
-        <p>e1, e8: King<br>
-        b8, h2: Rook<br>
-        b2, h8: Bishop<br>
-        d1, d8, f1, f8: Gold General<br>
-        c1, c8, g1, g8: Silver General<br>
-        b1, b8, h1, h8: (Shogi) Knight<br>
-        a1, a8, i1, i8: Lance<br>
+        <p>e1, e8: King<br />
+        b8, h2: Rook<br />
+        b2, h8: Bishop<br />
+        d1, d8, f1, f8: Gold General<br />
+        c1, c8, g1, g8: Silver General<br />
+        b1, b8, h1, h8: (Shogi) Knight<br />
+        a1, a8, i1, i8: Lance<br />
         a3-i3, a7-i7: Pawns</p>
       </td>
     </tr>
@@ -92,10 +92,10 @@
       <td class="n" id="sq2x7"></td>
 
       <td class="n" id="sq3x7" onmousedown="down_click(3,7)"
-      onmouseup="up_click()"><img src="sym/WhiteGold.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteGold.png" alt="" /></td>
 
       <td class="n" id="sq4x7" onmousedown="down_click(4,7)"
-      onmouseup="up_click()"><img src="sym/WhiteAdvisor.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteAdvisor.png" alt="" /></td>
 
       <td class="n" id="sq5x7"></td>
 
@@ -122,7 +122,7 @@
       <td class="n" id="sq5x6"></td>
 
       <td class="n" id="sq6x6" onmousedown="down_click(6,6)"
-      onmouseup="up_click()"><img src="sym/WhiteKing.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKing.png" alt="" /></td>
 
       <td class="n" id="sq7x6" onmousedown="down_click(7,0)"
       onmouseup="up_click()"></td>
@@ -147,10 +147,10 @@
 
       <td class="n" id="sq6x5" onmousedown="down_click(6,5)"
       onmouseup="up_click()"><img src=
-      "sym/WhiteCrownedRook.png"></td>
+      "sym/WhiteCrownedRook.png" alt="" /></td>
 
       <td class="n" id="sq7x5" onmousedown="down_click(7,5)"
-      onmouseup="up_click()"><img src="sym/WhiteRook.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteRook.png" alt="" /></td>
 
       <td class="n" id="sq8x5"></td>
 
@@ -172,10 +172,10 @@
 
       <td class="n" id="sq6x4" onmousedown="down_click(6,4)"
       onmouseup="up_click()"><img src=
-      "sym/WhiteCrownedBishop.png"></td>
+      "sym/WhiteCrownedBishop.png" alt="" /></td>
 
       <td class="n" id="sq7x4" onmousedown="down_click(7,4)"
-      onmouseup="up_click()"><img src="sym/WhiteBishop.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteBishop.png" alt="" /></td>
 
       <td class="n" id="sq8x4"></td>
 
@@ -212,15 +212,15 @@
       <td class="n" id="sq2x2"></td>
 
       <td class="n" id="sq3x2" onmousedown="down_click(3,2)"
-      onmouseup="up_click()"><img src="sym/WhiteKnight.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteKnight.png" alt="" /></td>
 
       <td class="n" id="sq4x2" onmousedown="down_click(4,2)"
-      onmouseup="up_click()"><img src="sym/WhiteLance.png"></td>
+      onmouseup="up_click()"><img src="sym/WhiteLance.png" alt="" /></td>
 
       <td class="n" id="sq5x2"></td>
 
       <td class="n" id="sq6x2" onmousedown="down_click(6,2)"
-      onmouseup="up_click()"><img src="sym/WhitePawn.png"></td>
+      onmouseup="up_click()"><img src="sym/WhitePawn.png" alt="" /></td>
 
       <td class="n" id="sq7x2"></td>
 
@@ -274,12 +274,12 @@
     </tr>
   </table>
 
-  <p id="piece" height="20">:<br>
-  :<br>
-  :<br>
+  <p id="piece">:<br />
+  :<br />
+  :<br />
   :</p>
 
-  <table cellpadding="5" border="1">
+  <table class="moves">
     <tr>
       <td>Piece</td>
 
