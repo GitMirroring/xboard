@@ -101,11 +101,10 @@ xboard_SOURCES = \
 
 xboard_LDADD = -ldl -lm @FRONTEND_LIBS@ @X_LIBS@ @LIBINTL@ @CAIRO_LIBS@
 
-SUBDIRS = po
+SUBDIRS = doc po
 
 EXTRA_DIST = \
-    pixmaps themes png sounds winboard \
-    xboard.texi gpl.texinfo texi2man texinfo.tex xboard.man xboard.desktop xboard-config.desktop \
+    pixmaps themes png sounds winboard xboard.desktop xboard-config.desktop \
     xboard-fen-viewer.desktop xboard-pgn-viewer.desktop xboard-tourney.desktop xboard.xml \
     COPYRIGHT FAQ.html engine-intf.html ics-parsing.txt readme.htm zippy.README \
     xboard.conf SHORTLOG DIFFSTAT history.c ABOUT-NLS $(frontend_extras) $(zippy_extras)
@@ -126,10 +125,6 @@ AM_CPPFLAGS = @X_CFLAGS@ @CAIRO_CFLAGS@ @FRONTEND_CFLAGS@ \
     $(front_end_flags)
 
 ACLOCAL_AMFLAGS = -I m4
-
-info_TEXINFOS =  xboard.texi
-xboard_TEXINFOS =  copyright.texi
-man6_MANS = xboard.man
 
 ### config file
 
@@ -271,11 +266,6 @@ soundsdir = $(gamedatadir)/sounds
 dist_sounds_DATA = \
     sounds/cymbal.wav     sounds/pop2.wav   sounds/slap.wav     sounds/ding1.wav      sounds/laser.wav  \
     sounds/woodthunk.wav  sounds/gong.wav   sounds/penalty.wav  sounds/honkhonk.wav   sounds/phone.wav  sounds/roar.wav
-
-### the man page depends on several files, so we add a special rule
-
-xboard.man: xboard.texi copyright.texi gpl.texinfo version.texi
-	$(srcdir)/texi2man $(srcdir)/xboard.texi > xboard.man || (rm -f xboard.man ; false)
 
 ### install mime-type files and corresponding icons and menu entries if enabled during configure
 

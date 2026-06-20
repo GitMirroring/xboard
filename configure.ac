@@ -730,7 +730,7 @@ enable_sigint=${enable_sigint}"
 
 AC_SUBST(CONFIGURE_OPTIONS)
 
-AC_CONFIG_FILES([Makefile cmail po/Makefile.in osxapp/Info.plist])
+AC_CONFIG_FILES([Makefile cmail doc/Makefile po/Makefile.in osxapp/Info.plist])
 AC_CONFIG_COMMANDS(
     [test-stamp-h],
     [test -z "$CONFIG_HEADERS" || date > stamp-h]

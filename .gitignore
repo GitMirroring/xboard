@@ -35,8 +35,6 @@ stamp-vti
 # Miscellaneous
 *~
 config.log
-texinfo.tex
-version.texi
 xboard.info
 xboard.man
 ylwrap

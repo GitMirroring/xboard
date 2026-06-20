@@ -5066,7 +5066,7 @@ and placed its book and other support files.
 
 @node Copying
 @unnumbered GNU GENERAL PUBLIC LICENSE
-@include gpl.texinfo
+@include gpl-3.0.texi
 
 @c noman
 @node Index
