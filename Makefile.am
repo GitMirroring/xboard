@@ -111,17 +111,13 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = stamp-h
 
-GIT_REVISION=$(shell sh -c 'git describe --dirty --always 2>/dev/null')
-
 AM_CPPFLAGS = @X_CFLAGS@ @CAIRO_CFLAGS@ @FRONTEND_CFLAGS@ \
-    -DCONFIGURE_OPTIONS='"@CONFIGURE_OPTIONS@"' \
-    -DDATADIR='"$(datadir)/games/xboard"' \
-    -DGIT_REVISION='"$(GIT_REVISION)"' \
-    -DINFODIR='"$(infodir)"' \
-    -DLOCALEDIR='"$(localedir)"' \
-    -DMANDIR='"$(mandir)"' \
-    -DSVGDIR='"$(svgdir)"' \
-    -DSYSCONFDIR='"$(sysconfdir)"' \
+    -DXBOARD_DATADIR=$(datadir)/games/xboard \
+    -DXBOARD_INFODIR=$(infodir) \
+    -DXBOARD_LOCALEDIR=$(localedir) \
+    -DXBOARD_MANDIR=$(mandir) \
+    -DXBOARD_SVGDIR=$(svgdir) \
+    -DXBOARD_SYSCONFDIR=$(sysconfdir) \
     $(front_end_flags)
 
 ACLOCAL_AMFLAGS = -I m4

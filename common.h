@@ -91,6 +91,45 @@ typedef char * String;
 
 /* End compatibility grunge */
 
+#define XBOARD_LITERALIZE(l) #l
+#define XBOARD_STRINGIZE(s) XBOARD_LITERALIZE(s)
+
+#ifdef XBOARD_DATADIR
+# define XBOARD_DATA_DIR XBOARD_STRINGIZE(XBOARD_DATADIR)
+#else
+# error "XBOARD_DATADIR was expected to be defined."
+#endif
+
+#ifdef XBOARD_SYSCONFDIR
+# define XBOARD_SYSTEM_CONFIG_DIR XBOARD_STRINGIZE(XBOARD_SYSCONFDIR)
+#else
+# error "XBOARD_SYSCONFDIR was expected to be defined."
+#endif
+
+#ifdef XBOARD_LOCALEDIR
+# define XBOARD_LOCALE_DIR XBOARD_STRINGIZE(XBOARD_LOCALEDIR)
+#else
+# error "XBOARD_LOCALEDIR was expected to be defined."
+#endif
+
+#ifdef XBOARD_INFODIR
+# define XBOARD_INFO_DIR XBOARD_STRINGIZE(XBOARD_INFODIR)
+#else
+# error "XBOARD_INFODIR was expected to be defined."
+#endif
+
+#ifdef XBOARD_MANDIR
+# define XBOARD_MAN_DIR XBOARD_STRINGIZE(XBOARD_MANDIR)
+#else
+# error "XBOARD_MANDIR was expected to be defined."
+#endif
+
+#ifdef XBOARD_SVGDIR
+# define XBOARD_SVG_DIR XBOARD_STRINGIZE(XBOARD_SVGDIR)
+#else
+# error "XBOARD_SVGDIR was expected to be defined."
+#endif
+
 #define PROTOVER 2 /* engine protocol version */
 
 // [HGM] license: Messages that engines must print to satisfy their license requirements for patented variants
@@ -149,7 +188,6 @@ typedef char * String;
 #define FIRST_HOST "localhost"
 #define SECOND_HOST "localhost"
 #define TELNET_PROGRAM "telnet"
-#define DEF_BITMAP_DIR BITMAPDIR
 #define MATCH_MODE "False"
 #define INIT_STRING "new\nrandom\n"
 #define WHITE_STRING "white\ngo\n"

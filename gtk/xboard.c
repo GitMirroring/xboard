@@ -153,18 +153,21 @@
 
 #include "gtk/button_labels.h"
 
+/* TODO: macOS support seems hacked in uncomfortably.  Certainly, clobbering LOCALEDIR (or XBOARD_LOCALE_DIR) from within the source
+   code is not the way this should be done.  It may be best to remove the attempt to support macOS entirely, unless we can obtain
+   appropriate access to such a machine. */
 #ifdef OSXAPP
 # include <gtkmacintegration/gtkosxapplication.h>
-// prevent pathname of positional file argument provided by OS X being be mistaken for option name
-// (price is that we won't recognize Windows option format anymore).
+/* prevent pathname of positional file argument provided by OS X being be mistaken for option name
+   (price is that we won't recognize Windows option format anymore) */
 # define SLASH '-'
 # define IMG ".png"
-// redefine some defaults
+/* redefine some defaults */
 # undef ICS_LOGON
-# undef LOCALEDIR
-# undef SETTINGS_FILE
 # define ICS_LOGON "Library/Preferences/XboardICS.conf"
-# define LOCALEDIR localeDir
+# undef XBOARD_LOCALE_DIR
+# define XBOARD_LOCALE_DIR localeDir
+# undef SETTINGS_FILE
 # define SETTINGS_FILE masterSettings
 # define SYNC_MENUBAR gtkosx_application_sync_menubar(theApp)
 char localeDir[MSG_SIZ];
@@ -893,7 +896,7 @@ int main(int argc, char ** argv) {
     debugFP = stderr;
 
     if (argc > 1 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
-        printf("%s version %s\n\n  configure options: %s\n", PACKAGE_NAME, PACKAGE_VERSION, CONFIGURE_OPTIONS);
+        printf("%s version %s\n\n  autotools configuration: %s\n", PACKAGE_NAME, PACKAGE_VERSION, AUTOTOOLS_CONFIGURATION);
         exit(0);
     }
 
@@ -945,7 +948,7 @@ int main(int argc, char ** argv) {
         static Config configList[] = {
          {"Datadir", dataDir},
          {"Mandir", manDir},
-         {"Sysconfdir", SYSCONFDIR},
+         {"Sysconfdir", XBOARD_SYSTEM_CONFIG_DIR},
          {NULL}
         };
         int i;
@@ -978,7 +981,7 @@ int main(int argc, char ** argv) {
     //   fprintf(debugFP, "locale = %s\n", setlocale(LC_ALL, NULL));
     // }
 
-    bindtextdomain(PACKAGE, LOCALEDIR);
+    bindtextdomain(PACKAGE, XBOARD_LOCALE_DIR);
     bind_textdomain_codeset(PACKAGE, "UTF-8");  // needed when creating markup for the clocks
     textdomain(PACKAGE);
 #endif
@@ -2178,7 +2181,7 @@ void InfoProc(void) {
      "osascript -e 'tell application \"Terminal\"' -e 'activate' -e 'do script \"info -d %s/../info -f xboard.info\"' -e 'end tell'",
      dataDir);
 #else
-    snprintf(buf, sizeof(buf), "xterm -e info --directory %s --directory . -f %s &", INFODIR, INFOFILE);
+    snprintf(buf, sizeof(buf), "xterm -e info --directory %s --directory . -f %s &", XBOARD_INFO_DIR, INFOFILE);
 #endif
     system(buf);
 }

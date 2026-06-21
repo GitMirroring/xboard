@@ -706,10 +706,10 @@ dnl | since AC_PATH_XTRA only adds the paths
     ]
 )
 
-dnl| Create a string that holds the configure options, so that this information
-dnl| may be displayed from within GNU XBoard while it is running.  (It can be
-dnl| useful for bug reporting purposes.)
-CONFIGURE_OPTIONS="\
+dnl| Create a string that holds the options passed to autotools' configure, so
+dnl| that this information may be displayed from within GNU XBoard while it is
+dnl| running.  (It can be useful for bug reporting purposes.)
+AUTOTOOLS_CONFIGURATION="\
 prefix=${prefix}; \
 datarootdir=${datarootdir}; \
 datadir=${datadir}; \
@@ -728,7 +728,11 @@ enable_ptys=${enable_ptys}; \
 enable_zippy=${enable_zippy}; \
 enable_sigint=${enable_sigint}"
 
-AC_SUBST(CONFIGURE_OPTIONS)
+AC_SUBST(AUTOTOOLS_CONFIGURATION)
+AC_DEFINE_UNQUOTED([AUTOTOOLS_CONFIGURATION], ["$AUTOTOOLS_CONFIGURATION"], [Autotools configuration])
+
+GIT_REVISION=`git describe --dirty --always 2>/dev/null || echo "unknown"`
+AC_DEFINE_UNQUOTED([GIT_REVISION], ["$GIT_REVISION"], [Git revision])
 
 AC_CONFIG_FILES([Makefile cmail doc/Makefile po/Makefile.in osxapp/Info.plist])
 AC_CONFIG_COMMANDS(

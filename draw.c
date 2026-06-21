@@ -114,7 +114,7 @@ int useTexture, textureW[2], textureH[2];
 
 #define White(piece) ((int)(piece) < (int)BlackPawn)
 
-char svgDir[MSG_SIZ] = SVGDIR;
+char svgDir[MSG_SIZ] = XBOARD_SVG_DIR;
 
 char * crWhite = "#FFFFB0";
 char * crBlack = "#AD5D3D";

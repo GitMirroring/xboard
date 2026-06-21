@@ -58,7 +58,7 @@
 int initialSquareSize;
 int values[MAX_OPTIONS];
 ChessProgramState * currentCps;
-char manDir[MSG_SIZ] = MANDIR;
+char manDir[MSG_SIZ] = XBOARD_MAN_DIR;
 
 //----------------------------Generic dialog --------------------------------------------
 

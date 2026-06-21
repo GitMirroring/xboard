@@ -964,7 +964,7 @@ int main(int argc, char ** argv) {
     debugFP = stderr;
 
     if (argc > 1 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
-        printf("%s version %s\n\n  configure options: %s\n", PACKAGE_NAME, PACKAGE_VERSION, CONFIGURE_OPTIONS);
+        printf("%s version %s\n\n  autotools configuration: %s\n", PACKAGE_NAME, PACKAGE_VERSION, AUTOTOOLS_CONFIGURATION);
         exit(0);
     }
 
@@ -978,8 +978,8 @@ int main(int argc, char ** argv) {
             char *name, *value;
         } Config;
         static Config configList[] = {
-         {"Datadir", DATADIR},
-         {"Sysconfdir", SYSCONFDIR},
+         {"Datadir", XBOARD_DATA_DIR},
+         {"Sysconfdir", XBOARD_SYSTEM_CONFIG_DIR},
          {NULL}
         };
         int i;
@@ -1010,7 +1010,7 @@ int main(int argc, char ** argv) {
         fprintf(debugFP, "locale = %s\n", setlocale(LC_ALL, NULL));
     }
 
-    bindtextdomain(PACKAGE, LOCALEDIR);
+    bindtextdomain(PACKAGE, XBOARD_LOCALE_DIR);
     textdomain(PACKAGE);
 #endif
 
@@ -2085,7 +2085,7 @@ void ManProc(void) {  // called from menu
 
 void InfoProc(void) {
     char buf[MSG_SIZ];
-    snprintf(buf, sizeof(buf), "xterm -e info --directory %s --directory . -f %s &", INFODIR, INFOFILE);
+    snprintf(buf, sizeof(buf), "xterm -e info --directory %s --directory . -f %s &", XBOARD_INFO_DIR, INFOFILE);
     system(buf);
 }
 

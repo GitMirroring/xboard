@@ -120,7 +120,7 @@ typedef struct {
 #define FCP_NAMES ""
 #define SCP_NAMES ""
 #define ICS_TEXT_MENU_DEFAULT ""
-#define SETTINGS_FILE SYSCONFDIR "/xboard.conf"
+#define SETTINGS_FILE XBOARD_SYSTEM_CONFIG_DIR "/xboard.conf"
 #define COLOR_BKGD "white"
 
 GdkPixbuf * LoadIconFile(char * name);

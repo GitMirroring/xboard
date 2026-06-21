@@ -117,7 +117,7 @@ typedef struct {
 } IcsTextMenuEntry;
 
 IcsTextMenuEntry icsTextMenuEntry[ICS_TEXT_MENU_SIZE];
-char dataDir[MSG_SIZ] = DATADIR;
+char dataDir[MSG_SIZ] = XBOARD_DATA_DIR;
 
 int junk;
 int saveDate;
@@ -949,7 +949,7 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
     }
     if (ok) {
         f = fopen(fullname, "r");
-#ifdef DATADIR
+#ifdef XBOARD_DATA_DIR
         if (f == NULL && *fullname != '/' && !addr) {  // when a relative name did not work
             len = snprintf(buf, MSG_SIZ, "~/.xboard/themes/conf/%s", name);
             if ((len < 0 || len >= MSG_SIZ) && appData.debugMode) {
