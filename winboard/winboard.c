@@ -9567,7 +9567,7 @@ int OpenTCP(char * host, char * port, ProcRef * pr) {
     return NO_ERROR;
 }
 
-int OpenCommPort(char * name, ProcRef * pr) {
+int OpenCommunicationPort(char * name, ProcRef * pr) {
     HANDLE h;
     COMMTIMEOUTS ct;
     ChildProc * cp;

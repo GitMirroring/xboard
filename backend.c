@@ -1928,7 +1928,7 @@ int establish(void) {
 
     if (*appData.icsCommPort != NULLCHAR) {
         /* Talk to the host through a serial comm port */
-        return OpenCommPort(appData.icsCommPort, &icsPR);
+        return OpenCommunicationPort(appData.icsCommPort, &icsPR);
 
     } else if (*appData.gateway != NULLCHAR) {
         if (*appData.remoteShell == NULLCHAR) {

@@ -581,7 +581,7 @@ int OpenTCP(char * host, char * port, ProcRef * pr) {
     return 0;
 }
 
-int OpenCommPort(char * name, ProcRef * pr) {
+int OpenCommunicationPort(char * name, ProcRef * pr) {
     int fd;
     ChildProc * cp;
 
