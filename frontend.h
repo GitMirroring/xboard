@@ -241,7 +241,7 @@ int EngineOutputDialogExists(void);
 void EvalGraphPopUp(void);
 Boolean EvalGraphIsUp(void);
 int EvalGraphDialogExists(void);
-void SlavePopUp(void);
+void SecondaryBoardPopUp(void);
 void ActivateTheme(int new);
 char * Col2Text(int n);
 char * Shorten(char * s);

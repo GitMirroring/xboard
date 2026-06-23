@@ -807,18 +807,21 @@ void PrintOptions(void) {
     }
 }
 
-void SlaveResize(Option * opt) {
-    static int slaveW, slaveH, w, h;
+void SecondaryBoardResize(Option * opt) {
+    static int secondaryBoardWidth = 0;
+    static int secondaryBoardHeight = 0;
+    static int w;
+    static int h;
     GtkAllocation a;
-    if (!slaveH) {
+    if (0 == secondaryBoardHeight) {
         gtk_widget_get_allocation(shells[DummyDlg], &a);
         w = a.width;
         h = a.height;
         gtk_widget_get_allocation(opt->handle, &a);
-        slaveW = w - opt->max;  // [HGM] needed to set new shellWidget size when we resize board
-        slaveH = h - a.height + 13;
+        secondaryBoardWidth = w - opt->max;
+        secondaryBoardHeight = h - a.height + 13;
     }
-    gtk_window_resize(GTK_WINDOW(shells[DummyDlg]), slaveW + opt->max, slaveH + opt->value);
+    gtk_window_resize(GTK_WINDOW(shells[DummyDlg]), secondaryBoardWidth + opt->max, secondaryBoardHeight + opt->value);
 }
 
 GdkPixbuf * LoadIconFile(char * svgFilename) {
@@ -1835,9 +1838,10 @@ void ReSize(WindowPlacement * wp) {
         optList[W_BOARD].value = h;
     }
     if (twoBoards && shellUp[DummyDlg]) {
-        SlavePopUp();
+        SecondaryBoardPopUp();
         dualOptions[3].max = 0;
-        DoEvents();  // calls SlaveResize, kludge to force assigning new canvas
+        /* Calls SecondaryBoardResize as a kludge to force the assignment of a new canvas. */
+        DoEvents();
         partnerUp = !partnerUp;
         flipView = !flipView;
         DrawPosition(True, NULL);

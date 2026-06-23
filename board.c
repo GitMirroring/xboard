@@ -883,7 +883,8 @@ void DrawPositionX(int repaint, Board board) {
     repaint |= messedUp;
 
     if (DrawSeekGraph()) {
-        return;  // [HGM] seekgraph: suppress any drawing if seek graph up
+        /* [HGM] seekgraph: suppress any drawing if seek graph up */
+        return;
     }
 
     if (board == NULL) {
@@ -897,9 +898,10 @@ void DrawPositionX(int repaint, Board board) {
     }
 
     if (nr) {
-        SlavePopUp();
+        /* [HGM] popup board if not yet popped up, and switch drawing to it. */
+        SecondaryBoardPopUp();
         SwitchWindow(0);
-    }  // [HGM] popup board if not yet popped up, and switch drawing to it.
+    }
 
     /*
      * It would be simpler to clear the window with XClearWindow()

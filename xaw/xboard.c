@@ -944,7 +944,7 @@ void PrintOptions(void) {
     }
 }
 
-void SlaveResize(Option * opt) {}
+void SecondaryBoardResize(Option * opt) {}
 
 int main(int argc, char ** argv) {
     int i, clockFontPxlSize, coordFontPxlSize, fontPxlSize;

@@ -202,7 +202,7 @@ void DisplayTimerLabel(Option * opt, char * color, long timer, int highlight);
 void SetWindowTitle(char * text, char * title, char * icon);
 void SetupDropMenu(void);
 Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy);
-void SlaveResize(Option * opt);
+void SecondaryBoardResize(Option * opt);
 
 int SetCurrentComboSelection(Option * opt);
 void BoxAutoPopUp(char * buf);

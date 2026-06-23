@@ -3167,36 +3167,39 @@ Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy) {
     return mainOptions;
 }
 
-static Option * SlaveExp(int n, int x, int y) {
-    if (n == 10) {  // expose event
+static Option * SecondaryBoardExposeCallbackFn(int n, int x, int y) {
+    if (n == 10) {
+        /* It's an expose event. */
         flipView = !flipView;
         partnerUp = !partnerUp;
-        DrawPosition(True, NULL);  // [HGM] dual: draw other board in other orientation
+        /* [HGM] dual: draw other board in other orientation. */
+        DrawPosition(True, NULL);
         flipView = !flipView;
         partnerUp = !partnerUp;
     }
     return NULL;
 }
 
+/* These are for the secondary board window. */
 Option dualOptions[] = {
-  // auxiliary board window
- {0,   L2L | T2T,            198, NULL, NULL,              NULL, NULL, Label,   "White"                       }, // white clock
- {0,   R2R | T2T | SAME_ROW, 198, NULL, NULL,              NULL, NULL, Label,   "Black"                       }, // black clock
- {0,   LR | T2T | BORDER,    401, NULL, NULL,              NULL, NULL, Label,   "This feature is experimental"}, // message field
- {401, LR | TT,              401, NULL, (char *)&SlaveExp, NULL, NULL, Graph,   "shadow board"                }, // board
- {0,   NO_OK,                0,   NULL, NULL,              "",   NULL, EndMark, ""                            }
+ {0,   L2L | T2T,            198, NULL, NULL, NULL, NULL, Label,   "White"               }, /* white clock */
+ {0,   R2R | T2T | SAME_ROW, 198, NULL, NULL, NULL, NULL, Label,   "Black"               }, /* black clock */
+ {0,   LR | T2T | BORDER,    401, NULL, NULL, NULL, NULL, Label,   "Experimental feature"}, /* message field */
+ {401, LR | TT,              401, NULL, (char *)&SecondaryBoardExposeCallbackFn,
+                                              NULL, NULL, Graph,   "Secondary board"     }, /* board */
+ {0,   NO_OK,                0,   NULL, NULL, "",   NULL, EndMark, ""                    }
 };
 
-void SlavePopUp(void) {
+void SecondaryBoardPopUp(void) {
     int size = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
-    // copy params from main board
+    /* Copy parameters from the primary board. */
     dualOptions[0].choice = mainOptions[W_WHITE].choice;
     dualOptions[1].choice = mainOptions[W_BLACK].choice;
     dualOptions[3].value = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;
     dualOptions[3].max = dualOptions[2].max = size;  // board width
     dualOptions[0].max = dualOptions[1].max = size / 2 - 3;  // clock width
     GenericPopUp(dualOptions, "XBoard", DummyDlg, BoardWindow, NONMODAL, appData.topLevel);
-    SlaveResize(dualOptions + 3);
+    SecondaryBoardResize(dualOptions + 3);
 }
 
 static char clockMsg[2][MSG_SIZ];
