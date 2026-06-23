@@ -770,8 +770,6 @@ ArgDescriptor argDescriptors[] = {
  {"zippyMaxGames", ArgInt, (void *)&appData.zippyMaxGames, FALSE, (ArgIniType)ZIPPY_MAX_GAMES},
  {"zippyReplayTimeout", ArgInt, (void *)&appData.zippyReplayTimeout, FALSE, (ArgIniType)ZIPPY_REPLAY_TIMEOUT},
  {"zippyShortGame", ArgInt, (void *)&appData.zippyShortGame, FALSE, INVALID},
- /* Kludge to allow winboard.ini files from buggy 4.0.4 to be read: */
- {"zippyReplyTimeout", ArgInt, (void *)&junk, FALSE, INVALID},
 #endif
  /* [HGM] options for broadcasting and time odds */
  {"chatBoxes", ArgString, (void *)&appData.chatBoxes, !XBOARD, (ArgIniType)NULL},
