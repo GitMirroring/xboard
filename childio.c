@@ -162,21 +162,6 @@ int PseudoTTY(char pty_name[]) {
     return fd;
 }
 
-# elif HAVE_LIBSEQ
-/* This code is for Sequent DYNIX/ptx.  Untested. --tpm */
-
-int PseudoTTY(char pty_name[]) {
-    int fd;
-    char *slave, *master;
-
-    fd = getpseudotty(&slave, &master);
-    if (fd < 0) {
-        return fd;
-    }
-    safeStrCpy(pty_name, slave, sizeof(pty_name));
-    return fd;
-}
-
 # else
 /* This code is for all other systems */
 /* The code is adapted from GNU Emacs 19.24 */
@@ -283,5 +268,5 @@ int PseudoTTY(char pty_name[]) {
     return -1;
 }
 
-# endif /* HAVE_GRANTPT #elif HAVE__GETPTY #elif HAVE_LIBSEQ #else */
+# endif /* HAVE_GRANTPT #elif HAVE__GETPTY #else */
 #endif /* USE_PTYS */
