@@ -65,7 +65,6 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <pwd.h>
 
 #if HAVE_SYS_TIME_H
 # include <sys/time.h>

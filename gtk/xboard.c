@@ -64,7 +64,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <pwd.h>
+
 #include <cairo/cairo.h>
 #include <gtk/gtk.h>
 

@@ -113,6 +113,9 @@
 /* Define to 1 if you have the 'ptsname' function. */
 /* #undef HAVE_PTSNAME */
 
+/* Define to 1 if you have the <pwd.h> header file. */
+/* #undef HAVE_PWD_H */
+
 /* Define to 1 if you have the 'rand48' function. */
 /* #undef HAVE_RAND48 */
 

@@ -138,7 +138,7 @@ AC_DEFINE_UNQUOTED([REMOTE_SHELL], ["$RSH"])
 
 AC_HEADER_DIRENT
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS_ONCE([stropts.h sys/file.h sys/ioctl.h sys/systeminfo.h sys/time.h unistd.h])
+AC_CHECK_HEADERS_ONCE([pwd.h stropts.h sys/file.h sys/ioctl.h sys/systeminfo.h sys/time.h unistd.h])
 AC_CHECK_HEADERS([fcntl.h sys/fcntl.h], break)
 AC_CHECK_HEADERS([sys/socket.h lan/socket.h], break)
 

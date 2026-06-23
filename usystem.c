@@ -63,7 +63,10 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#if HAVE_PWD_H
 #include <pwd.h>
+#endif
 
 #if !OMIT_SOCKETS
 # if HAVE_SYS_SOCKET_H

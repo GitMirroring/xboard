@@ -66,7 +66,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <pwd.h>
+
 #include <cairo/cairo.h>
 #include <cairo/cairo-xlib.h>
 
