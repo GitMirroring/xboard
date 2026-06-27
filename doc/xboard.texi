@@ -305,7 +305,7 @@ however, if you rights-click them in the comment window,
 XBoard will shelve the current line, and load the the selected variation,
 so you can step through it.
 You can later revert to the previous line with the @samp{Revert} command.
-This way you can walk quite complex varation trees with XBoard.
+This way you can walk quite complex variation trees with XBoard.
 The nonstandard PGN tag [Variant "varname"] functions similarly to
 the -variant command-line option (see below), allowing games in certain chess
 variants to be loaded.  
@@ -468,10 +468,10 @@ of the side you want to give the move to.
 To clear the board you can click the clock of the side that
 already has the move (which is highlighted in black).
 If you repeat this the board will cycle from empty to a
-@code{pallette board} containing every piece once to the initial
+@code{palette board} containing every piece once to the initial
 position to the one before clearing.
 The quickest way to set up a position is usually to start
-with the pallette board, and move the pieces to were you
+with the palette board, and move the pieces to were you
 want them, duplicating them where necessary by using the
 @kbd{Ctrl} key, dragging those you don't want off board,
 and use static button 2 or 3 clicks to place the Pawns.
@@ -763,7 +763,7 @@ where the ICS output pane is vertically split to divert messages from
 a specific user or ICS channel to the lower half.
 Lines typed in the input field will then be interpreted as messages
 to be sent to that user or channel,
-(automatically prefixed with the apporpriate ICS command and user name)
+(automatically prefixed with the appropriate ICS command and user name)
 rather than as commands to the ICS.
 Chats will keep collecting ICS output intended for them even when not displayed,
 and their buttons will turn orange to alert the user there has been activity.
@@ -903,7 +903,7 @@ When a directory is specified here, XBoard will first look for
 piece images (SVG or PNG files) in that directory,
 and fall back on the image from the default theme only for
 images it cannot find there.
-An image file called White/BlackTile in the directory will be prefered
+An image file called White/BlackTile in the directory will be preferred
 as fall-back for missing pieces over the default image, however.
 @item Selectable themes
 @itemx New name for current theme
@@ -1016,7 +1016,7 @@ The @kbd{Ctrl-G} key is a keyboard equivalent.
 XBoard will start auto-playing the game from the currently displayed position,
 while the engine is analyzing the current position.
 The game will be annotated with the results of these analyses.
-In particlar, the score and depth will be added as a comment,
+In particular, the score and depth will be added as a comment,
 and the PV will be added as a variation.
 
 Normally the analysis would stop after reaching the end of the game.
@@ -1161,7 +1161,7 @@ The @kbd{F11} key is a keyboard equivalent.
 @item Upload to Examine
 @cindex Upload to Examine, Menu Item
 Create an examined game of the proper variant on the ICS,
-and send the game there that is currenty loaded in XBoard
+and send the game there that is currently loaded in XBoard
 (e.g. through pasting or loading from file).
 You must be connected to an ICS for this to work.
 @item Adjudicate to White
@@ -1235,7 +1235,7 @@ the name of the engine package (e.g. 'crafty' or 'stockfish').
 Some engines need additional parameters on the command line.
 For engines that are not in a place where the system would expect them
 a full pathname can be specified, and usually the browse button
-for this oprion is the easiest way to obtain that.
+for this option is the easiest way to obtain that.
 @item Engine Directory
 @cindex Engine Directory, Menu Item
 Compliant engines could run from any directory,
@@ -1613,7 +1613,7 @@ along the board's left and bottom edges.
 @item Show Target Squares
 @cindex Show Target Squares, Menu Item
 If this option is on, all squares a piece that is 'picked up' with the mouse
-can legally move to are highighted with a fat colored dot in
+can legally move to are highlighted with a fat colored dot in
 yellow (non-captures) or red (captures).
 Special moves might have other colors
 (e.g. magenta for promotion, cyan for a partial move).
@@ -1666,7 +1666,7 @@ The shifted @kbd{Alt+T} key is a keyboard equivalent.
 @item classical
 @cindex classical, Menu Item
 Selects classical TC,
-where the game is devided into sessions of a certain number of moves,
+where the game is divided into sessions of a certain number of moves,
 and after each session the start time is again added to the clocks.
 @item incremental
 @cindex incremental, Menu Item
@@ -1721,7 +1721,7 @@ Only works when @samp{Test Legality} is on.
 When this option is set
 XBoard will verify engine result claims,
 (forfeiting engines that make false claims),
-rather than naively beleiving the engine.
+rather than naively believing the engine.
 Only works when @samp{Test Legality} is on.
 @item Draw if Insufficient Mating Material
 @cindex Draw if Insufficient Mating Material, Menu Item
@@ -1744,7 +1744,7 @@ KQKQ will also be adjudicated a draw (possibly unjustly so).
 Only works when @samp{Test Legality} is on.
 @item N-Move Rule
 @cindex N-Move Rule, Menu Item
-When this option is set to a value differnt from zero
+When this option is set to a value different from zero
 XBoard will terminate games with a draw result
 after the specified number of reversible moves
 (i.e. without captures or pawn pushes) is made.
@@ -1789,7 +1789,7 @@ playing against an Internet Chess Server.
 @table @asis
 @item Auto-Kibitz
 @cindex Auto-Kibitz, Menu Item
-Setting this option when playing with or aginst a chess program on an ICS
+Setting this option when playing with or against a chess program on an ICS
 will cause the last line of thinking output of the engine before its move
 to be sent to the ICS in a kibitz command.
 In addition, any kibitz message received through the ICS from
@@ -2117,7 +2117,7 @@ Pressing the @samp{Continue Later} button confirms the current value of all
 items in the dialog and closes it,
 but will not automatically start the tournament.
 This allows you to return to the dialog later without losing the settings you
-already entered, to adjust paramenters through other menu dialogs.
+already entered, to adjust parameters through other menu dialogs.
 (The @samp{Common Engine Setting}, @samp{Time Control} and @samp{General Options}
 dialogs can be accessed without closing the @samp{Tournament Options} dialog
 through the respective buttons at the bottom of the latter.)
@@ -2166,17 +2166,17 @@ meeting the specified criteria.
 @item Elo of weakest player at least
 @cindex Elo limits, Menu Item
 Games with an Elo tag specifying a lower rating for the mentioned player
-will not be diplayed in the @samp{Game List}. 
+will not be displayed in the @samp{Game List}. 
 @item No games before year
 @cindex Date limit, Menu item
 Games with a Date tag before the specified year
-will not be diplayed in the @samp{Game List}. 
+will not be displayed in the @samp{Game List}. 
 @item Final nr of pieces
 @cindex Final number of pieces, Menu Item
 A single number or a range (like 8-10) can be entered here,
 and will cause only games where the number of men in the final
 position is in the given range
-will be diplayed in the @samp{Game List}. 
+will be displayed in the @samp{Game List}. 
 @item Minimum nr consecutive positions
 @cindex Consecutive positions, Menu Item
 Specifies for how many consecutive positions the more fuzzy
@@ -3020,7 +3020,7 @@ where A and B are participant numbers (in the range 1-N).
 @cindex afterTourney, option
 When non-empty, the given string will be executed as a system command 
 after each tournament game, or after the tourney completes, respectively.
-This can be used, for example, to autmatically run a cross-table generator
+This can be used, for example, to automatically run a cross-table generator
 on the PGN file where games are saved, to update the tourney standings.
 Default: ""
 @item -syncAfterRound true/false
@@ -3522,7 +3522,7 @@ Default: "eprd"
 @cindex at sign, option
 When XBoard encounters an option -settingsFile (or -ini for short),
 or @@filename, it tries to read the mentioned file,
-and substitutes the contents of it (presumaby more command-line options)
+and substitutes the contents of it (presumably more command-line options)
 in place of the option.
 In the case of -ini or -settingsFile, the name of a successfully read
 settings file is also remembered as the file to use for saving settings
@@ -3532,9 +3532,9 @@ The option -saveSettingsFile does specify a name of the file to use
 for saving, without reading any options from it, and is thus also effective
 when the file did not exist yet.
 So the settings will be saved to the file specified in the last
--saveSettingsFile or succesfull -settingsFile / -ini command,
+-saveSettingsFile or successful -settingsFile / -ini command,
 if any, and in /etc/xboard/xboard.conf otherwise.
-Usualy the latter is only accessible for the system administrator, though, 
+Usually the latter is only accessible for the system administrator, though, 
 and will be used to contain system-wide default settings, amongst which
 a -saveSettingsFile and -settingsFile options to specify a settings file
 accessible to the individual user, such as ~/.xboardrc in the user's
@@ -3561,7 +3561,7 @@ and no update of the icon on the task bar in this mode.
 This option controls the drawing of player logos next to the clocks.
 The integer N specifies the width of the logo in pixels;
 the logo height will always be half the width.
-When N = 0, no logos will be diplayed.
+When N = 0, no logos will be displayed.
 Default: 0.
 @item -firstLogo imagefile
 @itemx -secondLogo imagefile
@@ -4051,7 +4051,7 @@ for the depth, score, time and nodes data.
 A button 3 click on these headers will hide or show the corresponding data.
 (Not intended for dynamic use, as already printed data of the current search
 will not be affected!)
-Defaul: False.
+Default: False.
 @end table
 
 @node Adjudication Options
@@ -4415,7 +4415,7 @@ These options order pauses before and after sending the "quit" command to an eng
 The pause between quit and the previous command is specified in milliseconds.
 The pause after quit is used to schedule a kill signal to be sent to the engine process after the
 number of specified seconds plus one.
-This signal is a different one as the terminiation signal described in the protocol specs
+This signal is a different one as the termination signal described in the protocol specs
 which engines can suppress or ignore, and which is sent directly after the "quit" command.
 Setting @code{delayAfterQuit} to -1 will suppress sending of the kill signal.
 Default: 0
