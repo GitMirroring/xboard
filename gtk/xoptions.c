@@ -1082,7 +1082,7 @@ static void ExposeDraw(Option * graph, GdkEventExpose * eevent) {
 }
 
 /* Handle expose and mouse events for the Graph widget. */
-static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
+static gboolean GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
     int w, h;
     int button = 10, f = 1, sizing = 0;
     Option *opt, *graph = (Option *)gdata;
@@ -1101,8 +1101,7 @@ static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
         gtk_widget_get_allocation(widget, &a);
         w = a.width;
         h = a.height;
-// printf("expose %dx%d @ (%d,%d): %dx%d @(%d,%d)\n", w, h, a.x, a.y, eevent->area.width, eevent->area.height, eevent->area.x,
-// eevent->area.y);
+
 #ifdef TODO_GTK
         j = 0;
         XtSetArg(args[j], XtNwidth, &w);
@@ -1121,8 +1120,11 @@ static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
             w = graph->max;
         }
         if (sizing && eevent->count > 0) {
+#if !GTK_CHECK_VERSION(3, 0, 0)
+            /* TODO: We likely don't want this for GTK 2 either, so test removing it entirely. */
             graph->max = 0;
-            return;
+#endif
+            return FALSE;
         }  // don't bother if further exposure is pending during resize
 #ifdef TODO_GTK
         if (!graph->textValue || sizing) {  // create surfaces of new size for display widget
@@ -1141,7 +1143,7 @@ static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
         }
         ExposeDraw(graph, eevent);
     default:
-        return;
+        return FALSE;
     case GDK_SCROLL:
         w = 0;
         h = 0;
@@ -1180,32 +1182,30 @@ static void GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdata) {
     }
     XSync(xDisplay, False);
 #endif
+    return FALSE;
 }
 
 void GraphExpose(Option * opt, int x, int y, int w, int h) {
-    if (!opt || !opt->handle)
+    if (!opt || !opt->handle) {
         return;
+    }
 
 #if GTK_CHECK_VERSION(3, 0, 0)
-    if (!GTK_IS_WIDGET(opt->handle))
+    if (!GTK_IS_WIDGET(opt->handle)) {
         return;
+    }
 
     gtk_widget_queue_draw_area(GTK_WIDGET(opt->handle), x, y, w, h);
 #else
-#if 0
-  GdkRectangle r;
-  r.x = x; r.y = y; r.width = w; r.height = h;
-  gdk_window_invalidate_rect(((GtkWidget *)(opt->handle))->window, &r, FALSE);
-#endif
     GdkEventExpose e;
-
     e.area.x = x;
     e.area.y = y;
     e.area.width = w;
     e.area.height = h;
+    /* Kludge to suppress sizing. */
     e.count = -1;
-    e.type = GDK_EXPOSE;  // count = -1: kludge to suppress sizing
-    ExposeDraw(opt, &e);  // fake expose event
+    e.type = GDK_EXPOSE;
+    ExposeDraw(opt, &e);
 #endif
 }
 

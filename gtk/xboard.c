@@ -52,6 +52,7 @@
 
 #include "config.h"
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <math.h>
@@ -215,7 +216,7 @@ void update_ics_width(void);
 int CopyMemoProc(void);
 static int EventProc(GtkWidget * widget, GdkEvent * event, void * g);
 static int FindLogo(char * place, char * name, char * buf);
-#if GTK_CHECK_VERSION(3,0,0)
+#if GTK_CHECK_VERSION(3, 0, 0)
 static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data);
 #endif
 
@@ -604,12 +605,11 @@ void ResizeBoardWindow(int w, int h, int inhibit) {
     marginW = a.width - bw;
     gtk_widget_get_allocation(optList[W_WHITE].handle, &a);
     gtk_widget_set_size_request(optList[W_BOARD].handle, w, h);  // protect board widget
-    // w += marginW + 1; // [HGM] not sure why the +1 is (sometimes) needed...
-    // h += marginH + a.height + 1;
     gtk_window_resize(GTK_WINDOW(shellWidget), w, 10);
     DoEvents();
     if (!appData.fixedSize) {
-        gtk_widget_set_size_request(optList[W_BOARD].handle, 100, 100);  // liberate board again
+        /* Liberate the board again. */
+        gtk_widget_set_size_request(optList[W_BOARD].handle, -1, -1);
     }
 }
 
@@ -856,17 +856,18 @@ static int StartNewXBoard(GtkosxApplication * app, char * path, void * user_data
 GtkosxApplication * theApp;
 #endif
 
-static void get_default_monitor_size(unsigned int *width, unsigned int *height) {
-#if GTK_CHECK_VERSION(3,22,0)
-    GdkDisplay *display = gdk_display_get_default();
-    GdkMonitor *monitor = NULL;
+static void get_default_monitor_size(unsigned int * width, unsigned int * height) {
+#if GTK_CHECK_VERSION(3, 22, 0)
+    GdkDisplay * display = gdk_display_get_default();
+    GdkMonitor * monitor = NULL;
     GdkRectangle geometry;
 
-    if (display)
+    if (display) {
         monitor = gdk_display_get_primary_monitor(display);
-    if (!monitor && display)
+    }
+    if (!monitor && display) {
         monitor = gdk_display_get_monitor(display, 0);
-
+    }
     if (monitor) {
         gdk_monitor_get_geometry(monitor, &geometry);
         *width = geometry.width;
@@ -1202,14 +1203,17 @@ int main(int argc, char ** argv) {
     currBoard = &optList[W_BOARD];
     boardWidget = optList[W_BOARD].handle;
 
-#if GTK_CHECK_VERSION(3,0,0)
-    g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), &mainOptions[W_BOARD]);
+#if GTK_CHECK_VERSION(3, 0, 0)
+    g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), currBoard);
 #endif
 
     menuBarWidget = optList[W_MENU].handle;
     dropMenu = optList[W_DROP].handle;
     titleWidget = optList[optList[W_TITLE].type != Skip ? W_TITLE : W_SMALL].handle;
-    DelayedDrag();  // fake configure event (i3wm tiling window manager fails to send one after initial resize)
+
+    /* Fake configure event (i3wm tiling window manager fails to send one after initial resize). */
+    DelayedDrag();
+
 #ifdef TODO_GTK
     formWidget = XtParent(boardWidget);
     XtSetArg(args[0], XtNbackground, &timerBackgroundPixel);
@@ -1226,8 +1230,6 @@ int main(int argc, char ** argv) {
     //       not need to go into InitDrawingSizes().
 
     InitMenuMarkers();
-
-    // add accelerators to main shell
     gtk_window_add_accel_group(GTK_WINDOW(shellWidget), GtkAccelerators);
 
     /*
@@ -1344,14 +1346,12 @@ int main(int argc, char ** argv) {
     XSetInputFocus(xDisplay, XtWindow(formWidget), RevertToPointerRoot, CurrentTime);
 #endif
 
-    /* check for GTK events and process them */
-    // gtk_main();
     while (1) {
         gtk_main_iteration();
     }
 
     if (appData.debugMode) {
-        fclose(debugFP);  // [DM] debug
+        fclose(debugFP);
     }
     return 0;
 }
@@ -1855,25 +1855,30 @@ void ReSize(WindowPlacement * wp) {
 
 static unsigned int delayedDragTag = 0;
 
-void DragProc(void) {
+gboolean DragProc(gpointer data) {
     static int busy;
     if (busy++) {
-        return;  // prevent recursive calling, but remember we missed an event in 'busy'
+        /* Prevent recursive calling. */
+        return FALSE;
     }
 
     if (delayedDragTag) {
-        g_source_remove(delayedDragTag);  // no more timer interrupts from same event!
+        /* No more timer interrupts from the same event! */
+        g_source_remove(delayedDragTag);
     }
     delayedDragTag = 0;
 
     do {
         GetActualPlacement(shellWidget, &wpNew);
-        if (wpNew.x == wpMain.x && wpNew.y == wpMain.y &&  // not moved
-         wpNew.width == wpMain.width && wpNew.height == wpMain.height) {  // not sized
+        int const moved = (wpNew.x != wpMain.x) || (wpNew.y != wpMain.y);
+        int const sized = (wpNew.width != wpMain.width) || (wpNew.height != wpNew.height);
+        if (!moved && !sized) {
+            assert(!moved && !sized);
             busy = 0;
-            break;  // false alarm
+            break;
         }
-        ReSize(&wpNew);  // this can be interrupted by other events
+        /* N.B.: Resizing can be interrupted by other events. */
+        ReSize(&wpNew);
         if (appData.useStickyWindows) {
             if (shellUp[EngOutDlg]) {
                 CoDrag(shells[EngOutDlg], &wpEngineOutput);
@@ -1900,6 +1905,7 @@ void DragProc(void) {
             busy = 2;  // if multiple events were backlogged, only do one more
         }
     } while (--busy);
+    return FALSE;
 }
 
 void DelayedDrag(void) {
@@ -1926,15 +1932,16 @@ static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
 
 #if GTK_CHECK_VERSION(3, 0, 0)
 static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data) {
-    Option *opt = (Option *) data;
-
-    if (!opt || !opt->choice)
-        return TRUE;
-
-    cairo_set_source_surface(cr, (cairo_surface_t *)opt->choice, 0, 0);
+    cairo_surface_t * surface;
+    Option *opt = (Option *)data;
+    if (!opt || !opt->choice) {
+        /* We can't draw anything yet. */
+        return FALSE;
+    }
+    surface = (cairo_surface_t *)opt->choice;
+    cairo_set_source_surface(cr, surface, 0, 0);
     cairo_paint(cr);
-
-    return TRUE;
+    return FALSE;
 }
 #endif
 

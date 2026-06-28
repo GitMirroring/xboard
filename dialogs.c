@@ -3135,18 +3135,28 @@ static Option * Exp(int n, int x, int y) {
 }
 
 Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy) {
-    int i, size = BOARD_WIDTH * (squareSize + lineGap) + lineGap, logo = appData.logoSize;
-    int f = 2 * appData.fixedSize;  // width fudge, needed for unknown reasons to not clip board
+    int size = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
+    int logo = appData.logoSize;
+    /* width fudge, needed for unknown reasons to not clip board */
+    int f = 2 * appData.fixedSize;
+    int i;
+
     mainOptions[W_WHITE].choice = (char **)clockFontThingy;
     mainOptions[W_BLACK].choice = (char **)clockFontThingy;
     mainOptions[W_BOARD].value = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;
-    mainOptions[W_BOARD].max = mainOptions[W_SMALL].max = size;  // board size
-    mainOptions[W_SMALL].max = size - 2;  // board title (subtract border!)
-    mainOptions[W_BLACK].max = mainOptions[W_WHITE].max = size / 2 - 3;  // clock width
-    mainOptions[W_MESSG].max = appData.showButtonBar ? size - 135 + f : size - 2 + f;  // message
-    mainOptions[W_MENU].max = size - 40;  // menu bar
+    /* Board size. */
+    mainOptions[W_BOARD].max = mainOptions[W_SMALL].max = size;
+    /* Board title, with the border subtracted. */
+    mainOptions[W_SMALL].max = size - 2;
+    /* Clock width */
+    mainOptions[W_BLACK].max = mainOptions[W_WHITE].max = size / 2 - 3;
+    /* Message. */
+    mainOptions[W_MESSG].max = appData.showButtonBar ? size - 135 + f : size - 2 + f;
+    /* Menu bar. */
+    mainOptions[W_MENU].max = size - 40;
     mainOptions[W_TITLE].type = appData.titleInWindow ? Label : Skip;
-    if (logo && logo <= size / 4) {  // Activate logos
+    if (logo && logo <= size / 4) {
+        /* Activate logos. */
         mainOptions[W_WHITE - 1].type = mainOptions[W_BLACK + 1].type = Graph;
         mainOptions[W_WHITE - 1].max = mainOptions[W_BLACK + 1].max = logo;
         mainOptions[W_WHITE - 1].value = mainOptions[W_BLACK + 1].value = logo / 2;
@@ -3163,7 +3173,9 @@ Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy) {
         mainOptions[i + 1].choice = (char **)menuBar[i].mi;
     }
     AppendEnginesToMenu(appData.recentEngineList);
-    GenericPopUp(mainOptions, "XBoard", BoardWindow, BoardWindow, NONMODAL, 1);  // allways top-level
+    mainOptions[W_BOARD].choice = NULL;
+    /* Always top-level. */
+    GenericPopUp(mainOptions, "XBoard", BoardWindow, BoardWindow, NONMODAL, 1);
     return mainOptions;
 }
 
