@@ -87,14 +87,6 @@
 #include "draw.h"
 
 
-#ifdef __EMX__
-# ifndef HAVE_USLEEP
-#  define HAVE_USLEEP
-# endif
-# define usleep(t) _sleep2(((t) + 500) / 1000)
-#endif
-
-
 int squareSize, lineGap;
 
 int damage[2][BOARD_RANKS][BOARD_FILES];

@@ -193,13 +193,6 @@
 
 #define SLASH '/'
 
-#ifdef __EMX__
-# ifndef HAVE_USLEEP
-#  define HAVE_USLEEP
-# endif
-# define usleep(t) _sleep2(((t) + 500) / 1000)
-#endif
-
 #ifdef ENABLE_NLS
 # define _(s) gettext(s)
 # define N_(s) gettext_noop(s)

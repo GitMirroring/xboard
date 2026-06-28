@@ -89,6 +89,14 @@ typedef char * String;
 # endif /* not HAVE_RAND48 */
 #endif /* !HAVE_RANDOM */
 
+/* Kludge for supporting the (obsolete) OS/2 EMX environment. */
+#ifdef __EMX__
+# ifndef HAVE_USLEEP
+#  define HAVE_USLEEP
+# endif
+# define usleep(t) _sleep2(((t) + 500) / 1000)
+#endif
+
 /* End compatibility grunge */
 
 #define XBOARD_LITERALIZE(l) #l

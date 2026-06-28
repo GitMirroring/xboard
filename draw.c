@@ -82,13 +82,6 @@
 /* C doesn't guarantee that M_PI is defined anyway. */
 double const tau = 6.28318530717958647692528676655900577;
 
-#ifdef __EMX__
-# ifndef HAVE_USLEEP
-#  define HAVE_USLEEP
-# endif
-# define usleep(t) _sleep2(((t) + 500) / 1000)
-#endif
-
 #ifdef ENABLE_NLS
 # define _(s) gettext(s)
 # define N_(s) gettext_noop(s)
