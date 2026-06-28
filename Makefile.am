@@ -66,6 +66,7 @@ xboard_SOURCES = \
     childio.c \
     childio.h \
     common.h \
+    common.c \
     dialogs.c \
     dialogs.h \
     draw.c \

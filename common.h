@@ -50,8 +50,8 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#ifndef XB_COMMON
-#define XB_COMMON
+#ifndef GNU_XBOARD_COMMON_H
+#define GNU_XBOARD_COMMON_H
 
 
 /* Begin compatibility grunge  */
@@ -67,6 +67,7 @@ typedef char * String;
 # else
 typedef char Boolean;
 typedef char * String;
+/* N.B.: Prefer using TRUE and FALSE to these. */
 #  define True 1
 #  define False 0
 # endif
@@ -77,7 +78,8 @@ typedef char * String;
 # define FALSE 0
 #endif
 
-#define UNKNOWN -1 /* [HGM] nps */
+/* [HGM] nps */
+#define UNKNOWN -1
 
 #if !HAVE_RANDOM
 # if HAVE_RAND48
@@ -140,23 +142,19 @@ typedef char * String;
 
 #define PROTOVER 2 /* engine protocol version */
 
-// [HGM] license: Messages that engines must print to satisfy their license requirements for patented variants
+/* [HGM] license: Messages that engines must print to satisfy their license requirements for patented variants. */
 #define GOTHIC "Gothic Chess (see www.GothicChess.com) is licensed under U.S. Patent #6,481,716 by Ed Trice"
 #define FALCON "Falcon Chess (see www.chessvariants.com) is licensed under U.S. Patent #5,690,334 by George W. Duke"
 
 /* [HGM] Some notes about board sizes:
-   In games that allow piece drops, the holdings are considered part of the
-   board, in the leftmost and rightmost two files. This way they are
-   automatically part of the game-history states, and enjoy all display
-   functions (including drag-drop and click-click moves to the regular part
-   of the board). The drawback of this is that the internal numbering of
-   files starts at 2 for the a-file if holdings are displayed. To ensure
-   consistency, this shifted numbering system is used _everywhere_ in the
-   code, and conversion to the 'normal' system only takes place when the
-   file number is converted to or from ASCII (by redefining the character
-   constant 'a'). This works because Winboard only communicates with the
-   outside world in ASCII. In a similar way, the different rank numbering
-   systems (starting at rank 0 or 1) are implemented by redefining '1'.
+
+   In games that allow piece drops, the holdings are considered part of the board, in the leftmost and rightmost two files.  This
+   way, they are automatically part of the game history states, and enjoy all display functions (including drag-drop and click-click
+   moves to the regular part of the board).  The drawback of this is that the internal numbering of files starts at 2 for the a-file
+   if holdings are displayed.  To ensure consistency, this shifted numbering system is used _everywhere_ in the code, and conversion
+   to the 'normal' system only takes place when the file number is converted to or from ASCII (by redefining the character constant
+   'a').  This works because Winboard only communicates with the outside world in ASCII. In a similar way, the different rank
+   numbering systems (starting at rank 0 or 1) are implemented by redefining '1'.
 */
 #define BOARD_RANKS 17 /* [HGM] for in declarations  */
 #define BOARD_FILES 16 /* [HGM] for in declarations  */
@@ -225,19 +223,21 @@ typedef char * String;
 #define GAMELIST_FONT 7
 #define NUM_FONTS 8
 
-/* Default to no flashing (the "usual" XBoard behavior) */
-#define FLASH_COUNT 0 /* Number of times to flash */
-#define FLASH_RATE 5 /* Flashes per second */
+/* Default to no flashing (the "usual" XBoard behavior). */
+/* Number of times to flash. */
+#define FLASH_COUNT 0
+/* Flashes per second. */
+#define FLASH_RATE 5
 
-/* Default delay per character (in msec) while sending login script */
+/* Default delay per character (in msec) while sending login script. */
 #define MS_LOGIN_DELAY 0
 
-/* [AS] Support for background textures */
+/* Support for background textures. */
 #define BACK_TEXTURE_MODE_DISABLED 0
 #define BACK_TEXTURE_MODE_PLAIN 1
 #define BACK_TEXTURE_MODE_FULL_RANDOM 2
 
-/* Zippy defaults */
+/* Zippy defaults. */
 #define ZIPPY_TALK FALSE
 #define ZIPPY_PLAY FALSE
 #define ZIPPY_LINES "yow.lines"
@@ -285,9 +285,8 @@ typedef enum {
 } GameMode;
 
 typedef enum {
-    /* [HGM] the order here is crucial for Crazyhouse & Shogi: */
-    /* only the first N pieces can go into the holdings, and   */
-    /* promotions in those variants shift P-W to U-S           */
+    /* [HGM] The order here is crucial for Crazyhouse & Shogi: only the first N pieces can go into the holdings, and promotions in
+       those variants shift P-W to U-S. */
     WhitePawn,
     WhiteKnight,
     WhiteBishop,
@@ -422,15 +421,17 @@ typedef enum {
     BlackKing,
     EmptySquare,
     DarkSquare,
-    NoRights,  // [HGM] gamestate: for castling rights hidden in board[CASTLING]
+    /* Game state: for castling rights hidden in board[CASTLING]. */
+    NoRights,
     ClearBoard,
     WhitePlay,
     BlackPlay,
     PromotePiece,
-    DemotePiece /*for use on EditPosition menus*/
+    /* For use on EditPosition menus. */
+    DemotePiece
 } ChessSquare;
 
-/* [HGM] some macros that can be used as prefixes to convert piece types */
+/* [HGM] Some macros that can be used as prefixes to convert piece types. */
 #define WHITE_TO_BLACK (int)BlackPawn - (int)WhitePawn + (int)
 #define BLACK_TO_WHITE (int)WhitePawn - (int)BlackPawn + (int)
 #define PROMO (int)WhiteDragon - (int)WhiteRook + (int)
@@ -567,7 +568,8 @@ typedef enum {
     VariantChuChess,
     VariantJanggi,
     VariantDuck,
-    VariantUnknown /* Catchall for other unknown variants */
+    /* Catch-all for other, unknown variants. */
+    VariantUnknown
 } VariantClass;
 
 #define VARIANT_NAMES \
@@ -614,8 +616,10 @@ typedef struct {
     Boolean autoBox;
     char * icsHost;
     char * icsPort;
-    char * icsCommPort; /* if set, use serial port instead of tcp host/port */
-    char * icsLogon; /* Hack to permit variable logon scripts. */
+    /* If set, use serial port instead of TCP host/port */
+    char * icsCommPort;
+    /* Hack to permit variable logon scripts. */
+    char * icsLogon;
     char * icsHelper;
     Boolean icsInputBox;
     Boolean useTelnet;
@@ -624,15 +628,19 @@ typedef struct {
     char * telnetProgram;
     char * gateway;
     char * loadGameFile;
-    int loadGameIndex; /* game # within file */
+    /* game # within file */
+    int loadGameIndex;
     char * saveGameFile;
     char * autoInstall;
     Boolean autoSaveGames;
-    Boolean onlyOwn; /* [HGM] suppress auto-saving of observed games */
+    /* [HGM] suppress auto-saving of observed games */
+    Boolean onlyOwn;
     char * loadPositionFile;
-    int loadPositionIndex; /* position # within file */
+    /* position # within file */
+    int loadPositionIndex;
     char * savePositionFile;
-    Boolean fischerCastling; /* [HGM] fischer: allow Fischr castling in any variant */
+    /* [HGM] For allowing Fischer castling in any variant. */
+    Boolean fischerCastling;
     Boolean matchMode;
     int matchGames;
     Boolean epd;
@@ -647,9 +655,11 @@ typedef struct {
     int searchDepth;
     Boolean showCoords;
     char * clockFont;
-    char * messageFont; /* WinBoard only */
+    /* messageFont is for WinBoard only */
+    char * messageFont;
     char * coordFont;
-    char * font; /* xboard only */
+    /* font is for XBoard only */
+    char * font;
     char * tagsFont;
     char * commentFont;
     char * historyFont;
@@ -660,7 +670,8 @@ typedef struct {
     Boolean autoCallFlag;
     Boolean flipView;
     Boolean autoFlipView;
-    char * cmailGameName; /* xboard only */
+    /* cmailGameName is for XBoard only */
+    char * cmailGameName;
     Boolean moveTime;
     Boolean headers;
     Boolean alwaysPromoteToQueen;
@@ -675,19 +686,26 @@ typedef struct {
     Boolean autoComment;
     Boolean getMoveList;
     Boolean testLegality;
-    Boolean topLevel; /* xboard, top-level auxiliary windows */
-    Boolean titleInWindow; /* xboard only */
-    Boolean localLineEditing; /* WinBoard only */
+    /* XBoard, top-level auxiliary windows */
+    Boolean topLevel;
+    /* titleInWindow is for XBoard only */
+    Boolean titleInWindow;
+    /* localLineEditing is for WinBoard only */
+    Boolean localLineEditing;
     Boolean zippyTalk;
     Boolean zippyPlay;
     int jewelled;
-    int flashCount; /* Number of times to flash (xboard only) */
-    int flashRate; /* Flashes per second (xboard only)  */
-    int msLoginDelay; /* Delay per character (in msec) while sending
-                         ICS logon script (xboard only) */
-    Boolean colorize; /* If True, use the following colors to color text */
+    /* Number of times to flash (xboard only) */
+    int flashCount;
+    /* Flashes per second (xboard only) */
+    int flashRate;
+    /* Delay per character (in msec) while sending ICS logon script (xboard only) */
+    int msLoginDelay;
+    /* If TRUE, use the following colors to color text */
+    Boolean colorize;
     /* Strings for colors, as "fg, bg, bold" (strings used in xboard only) */
-    char * colorShout;  // [HGM] IMPORTANT: order must conform to ColorClass definition
+    /* IMPORTANT: The order must match the order used in the ColorClass typedef definition. */
+    char * colorShout;
     char * colorSShout;
     char * colorChannel1;
     char * colorChannel;
@@ -697,8 +715,10 @@ typedef struct {
     char * colorRequest;
     char * colorSeek;
     char * colorNormal;
-    char * soundProgram; /* sound-playing program */
-    char * soundShout;  // [HGM] IMPORTANT: order must be as in ColorClass
+    /* Sound-playing program. */
+    char * soundProgram;
+    /* IMPORTANT: The order must match the order used in the ColorClass typedef definition. */
+    char * soundShout;
     char * soundSShout;
     char * soundChannel1;
     char * soundChannel;
@@ -707,7 +727,8 @@ typedef struct {
     char * soundChallenge;
     char * soundRequest;
     char * soundSeek;
-    char * soundMove;  // [HGM] IMPORTANT: order must be as in SoundClass
+    /* IMPORTANT: The order must match the order used in the SoundClass typedef definition. */
+    char * soundMove;
     char * soundBell;
     char * soundRoar;
     char * soundIcsAlarm;
@@ -715,57 +736,83 @@ typedef struct {
     char * soundIcsLoss;
     char * soundIcsDraw;
     char * soundIcsUnfinished;
-    Boolean disguise; /* [HGM] Promoted Pawns look like pieces in bughouse */
+    /* [HGM] Promoted Pawns look like pieces in bughouse */
+    Boolean disguise;
     Boolean reuse[ENGINES];
-    Boolean animateDragging; /* If True, animate mouse dragging of pieces */
-    Boolean animate; /* If True, animate non-mouse moves */
-    int animSpeed; /* Delay in milliseconds between animation frames */
+    /* If TRUE, animate mouse dragging of pieces. */
+    Boolean animateDragging;
+    /* If TRUE, animate non-mouse moves. */
+    Boolean animate;
+    /* Delay in milliseconds between animation frames. */
+    int animSpeed;
     Boolean popupMoveErrors;
     Boolean popupExitMessage;
     int showJail;
     Boolean highlightLastMove;
     Boolean highlightDragging;
-    Boolean blindfold; /* if true, no pieces are drawn */
-    Boolean premove; /* true if premove feature enabled */
-    Boolean premoveWhite; /* true if premoving White first move  */
-    char * premoveWhiteText; /* text of White premove 1 */
-    Boolean premoveBlack; /* true if premoving Black first move */
-    char * premoveBlackText; /* text of Black premove 1 */
-    Boolean icsAlarm; /* true if sounding alarm at a certain time */
-    int icsAlarmTime; /* time to sound alarm, in milliseconds */
+    /* If TRUE, no pieces are drawn. */
+    Boolean blindfold;
+    /* TRUE iff premove feature is enabled. */
+    Boolean premove;
+    /* TRUE if premoving White's first move. */
+    Boolean premoveWhite;
+    /* Text of White's premove 1. */
+    char * premoveWhiteText;
+    /* TRUE if premoving Black's first move. */
+    Boolean premoveBlack;
+    /* Text of Black's premove 1. */
+    char * premoveBlackText;
+    /* TRUE iff sounding alarm at a certain time. */
+    Boolean icsAlarm;
+    /* time to sound alarm, in milliseconds */
+    int icsAlarmTime;
     Boolean autoRaiseBoard;
-    int fontSizeTolerance; /* xboard only */
+    /* fontSizeTolerance is for XBoard only. */
+    int fontSizeTolerance;
     char * initialMode;
     char * variant;
     char * chatBoxes;
     int protocolVersion[ENGINES];
     Boolean showButtonBar;
     Boolean icsEngineAnalyze;
-    Boolean variations; /* [HGM] enable variation-tree walking */
-    Boolean autoExtend; /* [HGM] enable playing move(s) of right-clicked PV in analysis mode */
+    /* Enable variation-tree walking. */
+    Boolean variations;
+    /* Enable playing move(s) of right-clicked PV in analysis mode. */
+    Boolean autoExtend;
 
-    /* [AS] New properties (down to the "ZIPPY" part) */
-    Boolean scoreIsAbsolute[ENGINES]; /* If true, engine score is always from white side */
-    Boolean saveExtendedInfoInPGN; /* If true, saved PGN games contain extended info */
-    Boolean hideThinkingFromHuman; /* If true, program thinking is generated but not displayed in human/computer matches */
-    Boolean cumulativeTimePGN; /* If true, times saved in PGN extended info is time left on clock */
+    /* Iff TRUE, engine score is always from white side. */
+    Boolean scoreIsAbsolute[ENGINES];
+    /* Iff TRUE, saved PGN games contain extended info. */
+    Boolean saveExtendedInfoInPGN;
+    /* Iff TRUE, program thinking is generated but not displayed in human/computer matches. */
+    Boolean hideThinkingFromHuman;
+    /* Iff TRUE, times saved in PGN extended info is time left on clock. */
+    Boolean cumulativeTimePGN;
     Boolean useBitmaps;
     Boolean useFont;
     Boolean useBorder;
-    char * liteBackTextureFile; /* Name of texture bitmap for lite squares */
-    char * darkBackTextureFile; /* Name of texture bitmap for dark squares */
+    /* Name of texture bitmap for light squares. */
+    char * liteBackTextureFile;
+    /* Name of texture bitmap for dark squares. */
+    char * darkBackTextureFile;
     int liteBackTextureMode;
     int darkBackTextureMode;
-    char * renderPiecesWithFont; /* Name of font for rendering chess pieces */
-    char * fontToPieceTable; /* Map to translate font character to chess pieces */
-    char * inscriptions; /* text (kanji) to write on top of a piece     */
+    /* Name of font for rendering chess pieces. */
+    char * renderPiecesWithFont;
+    /* Map to translate font character to chess pieces. */
+    char * fontToPieceTable;
+    /* Text (kanji) to write on top of a piece. */
+    char * inscriptions;
     int fontBackColorWhite;
     int fontForeColorWhite;
     int fontBackColorBlack;
     int fontForeColorBlack;
-    int fontPieceSize; /* Size of font relative to square (percentage) */
-    int overrideLineGap; /* If >= 0 overrides the lineGap value of the board size properties */
-    int adjudicateLossThreshold; /* Adjudicate a two-machine game if both engines agree the score is below this for 6 plies */
+    /* Size of font relative to square (percentage). */
+    int fontPieceSize;
+    /* Iff >= 0, overrides the lineGap value of the board size properties. */
+    int overrideLineGap;
+    /* Adjudicate a two-machine game when both engines agree the score is below this for 6 plies. */
+    int adjudicateLossThreshold;
     int delayBeforeQuit;
     int delayAfterQuit;
     char * nameOfDebugFile;
@@ -781,14 +828,15 @@ typedef struct {
     char * tourneyOptions;
     int highlightArrowColor;
     Boolean useStickyWindows;
-    Boolean bgObserve; /* [HGM] bughouse */
-    Boolean dualBoard; /* [HGM] dual     */
+    /* Bughouse */
+    Boolean bgObserve;
+    Boolean dualBoard;
     Boolean viewer;
     char * viewerOptions;
     int adjudicateDrawMoves;
     Boolean autoDisplayComment;
     Boolean autoDisplayTags;
-    Boolean pseudo[ENGINES]; /* [HGM] pseudo-engines */
+    Boolean pseudo[ENGINES];
     Boolean isUCI[ENGINES];
     Boolean hasOwnBookUCI[ENGINES];
     char * adapterCommand;
@@ -803,7 +851,6 @@ typedef struct {
     int defaultCacheSizeEGTB;
     char * defaultPathEGTB;
     int defaultMatchGames;
-
     /* [HGM] Board size */
     int NrFiles;
     int NrRanks;
@@ -839,10 +886,12 @@ typedef struct {
     int zippyAbort;
     char * zippyVariants;
     int zippyMaxGames;
-    int zippyReplayTimeout; /*seconds*/
-    int zippyShortGame; /* [HGM] aborter   */
+    /* Measured in seconds. */
+    int zippyReplayTimeout;
+    /* Aborter. */
+    int zippyShortGame;
 #endif
-    Boolean lowTimeWarning; /* [HGM] low time */
+    Boolean lowTimeWarning;
     Boolean quitNext;
     char * lowTimeWarningColor;
 
@@ -935,7 +984,7 @@ typedef struct {
 #define GLT_SITE 's'
 #define GLT_DATE 'd'
 #define GLT_ROUND 'o'
-#define GLT_PLAYERS 'p' /* I.e. white "-" black */
+#define GLT_PLAYERS 'p' /* i.e., White "-" Black */
 #define GLT_RESULT 'r'
 #define GLT_WHITE_ELO 'w'
 #define GLT_BLACK_ELO 'b'
@@ -944,7 +993,8 @@ typedef struct {
 #define GLT_OUT_OF_BOOK 'a'
 #define GLT_RESULT_COMMENT 'c' /* [HGM] rescom */
 
-#define GLT_DEFAULT_TAGS "eprd" /* Event, players, result, date */
+/* Event, players, result, date */
+#define GLT_DEFAULT_TAGS "eprd"
 
 #define GLT_ALL_TAGS "esdoprwbtvac"
 
@@ -953,7 +1003,7 @@ typedef struct {
 extern AppData appData;
 
 typedef struct {
-    /* PGN 7-tag info */
+    /* PGN seven-tag info */
     char * event;
     char * site;
     char * date;
@@ -961,32 +1011,41 @@ typedef struct {
     char * white;
     char * black;
     ChessMove result;
-    /* Additional info */
-    char * fen; /* NULL or FEN for starting position; input only */
+    /* NULL or FEN for starting position; input only */
+    char * fen;
     char * resultDetails;
     char * timeControl;
-    char * extraTags; /* NULL or "[Tag \"Value\"]\n", etc. */
-    int whiteRating; /* -1 if unknown */
-    int blackRating; /* -1 if unknown */
+    /* NULL or "[Tag \"Value\"]\n", etc. */
+    char * extraTags;
+    /* -1 if unknown */
+    int whiteRating;
+    /* -1 if unknown */
+    int blackRating;
     VariantClass variant;
     char * variantName;
-    char * outOfBook; /* [AS] Move and score when engine went out of book */
-    int boardWidth; /* [HGM] adjustable board size */
+    /* Move and score when engine went out of book. */
+    char * outOfBook;
+    /* Adjustable board size. */
+    int boardWidth;
     int boardHeight;
-    /* [HGM] For Shogi and Crazyhouse: */
-    int holdingsSize; /* number of different piece types in holdings       */
-    int holdingsWidth; /* number of files left and right of board, 0 or 2   */
+    /* Holdings are for Shogi and Crazyhouse. */
+    /* Number of different piece types in holdings. */
+    int holdingsSize;
+    /* Number of files left and right of board, 0 or 2. */
+    int holdingsWidth;
 } GameInfo;
 
-/* [AS] Search stats from chessprogram, for the played move */
-// [HGM] moved here from backend.h because it occurs in declarations of front-end functions
+/* Search stats from chess program for the played move. */
 typedef struct {
-    int score; /* Centipawns */
-    int depth; /* Plies */
-    int time; /* Milliseconds */
+    /* Centipawns. */
+    int score;
+    /* Plies. */
+    int depth;
+    /* Milliseconds. */
+    int time;
 } ChessProgramStats_Move;
 
-/* [AS] Layout management */
+/* Layout management. */
 typedef struct {
     Boolean visible;
     int x;
@@ -1004,17 +1063,17 @@ extern WindowPlacement wpTextMenu;
 
 #define MAXENGINES 2000
 
-// [HGM] chat
+/* Chat. */
 #define MAX_CHAT 5
 extern int chatCount;
 extern char chatPartner[MAX_CHAT][MSG_SIZ];
 
-// Some prototypes of routines so general they should be available everywhere
+/* Some prototypes of routines so general they should be available everywhere. */
 /* If status == 0, we are exiting with a benign message, not an error */
 void DisplayFatalError(String message, int error, int status);
 void DisplayError(String message, int error);
 
-// [HGM] generally useful macros; there are way too many memory leaks...
+/* [HGM] generally useful macros; there are way too many memory leaks... */
 #define FREE(x) \
     if (x) \
     free(x)
@@ -1023,9 +1082,8 @@ void DisplayError(String message, int error);
         free(x); \
     x = strdup(y)
 
-// [HGM] for now we use the kludge to redefine all the unstructured options by their array counterpart
-//       in due time we would have to make the actual substitutions all through the source
-
+/* [HGM] For now, we use the kludge to redefine all the unstructured options by their array counterpart.  In due time, we would have
+   to make the actual substitutions all through the source. */
 #define firstInitString engInitString[0]
 #define secondInitString engInitString[1]
 #define firstComputerString computerString[0]
@@ -1059,4 +1117,4 @@ void DisplayError(String message, int error);
 #define firstOptions engOptions[0]
 #define secondOptions engOptions[1]
 
-#endif
+#endif /* GNU_XBOARD_COMMON_H */
