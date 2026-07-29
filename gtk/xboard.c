@@ -1886,12 +1886,9 @@ void ReSize(WindowPlacement * wp) {
     }
     w = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
     h = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
-    if (optList[W_BOARD].max > w) {
-        optList[W_BOARD].max = w;
-    }
-    if (optList[W_BOARD].value > h) {
-        optList[W_BOARD].value = h;
-    }
+    optList[W_BOARD].max = w;
+    optList[W_BOARD].value = h;
+    optList[W_BOARD].min |= REPLACE;
     if (twoBoards && shellUp[DummyDlg]) {
         SecondaryBoardPopUp();
         dualOptions[3].max = 0;
@@ -1964,36 +1961,30 @@ gboolean DragProc(gpointer data) {
 }
 
 void DelayedDrag(void) {
-    // printf("old timr = %d\n", delayedDragTag);
     if (delayedDragTag) {
         g_source_remove(delayedDragTag);
     }
     delayedDragTag = g_timeout_add(200, (GSourceFunc)DragProc, NULL);
-    // printf("new timr = %d\n", delayedDragTag);
 }
 
 static int EventProc(GtkWidget * widget, GdkEvent * event, void * g) {
-    // printf("event proc (%d,%d) %dx%d\n", event->configure.x, event->configure.y, event->configure.width,
-    // event->configure.height);
-    //  immediately
     wpNew.x = event->configure.x;
     wpNew.y = event->configure.y;
     wpNew.width = event->configure.width;
     wpNew.height = event->configure.height;
-    // SetWidgetLabel(&mainOptions[W_WHITE], ""); SetWidgetLabel(&mainOptions[W_BLACK], "");
-    DelayedDrag();  // as long as events keep coming in faster than 50 msec, they destroy each other
+    DelayedDrag();
     return FALSE;
 }
 
 #if GTK_CHECK_VERSION(3, 0, 0)
-static gboolean BoardDrawProc(GtkWidget *widget, cairo_t *cr, gpointer data) {
+static gboolean BoardDrawProc(GtkWidget * widget, cairo_t * cr, gpointer data) {
     cairo_surface_t * surface;
-    Option *opt = (Option *)data;
+    Option * opt = (Option *)data;
     if (!opt || !opt->choice) {
         /* We can't draw anything yet. */
         return FALSE;
     }
-    surface = (cairo_surface_t *)opt->choice;
+    surface = CsBoardWindow(opt);
     cairo_set_source_surface(cr, surface, 0, 0);
     cairo_paint(cr);
     return FALSE;

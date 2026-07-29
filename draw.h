@@ -52,14 +52,16 @@
 
 #define DRAWABLE(X) ((cairo_surface_t *)((X)->choice))
 
-// defined in xboard.c
+/* defined in xboard.c */
 void CreateGrid(void);
 void CreateGCs(int redo);
 void DelayedDrag(void);
 
-extern int lineGap, squareSize;
+/* defined in board.c */
+extern int lineGap;
+extern int squareSize;
 
-// defined in draw.c
+/* defined in draw.c */
 void CreateGCs(int redo);
 void CreateAnyPieces(int p);
 void CreatePNGPieces(char * pieceDir);
@@ -72,11 +74,19 @@ int desired_board_width_in_pixels(int board_column_count, int square_size, int l
 int desired_board_height_in_pixels(int board_row_count, int square_size, int line_gap);
 int line_gap(int square_size);
 void resize_board_window(int board_column_count, int board_row_count, int * const square_size_ptr, int line_gap);
-extern Option * disp;
+
+#if API_USED_FOR_DRAWING_GUI == 2 || API_USED_FOR_DRAWING_GUI == 3
+#include <cairo/cairo.h>
+cairo_surface_t * CsBoardWindow(Option * opt);
+#endif
+
 extern char svgDir[];
 
-// defined in evaldraw.c
+/* defined in nevalgraph.c */
+extern Option * disp;
+
+/* defined in evaldraw.c */
 float Color(char * col, int n);
 
-// defined in xoptions.c
+/* defined in xoptions.c */
 void GraphExpose(Option * opt, int x, int y, int w, int h);

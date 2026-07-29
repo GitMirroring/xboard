@@ -126,13 +126,16 @@ void SwitchWindow(int main) {
 
 
 static void NewCanvas(Option * graph) {
+    int w;
+    int h;
     cairo_t * cr;
-    int w = graph->max, h = graph->value;
+    w = graph->max;
+    h = graph->value;
     if (graph->choice) {
         cairo_surface_destroy((cairo_surface_t *)graph->choice);
     }
     graph->choice = (char **)cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
-    // paint white, to prevent weirdness when people maximize window and drag pieces over space next to board
+    /* Paint white to prevent weirdness when people maximize window and drag pieces over space next to board. */
     cr = cairo_create((cairo_surface_t *)graph->choice);
     cairo_rectangle(cr, 0, 0, w, h);
     cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
@@ -141,13 +144,13 @@ static void NewCanvas(Option * graph) {
     graph->min &= ~REPLACE;
 }
 
-static cairo_surface_t * CsBoardWindow(Option * opt) {  // test before every draw event if we need to resize the canvas
+/* Tests if we need to resize the canvas before every draw event. */
+cairo_surface_t * CsBoardWindow(Option * opt) {
     if (opt->min & REPLACE) {
         NewCanvas(opt);
     }
     return DRAWABLE(opt);
 }
-
 
 void SelectPieces(VariantClass v) {
     int i;
