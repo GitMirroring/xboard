@@ -586,12 +586,9 @@ char * ConvertToLine(int argc, char ** argv) {
 
 //--------------------------------------------------------------------------------------------
 
-int clockKludge;
-
 void ResizeBoardWindow(int w, int h, int inhibit) {
     GtkAllocation a;
     int bw;
-    // if(clockKludge) return; // ignore as long as clock does not have final height
     gtk_widget_get_allocation(optList[W_BOARD].handle, &a);
     bw = a.width;
     gtk_widget_get_allocation(shellWidget, &a);
@@ -1253,19 +1250,22 @@ int main(int argc, char ** argv) {
 // XtSetValues(shellWidget, &shellArgs[2], 4);
 #endif
     {
-        // Note: We cannot do sensible sizing here, because the height of the clock widget is not yet known
-        // It wil only become known asynchronously, when we first write a string into it.
-        // This will then change the clock widget height, which triggers resizing the top-level window
-        // and a configure event. Only then can we know the total height of the top-level window,
-        // and calculate the height we need. The clockKludge flag suppresses all resizing until
-        // that moment comes, after which the configure event-handler handles it through a (delayed) DragProg.
+        /*
+           N.B.: Currently, we cannot do sensible sizing here, because the height of the clock widget is not yet known.  It wil only
+           become known asynchronously, when we first write a string into it.  This will then change the clock widget height, which
+           triggers resizing the top-level window and a configure event.  Only then can we know the total height of the top-level
+           window, and calculate the height we need.  Once that moment arrives, the configure event-handler handles it through a
+           (delayed) DragProc.
+
+           TODO: See if we can clean up this sizing issue by initializing the clocks to a reasonable value such as 0:00.00.
+        */
         int hc;
         GtkAllocation a;
         gtk_widget_get_allocation(shells[BoardWindow], &a);
         w = a.width;
         h = a.height;
         gtk_widget_get_allocation(optList[W_WHITE].handle, &a);
-        clockKludge = hc = a.height;
+        hc = a.height;
         gtk_widget_get_allocation(boardWidget, &a);
         marginW = w - boardWidth;  // [HGM] needed to set new shellWidget size when we resize board
         marginH = h - a.height - hc;  // subtract current clock height, so it can be added back dynamically
