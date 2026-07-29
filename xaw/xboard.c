@@ -610,8 +610,9 @@ int MainWindowUp(void) {  // [HGM] args: allows testing if main window is realiz
 void PopUpStartupDialog(void) {  // start menu not implemented in XBoard
 }
 
-// TODO: Properly handle individual arguments that exceed 1023 characters.
-// TODO: Deduplicate with other implementation in gtk/xboard.c.
+/* TODO: Properly handle individual arguments that exceed 1023 characters.
+
+   TODO: Deduplicate with other implementation in xaw/xboard.c. */
 char * ConvertToLine(int argc, char ** argv) {
     static char line[128 * 1024];
     char buf[1024];
@@ -631,16 +632,15 @@ char * ConvertToLine(int argc, char ** argv) {
     return line;
 }
 
-//--------------------------------------------------------------------------------------------
-
-void ResizeBoardWindow(int w, int h, int inhibit) {
-    w += marginW + 1;  // [HGM] not sure why the +1 is (sometimes) needed...
-    h += marginH;
-    shellArgs[0].value = w;
-    shellArgs[1].value = h;
-    shellArgs[4].value = shellArgs[2].value = w;
-    shellArgs[5].value = shellArgs[3].value = h;
-    XtSetValues(shellWidget, &shellArgs[0], inhibit ? 6 : 2);
+void ResizeBoardWindow(int widthInPixels, int heightInPixels) {
+    /* [HGM] not sure why the +1 is (sometimes) needed. */
+    widthInPixels += marginW + 1;
+    heightInPixels += marginH;
+    shellArgs[0].value = widthInPixels;
+    shellArgs[1].value = heightInPixels;
+    shellArgs[4].value = shellArgs[2].value = widthInPixels;
+    shellArgs[5].value = shellArgs[3].value = heightInPixels;
+    XtSetValues(shellWidget, &shellArgs[0], 2);
 
     XSync(xDisplay, False);
 }
@@ -661,7 +661,7 @@ static int MakeOneColor(char * name, Pixel * color) {
     return False;
 }
 
-int MakeColors(void) {  // [HGM] taken out of main(), so it can be called from BoardOptions dialog
+int MakeColors(void) {
     int forceMono = False;
 
     if (appData.lowTimeWarning) {
@@ -1688,7 +1688,7 @@ void ReSize(WindowPlacement * wp) {
         CreatePNGPieces(appData.pieceDirectory);  // make newly scaled pieces
         InitDrawingSizes(0, 0);  // creates grid etc.
     } else {
-        ResizeBoardWindow(BOARD_WIDTH * (squareSize + lineGap) + lineGap, BOARD_HEIGHT * (squareSize + lineGap) + lineGap, 0);
+        ResizeBoardWindow(BOARD_WIDTH * (squareSize + lineGap) + lineGap, BOARD_HEIGHT * (squareSize + lineGap) + lineGap);
     }
     w = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
     h = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;

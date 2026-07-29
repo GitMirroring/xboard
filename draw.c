@@ -176,9 +176,8 @@ void SelectPieces(VariantClass v) {
     }
 }
 
-#define BoardSize int
-void InitDrawingSizes(
- BoardSize boardSize, int flags) {  // [HGM] resize is functional now, but for board format changes only (nr of ranks, files)
+void InitDrawingSizes(int boardSize, int flags) {
+    /* [HGM] resize is functional now, but for board format changes only (number of ranks, files) */
     int boardWidth, boardHeight;
     static int oldWidth, oldHeight;
     static VariantClass oldVariant;
@@ -188,9 +187,10 @@ void InitDrawingSizes(
         return;
     }
 
-    if (boardSize == -2 && gameInfo.variant != oldVariant && oldNrOfFiles &&
-     oldNrOfFiles != BOARD_WIDTH) {  // called because variant switch changed board format
-        squareSize = ((squareSize + lineGap) * oldNrOfFiles + 0.5 * BOARD_WIDTH) / BOARD_WIDTH;  // keep total width fixed
+    if (boardSize == -2 && gameInfo.variant != oldVariant && oldNrOfFiles && oldNrOfFiles != BOARD_WIDTH) {
+        /* called because variant switch changed board format */
+        /* keep total width fixed */
+        squareSize = ((squareSize + lineGap) * oldNrOfFiles + 0.5 * BOARD_WIDTH) / BOARD_WIDTH;
         if (appData.overrideLineGap < 0) {
             lineGap = squareSize < 37 ? 1 : squareSize < 59 ? 2 : squareSize < 116 ? 3 : 4;
         }
@@ -211,28 +211,21 @@ void InitDrawingSizes(
     boardWidth = lineGap + BOARD_WIDTH * (squareSize + lineGap);
     boardHeight = lineGap + BOARD_HEIGHT * (squareSize + lineGap);
 
-    if (boardWidth != oldWidth || boardHeight != oldHeight) {  // do resizing stuff only if size actually changed
-
+    /* Resize only if the size actually changed. */
+    if ((boardWidth != oldWidth) || (boardHeight != oldHeight)) {
         oldWidth = boardWidth;
         oldHeight = boardHeight;
         CreateGrid();
-        CreateAnyPieces(0);  // redo texture scaling
-
-        /*
-         * Inhibit shell resizing.
-         */
-        ResizeBoardWindow(boardWidth, boardHeight, 0);
-
+        /* Redo texture scaling. */
+        CreateAnyPieces(0);
+        /* Inhibit shell resizing. */
+        ResizeBoardWindow(boardWidth, boardHeight);
         DelayedDrag();
     }
 
-    // [HGM] pieces: tailor piece bitmaps to needs of specific variant
-    // (only for xpm)
-
-    if (gameInfo.variant != oldVariant) {  // and only if variant changed
-
+    /* [HGM] pieces: tailor piece bitmaps to needs of specific variant (only for xpm), and only if the variant changed. */
+    if (gameInfo.variant != oldVariant) {
         SelectPieces(gameInfo.variant);
-
         oldVariant = gameInfo.variant;
     }
     CreateAnimVars();

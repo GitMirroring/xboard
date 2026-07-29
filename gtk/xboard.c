@@ -563,8 +563,9 @@ int MainWindowUp(void) {  // [HGM] args: allows testing if main window is realiz
 void PopUpStartupDialog(void) {  // start menu not implemented in XBoard
 }
 
-// TODO: Properly handle individual arguments that exceed 1023 characters.
-// TODO: Deduplicate with other implementation in xaw/xboard.c.
+/* TODO: Properly handle individual arguments that exceed 1023 characters.
+
+   TODO: Deduplicate with other implementation in xaw/xboard.c. */
 char * ConvertToLine(int argc, char ** argv) {
     static char line[128 * 1024];
     char buf[1024];
@@ -584,9 +585,7 @@ char * ConvertToLine(int argc, char ** argv) {
     return line;
 }
 
-//--------------------------------------------------------------------------------------------
-
-void ResizeBoardWindow(int w, int h, int inhibit) {
+void ResizeBoardWindow(int widthInPixels, int heightInPixels) {
     GtkAllocation a;
     int bw;
     gtk_widget_get_allocation(optList[W_BOARD].handle, &a);
@@ -594,8 +593,9 @@ void ResizeBoardWindow(int w, int h, int inhibit) {
     gtk_widget_get_allocation(shellWidget, &a);
     marginW = a.width - bw;
     gtk_widget_get_allocation(optList[W_WHITE].handle, &a);
-    gtk_widget_set_size_request(optList[W_BOARD].handle, w, h);  // protect board widget
-    gtk_window_resize(GTK_WINDOW(shellWidget), w, 10);
+    /* Protect the board widget. */
+    gtk_widget_set_size_request(optList[W_BOARD].handle, widthInPixels, heightInPixels);
+    gtk_window_resize(GTK_WINDOW(shellWidget), widthInPixels, 10);
     DoEvents();
     if (!appData.fixedSize) {
         /* Liberate the board again. */
@@ -1820,7 +1820,7 @@ void ReSize(WindowPlacement * wp) {
         CreatePNGPieces(appData.pieceDirectory);  // make newly scaled pieces
         InitDrawingSizes(0, 0);  // creates grid etc.
     } else {
-        ResizeBoardWindow(BOARD_WIDTH * (squareSize + lineGap) + lineGap, BOARD_HEIGHT * (squareSize + lineGap) + lineGap, 0);
+        ResizeBoardWindow(BOARD_WIDTH * (squareSize + lineGap) + lineGap, BOARD_HEIGHT * (squareSize + lineGap) + lineGap);
     }
     w = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
     h = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;

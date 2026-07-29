@@ -53,7 +53,7 @@
 #define DRAWABLE(X) ((cairo_surface_t *)((X)->choice))
 
 // defined in xboard.c
-void ResizeBoardWindow(int w, int h, int inhibit);
+void ResizeBoardWindow(int widthInPixels, int heightInPixels);
 void CreateGrid(void);
 void CreateGCs(int redo);
 void DelayedDrag(void);
