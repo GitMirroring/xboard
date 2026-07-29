@@ -1155,9 +1155,9 @@ int main(int argc, char ** argv) {
         lineGap = appData.overrideLineGap;
     }
 
-    /* [HR] height treated separately (hacked) */
-    boardWidth = lineGap + BOARD_WIDTH * (squareSize + lineGap);
-    boardHeight = lineGap + BOARD_HEIGHT * (squareSize + lineGap);
+    /* For GTK but not Xaw, height treated separately (hacked). */
+    boardWidth = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    boardHeight = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
 
     /*
      * Determine what fonts to use.
@@ -1688,10 +1688,10 @@ void ReSize(WindowPlacement * wp) {
         CreatePNGPieces(appData.pieceDirectory);  // make newly scaled pieces
         InitDrawingSizes(0, 0);  // creates grid etc.
     } else {
-        ResizeBoardWindow(BOARD_WIDTH * (squareSize + lineGap) + lineGap, BOARD_HEIGHT * (squareSize + lineGap) + lineGap);
+        resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
     }
-    w = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
-    h = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;
+    w = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    h = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     if (optList[W_BOARD].max > w) {
         optList[W_BOARD].max = w;
     }
@@ -1757,7 +1757,7 @@ void DrawPositionProc(Widget w, XEvent * event, String * prms, Cardinal * nprms)
 
 
 void HandlePV(Widget w, XEvent * event, String * params, Cardinal * nParams) {  // [HGM] pv: walk PV
-    MovePV(event->xmotion.x, event->xmotion.y, lineGap + BOARD_HEIGHT * (squareSize + lineGap));
+    MovePV(event->xmotion.x, event->xmotion.y, desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
 }
 
 extern int savedIndex; /* gross that this is global */

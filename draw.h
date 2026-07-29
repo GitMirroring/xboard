@@ -53,7 +53,6 @@
 #define DRAWABLE(X) ((cairo_surface_t *)((X)->choice))
 
 // defined in xboard.c
-void ResizeBoardWindow(int widthInPixels, int heightInPixels);
 void CreateGrid(void);
 void CreateGCs(int redo);
 void DelayedDrag(void);
@@ -69,7 +68,10 @@ void DrawSegment(int x, int y, int * lastX, int * lastY, int p);
 void DrawRectangle(int left, int top, int right, int bottom, int side, int style);
 void DrawEvalText(char * buf, int cbBuf, int y);
 void DrawText(char * string, int x, int y, int align);
+int desired_board_width_in_pixels(int board_column_count, int square_size, int line_gap);
+int desired_board_height_in_pixels(int board_row_count, int square_size, int line_gap);
 int line_gap(int square_size);
+void resize_board_window(int board_column_count, int board_row_count, int * const square_size_ptr, int line_gap);
 extern Option * disp;
 extern char svgDir[];
 

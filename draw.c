@@ -82,6 +82,9 @@
 /* C doesn't guarantee that M_PI is defined anyway. */
 double const tau = 6.28318530717958647692528676655900577;
 
+// This is defined in {gtk|xaw}/xboard.c.  We do not want to make it available to other code by placing it in draw.h.
+void ResizeBoardWindow(int widthInPixels, int heightInPixels);
+
 #ifdef ENABLE_NLS
 # define _(s) gettext(s)
 # define N_(s) gettext_noop(s)
@@ -183,6 +186,29 @@ int line_gap(int const square_size) {
     return 4;
 }
 
+int desired_board_width_in_pixels(int const board_column_count, int square_size, int line_gap) {
+    return line_gap + board_column_count * (square_size + line_gap);
+}
+
+int desired_board_height_in_pixels(int const board_row_count, int square_size, int line_gap) {
+    return line_gap + board_row_count * (square_size + line_gap);
+}
+
+void resize_board_window(int const board_column_count, int const board_row_count, int * const square_size_ptr, int const line_gap) {
+    int desired_width;
+    int desired_height;
+    int minimum_acceptable_width = 0;
+    do {
+        desired_width = desired_board_width_in_pixels(board_column_count, *square_size_ptr, line_gap);
+        if (minimum_acceptable_width <= desired_width) {
+            break;
+        }
+        ++(*square_size_ptr);
+    } while (1);
+    desired_height = desired_board_height_in_pixels(board_row_count, *square_size_ptr, line_gap);
+    ResizeBoardWindow(desired_width, desired_height);
+}
+
 void InitDrawingSizes(int boardSize, int flags) {
     /* [HGM] resize is functional now, but for board format changes only (number of ranks, files) */
     int boardWidth, boardHeight;
@@ -215,9 +241,9 @@ void InitDrawingSizes(int boardSize, int flags) {
     if (appData.overrideLineGap >= 0) {
         lineGap = appData.overrideLineGap;
     }
-    boardWidth = lineGap + BOARD_WIDTH * (squareSize + lineGap);
-    boardHeight = lineGap + BOARD_HEIGHT * (squareSize + lineGap);
 
+    boardWidth = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    boardHeight = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     /* Resize only if the size actually changed. */
     if ((boardWidth != oldWidth) || (boardHeight != oldHeight)) {
         oldWidth = boardWidth;
@@ -226,7 +252,7 @@ void InitDrawingSizes(int boardSize, int flags) {
         /* Redo texture scaling. */
         CreateAnyPieces(0);
         /* Inhibit shell resizing. */
-        ResizeBoardWindow(boardWidth, boardHeight);
+        resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
         DelayedDrag();
     }
 
@@ -721,22 +747,17 @@ void InitDrawingHandle(Option * opt) {
 
 void CreateGrid(void) {
     int i, j;
-
     if (lineGap == 0) {
         return;
     }
-
-    /* [HR] Split this into 2 loops for non-square boards. */
-
     for (i = 0; i < BOARD_HEIGHT + 1; i++) {
         gridSegments[i].x1 = 0;
-        gridSegments[i].x2 = lineGap + BOARD_WIDTH * (squareSize + lineGap);
+        gridSegments[i].x2 = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
         gridSegments[i].y1 = gridSegments[i].y2 = lineGap / 2 + (i * (squareSize + lineGap));
     }
-
     for (j = 0; j < BOARD_WIDTH + 1; j++) {
         gridSegments[j + i].y1 = 0;
-        gridSegments[j + i].y2 = lineGap + BOARD_HEIGHT * (squareSize + lineGap);
+        gridSegments[j + i].y2 = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
         gridSegments[j + i].x1 = gridSegments[j + i].x2 = lineGap / 2 + (j * (squareSize + lineGap));
     }
 }

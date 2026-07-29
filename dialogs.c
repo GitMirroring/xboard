@@ -45,6 +45,7 @@
 #include "menus.h"
 #include "dialogs.h"
 #include "gettext.h"
+#include "draw.h"
 
 #ifdef ENABLE_NLS
 # define _(s) gettext(s)
@@ -3017,7 +3018,7 @@ Option * LogoB(int n, int x, int y) {
 }
 
 void SizeKludge(int n) {  // callback called by GenericPopUp immediately after sizing the menu bar
-    int width = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
+    int width = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
     int w = width - 44 - mainOptions[n].min;
     mainOptions[W_TITLE].max = w;  // width left behind menu bar
     if (w < 0.4 * width) {  // if no reasonable amount of space for title, force small layout
@@ -3059,7 +3060,7 @@ static Option * Exp(int n, int x, int y) {
             DragPieceMove(x, y);
         }
         if (but3) {
-            MovePV(x, y, lineGap + BOARD_HEIGHT * (squareSize + lineGap));
+            MovePV(x, y, desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
         }
         if (appData.highlightDragging) {
             f = EventToSquare(x, BOARD_WIDTH);
@@ -3135,7 +3136,7 @@ static Option * Exp(int n, int x, int y) {
 }
 
 Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy) {
-    int size = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
+    int size = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
     int logo = appData.logoSize;
     /* width fudge, needed for unknown reasons to not clip board */
     int f = 2 * appData.fixedSize;
@@ -3143,7 +3144,7 @@ Option * BoardPopUp(int squareSize, int lineGap, void * clockFontThingy) {
 
     mainOptions[W_WHITE].choice = (char **)clockFontThingy;
     mainOptions[W_BLACK].choice = (char **)clockFontThingy;
-    mainOptions[W_BOARD].value = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;
+    mainOptions[W_BOARD].value = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     /* Board size. */
     mainOptions[W_BOARD].max = mainOptions[W_SMALL].max = size;
     /* Board title, with the border subtracted. */
@@ -3203,11 +3204,11 @@ Option dualOptions[] = {
 };
 
 void SecondaryBoardPopUp(void) {
-    int size = BOARD_WIDTH * (squareSize + lineGap) + lineGap;
+    int size = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
     /* Copy parameters from the primary board. */
     dualOptions[0].choice = mainOptions[W_WHITE].choice;
     dualOptions[1].choice = mainOptions[W_BLACK].choice;
-    dualOptions[3].value = BOARD_HEIGHT * (squareSize + lineGap) + lineGap;
+    dualOptions[3].value = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     dualOptions[3].max = dualOptions[2].max = size;  // board width
     dualOptions[0].max = dualOptions[1].max = size / 2 - 3;  // clock width
     GenericPopUp(dualOptions, "XBoard", DummyDlg, BoardWindow, NONMODAL, appData.topLevel);

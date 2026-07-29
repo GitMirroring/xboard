@@ -228,7 +228,7 @@ int SquareColor(int row, int column) {
     return square_color;
 }
 
-/*	Convert board position to corner of screen rect and color	*/
+/* Convert board position to corner of screen rect and color. */
 
 void ScreenSquare(int column, int row, Pnt * pt, int * color) {
     if (flipView) {
@@ -241,7 +241,7 @@ void ScreenSquare(int column, int row, Pnt * pt, int * color) {
     *color = SquareColor(row, column);
 }
 
-/*	Convert window coords to square			*/
+/* Convert window coords to square. */
 
 void BoardSquare(int x, int y, int * column, int * row) {
     *column = EventToSquare(x, BOARD_WIDTH);
@@ -1011,8 +1011,8 @@ void DrawPositionX(int repaint, Board board) {
     DrawDragPiece();
 
     if (exposeAll) {
-        GraphExpose(
-         currBoard, 0, 0, BOARD_WIDTH * (squareSize + lineGap) + lineGap, BOARD_HEIGHT * (squareSize + lineGap) + lineGap);
+        GraphExpose(currBoard, 0, 0, desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap),
+         desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
     } else {
         for (i = 0; i < BOARD_HEIGHT; i++) {
             for (j = 0; j < BOARD_WIDTH; j++) {
