@@ -86,7 +86,7 @@ void UnCaret(void) {
     Arg args[2];
 
     if (previous) {
-        XtSetArg(args[0], XtNdisplayCaret, False);
+        XtSetArg(args[0], XtNdisplayCaret, FALSE);
         XtSetValues(previous, args, 1);
     }
     previous = NULL;
@@ -101,7 +101,7 @@ void SetFocus(Widget w, XtPointer data, XEvent * event, Boolean * b) {
     XtSetArg(args[0], XtNstring, &s);
     XtGetValues(w, args, 1);
     j = 1;
-    XtSetArg(args[0], XtNdisplayCaret, True);
+    XtSetArg(args[0], XtNdisplayCaret, TRUE);
     if (!strchr(s, '\n') && strlen(s) < 80) {
         XtSetArg(args[1], XtNinsertPosition, strlen(s)), j++;
     }
@@ -124,7 +124,7 @@ static Arg layoutArgs[] = {
 
 static Arg formArgs[] = {
  {XtNborderWidth, 0             },
- {XtNresizable,   (XtArgVal)True},
+ {XtNresizable,   (XtArgVal)TRUE},
 };
 
 void CursorAtEnd(Option * opt) {}
@@ -140,7 +140,7 @@ void SetWidgetText(Option * opt, char * buf, int n) {
     XtSetArg(arg, XtNstring, buf);
     XtSetValues(opt->handle, &arg, 1);
     if (n >= 0) {
-        SetFocus(opt->handle, shells[n], NULL, False);
+        SetFocus(opt->handle, shells[n], NULL, FALSE);
     }
 }
 
@@ -175,7 +175,7 @@ void SetDialogTitle(DialogClass dlg, char * title) {
 void LoadListBox(Option * opt, char * emptyText, int n1, int n2) {
     static char * dummyList[2];
     dummyList[0] = emptyText;  // empty listboxes tend to crash X, so display user-supplied warning string instead
-    XawListChange(opt->handle, *(char **)opt->target ? opt->target : dummyList, 0, 0, True);
+    XawListChange(opt->handle, *(char **)opt->target ? opt->target : dummyList, 0, 0, TRUE);
     // printf("listbox data = %x\n", opt->target);
 }
 
@@ -667,11 +667,11 @@ int DialogExists(DialogClass n) {  // accessor for use in back-end
 void RaiseWindow(DialogClass dlg) {
     static XEvent xev;
     Window root = RootWindow(xDisplay, DefaultScreen(xDisplay));
-    Atom atom = XInternAtom(xDisplay, "_NET_ACTIVE_WINDOW", False);
+    Atom atom = XInternAtom(xDisplay, "_NET_ACTIVE_WINDOW", FALSE);
 
     xev.xclient.type = ClientMessage;
     xev.xclient.serial = 0;
-    xev.xclient.send_event = True;
+    xev.xclient.send_event = TRUE;
     xev.xclient.display = xDisplay;
     xev.xclient.window = XtWindow(shells[dlg]);
     xev.xclient.message_type = atom;
@@ -679,14 +679,14 @@ void RaiseWindow(DialogClass dlg) {
     xev.xclient.data.l[0] = 1;
     xev.xclient.data.l[1] = CurrentTime;
 
-    XSendEvent(xDisplay, root, False, SubstructureRedirectMask | SubstructureNotifyMask, &xev);
+    XSendEvent(xDisplay, root, FALSE, SubstructureRedirectMask | SubstructureNotifyMask, &xev);
 
     XFlush(xDisplay);
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 }
 
 int PopDown(DialogClass
-  n) {  // pops down any dialog created by GenericPopUp (or returns False if it wasn't up), unmarks any associated marked menu
+  n) {  // pops down any dialog created by GenericPopUp (or returns FALSE if it wasn't up), unmarks any associated marked menu
     int j;
     Arg args[10];
     Dimension windowH, windowW;
@@ -717,7 +717,7 @@ int PopDown(DialogClass
         XtDestroyWidget(shells[n]), shells[n] = NULL;
     }
     if (marked[n]) {
-        MarkMenuItem(marked[n], False);
+        MarkMenuItem(marked[n], FALSE);
         marked[n] = NULL;
     }
     if (!n && n != BrowserDlg) {
@@ -888,7 +888,7 @@ static void GraphEventProc(Widget widget, caddr_t client_data, XEvent * event) {
         XtCallActionProc(widget, "XawPositionSimpleMenu", event, &(opt->name), 1);
         XtPopupSpringLoaded(opt->handle);
     }
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 }
 
 void GraphExpose(Option * opt, int x, int y, int w, int h) {
@@ -1120,7 +1120,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
     }
     if (dlgNr && dlgNr < PromoDlg && shells[dlgNr]) {  // reusable, and used before (but popped down)
         XtPopup(shells[dlgNr], XtGrabNone);
-        shellUp[dlgNr] = True;
+        shellUp[dlgNr] = TRUE;
         return 0;
     }
     if (dlgNr == TransientDlg && parent == BoardWindow && shellUp[MasterDlg]) {
@@ -1149,7 +1149,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
         currentOption[n].target = NULL;  // delimit list by callback-less end mark
     }
     i = 0;
-    XtSetArg(args[i], XtNresizable, True);
+    XtSetArg(args[i], XtNresizable, TRUE);
     i++;
     shells[BoardWindow] = shellWidget;
     parents[dlgNr] = parent;
@@ -1236,7 +1236,7 @@ tBox:
                         j++;
                     }
                     if (option[i].min & T_FILL) {
-                        XtSetArg(args[j], XtNautoFill, True);
+                        XtSetArg(args[j], XtNautoFill, TRUE);
                         j++;
                     }
                     if (option[i].min & T_WRAP) {
@@ -1257,11 +1257,11 @@ tBox:
                 }
                 XtSetArg(args[j], XtNeditType, XawtextEdit);
                 j++;
-                XtSetArg(args[j], XtNuseStringInPlace, False);
+                XtSetArg(args[j], XtNuseStringInPlace, FALSE);
                 j++;
-                XtSetArg(args[j], XtNdisplayCaret, False);
+                XtSetArg(args[j], XtNdisplayCaret, FALSE);
                 j++;
-                XtSetArg(args[j], XtNresizable, True);
+                XtSetArg(args[j], XtNresizable, TRUE);
                 j++;
                 XtSetArg(args[j], XtNinsertPosition, 9999);
                 j++;
@@ -1272,7 +1272,7 @@ tBox:
                 j++;
                 edit = last;
                 option[i].handle = (void *)(textField = last = XtCreateManagedWidget("text", asciiTextWidgetClass, form, args, j));
-                XtAddEventHandler(last, ButtonPressMask, False, SetFocus, (XtPointer)popup);  // gets focus on mouse click
+                XtAddEventHandler(last, ButtonPressMask, FALSE, SetFocus, (XtPointer)popup);  // gets focus on mouse click
                 if (option[i].min == 0 || option[i].type != TextBox) {
                     XtOverrideTranslations(last, XtParseTranslationTable(oneLiner));  // standard handler for <Enter> and <Tab>
                 }
@@ -1329,7 +1329,7 @@ tBox:
                 j++;
                 last = XtCreateManagedWidget("label", commandWidgetClass, form, args, j);
                 // make clicking the text toggle checkbox
-                XtAddEventHandler(last, ButtonPressMask, False, CheckCallback, (XtPointer)(intptr_t)i + 256 * dlgNr);
+                XtAddEventHandler(last, ButtonPressMask, FALSE, CheckCallback, (XtPointer)(intptr_t)i + 256 * dlgNr);
                 shrink = TRUE;  // following buttons must get text height
                 break;
             case Icon:
@@ -1355,7 +1355,7 @@ tBox:
                     XtSetArg(args[j], XtNfont, (XFontStruct *)option[i].choice), j++;
                 }
 #endif
-                XtSetArg(args[j], XtNresizable, False);
+                XtSetArg(args[j], XtNresizable, FALSE);
                 j++;
                 XtSetArg(args[j], XtNjustify, XtJustifyLeft);
                 j++;
@@ -1363,7 +1363,7 @@ tBox:
                 j++;
                 option[i].handle = (void *)(last = XtCreateManagedWidget("label", labelWidgetClass, form, args, j));
                 if (option[i].target) {  // allow user to specify event handler for button presses
-                    XtAddEventHandler(last, ButtonPressMask, False, LabelCallback, (XtPointer)(intptr_t)i + 256 * dlgNr);
+                    XtAddEventHandler(last, ButtonPressMask, FALSE, LabelCallback, (XtPointer)(intptr_t)i + 256 * dlgNr);
                 }
                 break;
             case SaveButton:
@@ -1394,7 +1394,7 @@ tBox:
                  (void *)(dialog = last = XtCreateManagedWidget(option[i].name, commandWidgetClass, form, args, j));
                 if (option[i].choice && ((char *)option[i].choice)[0] == '#' && !engineDlg) {  // for the color picker default-reset
                     SetColor(*(char **)option[i - 1].target, &option[i]);
-                    XtAddEventHandler(option[i - 1].handle, KeyReleaseMask, False, ColorChanged, (XtPointer)(intptr_t)i - 1);
+                    XtAddEventHandler(option[i - 1].handle, KeyReleaseMask, FALSE, ColorChanged, (XtPointer)(intptr_t)i - 1);
                 }
                 XtAddCallback(last, XtNcallback, GenericCallback, (XtPointer)(intptr_t)i + (dlgNr << 16));  // invokes user callback
                 if (option[i].textValue && *option[i].textValue == '#') {
@@ -1438,20 +1438,20 @@ tBox:
                 }
                 j = SetPositionAndSize(
                  args, last, lastrow, 1 /* border */, option[i].max /* w */, option[i].value /* h */, option[i].min /* chain */);
-                XtSetArg(args[j], XtNresizable, False);
+                XtSetArg(args[j], XtNresizable, FALSE);
                 j++;
-                XtSetArg(args[j], XtNallowVert, True);
+                XtSetArg(args[j], XtNallowVert, TRUE);
                 j++;  // scoll direction
                 last = XtCreateManagedWidget("viewport", viewportWidgetClass, form, args, j);
                 j = 0;  // now list itself
                 XtSetArg(args[j], XtNdefaultColumns, 1);
                 j++;
-                XtSetArg(args[j], XtNforceColumns, True);
+                XtSetArg(args[j], XtNforceColumns, TRUE);
                 j++;
-                XtSetArg(args[j], XtNverticalList, True);
+                XtSetArg(args[j], XtNverticalList, TRUE);
                 j++;
                 option[i].handle = (void *)(edit = XtCreateManagedWidget("list", listWidgetClass, last, args, j));
-                XawListChange(option[i].handle, option[i].target, 0, 0, True);
+                XawListChange(option[i].handle, option[i].target, 0, 0, TRUE);
                 XawListHighlight(option[i].handle, 0);
                 scrollTranslations[25] = '0' + i;
                 scrollTranslations[27] = 'A' + dlgNr;
@@ -1461,7 +1461,7 @@ tBox:
                 j = SetPositionAndSize(
                  args, last, lastrow, 0 /* border */, option[i].max /* w */, option[i].value /* h */, option[i].min /* chain */);
                 option[i].handle = (void *)(last = XtCreateManagedWidget("graph", widgetClass, form, args, j));
-                XtAddEventHandler(last, ExposureMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask, False,
+                XtAddEventHandler(last, ExposureMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask, FALSE,
                  (XtEventHandler)GraphEventProc, &option[i]);  // mandatory user-supplied expose handler
                 if (option[i].min & SAME_ROW) {
                     last = forelast, forelast = lastrow;
@@ -1656,7 +1656,7 @@ tBox:
     shellUp[dlgNr]++;  // count rather than flag
     previous = NULL;
     if (textField) {
-        SetFocus(textField, popup, (XEvent *)NULL, False);
+        SetFocus(textField, popup, (XEvent *)NULL, FALSE);
     }
     if (dlgNr && wp[dlgNr]) {  // if persistent window-info available, reposition
         j = 0;
@@ -1716,7 +1716,7 @@ void SetInsertPos(Option * opt, int pos) {
     }
     XtSetArg(args[0], XtNinsertPosition, pos);
     XtSetValues(opt->handle, args, 1);
-    // SetFocus(opt->handle, shells[InputBoxDlg], NULL, False); // No idea why this does not work, and the following is needed:
+    // SetFocus(opt->handle, shells[InputBoxDlg], NULL, FALSE); // No idea why this does not work, and the following is needed:
     // XSetInputFocus(xDisplay, XtWindow(opt->handle), RevertToPointerRoot, CurrentTime);
 }
 
@@ -1743,7 +1743,7 @@ void HardSetFocus(Option * opt, DialogClass dlg) {
 
 void FileNamePopUpWrapper(
  char * label, char * def, char * filter, FileProc proc, Boolean pathFlag, char * openMode, char ** openName, FILE ** openFP) {
-    Browse(BoardWindow, label, (def[0] ? def : NULL), filter, False, openMode, openName, openFP);
+    Browse(BoardWindow, label, (def[0] ? def : NULL), filter, FALSE, openMode, openName, openFP);
 }
 
 void LockBoardSize(int after) {}

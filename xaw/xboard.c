@@ -228,7 +228,7 @@ static void UpKeyProc(Widget w, XEvent * event, String * prms, Cardinal * nprms)
 static void DownKeyProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 void TempBackwardProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 void TempForwardProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
-Boolean TempBackwardActive = False;
+Boolean TempBackwardActive = FALSE;
 void ManInner(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 void DisplayMove(int moveNumber);
 void update_ics_width(void);
@@ -268,12 +268,12 @@ Boolean chessProgram;
 
 int minX, minY;  // [HGM] placement: volatile limits on upper-left corner
 int smallLayout = 0, tinyLayout = 0, marginW, marginH,  // [HGM] for run-time resizing
- fromX = -1, fromY = -1, toX, toY, commentUp = False, errorExitStatus = -1, defaultLineGap;
+ fromX = -1, fromY = -1, toX, toY, commentUp = FALSE, errorExitStatus = -1, defaultLineGap;
 Dimension textHeight;
 Pixel timerForegroundPixel, timerBackgroundPixel;
 Pixel buttonForegroundPixel, buttonBackgroundPixel;
 char *chessDir, *programName, *programVersion;
-Boolean alwaysOnTop = False;
+Boolean alwaysOnTop = FALSE;
 char * icsTextMenuString;
 char * icsNames;
 char * firstChessProgramNames;
@@ -403,7 +403,7 @@ void CatchDeleteWindow(Widget w, String procname) {
 
 void BoardToTop(void) {
     Arg args[16];
-    XtSetArg(args[0], XtNiconic, False);
+    XtSetArg(args[0], XtNiconic, FALSE);
     XtSetValues(shellWidget, args, 1);
 
     XtPopup(shellWidget, XtGrabNone); /* Raise if lowered  */
@@ -411,7 +411,7 @@ void BoardToTop(void) {
 
 //---------------------------------------------------------------------------------------------------------
 // some symbol definitions to provide the proper (= XBoard) context for the code in args.h
-#define XBOARD True
+#define XBOARD TRUE
 #define JAWS_ARGS
 #define CW_USEDEFAULT (1 << 31)
 #define ICS_TEXT_MENU_SIZE 90
@@ -447,7 +447,7 @@ void ParseFont(char * name, int number) {  // in XBoard, only 2 of the fonts are
         if (strstr(name, "-*-") &&  // only pay attention to things that look like X-fonts
          size >= 0 && size < MAX_SIZE) {  // for now, fixed limit
             fontTable[number][size] = strdup(strchr(name, ':') + 1);
-            fontValid[number][size] = True;
+            fontValid[number][size] = TRUE;
         }
         return;
     }
@@ -464,7 +464,7 @@ void ParseFont(char * name, int number) {  // in XBoard, only 2 of the fonts are
     default:
         return;
     }
-    fontIsSet[number] = True;  // [HGM] font: indicate a font was specified (not from settings file)
+    fontIsSet[number] = TRUE;  // [HGM] font: indicate a font was specified (not from settings file)
 }
 
 void SetFontDefaults(void) {  // only 2 fonts currently
@@ -514,7 +514,7 @@ void SaveFontArg(FILE * f, ArgDescriptor * ad) {
     for (i = 0; i < NUM_SIZES; i++) {  // [HGM] font: current font becomes standard for current size
         if (sizeDefaults[i].squareSize == squareSize) {  // only for standard sizes!
             fontTable[n][squareSize] = strdup(name);
-            fontValid[n][squareSize] = True;
+            fontValid[n][squareSize] = TRUE;
             break;
         }
     }
@@ -642,7 +642,7 @@ void ResizeBoardWindow(int widthInPixels, int heightInPixels) {
     shellArgs[5].value = shellArgs[3].value = heightInPixels;
     XtSetValues(shellWidget, &shellArgs[0], 2);
 
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 }
 
 static int MakeOneColor(char * name, Pixel * color) {
@@ -652,17 +652,17 @@ static int MakeOneColor(char * name, Pixel * color) {
         vFrom.size = strlen(name);
         XtConvert(shellWidget, XtRString, &vFrom, XtRPixel, &vTo);
         if (vTo.addr == NULL) {
-            appData.monoMode = True;
-            return True;
+            appData.monoMode = TRUE;
+            return TRUE;
         } else {
             *color = *(Pixel *)vTo.addr;
         }
     }
-    return False;
+    return FALSE;
 }
 
 int MakeColors(void) {
-    int forceMono = False;
+    int forceMono = FALSE;
 
     if (appData.lowTimeWarning) {
         forceMono |= MakeOneColor(appData.lowTimeWarningColor, &lowTimeWarningColor);
@@ -945,7 +945,7 @@ int main(int argc, char ** argv) {
     Arg args[16];
     Dimension boardWidth, boardHeight, w, h;
     char * p;
-    int forceMono = False;
+    int forceMono = FALSE;
 
     extern Option chatOptions[];  // FIXME: adapt Chat window, removing ICS pane and Hide button
     chatOptions[6].type = chatOptions[10].type = Skip;
@@ -1071,7 +1071,7 @@ int main(int argc, char ** argv) {
 
     xDisplay = XtDisplay(shellWidget);
     xScreen = DefaultScreen(xDisplay);
-    wm_delete_window = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
+    wm_delete_window = XInternAtom(xDisplay, "WM_DELETE_WINDOW", TRUE);
 
     /*
      * determine size, based on supplied or remembered -size, or screen size
@@ -1168,14 +1168,14 @@ int main(int argc, char ** argv) {
      * Detect if there are not enough colors available and adapt.
      */
     if (DefaultDepth(xDisplay, xScreen) <= 2) {
-        appData.monoMode = True;
+        appData.monoMode = TRUE;
     }
 
     forceMono = MakeColors();
 
     if (forceMono) {
         fprintf(stderr, _("%s: too few colors available; trying monochrome mode\n"), programName);
-        appData.monoMode = True;
+        appData.monoMode = TRUE;
     }
 
     if (appData.monoMode && appData.debugMode) {
@@ -1223,8 +1223,8 @@ int main(int argc, char ** argv) {
 
     xBoardWindow = XtWindow(boardWidget);
 
-    // [HGM] it seems the layout code ends here, but perhaps the color stuff is size independent and would
-    //       not need to go into InitDrawingSizes().
+    /* [HGM] it seems the layout code ends here, but perhaps the color stuff is size-independent and would not need to go into
+       InitDrawingSizes(). */
 
     /*
      * Create X checkmark bitmap and initialize option menu checks.
@@ -1232,9 +1232,7 @@ int main(int argc, char ** argv) {
     ReadBitmap(&xMarkPixmap, "checkmark.bm", checkmark_bits, checkmark_width, checkmark_height);
     InitMenuMarkers();
 
-    /*
-     * Create an icon.
-     */
+    /* Create an icon.  (We use two icons, to indicate whther it is white's or black's turn.) */
     ReadBitmap(&wIconPixmap, "icon_white.bm", icon_white_bits, icon_white_width, icon_white_height);
     ReadBitmap(&bIconPixmap, "icon_black.bm", icon_black_bits, icon_black_width, icon_black_height);
     iconPixmap = wIconPixmap;
@@ -1243,22 +1241,19 @@ int main(int argc, char ** argv) {
     i++;
     XtSetValues(shellWidget, args, i);
 
-    /*
-     * Create a cursor for the board widget.
-     */
+    /* Create a cursor for the board widget. */
     window_attributes.cursor = XCreateFontCursor(xDisplay, XC_hand2);
     XChangeWindowAttributes(xDisplay, xBoardWindow, CWCursor, &window_attributes);
 
-    /*
-     * Inhibit shell resizing.
-     */
+    /* Inhibit shell resizing. */
     shellArgs[0].value = (XtArgVal)&w;
     shellArgs[1].value = (XtArgVal)&h;
     XtGetValues(shellWidget, shellArgs, 2);
     shellArgs[4].value = shellArgs[2].value = w;
     shellArgs[5].value = shellArgs[3].value = h;
-    // XtSetValues(shellWidget, &shellArgs[2], 4);
-    marginW = w - boardWidth;  // [HGM] needed to set new shellWidget size when we resize board
+    /*XtSetValues(shellWidget, &shellArgs[2], 4);*/
+    /* [HGM] needed to set new shellWidget size when we resize board. */
+    marginW = w - boardWidth;
     marginH = h - boardHeight;
 
     CatchDeleteWindow(shellWidget, "QuitProc");
@@ -1266,7 +1261,8 @@ int main(int argc, char ** argv) {
     CreateAnyPieces(1);
     CreateGrid();
 
-    if (appData.logoSize) {  // locate and read user logo
+    /* Locate and read user logo. */
+    if (appData.logoSize) {
         char buf[MSG_SIZ], name[MSG_SIZ];
         snprintf(name, MSG_SIZ, "/home/%s", UserName());
         if (!FindLogo(name, ".logo", buf)) {
@@ -1285,8 +1281,8 @@ int main(int argc, char ** argv) {
     XtAugmentTranslations(formWidget, XtParseTranslationTable(globalTranslations));
     XtAugmentTranslations(formWidget, XtParseTranslationTable(TranslationsTableMenus));
 
-    XtAddEventHandler(formWidget, KeyPressMask, False, (XtEventHandler)MoveTypeInProc, NULL);
-    XtAddEventHandler(shellWidget, StructureNotifyMask, False, (XtEventHandler)EventProc, NULL);
+    XtAddEventHandler(formWidget, KeyPressMask, FALSE, (XtEventHandler)MoveTypeInProc, NULL);
+    XtAddEventHandler(shellWidget, StructureNotifyMask, FALSE, (XtEventHandler)EventProc, NULL);
 
     /* [AS] Restore layout */
     if (wpMoveHistory.visible) {
@@ -1603,7 +1599,7 @@ void SetupDropMenu(void) {
 static void do_flash_delay(unsigned long msec) { TimeDelay(msec); }
 
 void FlashDelay(int flash_delay) {
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
     if (flash_delay) {
         do_flash_delay(flash_delay);
     }
@@ -1729,7 +1725,7 @@ void DragProc(void) {
         CoDrag(shells[GameListDlg], &wpGameList);
     }
     wpMain = wpNew;
-    DrawPosition(True, NULL);
+    DrawPosition(TRUE, NULL);
     delayedDragID =
      0;  // now drag executed, make sure next DelayedDrag will not cancel timer event (which could now be used by other)
     busy = 0;
@@ -1753,7 +1749,7 @@ void EventProc(Widget widget, caddr_t unused, XEvent * event) {
 /*
  * event handler for redrawing the board
  */
-void DrawPositionProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { DrawPosition(True, NULL); }
+void DrawPositionProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { DrawPosition(TRUE, NULL); }
 
 
 void HandlePV(Widget w, XEvent * event, String * params, Cardinal * nParams) {  // [HGM] pv: walk PV
@@ -1831,14 +1827,14 @@ void ModeHighlight(void) {
 
     wname = ModeToWidgetName(oldMode);
     if (wname != NULL) {
-        MarkMenuItem(wname, False);
+        MarkMenuItem(wname, FALSE);
     }
     wname = ModeToWidgetName(gameMode);
     if (wname != NULL) {
-        MarkMenuItem(wname, True);
+        MarkMenuItem(wname, TRUE);
     }
     if (oldMode == TwoMachinesPlay) {
-        EnableNamedMenuItem("Mode.MachineMatch", True);
+        EnableNamedMenuItem("Mode.MachineMatch", TRUE);
     }
     MarkMenuItem("Mode.MachineMatch", matchMode && matchGame < appData.matchGames);
     oldMode = gameMode;
@@ -1861,14 +1857,14 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
  unsigned long * length_return, int * format_return) {
     char * selection_tmp;
 
-    // if (!selected_fen_position) return False; /* should never happen */
+    // if (!selected_fen_position) return FALSE; /* should never happen */
     if (*target == XA_STRING || *target == XA_UTF8_STRING(xDisplay)) {
         if (!selected_fen_position) {  // since it never happens, we use it for indicating a game is being sent
             FILE * f = fopen(gameCopyFilename, "r");  // This code, taken from SendGameSelection, now merges the two
             long len;
             size_t count;
             if (f == NULL) {
-                return False;
+                return FALSE;
             }
             fseek(f, 0, 2);
             len = ftell(f);
@@ -1878,7 +1874,7 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
             fclose(f);
             if (len != count) {
                 XtFree(selection_tmp);
-                return False;
+                return FALSE;
             }
             selection_tmp[len] = NULLCHAR;
         } else {
@@ -1893,7 +1889,7 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
         *length_return = strlen(selection_tmp);
         *type_return = *target;
         *format_return = 8; /* bits per byte */
-        return True;
+        return TRUE;
     } else if (*target == XA_TARGETS(xDisplay)) {
         Atom * targets_tmp = (Atom *)XtMalloc(2 * sizeof(Atom));
         targets_tmp[0] = XA_UTF8_STRING(xDisplay);
@@ -1914,9 +1910,9 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
 #else
         *format_return = 32;
 #endif
-        return True;
+        return TRUE;
     } else {
-        return False;
+        return FALSE;
     }
 }
 
@@ -2041,7 +2037,7 @@ static void EnterKeyProc(Widget w, XEvent * event, String * prms, Cardinal * npr
 
 void TempBackwardProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
     if (!TempBackwardActive) {
-        TempBackwardActive = True;
+        TempBackwardActive = TRUE;
         BackwardEvent();
     }
 }
@@ -2057,7 +2053,7 @@ void TempForwardProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) 
         }
     }
     ForwardEvent();
-    TempBackwardActive = False;
+    TempBackwardActive = FALSE;
 }
 
 void ManInner(Widget w, XEvent * event, String * prms, Cardinal * nprms) {  // called as key binding
@@ -2097,7 +2093,7 @@ void SetWindowTitle(char * text, char * title, char * icon) {
     XtSetArg(args[i], XtNtitle, (XtArgVal)title);
     i++;
     XtSetValues(shellWidget, args, i);
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 }
 
 
@@ -2368,7 +2364,7 @@ void RemoveInputSource(InputSourceRef isr) {
 static Boolean frameWaiting;
 
 static void FrameAlarm(int sig) {
-    frameWaiting = False;
+    frameWaiting = FALSE;
     /* In case System-V style signals.  Needed?? */
     signal(SIGALRM, FrameAlarm);
 }
@@ -2376,10 +2372,10 @@ static void FrameAlarm(int sig) {
 void FrameDelay(int time) {
     struct itimerval delay;
 
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 
     if (time > 0) {
-        frameWaiting = True;
+        frameWaiting = TRUE;
         signal(SIGALRM, FrameAlarm);
         delay.it_interval.tv_sec = delay.it_value.tv_sec = time / 1000;
         delay.it_interval.tv_usec = delay.it_value.tv_usec = (time % 1000) * 1000;
@@ -2396,7 +2392,7 @@ void FrameDelay(int time) {
 #else
 
 void FrameDelay(int time) {
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
     if (time > 0) {
         usleep(time * 1000);
     }

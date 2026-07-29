@@ -89,7 +89,7 @@ void ScrollToCursor(Option * opt, int caretPos) {
     }
     // the following leads to a very annoying flicker, even when no scrolling is done at all.
     XtSetArg(args[0], XtNinsertPosition, caretPos);  // this triggers scrolling in Xaw
-    XtSetArg(args[1], XtNdisplayCaret, False);
+    XtSetArg(args[1], XtNdisplayCaret, FALSE);
     XtSetValues(opt->handle, args, 2);
 }
 

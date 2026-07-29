@@ -198,8 +198,8 @@ void QuitProc(void) { ExitEvent(0); }
 
 void MatchProc(void) {
     static Enables matchOff[] = {
-     {"Mode.MachineMatch", False},
-     {NULL,                False}
+     {"Mode.MachineMatch", FALSE},
+     {NULL,                FALSE}
     };
     if (matchMode) {
         SetMenuEnables(matchOff);
@@ -213,18 +213,18 @@ void AdjuBlackProc(void) { UserAdjudicationEvent(-1); }
 
 void AdjuDrawProc(void) { UserAdjudicationEvent(0); }
 
-void RevertProc(void) { RevertEvent(False); }
+void RevertProc(void) { RevertEvent(FALSE); }
 
-void AnnotateProc(void) { RevertEvent(True); }
+void AnnotateProc(void) { RevertEvent(TRUE); }
 
 void FlipViewProc(void) {
     if (twoBoards) {
         partnerUp = 1;
-        DrawPosition(True, NULL);
+        DrawPosition(TRUE, NULL);
         partnerUp = 0;
     }
     flipView = !flipView;
-    DrawPosition(True, NULL);
+    DrawPosition(TRUE, NULL);
 }
 
 void SaveOnExitProc(void) {
@@ -361,7 +361,7 @@ void AutoflipProc(void) {
 void BlindfoldProc(void) {
     appData.blindfold = !appData.blindfold;
     MARK_MENU_ITEM("Options.Blindfold", appData.blindfold);
-    DrawPosition(True, NULL);
+    DrawPosition(TRUE, NULL);
 }
 
 void TestLegalityProc(void) {
@@ -434,7 +434,7 @@ void PremoveProc(void) {
 void ShowCoordsProc(void) {
     appData.showCoords = !appData.showCoords;
     MARK_MENU_ITEM("Options.ShowCoords", appData.showCoords);
-    DrawPosition(True, NULL);
+    DrawPosition(TRUE, NULL);
 }
 
 void ShowThinkingProc(void) {
@@ -747,189 +747,204 @@ void AppendEnginesToMenu(char * list) {
 }
 
 Enables icsEnables[] = {
- {"File.MailMove",           False},
- {"File.ReloadCMailMessage", False},
- {"Mode.MachineBlack",       False},
- {"Mode.MachineWhite",       False},
- {"Mode.AnalysisMode",       False},
- {"Mode.AnalyzeFile",        False},
- {"Mode.TwoMachines",        False},
- {"Mode.MachineMatch",       False},
+ {"File.MailMove",           FALSE},
+ {"File.ReloadCMailMessage", FALSE},
+ {"Mode.MachineBlack",       FALSE},
+ {"Mode.MachineWhite",       FALSE},
+ {"Mode.AnalysisMode",       FALSE},
+ {"Mode.AnalyzeFile",        FALSE},
+ {"Mode.TwoMachines",        FALSE},
+ {"Mode.MachineMatch",       FALSE},
 #if !ZIPPY
- {"Engine.Hint",             False},
- {"Engine.Book",             False},
- {"Engine.MoveNow",          False},
+ {"Engine.Hint",             FALSE},
+ {"Engine.Book",             FALSE},
+ {"Engine.MoveNow",          FALSE},
 # ifndef OPTIONSDIALOG
- {"PeriodicUpdates",         False},
- {"HideThinking",            False},
- {"PonderNextMove",          False},
+ {"PeriodicUpdates",         FALSE},
+ {"HideThinking",            FALSE},
+ {"PonderNextMove",          FALSE},
 # endif
 #endif
- {"Engine.Engine#1Settings", False},
- {"Engine.Engine#2Settings", False},
- {"Engine.Load1stEngine",    False},
- {"Engine.Load2ndEngine",    False},
- {"Edit.Annotate",           False},
- {"Options.Match",           False},
- {NULL,                      False}
+ {"Engine.Engine#1Settings", FALSE},
+ {"Engine.Engine#2Settings", FALSE},
+ {"Engine.Load1stEngine",    FALSE},
+ {"Engine.Load2ndEngine",    FALSE},
+ {"Edit.Annotate",           FALSE},
+ {"Options.Match",           FALSE},
+ {NULL,                      FALSE}
 };
 
 Enables ncpEnables[] = {
- {"File.MailMove",           False},
- {"File.ReloadCMailMessage", False},
- {"Mode.MachineWhite",       False},
- {"Mode.MachineBlack",       False},
- {"Mode.AnalysisMode",       False},
- {"Mode.AnalyzeFile",        False},
- {"Mode.TwoMachines",        False},
- {"Mode.MachineMatch",       False},
- {"Mode.ICSClient",          False},
- {"View.ICStextmenu",        False},
- {"View.ICSInputBox",        False},
- {"View.OpenChatWindow",     False},
- {"Action.",                 False},
- {"Edit.Revert",             False},
- {"Edit.Annotate",           False},
- {"Engine.Engine#1Settings", False},
- {"Engine.Engine#2Settings", False},
- {"Engine.MoveNow",          False},
- {"Engine.RetractMove",      False},
- {"Options.ICS",             False},
+ {"File.MailMove",           FALSE},
+ {"File.ReloadCMailMessage", FALSE},
+ {"Mode.MachineWhite",       FALSE},
+ {"Mode.MachineBlack",       FALSE},
+ {"Mode.AnalysisMode",       FALSE},
+ {"Mode.AnalyzeFile",        FALSE},
+ {"Mode.TwoMachines",        FALSE},
+ {"Mode.MachineMatch",       FALSE},
+ {"Mode.ICSClient",          FALSE},
+ {"View.ICStextmenu",        FALSE},
+ {"View.ICSInputBox",        FALSE},
+ {"View.OpenChatWindow",     FALSE},
+ {"Action.",                 FALSE},
+ {"Edit.Revert",             FALSE},
+ {"Edit.Annotate",           FALSE},
+ {"Engine.Engine#1Settings", FALSE},
+ {"Engine.Engine#2Settings", FALSE},
+ {"Engine.MoveNow",          FALSE},
+ {"Engine.RetractMove",      FALSE},
+ {"Options.ICS",             FALSE},
 #ifndef OPTIONSDIALOG
- {"Options.AutoFlag",        False},
- {"Options.AutoFlip View",   False},
- // { "Options.ICSAlarm", False },
- {"Options.MoveSound",       False},
- {"Options.HideThinking",    False},
- {"Options.PeriodicUpdates", False},
- {"Options.PonderNextMove",  False},
+ {"Options.AutoFlag",        FALSE},
+ {"Options.AutoFlip View",   FALSE},
+/*
+ {"Options.ICSAlarm",        FALSE},
+*/
+ {"Options.MoveSound",       FALSE},
+ {"Options.HideThinking",    FALSE},
+ {"Options.PeriodicUpdates", FALSE},
+ {"Options.PonderNextMove",  FALSE},
 #endif
- {"Engine.Hint",             False},
- {"Engine.Book",             False},
- {NULL,                      False}
+ {"Engine.Hint",             FALSE},
+ {"Engine.Book",             FALSE},
+ {NULL,                      FALSE}
 };
 
 Enables gnuEnables[] = {
- {"Mode.ICSClient",          False},
- {"View.ICStextmenu",        False},
- {"View.ICSInputBox",        False},
- {"View.OpenChatWindow",     False},
- {"Action.Accept",           False},
- {"Action.Decline",          False},
- {"Action.Rematch",          False},
- {"Action.Adjourn",          False},
- {"Action.StopExamining",    False},
- {"Action.StopObserving",    False},
- {"Action.UploadtoExamine",  False},
- {"Edit.Revert",             False},
- {"Edit.Annotate",           False},
- {"Options.ICS",             False},
+ {"Mode.ICSClient",          FALSE},
+ {"View.ICStextmenu",        FALSE},
+ {"View.ICSInputBox",        FALSE},
+ {"View.OpenChatWindow",     FALSE},
+ {"Action.Accept",           FALSE},
+ {"Action.Decline",          FALSE},
+ {"Action.Rematch",          FALSE},
+ {"Action.Adjourn",          FALSE},
+ {"Action.StopExamining",    FALSE},
+ {"Action.StopObserving",    FALSE},
+ {"Action.UploadtoExamine",  FALSE},
+ {"Edit.Revert",             FALSE},
+ {"Edit.Annotate",           FALSE},
+ {"Options.ICS",             FALSE},
 
  /* The next two options rely on SetCmailMode being called *after*    */
  /* SetGNUMode so that when GNU is being used to give hints these     */
  /* menu options are still available                                  */
 
- {"File.MailMove",           False},
- {"File.ReloadCMailMessage", False},
- // [HGM] The following have been added to make a switch from ncp to GNU mode possible
- {"Mode.MachineWhite",       True },
- {"Mode.MachineBlack",       True },
- {"Mode.AnalysisMode",       True },
- {"Mode.AnalyzeFile",        True },
- {"Mode.TwoMachines",        True },
- {"Mode.MachineMatch",       True },
- {"Engine.Engine#1Settings", True },
- {"Engine.Engine#2Settings", True },
- {"Engine.Hint",             True },
- {"Engine.Book",             True },
- {"Engine.MoveNow",          True },
- {"Engine.RetractMove",      True },
- {"Action.",                 True },
- {NULL,                      False}
+ {"File.MailMove",           FALSE},
+ {"File.ReloadCMailMessage", FALSE},
+ /* [HGM] The following have been added to make a switch from ncp to GNU mode possible. */
+ {"Mode.MachineWhite",       TRUE},
+ {"Mode.MachineBlack",       TRUE},
+ {"Mode.AnalysisMode",       TRUE},
+ {"Mode.AnalyzeFile",        TRUE},
+ {"Mode.TwoMachines",        TRUE},
+ {"Mode.MachineMatch",       TRUE},
+ {"Engine.Engine#1Settings", TRUE},
+ {"Engine.Engine#2Settings", TRUE},
+ {"Engine.Hint",             TRUE},
+ {"Engine.Book",             TRUE},
+ {"Engine.MoveNow",          TRUE},
+ {"Engine.RetractMove",      TRUE},
+ {"Action.",                 TRUE},
+ {NULL,                      FALSE}
 };
 
 Enables cmailEnables[] = {
- {"Action.",                 True },
- {"Action.CallFlag",         False},
- {"Action.Draw",             True },
- {"Action.Adjourn",          False},
- {"Action.Abort",            False},
- {"Action.StopObserving",    False},
- {"Action.StopExamining",    False},
- {"File.MailMove",           True },
- {"File.ReloadCMailMessage", True },
- {NULL,                      False}
+ {"Action.",                 TRUE},
+ {"Action.CallFlag",         FALSE},
+ {"Action.Draw",             TRUE},
+ {"Action.Adjourn",          FALSE},
+ {"Action.Abort",            FALSE},
+ {"Action.StopObserving",    FALSE},
+ {"Action.StopExamining",    FALSE},
+ {"File.MailMove",           TRUE},
+ {"File.ReloadCMailMessage", TRUE},
+ {NULL,                      FALSE}
 };
 
 Enables trainingOnEnables[] = {
- {"Edit.EditComment",  False},
- {"Mode.Pause",        False},
- {"Edit.Forward",      False},
- {"Edit.Backward",     False},
- {"Edit.ForwardtoEnd", False},
- {"Edit.BacktoStart",  False},
- {"Engine.MoveNow",    False},
- {"Edit.TruncateGame", False},
- {NULL,                False}
+ {"Edit.EditComment",  FALSE},
+ {"Mode.Pause",        FALSE},
+ {"Edit.Forward",      FALSE},
+ {"Edit.Backward",     FALSE},
+ {"Edit.ForwardtoEnd", FALSE},
+ {"Edit.BacktoStart",  FALSE},
+ {"Engine.MoveNow",    FALSE},
+ {"Edit.TruncateGame", FALSE},
+ {NULL,                FALSE}
 };
 
 Enables trainingOffEnables[] = {
- {"Edit.EditComment",    True },
- {"Mode.Pause",          True },
- {"Edit.Forward",        True },
- {"Edit.Backward",       True },
- {"Edit.ForwardtoEnd",   True },
- {"Edit.BacktoStart",    True },
- {"Engine.MoveNow",      True },
- {"Engine.TruncateGame", True },
- {NULL,                  False}
+ {"Edit.EditComment",    TRUE},
+ {"Mode.Pause",          TRUE},
+ {"Edit.Forward",        TRUE},
+ {"Edit.Backward",       TRUE},
+ {"Edit.ForwardtoEnd",   TRUE},
+ {"Edit.BacktoStart",    TRUE},
+ {"Engine.MoveNow",      TRUE},
+ {"Engine.TruncateGame", TRUE},
+ {NULL,                  FALSE}
 };
 
 Enables machineThinkingEnables[] = {
- {"File.LoadGame",      False},
- // { "LoadNextGame", False },
- // { "LoadPreviousGame", False },
- // { "ReloadSameGame", False },
- {"Edit.PasteGame",     False},
- {"File.LoadPosition",  False},
- // { "LoadNextPosition", False },
- // { "LoadPreviousPosition", False },
- // { "ReloadSamePosition", False },
- {"Edit.PastePosition", False},
- {"Mode.MachineWhite",  False},
- {"Mode.MachineBlack",  False},
- {"Mode.TwoMachines",   False},
- // { "MachineMatch", False },
- {"Engine.RetractMove", False},
- {NULL,                 False}
+ {"File.LoadGame",      FALSE},
+/*
+ {"LoadNextGame",       FALSE},
+ {"LoadPreviousGame",   FALSE},
+ {"ReloadSameGame",     FALSE},
+*/
+ {"Edit.PasteGame",     FALSE},
+ {"File.LoadPosition",  FALSE},
+/*
+ {"LoadNextPosition",     FALSE},
+ {"LoadPreviousPosition", FALSE},
+ {"ReloadSamePosition",   FALSE},
+*/
+ {"Edit.PastePosition", FALSE},
+ {"Mode.MachineWhite",  FALSE},
+ {"Mode.MachineBlack",  FALSE},
+ {"Mode.TwoMachines",   FALSE},
+/*
+ {"MachineMatch",       FALSE},
+*/
+ {"Engine.RetractMove", FALSE},
+ {NULL,                 FALSE}
 };
 
 Enables userThinkingEnables[] = {
- {"File.LoadGame",      True },
- // { "LoadNextGame", True },
- // { "LoadPreviousGame", True },
- // { "ReloadSameGame", True },
- {"Edit.PasteGame",     True },
- {"File.LoadPosition",  True },
- // { "LoadNextPosition", True },
- // { "LoadPreviousPosition", True },
- // { "ReloadSamePosition", True },
- {"Edit.PastePosition", True },
- {"Mode.MachineWhite",  True },
- {"Mode.MachineBlack",  True },
- {"Mode.TwoMachines",   True },
- // { "MachineMatch", True },
- {"Engine.RetractMove", True },
- {NULL,                 False}
+ {"File.LoadGame",      TRUE},
+/*
+ {"LoadNextGame",       TRUE},
+ {"LoadPreviousGame",   TRUE},
+ {"ReloadSameGame",     TRUE},
+*/
+ {"Edit.PasteGame",     TRUE},
+ {"File.LoadPosition",  TRUE},
+/*
+ {"LoadNextPosition",     TRUE},
+ {"LoadPreviousPosition", TRUE},
+ {"ReloadSamePosition",   TRUE},
+*/
+ {"Edit.PastePosition", TRUE},
+ {"Mode.MachineWhite",  TRUE},
+ {"Mode.MachineBlack",  TRUE},
+ {"Mode.TwoMachines",   TRUE},
+/*
+ {"MachineMatch",       TRUE},
+*/
+ {"Engine.RetractMove", TRUE},
+ {NULL,                 FALSE}
 };
 
 void SetICSMode(void) {
     SetMenuEnables(icsEnables);
 
 #if ZIPPY
-    if (appData.zippyPlay && !appData.noChessProgram) { /* [DM] icsEngineAnalyze */
-        EnableNamedMenuItem("Mode.AnalysisMode", True);
-        EnableNamedMenuItem("Engine.Engine#1Settings", True);
+    if (appData.zippyPlay && !appData.noChessProgram) {
+        /* [DM] icsEngineAnalyze */
+        EnableNamedMenuItem("Mode.AnalysisMode", TRUE);
+        EnableNamedMenuItem("Engine.Engine#1Settings", TRUE);
     }
 #endif
 }
@@ -943,7 +958,7 @@ void SetCmailMode(void) { SetMenuEnables(cmailEnables); }
 void SetTrainingModeOn(void) {
     SetMenuEnables(trainingOnEnables);
     if (appData.showButtonBar) {
-        EnableButtonBar(False);
+        EnableButtonBar(FALSE);
     }
     CommentPopDown();
 }
@@ -951,7 +966,7 @@ void SetTrainingModeOn(void) {
 void SetTrainingModeOff(void) {
     SetMenuEnables(trainingOffEnables);
     if (appData.showButtonBar) {
-        EnableButtonBar(True);
+        EnableButtonBar(TRUE);
     }
 }
 
@@ -971,7 +986,7 @@ void SetMachineThinkingEnables(void) {
     case MachinePlaysBlack:
     case MachinePlaysWhite:
     case TwoMachinesPlay:
-        EnableNamedMenuItem(ModeToWidgetName(gameMode), True);
+        EnableNamedMenuItem(ModeToWidgetName(gameMode), TRUE);
         break;
     default:
         break;
@@ -1128,77 +1143,81 @@ void AutoInstall(char * settingsFile) {  // install all new XBoard and UCI engin
 void InitMenuMarkers(void) {
 #ifndef OPTIONSDIALOG
     if (appData.alwaysPromoteToQueen) {
-        MarkMenuItem("Options.Always Queen", True);
+        MarkMenuItem("Options.Always Queen", TRUE);
     }
     if (appData.animateDragging) {
-        MarkMenuItem("Options.Animate Dragging", True);
+        MarkMenuItem("Options.Animate Dragging", TRUE);
     }
     if (appData.animate) {
-        MarkMenuItem("Options.Animate Moving", True);
+        MarkMenuItem("Options.Animate Moving", TRUE);
     }
     if (appData.autoCallFlag) {
-        MarkMenuItem("Options.Auto Flag", True);
+        MarkMenuItem("Options.Auto Flag", TRUE);
     }
     if (appData.autoFlipView) {
-        XtSetValues(XtNameToWidget(menuBarWidget,"Options.Auto Flip View", True);
+        XtSetValues(XtNameToWidget(menuBarWidget,"Options.Auto Flip View", TRUE);
     }
     if (appData.blindfold) {
-        MarkMenuItem("Options.Blindfold", True);
+        MarkMenuItem("Options.Blindfold", TRUE);
     }
     if (appData.flashCount > 0) {
-        MarkMenuItem("Options.Flash Moves", True);
+        MarkMenuItem("Options.Flash Moves", TRUE);
     }
 # if HIGHDRAG
     if (appData.highlightDragging) {
-        MarkMenuItem("Options.Highlight Dragging", True);
+        MarkMenuItem("Options.Highlight Dragging", TRUE);
     }
 # endif
     if (appData.highlightLastMove) {
-        MarkMenuItem("Options.Highlight Last Move", True);
+        MarkMenuItem("Options.Highlight Last Move", TRUE);
     }
     if (appData.highlightMoveWithArrow) {
-        MarkMenuItem("Options.Arrow", True);
+        MarkMenuItem("Options.Arrow", TRUE);
     }
-    // if (appData.icsAlarm) {
-    //	MarkMenuItem("Options.ICS Alarm", True);
-    // }
+    /*
+    if (appData.icsAlarm) {
+        MarkMenuItem("Options.ICS Alarm", TRUE);
+    }
+    */
     if (appData.ringBellAfterMoves) {
-        MarkMenuItem("Options.Move Sound", True);
+        MarkMenuItem("Options.Move Sound", TRUE);
     }
     if (appData.oneClick) {
-        MarkMenuItem("Options.OneClick", True);
+        MarkMenuItem("Options.OneClick", TRUE);
     }
     if (appData.periodicUpdates) {
-        MarkMenuItem("Options.Periodic Updates", True);
+        MarkMenuItem("Options.Periodic Updates", TRUE);
     }
     if (appData.ponderNextMove) {
-        MarkMenuItem("Options.Ponder Next Move", True);
+        MarkMenuItem("Options.Ponder Next Move", TRUE);
     }
     if (appData.popupExitMessage) {
-        MarkMenuItem("Options.Popup Exit Message", True);
+        MarkMenuItem("Options.Popup Exit Message", TRUE);
     }
     if (appData.popupMoveErrors) {
-        MarkMenuItem("Options.Popup Move Errors", True);
+        MarkMenuItem("Options.Popup Move Errors", TRUE);
     }
-    // if (appData.premove) {
-    //	MarkMenuItem("Options.Premove", True);
-    // }
+    /*
+    if (appData.premove) {
+        MarkMenuItem("Options.Premove", TRUE);
+    }
+    */
     if (appData.showCoords) {
-        MarkMenuItem("Options.Show Coords", True);
+        MarkMenuItem("Options.Show Coords", TRUE);
     }
     if (appData.hideThinkingFromHuman) {
-        MarkMenuItem("Options.Hide Thinking", True);
+        MarkMenuItem("Options.Hide Thinking", TRUE);
     }
     if (appData.testLegality) {
-        MarkMenuItem("Options.Test Legality", True);
+        MarkMenuItem("Options.Test Legality", TRUE);
     }
 #endif
     if (saveSettingsOnExit) {
-        MarkMenuItem("Options.SaveSettingsonExit", True);
+        MarkMenuItem("Options.SaveSettingsonExit", TRUE);
     }
-    EnableNamedMenuItem("File.SaveSelected", False);
+    EnableNamedMenuItem("File.SaveSelected", FALSE);
 
-    // all XBoard builds get here, but not WinBoard...
+    /* All XBoard builds get here, but not WinBoard. */
     if (*appData.autoInstall) {
         AutoInstall(settingsFileName);
     }

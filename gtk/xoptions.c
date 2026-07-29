@@ -76,7 +76,7 @@ void UnCaret(void) {
     Arg args[2];
 
     if (previous) {
-        XtSetArg(args[0], XtNdisplayCaret, False);
+        XtSetArg(args[0], XtNdisplayCaret, FALSE);
         XtSetValues(previous, args, 1);
     }
     previous = NULL;
@@ -93,7 +93,7 @@ void SetFocus(Widget w, XtPointer data, XEvent * event, Boolean * b) {
     XtSetArg(args[0], XtNstring, &s);
     XtGetValues(w, args, 1);
     j = 1;
-    XtSetArg(args[0], XtNdisplayCaret, True);
+    XtSetArg(args[0], XtNdisplayCaret, TRUE);
     if (!strchr(s, '\n') && strlen(s) < 80) {
         XtSetArg(args[1], XtNinsertPosition, strlen(s)), j++;
     }
@@ -122,7 +122,7 @@ static Arg layoutArgs[] = {
 
 static Arg formArgs[] = {
  {XtNborderWidth, 0             },
- {XtNresizable,   (XtArgVal)True},
+ {XtNresizable,   (XtArgVal)TRUE},
 };
 #endif
 
@@ -203,7 +203,7 @@ void SetWidgetText(Option * opt, char * buf, int n) {
 #ifdef TODO_GTK
     // focus is automatic in GTK?
     if (n >= 0) {
-        SetFocus(opt->handle, shells[n], NULL, False);
+        SetFocus(opt->handle, shells[n], NULL, FALSE);
     }
 #endif
 }
@@ -506,7 +506,7 @@ static GtkWidget * CreateMenuPopup(Option * opt, int n, int def) {
             if (mb[i].handle) {
                 entry = gtk_check_menu_item_new_with_label(msg);
                 if (mb[i].handle == RADIO) {
-                    gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(entry), True);
+                    gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(entry), TRUE);
                 }
             } else {
                 entry = gtk_menu_item_new_with_label(msg);
@@ -906,11 +906,11 @@ void RaiseWindow(DialogClass dlg) {
 #ifdef TODO_GTK
     static XEvent xev;
     Window root = RootWindow(xDisplay, DefaultScreen(xDisplay));
-    Atom atom = XInternAtom(xDisplay, "_NET_ACTIVE_WINDOW", False);
+    Atom atom = XInternAtom(xDisplay, "_NET_ACTIVE_WINDOW", FALSE);
 
     xev.xclient.type = ClientMessage;
     xev.xclient.serial = 0;
-    xev.xclient.send_event = True;
+    xev.xclient.send_event = TRUE;
     xev.xclient.display = xDisplay;
     xev.xclient.window = XtWindow(shells[dlg]);
     xev.xclient.message_type = atom;
@@ -918,7 +918,7 @@ void RaiseWindow(DialogClass dlg) {
     xev.xclient.data.l[0] = 1;
     xev.xclient.data.l[1] = CurrentTime;
 
-    XSendEvent(xDisplay, root, False,
+    XSendEvent(xDisplay, root, FALSE,
      static int MemoEvent(GtkWidget * widget, GdkEvent * event, void * gdata)
 
        SubstructureRedirectMask |
@@ -926,7 +926,7 @@ void RaiseWindow(DialogClass dlg) {
      &xev);
 
     XFlush(xDisplay);
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 #endif
 }
 
@@ -951,7 +951,7 @@ int PopDown(DialogClass n) {
     }
 
     if (marked[n]) {
-        MarkMenuItem(marked[n], False);
+        MarkMenuItem(marked[n], FALSE);
         marked[n] = NULL;
     }
 
@@ -1180,7 +1180,7 @@ static gboolean GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdat
         XtCallActionProc(widget, "XawPositionSimpleMenu", event, &(opt->name), 1);
         XtPopupSpringLoaded(opt->handle);
     }
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
 #endif
     return FALSE;
 }
@@ -1556,7 +1556,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
 
     if (dlgNr && dlgNr < PromoDlg && shells[dlgNr]) {  // reusable, and used before (but popped down)
         gtk_widget_show(shells[dlgNr]);
-        shellUp[dlgNr] = True;
+        shellUp[dlgNr] = TRUE;
         if (wp[dlgNr]) {
             gtk_window_move(GTK_WINDOW(shells[dlgNr]), wp[dlgNr]->x, wp[dlgNr]->y);
         }
@@ -1731,7 +1731,7 @@ tBox:
                 gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(textview), option[i].min & T_WRAP ? GTK_WRAP_WORD : GTK_WRAP_NONE);
 #ifdef TODO_GTK
                 if (option[i].min & T_FILL) {
-                    XtSetArg(args[j], XtNautoFill, True);
+                    XtSetArg(args[j], XtNautoFill, TRUE);
                     j++;
                 }
                 if (option[i].min & T_TOP) {
@@ -2087,16 +2087,18 @@ tBox:
                 boxStart = i;
                 break;
             case BoxBegin:
-                option[i + 1].min |= SAME_ROW;  // kludge to suppress allocation of new hbox
+                /* kludge to suppress allocation of new hbox */
+                option[i + 1].min |= SAME_ROW;
                 oldHbox = hbox;
+                /* hbox to collect buttons */
 #if GTK_CHECK_VERSION(3, 0, 0)
-                option[i].handle = (void *)(hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));  // hbox to collect buttons
+                option[i].handle = (void *)(hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
 #else
-                option[i].handle = (void *)(hbox = gtk_hbox_new(FALSE, 0));  // hbox to collect buttons
+                option[i].handle = (void *)(hbox = gtk_hbox_new(FALSE, 0));
 #endif
-                gtk_box_pack_start(
-                 GTK_BOX(oldHbox), hbox, FALSE, TRUE, 0);  // *** Beware! Assumes button bar always on same row with other! ***
-                // gtk_table_attach(GTK_TABLE(table), hbox, left+2, left+3, top, top+1, GTK_FILL | GTK_SHRINK, GTK_FILL, 2, 1);
+                /*** Beware! Assumes button bar always on same row with other! ***/
+                gtk_box_pack_start(GTK_BOX(oldHbox), hbox, FALSE, TRUE, 0);
+                /*gtk_table_attach(GTK_TABLE(table), hbox, left+2, left+3, top, top+1, GTK_FILL | GTK_SHRINK, GTK_FILL, 2, 1);*/
                 boxStart = i;
                 break;
             case BarEnd:
@@ -2105,11 +2107,14 @@ tBox:
                 gtk_table_attach(GTK_TABLE(table), menuBar, left, left + r, top, top + 1, GTK_FILL | GTK_EXPAND, GTK_FILL, 2, 1);
 
                 if (option[i].target) {
-                    ((ButtonCallback *)option[i].target)(boxStart);  // callback that can make sizing decisions
+                    /* callback that can make sizing decisions */
+                    ((ButtonCallback *)option[i].target)(boxStart);
                 }
 #else
-            top--;  // in OSX menu bar is not put in window, so also don't count it
-            {  // in stead, offer it to OSX, and move About item to top of App menu
+            /* in macOS menu bar is not put in window, so also don't count it */
+            top--;
+            {
+                /* instead, offer it to macOS, and move About item to top of App menu */
                 GtkosxApplication * theApp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
                 extern MenuItem helpMenu[];  // oh, well... Adding items in help menu breaks this anyway
                 gtk_widget_hide(menuBar);
@@ -2120,16 +2125,20 @@ tBox:
 #endif
                 break;
             case BoxEnd:
-                // XtManageChildren(&form, 1);
-                // SqueezeIntoBox(&option[boxStart], i-boxStart, option[boxStart].max);
+                /*
+                XtManageChildren(&form, 1);
+                SqueezeIntoBox(&option[boxStart], i-boxStart, option[boxStart].max);
+                */
                 hbox = oldHbox;
                 top--;
                 if (option[i].target) {
-                    ((ButtonCallback *)option[i].target)(boxStart);  // callback that can make sizing decisions
+                    /* callback that can make sizing decisions */
+                    ((ButtonCallback *)option[i].target)(boxStart);
                 }
                 break;
             case Break:
-                breakType = option[i].min & SAME_ROW | BORDER;  // kludge to flag we must break
+                /* kludge to flag we must break */
+                breakType = option[i].min & SAME_ROW | BORDER;
                 option[i].handle = table;
                 break;
 
@@ -2142,7 +2151,8 @@ tBox:
             }
         }
 
-        if (topLevel && !(option[i].min & NO_OK)) {  // buttons requested in top-level window
+        if (topLevel && !(option[i].min & NO_OK)) {
+            /* buttons requested in top-level window */
             button = gtk_button_new_with_label(_("OK"));
             g_signal_connect(button, "clicked", G_CALLBACK(PopDownProxy), (void *)(intptr_t)dlgNr);
             if (!(option[i].min & NO_CANCEL)) {
@@ -2152,7 +2162,7 @@ tBox:
 #if GTK_CHECK_VERSION(3, 0, 0)
                     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
-                    hbox = gtk_hbox_new(False, 0);
+                    hbox = gtk_hbox_new(FALSE, 0);
 #endif
                     gtk_table_attach(
                      GTK_TABLE(table), hbox, left, left + r, top + 1, top + 2, GTK_FILL | GTK_EXPAND, GTK_FILL, 2, 1);
@@ -2165,7 +2175,8 @@ tBox:
         }
 
         gtk_table_resize(GTK_TABLE(table), top + 1, r);
-        if (dlgNr == BoardWindow && appData.fixedSize) {  // inhibit sizing
+        if (dlgNr == BoardWindow && appData.fixedSize) {
+            /* inhibit sizing */
 #if GTK_CHECK_VERSION(3, 0, 0)
             GtkWidget * h = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
@@ -2180,7 +2191,8 @@ tBox:
             gtk_box_pack_start(GTK_BOX(/*GTK_DIALOG (dialog)->vbox*/ box), table, TRUE, TRUE, 0);
         }
 
-        option[i].handle = (void *)table;  // remember last table in EndMark handle (for hiding Engine-Output pane).
+        /* remember last table in EndMark handle (for hiding Engine-Output pane). */
+        option[i].handle = (void *)table;
 
         gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_NONE);
 
@@ -2203,7 +2215,8 @@ tBox:
         g_signal_connect(dialog, "delete-event", G_CALLBACK(GenericPopDown), (void *)(intptr_t)dlgNr);
         shellUp[dlgNr]++;
 
-        if (dlgNr && wp[dlgNr]) {  // if persistent window-info available, reposition
+        /* if persistent window-info available, reposition */
+        if (dlgNr && wp[dlgNr]) {
             if (wp[dlgNr]->x > 0 && wp[dlgNr]->y > 0) {
                 gtk_window_move(GTK_WINDOW(dialog), wp[dlgNr]->x, wp[dlgNr]->y);
             }
@@ -2214,15 +2227,16 @@ tBox:
 
         for (i = 0; option[i].type != EndMark; i++) {
             if (option[i].type == Graph || dlgNr == BoardWindow && option[i].handle && !appData.fixedSize) {
-                gtk_widget_set_size_request(
-                 option[i].handle, -1, -1);  // remove size requests after realization, so user can shrink
+                /* remove size requests after realization, so user can shrink */
+                gtk_widget_set_size_request(option[i].handle, -1, -1);
                 if (option[i].type == Label) {
                     gtk_label_set_ellipsize(option[i].handle, PANGO_ELLIPSIZE_END);
                 }
             }
         }
 
-        return 1;  // tells caller he must do initialization (e.g. add specific event handlers)
+        /* Tell the caller that it must do initialization (e.g. add specific event handlers). */
+        return 1;
     }
 
 /* function called when the data to Paste is ready */

@@ -67,9 +67,6 @@ typedef char * String;
 # else
 typedef char Boolean;
 typedef char * String;
-/* N.B.: Prefer using TRUE and FALSE to these. */
-#  define True 1
-#  define False 0
 # endif
 #endif /* _WIN32 */
 

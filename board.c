@@ -335,12 +335,12 @@ static void SetRect(MyRectangle * rect, int x, int y, int width, int height) {
 
 static Boolean Intersect(Pnt * old, Pnt * new, int size, MyRectangle * area, Pnt * pt) {
     if (old->x > new->x + size || new->x > old->x + size || old->y > new->y + size || new->y > old->y + size) {
-        return False;
+        return FALSE;
     } else {
         SetRect(area, Max(new->x - old->x, 0), Max(new->y - old->y, 0), size - abs(old->x - new->x), size - abs(old->y - new->y));
         pt->x = Max(old->x - new->x, 0);
         pt->y = Max(old->y - new->y, 0);
-        return True;
+        return TRUE;
     }
 }
 
@@ -613,7 +613,7 @@ again:
 void ChangeDragPiece(ChessSquare piece) {
     anims[Player].dragPiece = piece;
     SetDragPiece(Player, piece);
-    damage[0][fromY][fromX] = True;
+    damage[0][fromY][fromX] = TRUE;
 }
 
 void DragPieceMove(int x, int y) {
@@ -662,12 +662,12 @@ void DragPieceEnd(int x, int y) {
     EndAnimation(Player, &corner);
 
     /* Be sure end square is redrawn */
-    damage[0][boardY][boardX] = True;
+    damage[0][boardY][boardX] = TRUE;
 
     /* This prevents weird things happening with fast successive
        clicks which on my Sun at least can cause motion events
        without corresponding press/release. */
-    anims[Player].dragActive = False;
+    anims[Player].dragActive = FALSE;
 }
 
 void DragPieceBegin(int x, int y, Boolean instantly) {
@@ -696,7 +696,7 @@ void DragPieceBegin(int x, int y, Boolean instantly) {
     /* Sanity check */
     if (anims[Player].dragPiece >= 0 && anims[Player].dragPiece < EmptySquare) {
         ChessSquare bgPiece = EmptySquare;
-        anims[Player].dragActive = True;
+        anims[Player].dragActive = TRUE;
         if (boardX == BOARD_RGHT + 1 && PieceForSquare(boardX - 1, boardY) > 1 ||
          boardX == BOARD_LEFT - 2 && PieceForSquare(boardX + 1, boardY) > 1) {
             bgPiece = anims[Player].dragPiece;
@@ -708,9 +708,9 @@ void DragPieceBegin(int x, int y, Boolean instantly) {
         /* Mark this square as needing to be redrawn. Note that
            we don't remove the piece though, since logically (ie
            as seen by opponent) the move hasn't been made yet. */
-        damage[0][boardY][boardX] |= True;
+        damage[0][boardY][boardX] |= TRUE;
     } else {
-        anims[Player].dragActive = False;
+        anims[Player].dragActive = FALSE;
     }
 }
 
@@ -864,7 +864,8 @@ void SquareExpose(int i, int j, int d) {
 }
 
 void DrawPositionX(int repaint, Board board) {
-    int i, j, do_flash, exposeAll = False;
+    int i, j, do_flash;
+    int exposeAll = FALSE;
     static int lastFlipView = 0;
     static int lastBoardValid[2] = {0, 0};
     static Board lastBoard[2];
@@ -960,11 +961,11 @@ void DrawPositionX(int repaint, Board board) {
         for (i = 0; i < BOARD_HEIGHT; i++) {
             for (j = 0; j < BOARD_WIDTH; j++) {
                 DrawSquare(i, j, board[i][j], 0);
-                damage[nr][i][j] = False;
+                damage[nr][i][j] = FALSE;
             }
         }
 
-        exposeAll = True;
+        exposeAll = TRUE;
     }
 
     CopyBoard(lastBoard[nr], board);

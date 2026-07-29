@@ -95,7 +95,7 @@ void LoadSelectedProc(Widget w, XEvent * event, String * prms, Cardinal * nprms)
     if (GameListClicks(atoi(prms[0]))) {
         return;  // if no game loaded, no focus transfer
     }
-    XSync(xDisplay, False);
+    XSync(xDisplay, FALSE);
     XSetInputFocus(xDisplay, XtWindow(boardWidget), RevertToPointerRoot, CurrentTime);
 }
 

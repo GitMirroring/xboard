@@ -87,54 +87,61 @@ Option gamesOptions[] = {
 
 static void GL_Button(int n) {
     int index;
-    n = gamesOptions[n].value;  // use marker in option rather than n itself, for more easy adding/deletng of buttons
-    if (n == 6) {  // close
+    /* Use marker in option rather than n itself, for more easy adding/deletng of buttons. */
+    n = gamesOptions[n].value;
+    if (n == 6) {
+        /* Close. */
         PopDown(GameListDlg);
         return;
     }
-    if (n == 3) {  // thresholds
+    if (n == 3) {
+        /* Thresholds. */
         LoadOptionsPopUp(GameListDlg);
         return;
     }
-    if (n == 9) {  // tags
+    if (n == 9) {
+        /* Tags. */
         GameListOptionsPopUp(GameListDlg);
         return;
     }
     index = SelectedListBoxItem(&gamesOptions[0]);
-    if (n == 7) {  // load
+    if (n == 7) {
+        /* Load. */
         if (index < 0) {
             DisplayError(_("No game selected"), 0);
             return;
         }
-    } else if (n == 5) {  // next
+    } else if (n == 5) {
+        /* Next. */
         index++;
         if (index >= listLength || !list[index]) {
             DisplayError(_("Can't go forward any further"), 0);
             return;
         }
         HighlightWithScroll(&gamesOptions[0], index, listEnd);
-    } else if (n == 8) {  // prev
+    } else if (n == 8) {
+        /* Previous. */
         index--;
         if (index < 0) {
             DisplayError(_("Can't back up any further"), 0);
             return;
         }
         HighlightWithScroll(&gamesOptions[0], index, listEnd);
-    } else if (n == 2 ||  // narrow
-     n == 4) {  // find position
+    } else if (n == 2 /* narrow */ || n == 4 /* find position */) {
         char * text;
         GetWidgetText(&gamesOptions[1], &text);
         safeStrCpy(filterString, text, sizeof(filterString) / sizeof(filterString[0]));
-        GameListPrepare(True, n == 2);
+        GameListPrepare(TRUE, n == 2);
         GameListReplace(0);
         return;
     }
 
-    index = atoi(list[index]) - 1;  // [HGM] filter: read true index from sequence nr of line
+    /* [HGM] filter: read true index from sequence nr of line. */
+    index = atoi(list[index]) - 1;
     if (cmailMsgLoaded) {
-        CmailLoadGame(glc->fp, index + 1, glc->filename, True);
+        CmailLoadGame(glc->fp, index + 1, glc->filename, TRUE);
     } else {
-        LoadGame(glc->fp, index + 1, glc->filename, True);
+        LoadGame(glc->fp, index + 1, glc->filename, TRUE);
     }
 }
 
@@ -238,7 +245,7 @@ void GameListUpdate(void) {
     if (!DialogExists(GameListDlg)) {
         return;
     }
-    GameListPrepare(False, False);
+    GameListPrepare(FALSE, FALSE);
     GameListReplace(0);
 }
 
@@ -249,7 +256,8 @@ void GameListPopUp(FILE * fp, char * filename) {
         glc->filename = NULL;
     }
 
-    GameListPrepare(False, False);  // [HGM] filter: code put in separate routine
+    /* [HGM] filter: code put in separate routine. */
+    GameListPrepare(FALSE, FALSE);
 
     glc->fp = fp;
 
@@ -320,7 +328,7 @@ int GameListClicks(int direction) {
     if (page && (index == 0 && direction < 1 || direction == -4)) {
         page -= 1000;
         if (page < 0) {
-            page = 0;  // safety
+            page = 0;
         }
         GameListReplace(page);
         return 1;
@@ -351,11 +359,12 @@ int GameListClicks(int direction) {
             return 1;
         }
     }
-    index = atoi(list[index]) - 1;  // [HGM] filter: read true index from sequence nr of line
+    /* [HGM] filter: read true index from sequence nr of line. */
+    index = atoi(list[index]) - 1;
     if (cmailMsgLoaded) {
-        CmailLoadGame(glc->fp, index + 1, glc->filename, True);
+        CmailLoadGame(glc->fp, index + 1, glc->filename, TRUE);
     } else {
-        LoadGame(glc->fp, index + 1, glc->filename, True);
+        LoadGame(glc->fp, index + 1, glc->filename, TRUE);
     }
     return 0;
 }
@@ -364,10 +373,12 @@ void SetFilter(void) {
     char * name;
     GetWidgetText(&gamesOptions[1], &name);
     safeStrCpy(filterString, name, sizeof(filterString) / sizeof(filterString[0]));
-    GameListPrepare(False, False);
+    GameListPrepare(FALSE, FALSE);
     GameListReplace(0);
-    UnCaret();  // filter text-edit
-    FocusOnWidget(&gamesOptions[0], GameListDlg);  // listbox
+    /* Filter text-edit. */
+    UnCaret();
+    /* Listbox. */
+    FocusOnWidget(&gamesOptions[0], GameListDlg);
 }
 
 void GameListHighlight(int index) {
@@ -389,7 +400,7 @@ int SaveGameListAsText(FILE * f) {
 
     if (!glc || ((ListGame *)gameList.tailPred)->number <= 0) {
         DisplayError(_("Game list not loaded or empty"), 0);
-        return False;
+        return FALSE;
     }
 
     /* Copy the list into the global memory block */
@@ -408,7 +419,7 @@ int SaveGameListAsText(FILE * f) {
         }
 
         fclose(f);
-        return True;
+        return TRUE;
     }
-    return False;
+    return FALSE;
 }

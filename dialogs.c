@@ -68,7 +68,7 @@ char manDir[MSG_SIZ] = XBOARD_MAN_DIR;
 char * marked[NrOfDialogs];
 Boolean shellUp[NrOfDialogs];
 
-void MarkMenu(char * item, int dlgNr) { MarkMenuItem(marked[dlgNr] = item, True); }
+void MarkMenu(char * item, int dlgNr) { MarkMenuItem(marked[dlgNr] = item, TRUE); }
 
 void AddLine(Option * opt, char * s) {
     AppendText(opt, s);
@@ -278,9 +278,12 @@ static int MatchOK(int n) {
     if (!CreateTourney(tfName) || matchMode) {
         return matchMode || !appData.participants[0];
     }
-    PopDown(MasterDlg);  // early popdown to prevent FreezeUI called through MatchEvent from causing XtGrab warning
-    MatchEvent(2);  // start tourney
-    return FALSE;  // no double PopDown!
+    /* Early popdown to prevent FreezeUI called through MatchEvent from causing XtGrab warning. */
+    PopDown(MasterDlg);
+    /* Start tourney. */
+    MatchEvent(2);
+    /* Avoid a double popdown. */
+    return FALSE;
 }
 
 static void DoTimeControl(int n) { TimeControlProc(); }
@@ -326,12 +329,12 @@ static Option matchOptions[] = {
 
 static void ReplaceParticipant(void) {
     GenericReadout(matchOptions, PARTICIPANTS);
-    Substitute(strdup(engineName), True);
+    Substitute(strdup(engineName), TRUE);
 }
 
 static void UpgradeParticipant(void) {
     GenericReadout(matchOptions, PARTICIPANTS);
-    Substitute(strdup(engineName), False);
+    Substitute(strdup(engineName), FALSE);
 }
 
 static void PseudoOK(void) {
@@ -542,25 +545,31 @@ static void Pick(int n) {
     } else {
         *engineVariant = NULLCHAR;
     }
-    GenericReadout(variantDescriptors, -1);  // read new ranks and file settings
+    /* Read new ranks and file settings. */
+    GenericReadout(variantDescriptors, -1);
     if (!appData.noChessProgram) {
         char buf[MSG_SIZ];
         if (!SupportedVariant(first.variants, v, filesTmp, ranksTmp, sizeTmp, first.protocolVersion, first.tidy)) {
+            /* Ignore OK if first engine does not support it. */
             DisplayError(variantError, 0);
-            return; /* ignore OK if first engine does not support it */
+            return;
         } else if (second.initDone &&
          !SupportedVariant(second.variants, v, filesTmp, ranksTmp, sizeTmp, second.protocolVersion, second.tidy)) {
             snprintf(buf, MSG_SIZ, _("Warning: second engine (%s) does not support this!"), second.tidy);
-            DisplayError(buf, 0); /* use of second engine is optional; only warn user */
+            /* Use of second engine is optional, so only warn the user. */
+            DisplayError(buf, 0);
         }
     }
 
     gameInfo.variant = v;
     ASSIGN(appData.variant, VariantName(v));
 
-    shuffleOpenings = FALSE; /* [HGM] shuffle: possible shuffle reset when we switch */
-    startedFromPositionFile = FALSE; /* [HGM] loadPos: no longer valid in new variant */
-    appData.fischerCastling = FALSE; /* [HGM] fischer: no longer valid in new variant */
+    /* [HGM] shuffle: possible shuffle reset when we switch. */
+    shuffleOpenings = FALSE;
+    /* [HGM] loadPos: no longer valid in new variant. */
+    startedFromPositionFile = FALSE;
+    /* [HGM] fischer: no longer valid in new variant. */
+    appData.fischerCastling = FALSE;
     appData.NrRanks = ranksTmp;
     appData.NrFiles = filesTmp;
     appData.holdingsSize = sizeTmp;
@@ -569,7 +578,7 @@ static void Pick(int n) {
     ASSIGN(appData.colorNickNames, "");
     ASSIGN(appData.men, "");
     PopDown(TransientDlg);
-    Reset(True, True);
+    Reset(TRUE, TRUE);
     return;
 }
 
@@ -624,14 +633,14 @@ static int CommonOptionsOK(int n) {
     } else {
         ASSIGN(appData.defaultPathEGTB, egtPath);
     }
-    // make sure changes are sent to first engine by re-initializing it
-    // if it was already started pre-emptively at end of previous game
+    /* Ensure that changes are sent to the first engine by re-initializing it if it was already started pre-emptively at the end of
+       the previous game. */
     if (gameMode == BeginningOfGame) {
-        Reset(True, True);
+        Reset(TRUE, TRUE);
     } else {
-        // Some changed setting need immediate sending always.
+        /* Some changed setting need immediate sending always. */
         if (oldCores != appData.smpCores) {
-            NewSettingEvent(False, &(first.maxCores), "cores", appData.smpCores);
+            NewSettingEvent(FALSE, &(first.maxCores), "cores", appData.smpCores);
         }
         appData.ponderNextMove = oldPonder;
         PonderNextMoveEvent(newPonder);
@@ -1146,13 +1155,15 @@ Option commentOptions[] = {
 
 static int CommentClick(Option * opt, int n, int x, int y, char * val, int index) {
     if (n != 3) {
-        return FALSE;  // only button-3 press is of interest
+        /* Only a button-3 press is of interest. */
+        return FALSE;
     }
     ReplaceComment(savedIndex, val);
     if (savedIndex != currentMove) {
         ToNrEvent(savedIndex);
     }
-    LoadVariation(index, val);  // [HGM] also does the actual moving to it, now
+    /* [HGM] Also does the actual moving to it, now. */
+    LoadVariation(index, val);
     return TRUE;
 }
 
@@ -1196,10 +1207,12 @@ void CommentPopDown(void) { PopDown(CommentDlg); }
 
 
 void EditCommentProc(void) {
-    if (PopDown(CommentDlg)) {  // popdown succesful
-        //	MarkMenuItem("Edit.EditComment", False);
-        //	MarkMenuItem("View.Comments", False);
-    } else {  // was not up
+    if (PopDown(CommentDlg)) {
+        /* Pop-down was succesful. */
+        /* MarkMenuItem("Edit.EditComment", FALSE); */
+        /* MarkMenuItem("View.Comments", FALSE); */
+    } else {
+        /* Wasn't up. */
         EditCommentEvent();
     }
 }
@@ -1237,7 +1250,8 @@ Option tagsOptions[] = {
 
 static int TagsClick(Option * opt, int n, int x, int y, char * val, int index) {
     if (!bookUp || n != 3) {
-        return FALSE;  // only button-3 press in Edit Book is of interest
+        /* Only a button-3 press in Edit Book is of interest. */
+        return FALSE;
     }
     PlayBookMove(val, index);
     return TRUE;
@@ -1281,7 +1295,7 @@ void EditAnyPopUp(char * tags, char ** dest, char * title) {  // wrapper to pres
 
 void TagsPopDown(void) {
     PopDown(TagsDlg);
-    bookUp = False;
+    bookUp = FALSE;
 }
 
 void EditTagsProc(void) {
@@ -1532,19 +1546,23 @@ static int InstallOK(int n) {
             break;
         }
     }
-    PopDown(TransientDlg);  // early popdown, to allow FreezeUI to instate grab
+    /* Early popdown, to allow FreezeUI to instate grab. */
+    PopDown(TransientDlg);
     if (isUSI) {
-        isUCI = 2;  // kludge to pass isUSI to Load()
+        /* Kludge to pass isUSI to Load(). */
+        isUCI = 2;
+        /* TODO: Consider whether we should ensure that -uxiAdapter is defined. */
         if (!*appData.ucciAdapter) {
             ASSIGN(appData.ucciAdapter, "usi2wb -%variant \"%fcp\"\"%fd\"");
-        }  // make sure -uxiAdapter is defined
+        }
     }
     if (!secondEng) {
         Load(&first, 0);
     } else {
         Load(&second, 1);
     }
-    return FALSE;  // no double PopDown!
+    /* No double pop-down! */
+    return FALSE;
 }
 
 static void EngSel(int n, int sel) {
@@ -1568,13 +1586,21 @@ static void EngSel(int n, int sel) {
 static void LoadEngineProc(int engineNr, char * title) {
     int p = appData.defProtocol;
     if (*engineListFile) {
-        ParseSettingsFile(engineListFile, &engineListFile);  // contains engine list
+        /* Contains engine list. */
+        ParseSettingsFile(engineListFile, &engineListFile);
     }
     if (p >= 0 && p < 5) {
         protocolChoice = protocols[p];
     }
-    isUCI = isUSI = storeVariant = v1 = useNick = False;
-    addToList = hasBook = True;  // defaults
+
+    isUCI = FALSE;
+    isUSI = FALSE;
+    storeVariant = FALSE;
+    v1 = FALSE;
+    useNick = FALSE;
+    addToList = TRUE;
+    hasBook = TRUE;
+
     secondEng = engineNr;
     if (engineLine) {
         free(engineLine);
@@ -1628,7 +1654,7 @@ static void SetRandom(int n) {
     char buf[MSG_SIZ];
     snprintf(buf, MSG_SIZ, "%d", r);
     SetWidgetText(&shuffleOptions[2], buf, TransientDlg);
-    SetWidgetState(&shuffleOptions[0], True);
+    SetWidgetState(&shuffleOptions[0], TRUE);
 }
 
 void ShuffleMenuProc(void) { GenericPopUp(shuffleOptions, _("New Shuffle Game"), TransientDlg, BoardWindow, MODAL, 0); }
@@ -1639,19 +1665,20 @@ static void AdjustFont(int n);
 
 static char * oldFont[7];
 
-static int NewFont(
- int n, int fnr, char * font) {  // figure out if font changed, and if so, store it in the fonts table as a side effect
-    if (!strcmp(oldFont[n], font)) {
-        return 0;  // not changed
+/* Figures out if the font changed, and if so, stores it in the fonts table as a side effect. */
+static int NewFont(int n, int fnr, char * font) {
+    int fontChanged = strcmp(oldFont[n], font) ? 1 : 0;
+    if (fontChanged) {
+        ASSIGN(fontTable[fnr][initialSquareSize], font);
+        fontIsSet[fnr] = fontValid[fnr][initialSquareSize] = TRUE;
     }
-    ASSIGN(fontTable[fnr][initialSquareSize], font);
-    fontIsSet[fnr] = fontValid[fnr][initialSquareSize] = True;
-    return 1;  // changed
+    return fontChanged;
 }
 
 static int FontsOK(int n) {
     int i;
-    PopDown(TransientDlg);  // Early popdown to prevent expose events frommasking each other
+    /* Early popdown to prevent expose events from masking each other. */
+    PopDown(TransientDlg);
     LockBoardSize(0);
     if (NewFont(0, CLOCK_FONT, appData.clockFont)) {
         DisplayBothClocks();
@@ -1662,7 +1689,8 @@ static int FontsOK(int n) {
             ApplyFont(&mainOptions[W_BUTTON + i], NULL);
         }
     }
-    LockBoardSize(1);  // unlock
+    /* Unlock. */
+    LockBoardSize(1);
     if (NewFont(3, EDITTAGS_FONT, appData.tagsFont)) {
         ApplyFont(&tagsOptions[1], NULL);
     }
@@ -1679,10 +1707,13 @@ static int FontsOK(int n) {
     }
     if (NewFont(2, CONSOLE_FONT, appData.icsFont)) {
         ApplyFont(&chatOptions[11], appData.icsFont);
-        AppendColorized(&chatOptions[6], NULL, 0);  // kludge to replace font tag
+        /* Kludge to replace the font tag. */
+        AppendColorized(&chatOptions[6], NULL, 0);
     }
-    DrawPosition(TRUE, NULL);  // for coord font
-    return 0;  // suppress normal popdown because already done
+    /* For coord font. */
+    DrawPosition(TRUE, NULL);
+    /* Suppress the normal popdown, because it is already done. */
+    return 0;
 }
 
 static Option fontOptions[] = {
@@ -1882,7 +1913,7 @@ static int TcOK(int n) {
     }
     appData.firstTimeOdds = first.timeOdds = tmpOdds1;
     appData.secondTimeOdds = second.timeOdds = tmpOdds2;
-    Reset(True, True);
+    Reset(TRUE, TRUE);
     return 1;
 }
 
@@ -2075,18 +2106,21 @@ void ClearChat(void);
 
 WindowPlacement wpTextMenu;
 
-int ContextMenu(Option * opt, int button, int x, int y, char * text,
- int index) {  // callback for ICS-output clicks; handles button 3, passes on other events
+/* Callback for ICS-output clicks: handles button 3, passes on other events. */
+int ContextMenu(Option * opt, int button, int x, int y, char * text, int index) {
     int h;
     if (button == -3) {
-        return TRUE;  // supress default GTK context menu on up-click
+        /* Suppress the default GTK context menu on up-click. */
+        return TRUE;
     }
     if (button != 3) {
         return FALSE;
     }
-    if (index == -1) {  // pre-existing selection in memo
+    /* pre-existing selection in memo? */
+    if (index == -1) {
         strncpy(clickedWord, text, MSG_SIZ);
-    } else {  // figure out what word was clicked
+    } else {
+        /* Figure out what word was clicked. */
         char *start, *end;
         start = end = text + index;
         while (isalnum(*end)) {
@@ -2097,22 +2131,27 @@ int ContextMenu(Option * opt, int button, int x, int y, char * text,
         }
         clickedWord[0] = NULLCHAR;
         if (end - start >= 80) {
-            end = start + 80;  // intended for small words and numbers
+            /* Intended for small words and numbers. */
+            end = start + 80;
         }
         strncpy(clickedWord, start, end - start);
         clickedWord[end - start] = NULLCHAR;
     }
-    click = !shellUp[TextMenuDlg];  // request auto-popdown of textmenu when we popped it up
-    h = wpTextMenu.height;  // remembered height of text menu
+    /* Request auto-popdown of textmenu when we popped it up. */
+    click = !shellUp[TextMenuDlg];
+    /* Use the remembered height of text menu. */
+    h = wpTextMenu.height;
     if (h <= 0) {
-        h = 65;  // when not available, position w.r.t. top
+        /* When unavailable, position with respect to the top. */
+        h = 65;
     }
     GetPlacement(ChatDlg, &wpTextMenu);
     if (opt->target == (void *)&chatMemo) {
-        wpTextMenu.y += (wpTextMenu.height - 30) / 2;  // click in chat
+        /* Click in chat. */
+        wpTextMenu.y += (wpTextMenu.height - 30) / 2;
     }
     wpTextMenu.x += x - 50;
-    wpTextMenu.y += y - h + 50;  // request positioning
+    wpTextMenu.y += y - h + 50;
     if (wpTextMenu.x < 0) {
         wpTextMenu.x = 0;
     }
@@ -2255,42 +2294,51 @@ void OutputChatMessage(int partner, char * mess) {
     }
 }
 
-int ChatOK(int n) {  // can only be called through <Enter> in chat-partner text-edit, as there is no OK button
+int ChatOK(int n) {
+    /* Can only be called through <Enter> in chat-partner text-edit, as there is no OK button. */
     char buf[MSG_SIZ];
 
     if (!hidden && (!partner || strcmp(partner, chatPartner[activePartner]) || !*partner)) {
         safeStrCpy(chatPartner[activePartner], partner, MSG_SIZ);
-        SetWidgetText(&chatOptions[CHAT_OUT], "", -1);  // clear text if we alter partner
-        SetWidgetText(&chatOptions[CHAT_IN], "", ChatDlg);  // clear text if we alter partner
+        /* Clear text if we alter partner. */
+        SetWidgetText(&chatOptions[CHAT_OUT], "", -1);
+        SetWidgetText(&chatOptions[CHAT_IN], "", ChatDlg);
         SetWidgetLabel(&chatOptions[activePartner + 1], chatPartner[activePartner][0] ? chatPartner[activePartner] : _("New Chat"));
         if (!*partner) {
             PaneSwitch();
         }
         HardSetFocus(&chatOptions[CHAT_IN], 0);
     }
-    if (line[0] || hidden) {  // something was typed (for ICS commands we also allow empty line!)
+    if (line[0] || hidden) {
+        /* something was typed (for ICS commands we also allow empty line!) */
         SetWidgetText(&chatOptions[CHAT_IN], "", ChatDlg);
-        // from here on it could be back-end
+        /* From here on, it could be back-end. */
         if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = NULLCHAR;
         }
         SaveInHistory(line);
-        if (hidden || !*chatPartner[activePartner]) {  // command for ICS
+        /* Command for ICS. */
+        if (hidden || !*chatPartner[activePartner]) {
             snprintf(buf, MSG_SIZ, "%s\n", line);
             if (!remoteEchoOption) {
                 ConsoleWrite(buf, strlen(buf));
             }
         } else if (!strcmp("whispers", chatPartner[activePartner])) {
-            snprintf(buf, MSG_SIZ, "whisper %s\n", line);  // WHISPER box uses "whisper" to send
+            /* WHISPER box uses "whisper" to send. */
+            snprintf(buf, MSG_SIZ, "whisper %s\n", line);
         } else if (!strcmp("shouts", chatPartner[activePartner])) {
-            snprintf(buf, MSG_SIZ, "shout %s\n", line);  // SHOUT box uses "shout" to send
+            /* SHOUT box uses "shout" to send. */
+            snprintf(buf, MSG_SIZ, "shout %s\n", line);
         } else if (!strcmp("c-shouts", chatPartner[activePartner])) {
-            snprintf(buf, MSG_SIZ, "cshout %s\n", line);  // C-SHOUT box uses "cshout" to send
+            /* C-SHOUT box uses "cshout" to send. */
+            snprintf(buf, MSG_SIZ, "cshout %s\n", line);
         } else if (!strcmp("kibitzes", chatPartner[activePartner])) {
-            snprintf(buf, MSG_SIZ, "kibitz %s\n", line);  // KIBITZ box uses "kibitz" to send
+            /* KIBITZ box uses "kibitz" to send. */
+            snprintf(buf, MSG_SIZ, "kibitz %s\n", line);
         } else {
             if (!atoi(chatPartner[activePartner])) {
-                snprintf(buf, MSG_SIZ, "> %s\n", line);  // echo only tells to handle, not channel
+                /* Echo only tells to handle, not channel. */
+                snprintf(buf, MSG_SIZ, "> %s\n", line);
                 OutputChatMessage(activePartner, buf);
                 snprintf(buf, MSG_SIZ, "xtell %s %s\n", chatPartner[activePartner], line);
             } else {
@@ -2299,7 +2347,8 @@ int ChatOK(int n) {  // can only be called through <Enter> in chat-partner text-
         }
         SendToICS(buf);
     }
-    return FALSE;  // never pop down
+    /* Never pop down. */
+    return FALSE;
 }
 
 void DelayedSetText(void) {
@@ -2455,13 +2504,13 @@ void EchoOn(void) {
     }
     system("stty echo");
     WidgetEcho(&chatOptions[CHAT_IN], 1);
-    noEcho = False;
+    noEcho = FALSE;
 }
 
 void EchoOff(void) {
     system("stty -echo");
     WidgetEcho(&chatOptions[CHAT_IN], 0);
-    noEcho = True;
+    noEcho = TRUE;
 }
 
 //--------------------------------- Game-List options dialog ------------------------------------------
@@ -2558,27 +2607,32 @@ void GameListOptionsProc(void) { GameListOptionsPopUp(BoardWindow); }
  * has now been repaired, as the action routine assigned to it gets the shell passed as argument.
  */
 
-int errorUp = False;
+int errorUp = FALSE;
 
 void ErrorPopDown(void) {
     if (!errorUp) {
         return;
     }
-    dialogError = errorUp = False;
+    dialogError = FALSE;
+    errorUp = FALSE;
+    /* On an explicit request,  we pop down any error dialog. */
     PopDown(ErrorDlg);
-    PopDown(FatalDlg);  // on explicit request we pop down any error dialog
+    PopDown(FatalDlg);
     if (errorExitStatus != -1) {
         ExitEvent(errorExitStatus);
     }
 }
 
 int ErrorOK(int n) {
-    dialogError = errorUp = False;
-    PopDown(n == 1 ? FatalDlg : ErrorDlg);  // kludge: non-modal dialogs have one less (dummy) option
+    dialogError = FALSE;
+    errorUp = FALSE;
+    /* Kludge: non-modal dialogs have one less (dummy) option. */
+    PopDown(n == 1 ? FatalDlg : ErrorDlg);
     if (errorExitStatus != -1) {
         ExitEvent(errorExitStatus);
     }
-    return FALSE;  // prevent second Popdown !
+    /* Prevent a second pop-down. */
+    return FALSE;
 }
 
 static Option errorOptions[] = {
@@ -2588,15 +2642,17 @@ static Option errorOptions[] = {
 };
 
 void ErrorPopUp(char * title, char * label, int modal) {
-    errorUp = True;
+    errorUp = TRUE;
     errorOptions[1].name = label;
     if (dialogError = shellUp[TransientDlg]) {
-        GenericPopUp(errorOptions + 1, title, FatalDlg, TransientDlg, MODAL, 0);  // pop up as daughter of the transient dialog
+        /* Pop up as daughter of the transient dialog. */
+        GenericPopUp(errorOptions + 1, title, FatalDlg, TransientDlg, MODAL, 0);
     } else if (dialogError = shellUp[MasterDlg]) {
-        GenericPopUp(errorOptions + 1, title, FatalDlg, MasterDlg, MODAL, 0);  // pop up as daughter of the master dialog
+        /* Pop up as daughter of the master dialog. */
+        GenericPopUp(errorOptions + 1, title, FatalDlg, MasterDlg, MODAL, 0);
     } else {
-        GenericPopUp(errorOptions + modal, title, modal ? FatalDlg : ErrorDlg, BoardWindow, modal,
-         0);  // kludge: option start address indicates modality
+        /* Kludge: option start address indicates modality. */
+        GenericPopUp(errorOptions + modal, title, modal ? FatalDlg : ErrorDlg, BoardWindow, modal, 0);
     }
 }
 
@@ -2619,10 +2675,12 @@ void DisplayError(String message, int error) {
 
 
 void DisplayMoveError(String message) {
-    fromX = fromY = -1;
+    fromX = -1;
+    fromY = -1;
     ClearHighlights();
-    DrawPosition(TRUE, NULL);  // selective redraw would miss the from-square of the rejected move, displayed empty after drag, but
-                               // not marked damaged!
+    /* Selective redraw would miss the from-square of the rejected move, displayed empty after drag, but not marked damaged! */
+    DrawPosition(TRUE, NULL);
+
     if (appData.debugMode || appData.matchMode) {
         fprintf(stderr, "%s: %s\n", programName, message);
     }
@@ -2637,13 +2695,16 @@ void DisplayMoveError(String message) {
 void DisplayFatalError(String message, int error, int status) {
     char buf[MSG_SIZ], logout = appData.icsActive;
 
-    if (status == 666) {  // ignore this error when ICS Console window is up
+    if (status == 666) {
+        /* Ignore this error when ICS Console window is up. */
         if (shellUp[ChatDlg]) {
             return;
         }
         status = 0;
     } else if (status == 6666) {
-        status = logout = 0;  // 6666 = kludge that indicates ICS connection already closed
+        /* 6666 is a kludge that indicates that the ICS connection already closed. */
+        status = 0;
+        logout = 0;
     }
 
     errorExitStatus = status;
@@ -2657,7 +2718,8 @@ void DisplayFatalError(String message, int error, int status) {
     if (mainOptions[W_BOARD].handle) {
         if (appData.popupExitMessage) {
             if (logout) {
-                SendToICS("logout\n");  // [HGM] make sure no new games will be started
+                /* Logout so that no new games will be started. */
+                SendToICS("logout\n");
             }
             ErrorPopUp(status ? _("Fatal Error") : _("Exiting"), message, TRUE);
         } else {
@@ -3042,15 +3104,19 @@ static Option * Exp(int n, int x, int y) {
     TimeMark now;
     extern Boolean right;
 
-    if (right) {  // kludgy way to let button 1 double as button 3 when back-end requests this
+    /* Kludgy way to let button 1 double as button 3 when back-end requests this. */
+    if (right) {
         if (but1 && n == 0) {
-            but1 = 0, but3 = 1;
+            but1 = 0;
+            but3 = 1;
         } else if (n == -1) {
-            n = -3, right = FALSE;
+            n = -3;
+            right = FALSE;
         }
     }
 
-    if (n == 0) {  // motion
+    /* Motion? */
+    if (n == 0) {
         oldX = x;
         oldY = y;
         if (SeekGraphClick(Press, x, y, 1)) {
@@ -3076,7 +3142,9 @@ static Option * Exp(int n, int x, int y) {
         return NULL;
     }
     if (n != 10 && PopDown(PromoDlg)) {
-        fromX = fromY = -1;  // user starts fiddling with board when promotion dialog is up
+        /* User starts fiddling with board when promotion dialog is up. */
+        fromX = -1;
+        fromY = -1;
     } else {
         GetTimeMark(&now);
     }
@@ -3112,9 +3180,10 @@ static Option * Exp(int n, int x, int y) {
         oldH = y;
         InitDrawingHandle(mainOptions + W_BOARD);
         if (sizing && SubtractTimeMarks(&now, &programStartTime) > 10000) {
-            return NULL;  // don't redraw while sizing (except at startup)
+            /* Except during program start-up, don't redraw while sizing. */
+            return NULL;
         }
-        DrawPosition(True, NULL);
+        DrawPosition(TRUE, NULL);
     default:
         return NULL;
     }
@@ -3130,7 +3199,8 @@ static Option * Exp(int n, int x, int y) {
         ErrorPopDown();
     case -2:
     default:
-        break;  // -3, so no clicks caught
+        /* -3, so no clicks caught. */
+        break;
     }
     return NULL;
 }
@@ -3186,7 +3256,7 @@ static Option * SecondaryBoardExposeCallbackFn(int n, int x, int y) {
         flipView = !flipView;
         partnerUp = !partnerUp;
         /* [HGM] dual: draw other board in other orientation. */
-        DrawPosition(True, NULL);
+        DrawPosition(TRUE, NULL);
         flipView = !flipView;
         partnerUp = !partnerUp;
     }
@@ -3325,37 +3395,45 @@ Option browseOptions[] = {
 };
 
 int BrowseOK(int n) {
-    if (!fileName[0]) {  // it is enough to have a file selected
-        if (browseOptions[6].textValue) {  // kludge: if callback specified we browse for file
+    if (!fileName[0]) {
+        /* It is enough to have a file selected. */
+        /* Kludge: if a callback is specified, we browse for a file, otherwise we browse for a path. */
+        if (browseOptions[6].textValue) {
             int sel = SelectedListBoxItem(&browseOptions[6]);
             if (sel < 0 || sel >= filePtr) {
                 return FALSE;
             }
             ASSIGN(fileName, fileList[sel]);
-        } else {  // we browse for path
-            ASSIGN(fileName, curDir);  // kludge: without callback we browse for path
+        } else {
+            ASSIGN(fileName, curDir);
         }
     }
     if (!fileName[0]) {
-        return FALSE;  // refuse OK when no file
+        /* Refuse OK when no file. */
+        return FALSE;
     }
-    if (!savMode[0]) {  // browsing for name only (dialog Browse button)
-        if (fileName[0] == '/') {  // We already had a path name
+    if (!savMode[0]) {
+        /* Browsing for name only (dialog Browse button). */
+        if (fileName[0] == '/') {
+            /* We already had a path name. */
             snprintf(title, MSG_SIZ, "%s", fileName);
         } else {
             snprintf(title, MSG_SIZ, "%s/%s", curDir, fileName);
         }
         SetWidgetText((Option *)savFP, title, savDlg);
-        currentCps = savCps;  // could return to Engine Settings dialog!
+        /* Could return to Engine Settings dialog! */
+        currentCps = savCps;
         return TRUE;
     }
     *savFP = fopen(fileName, savMode);
     if (*savFP == NULL) {
-        return FALSE;  // refuse OK if file not openable
+        /* Refuse OK if file not openable. */
+        return FALSE;
     }
     ASSIGN(*namePtr, fileName);
     ScheduleDelayedEvent(DelayedLoad, 50);
-    currentCps = savCps;  // not sure this is ever non-null
+    /* Not sure this is ever non-null. */
+    currentCps = savCps;
     return TRUE;
 }
 
@@ -3621,9 +3699,10 @@ FILE * openFP;
 void DelayedLoad(void) { (void)(*fileProc)(openFP, 0, openName); }
 
 void FileNamePopUp(char * label, char * def, char * filter, FileProc proc, char * openMode) {
-    fileProc = proc; /* I can't see a way not */
-    fileOpenMode = openMode; /*   to use globals here */
-    FileNamePopUpWrapper(label, def, filter, proc, False, openMode, &openName, &openFP);
+    /* TODO: A previous developer couldn't see a way not to use global variables here.  Investigate. */
+    fileProc = proc;
+    fileOpenMode = openMode;
+    FileNamePopUpWrapper(label, def, filter, proc, FALSE, openMode, &openName, &openFP);
 }
 
 void ActivateTheme(int col) {
@@ -3634,7 +3713,7 @@ void ActivateTheme(int col) {
     }
     InitDrawingParams(strcmp(oldPieceDir, appData.pieceDirectory));
     InitDrawingSizes(-1, 0);
-    DrawPosition(True, NULL);
+    DrawPosition(TRUE, NULL);
 }
 
 char * Shorten(char * s) {
