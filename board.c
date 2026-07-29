@@ -102,7 +102,8 @@ static void DrawArrowHighlight(int fromX, int fromY, int toX, int toY);
 static void ArrowDamage(int s_col, int s_row, int d_col, int d_row);
 
 static void drawHighlight(int file, int rank, int type) {
-    int x, y;
+    int x;
+    int y;
 
     if (lineGap == 0) {
         return;
@@ -116,14 +117,21 @@ static void drawHighlight(int file, int rank, int type) {
         y = lineGap / 2 + ((BOARD_HEIGHT - 1) - rank) * (squareSize + lineGap);
     }
 
-    DrawBorder(x, y, type, lineGap & 1);  // pass whether lineGap is odd
+    /* Pass whether lineGap is odd. */
+    DrawBorder(x, y, type, lineGap & 1);
 }
 
-int hi1X = -1, hi1Y = -1, hi2X = -1, hi2Y = -1;
-int pm1X = -1, pm1Y = -1, pm2X = -1, pm2Y = -1;
+int hi1X = -1;
+int hi1Y = -1;
+int hi2X = -1;
+int hi2Y = -1;
+int pm1X = -1;
+int pm1Y = -1;
+int pm2X = -1;
+int pm2Y = -1;
 
-void SetHighlights(
- int fromX, int fromY, int toX, int toY) {  // [HGM] schedule old for erasure, and leave drawing new to DrawPosition
+void SetHighlights(int fromX, int fromY, int toX, int toY) {
+    /* [HGM] schedule old for erasure, and leave drawing new to DrawPosition */
     int change = 0;
 
     if (hi1X >= 0 && hi1Y >= 0) {
@@ -174,10 +182,8 @@ void SetPremoveHighlights(int fromX, int fromY, int toX, int toY) {
 
 void ClearPremoveHighlights(void) { SetPremoveHighlights(-1, -1, -1, -1); }
 
-/*
- * If the user selects on a border boundary, return -1; if off the board,
- *   return -2.  Otherwise map the event coordinate to the square.
- */
+/* If the user selects on a border boundary, return -1; if off the board, return -2.  Otherwise, map the event coordinate to the
+   square. */
 int EventToSquare(int x, int limit) {
     if (x <= 0) {
         return -2;
@@ -196,7 +202,7 @@ int EventToSquare(int x, int limit) {
     return x;
 }
 
-/* [HR] determine square color depending on chess variant. */
+/* Determine square color depending on chess variant. */
 int SquareColor(int row, int column) {
     int square_color;
 
@@ -214,22 +220,22 @@ int SquareColor(int row, int column) {
         square_color = ((column + row) % 2) == 1;
     }
 
-    /* [hgm] holdings: next line makes all holdings squares light */
+    /* Holdings: next line makes all holdings squares light. */
     if (column < BOARD_LEFT || column >= BOARD_RGHT) {
         square_color = 1;
     }
 
-    if (  // [HGM] holdings: blank out area between board and holdings
-     column == BOARD_LEFT - 1 || column == BOARD_RGHT || (column == BOARD_LEFT - 2 && row < BOARD_HEIGHT - gameInfo.holdingsSize) ||
-     (column == BOARD_RGHT + 1 && row >= gameInfo.holdingsSize)) {
-        square_color = 2;  // black
+    /* Holdings: blank out area between board and holdings. */
+    if (column == BOARD_LEFT - 1 || column == BOARD_RGHT || (column == BOARD_LEFT - 2 && row < BOARD_HEIGHT - gameInfo.holdingsSize)
+     || (column == BOARD_RGHT + 1 && row >= gameInfo.holdingsSize)) {
+        /* Black. */
+        square_color = 2;
     }
 
     return square_color;
 }
 
 /* Convert board position to corner of screen rect and color. */
-
 void ScreenSquare(int column, int row, Pnt * pt, int * color) {
     if (flipView) {
         pt->x = lineGap + ((BOARD_WIDTH - 1) - column) * (squareSize + lineGap);
@@ -242,7 +248,6 @@ void ScreenSquare(int column, int row, Pnt * pt, int * color) {
 }
 
 /* Convert window coords to square. */
-
 void BoardSquare(int x, int y, int * column, int * row) {
     *column = EventToSquare(x, BOARD_WIDTH);
     if (flipView && *column >= 0) {
@@ -254,16 +259,10 @@ void BoardSquare(int x, int y, int * column, int * row) {
     }
 }
 
-/*	Generate a series of frame coords from start->mid->finish.
-        The movement rate doubles until the half way point is
-        reached, then halves back down to the final destination,
-        which gives a nice slow in/out effect. The algorithmn
-        may seem to generate too many intermediates for short
-        moves, but remember that the purpose is to attract the
-        viewers attention to the piece about to be moved and
-        then to where it ends up. Too few frames would be less
-        noticeable.						*/
-
+/* Generate a series of frame coords from start->mid->finish.  The movement rate doubles until the half way point is reached, then
+   halves back down to the final destination, which gives a nice, slow in/out effect.  The algorithm may seem to generate too many
+   intermediates for short moves, but remember that the purpose is to attract the viewer's attention to the piece about to be moved,
+   and then to where it ends up.  Using too few frames would be less noticeable. */
 static void Tween(Pnt * start, Pnt * mid, Pnt * finish, int factor, Pnt frames[], int * nFrames) {
     int fraction, n, count;
 
@@ -296,24 +295,19 @@ static void Tween(Pnt * start, Pnt * mid, Pnt * finish, int factor, Pnt frames[]
     *nFrames = count;
 }
 
-/****	Animation code by Hugh Fisher, DCS, ANU.
+/* Animation code by Hugh Fisher, DCS, ANU.
 
-        Known problem: if a window overlapping the board is
-        moved away while a piece is being animated underneath,
-        the newly exposed area won't be updated properly.
-        I can live with this.
+   Known problem: if a window overlapping the board is moved away while a piece is being animated underneath, the newly exposed area
+   won't be updated properly.  We can live with this.
 
-        Known problem: if you look carefully at the animation
-        of pieces in mono mode, they are being drawn as solid
-        shapes without interior detail while moving. Fixing
-        this would be a major complication for minimal return.
-****/
+   Known problem: if you look carefully at the animation of pieces in mono mode, they are being drawn as solid shapes without
+   interior detail while moving.  Fixing this would be a major complication for minimal return.
+*/
 
-/*   Utilities	*/
-
-#undef Max /* just in case */
-#undef Min
+/* Utilities. */
+#undef Max
 #define Max(a, b) ((a) > (b) ? (a) : (b))
+#undef Min
 #define Min(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct {
@@ -329,10 +323,7 @@ static void SetRect(MyRectangle * rect, int x, int y, int width, int height) {
     rect->height = height;
 }
 
-/*	Test if two frames overlap. If they do, return
-        intersection rect within old and location of
-        that rect within new. */
-
+/* Test if two frames overlap.  If they do, return intersection rect within old and location of that rect within new. */
 static Boolean Intersect(Pnt * old, Pnt * new, int size, MyRectangle * area, Pnt * pt) {
     if (old->x > new->x + size || new->x > old->x + size || old->y > new->y + size || new->y > old->y + size) {
         return FALSE;
@@ -344,9 +335,7 @@ static Boolean Intersect(Pnt * old, Pnt * new, int size, MyRectangle * area, Pnt
     }
 }
 
-/*	For two overlapping frames, return the rect(s)
-        in the old that do not intersect with the new.   */
-
+/* For two overlapping frames, return the rect(s) in the old that do not intersect with the new. */
 static void CalcUpdateRects(Pnt * old, Pnt * new, int size, MyRectangle update[], int * nUpdates) {
     int count;
 
@@ -390,14 +379,13 @@ static void BeginAnimation(AnimNr anr, ChessSquare piece, ChessSquare bgPiece, i
     if (bgPiece == EmptySquare) {
         DrawBlank(anr, start->x, start->y, startColor);
     } else {
-        /* Kludge alert: When gating we want the introduced
-           piece to appear on the from square. To generate an
-           image of it, we draw it on the board, copy the image,
-           and draw the original piece again. */
+        /* Kludge alert: When gating, we want the introduced piece to appear on the from square.  To generate an image of it, we
+           draw it on the board, copy the image, and draw the original piece again. */
         if (piece != bgPiece) {
             DrawSquare(anim->startBoardY, anim->startBoardX, bgPiece, 0);
         }
-        CopyRectangle(anr, DISP, 2, start->x, start->y, squareSize, squareSize, 0, 0);  // [HGM] zh: unstack in stead of grab
+        /* [HGM] zh: unstack instead of grab */
+        CopyRectangle(anr, DISP, 2, start->x, start->y, squareSize, squareSize, 0, 0);
         if (piece != bgPiece) {
             DrawSquare(anim->startBoardY, anim->startBoardX, piece, 0);
         }
@@ -414,15 +402,14 @@ static void AnimationFrame(AnimNr anr, Pnt * frame, ChessSquare piece) {
     AnimState * anim = &anims[anr];
     int count, i, x, y, w, h;
 
-    /* Save what we are about to draw into the new buffer */
+    /* Save what we are about to draw into the new buffer. */
     CopyRectangle(anr, DISP, 0, x = frame->x, y = frame->y, w = squareSize, h = squareSize, 0, 0);
 
-    /* Erase bits of the previous frame */
+    /* Erase bits of the previous frame. */
     if (Intersect(&anim->prevFrame, frame, squareSize, &overlap, &pt)) {
-        /* Where the new frame overlapped the previous,
-           the contents in newBuf are wrong. */
+        /* Where the new frame overlapped the previous, the contents in newBuf are wrong. */
         CopyRectangle(anr, 2, 0, overlap.x, overlap.y, overlap.width, overlap.height, pt.x, pt.y);
-        /* Repaint the areas in the old that don't overlap new */
+        /* Repaint the areas in the old that don't overlap new. */
         CalcUpdateRects(&anim->prevFrame, frame, squareSize, updates, &count);
         for (i = 0; i < count; i++) {
             CopyRectangle(anr, 2, DISP, updates[i].x - anim->prevFrame.x, updates[i].y - anim->prevFrame.y, updates[i].width,
@@ -445,12 +432,11 @@ static void AnimationFrame(AnimNr anr, Pnt * frame, ChessSquare piece) {
         GraphExpose(currBoard, anim->prevFrame.x, anim->prevFrame.y, squareSize, squareSize);
     }
 
-    /* Save this frame for next time round */
+    /* Save this frame for the next time around. */
     CopyRectangle(anr, 0, 2, 0, 0, squareSize, squareSize, 0, 0);
     anim->prevFrame = *frame;
 
-    /* Draw piece over original screen contents, not current,
-       and copy entire rect. Wipes out overlapping piece images. */
+    /* Draw piece over original screen contents, not current, and copy entire rect.  Wipes out overlapping piece images. */
     InsertPiece(anr, piece);
     CopyRectangle(anr, 0, DISP, 0, 0, squareSize, squareSize, frame->x, frame->y);
     GraphExpose(currBoard, x, y, w, h);
@@ -463,8 +449,7 @@ static void EndAnimation(AnimNr anr, Pnt * finish) {
     int count, i;
     AnimState * anim = &anims[anr];
 
-    /* The main code will redraw the final square, so we
-       only need to erase the bits that don't overlap.	*/
+    /* The main code will redraw the final square, so we only need to erase the bits that don't overlap. */
     if (Intersect(&anim->prevFrame, finish, squareSize, &overlap, &pt)) {
         CalcUpdateRects(&anim->prevFrame, finish, squareSize, updates, &count);
         for (i = 0; i < count; i++) {
@@ -528,9 +513,10 @@ void AnimateMove(Board board, int fromX, int fromY, int toX, int toY) {
 
     if (board[toY][toX] == WhiteRook && board[fromY][fromX] == WhiteKing ||
      board[toY][toX] == BlackRook && board[fromY][fromX] == BlackKing ||
-     board[toY][toX] == WhiteKing && board[fromY][fromX] == WhiteRook ||  // [HGM] seirawan
+     board[toY][toX] == WhiteKing && board[fromY][fromX] == WhiteRook ||  /* [HGM] seirawan */
      board[toY][toX] == BlackKing && board[fromY][fromX] == BlackRook) {
-        return;  // [HGM] FRC: no animtion of FRC castlings, as to-square is not true to-square
+        /* [HGM] FRC: no animtion of FRC castlings, as to-square is not true to-square. */
+        return;
     }
 
     if (fromY < 0 || fromX < 0 || toX < 0 || toY < 0) {
@@ -542,9 +528,12 @@ void AnimateMove(Board board, int fromX, int fromY, int toX, int toY) {
     }
 
     if (x2 >= 0) {
-        toX = kill2X, toY = kill2Y;
+        toX = kill2X;
+        toY = kill2Y;
     } else if (killX >= 0 && gameInfo.variant != VariantDuck) {
-        toX = killX, toY = killY;  // [HGM] lion: first to kill square
+        /* [HGM] lion: first to kill square */
+        toX = killX;
+        toY = killY;
     }
 
 again:
@@ -572,14 +561,15 @@ again:
         mid.y = start.y + (finish.y - start.y) / 2;
     }
 
-    /* Don't use as many frames for very short moves */
+    /* Don't use as many frames for very short moves. */
     if (abs(toY - fromY) + abs(toX - fromX) <= 2) {
         Tween(&start, &mid, &finish, kFactor - 1, frames, &nFrames);
     } else {
         Tween(&start, &mid, &finish, kFactor, frames, &nFrames);
     }
     FrameSequence(Game, piece, startColor, &start, &finish, frames, nFrames);
-    if (Explode(board, fromX, fromY, toX, toY)) {  // mark as damaged
+    if (Explode(board, fromX, fromY, toX, toY)) {
+        /* mark as damaged */
         int i, j;
         for (i = 0; i < BOARD_WIDTH; i++) {
             for (j = 0; j < BOARD_HEIGHT; j++) {
@@ -590,7 +580,7 @@ again:
         }
     }
 
-    /* Be sure end square is redrawn, with piece in it */
+    /* Be sure end square is redrawn, with piece in it. */
     damage[0][toY][toX] |= 4;
 
     if (toX == x2 && toY == kill2Y) {
@@ -600,14 +590,14 @@ again:
         toY = killY;
         x2 = -1;
         goto again;
-    }  // second leg
+    } /* second leg */
     if (toX != x || toY != y) {
         fromX = toX;
         fromY = toY;
         toX = x;
         toY = y;
         goto again;
-    }  // second leg
+    } /* second leg */
 }
 
 void ChangeDragPiece(ChessSquare piece) {
@@ -753,19 +743,23 @@ static void DrawSquare(int row, int column, ChessSquare piece, int do_flash) {
     bString[1] = bString[0] = NULLCHAR;
     if (appData.showCoords && row == (flipView ? BOARD_HEIGHT - 1 : 0) && column >= BOARD_LEFT && column < BOARD_RGHT) {
         bString[0] = 'a' + column - BOARD_LEFT;
-        align = 1;  // coord in lower-right corner
+        /* coord in lower-right corner */
+        align = 1;
     }
     if (appData.showCoords && column == (flipView ? BOARD_RGHT - 1 : BOARD_LEFT)) {
         snprintf(tString, 3, "%d", ONE - '0' + row);
-        align = 2;  // coord in upper-left corner
+        /* coord in upper-left corner */
+        align = 2;
     }
     if (column == (flipView ? BOARD_LEFT - 1 : BOARD_RGHT) && piece > 1) {
         snprintf(tString, 3, "%d", piece);
-        align = 3;  // holdings count in upper-right corner
+        /* holdings count in upper-right corner */
+        align = 3;
     }
     if (column == (flipView ? BOARD_RGHT : BOARD_LEFT - 1) && piece > 1) {
         snprintf(tString, 3, "%d", piece);
-        align = 4;  // holdings count in upper-left corner
+        /* holdings count in upper-left corner */
+        align = 4;
     }
     if (piece == DarkSquare) {
         square_color = (gameInfo.variant == VariantDuck ? 3 : 2);
@@ -778,7 +772,8 @@ static void DrawSquare(int row, int column, ChessSquare piece, int do_flash) {
         for (i = 0; i < appData.flashCount; ++i) {
             DrawOneSquare(x, y, piece, square_color, 0, tString, bString, 0);
             GraphExpose(currBoard, x, y, squareSize, squareSize);
-            DoEvents();  // requires event processing to actually update screen :-(
+            /* requires event processing to actually update screen :-( */
+            DoEvents();
             FlashDelay(flash_delay);
             DrawOneSquare(x, y, EmptySquare, square_color, 0, tString, bString, 0);
             GraphExpose(currBoard, x, y, squareSize, squareSize);
@@ -789,8 +784,7 @@ static void DrawSquare(int row, int column, ChessSquare piece, int do_flash) {
     DrawOneSquare(x, y, piece, square_color, partnerUp ? 0 : marker[row][column], tString, bString, align);
 }
 
-/* Returns 1 if there are "too many" differences between b1 and b2
-   (i.e. more than 1 move was made) */
+/* Returns 1 if there are "too many" differences between b1 and b2 (i.e. more than 1 move was made) */
 static int too_many_diffs(Board b1, Board b2) {
     int i, j;
     int c = 0;
@@ -798,7 +792,8 @@ static int too_many_diffs(Board b1, Board b2) {
     for (i = 0; i < BOARD_HEIGHT; ++i) {
         for (j = 0; j < BOARD_WIDTH; ++j) {
             if (b1[i][j] != b2[i][j]) {
-                if (++c > 4) { /* Castling causes 4 diffs */
+                if (++c > 4) {
+                    /* Castling causes 4 diffs */
                     return 1;
                 }
             }
@@ -807,23 +802,22 @@ static int too_many_diffs(Board b1, Board b2) {
     return 0;
 }
 
-/* Matrix describing castling maneuvers */
-/* Row, ColRookFrom, ColKingFrom, ColRookTo, ColKingTo */
+/* Matrix describing castling maneuvers. */
 static int castling_matrix[4][5] = {
+ /* Row, ColRookFrom, ColKingFrom, ColRookTo, ColKingTo */
  {0, 0, 4, 3, 2}, /* 0-0-0, white */
  {0, 7, 4, 5, 6}, /* 0-0,   white */
  {7, 0, 4, 3, 2}, /* 0-0-0, black */
  {7, 7, 4, 5, 6}  /* 0-0,   black */
 };
 
-/* Checks whether castling occurred. If it did, *rrow and *rcol
-   are set to the destination (row,col) of the rook that moved.
+/*
+   Checks whether castling occurred. If it did, *rrow and *rcol are set to the destination (row,col) of the rook that moved.
 
    Returns 1 if castling occurred, 0 if not.
 
-   Note: Only handles a max of 1 castling move, so be sure
-   to call too_many_diffs() first.
-   */
+   Note: Only handles a max of 1 castling move, so be sure to call too_many_diffs() first.
+*/
 static int check_castle_draw(Board newb, Board oldb, int * rrow, int * rcol) {
     int i, *r, j;
     int match;
@@ -864,13 +858,16 @@ void SquareExpose(int i, int j, int d) {
 }
 
 void DrawPositionX(int repaint, Board board) {
-    int i, j, do_flash;
-    int exposeAll = FALSE;
     static int lastFlipView = 0;
     static int lastBoardValid[2] = {0, 0};
     static Board lastBoard[2];
     static char lastMarker[BOARD_RANKS][BOARD_FILES], messedUp;
-    int rrow = -1, rcol = -1;
+    int i;
+    int j;
+    int do_flash;
+    int exposeAll = FALSE;
+    int rrow = -1;
+    int rcol = -1;
     int nr = twoBoards * partnerUp;
 
     repaint |= messedUp;
@@ -948,7 +945,8 @@ void DrawPositionX(int repaint, Board board) {
             for (j = 0; j < BOARD_WIDTH; j++) {
                 if (board[i][j] != lastBoard[nr][i][j]) {
                     DrawSquare(i, j, board[i][j], do_flash && (i != rrow || j != rcol));
-                    damage[nr][i][j] = 1;  // mark for expose
+                    /* mark for expose */
+                    damage[nr][i][j] = 1;
                 }
             }
         }
@@ -970,7 +968,8 @@ void DrawPositionX(int repaint, Board board) {
 
     CopyBoard(lastBoard[nr], board);
     lastBoardValid[nr] = 1;
-    if (nr == 0) {  // [HGM] dual: no highlights on second board yet
+    if (nr == 0) {
+        /* [HGM] dual: no highlights on second board yet */
         lastFlipView = flipView;
         for (i = 0; i < BOARD_HEIGHT; i++) {
             for (j = 0; j < BOARD_WIDTH; j++) {
@@ -1018,20 +1017,24 @@ void DrawPositionX(int repaint, Board board) {
         for (i = 0; i < BOARD_HEIGHT; i++) {
             for (j = 0; j < BOARD_WIDTH; j++) {
                 if (damage[nr][i][j]) {
-                    if (damage[nr][i][j] & 2) {  // damage by old or new arrow
+                    /* Damage by old or new arrow? */
+                    if (damage[nr][i][j] & 2) {
                         SquareExpose(i, j, lineGap);
                     } else {
                         SquareExpose(i, j, 0);
                     }
                     if (nr == 0) {
-                        damage[nr][i][j] = 0;  // on auxiliary board we retain arrow damage
+                        /* On the secondary board, we retain arrow damage. */
+                        damage[nr][i][j] = 0;
                     }
                 }
             }
         }
     }
 
-    FlashDelay(0);  // this flushes drawing queue;
+    /* Flush the drawing queue. */
+    FlashDelay(0);
+
     if (nr) {
         SwitchWindow(1);
     } else {
@@ -1153,7 +1156,8 @@ static void DrawArrowBetweenPoints(int s_x, int s_y, int d_x, int d_y) {
         arrow[0].x = Round(x - j);
         arrow[0].y = Round(y + j * dx);
 
-        arrow[1].x = Round(arrow[0].x + 2 * j);  // [HGM] prevent width to be affected by rounding twice
+	/* [HGM] Prevent the width from being affected by rounding twice. */
+        arrow[1].x = Round(arrow[0].x + 2 * j);
         arrow[1].y = Round(arrow[0].y - 2 * j * dx);
 
         if (d_x > s_x) {
@@ -1164,8 +1168,9 @@ static void DrawArrowBetweenPoints(int s_x, int s_y, int d_x, int d_y) {
             y = (double)d_y + k * dy;
         }
 
+	/* [HGM] Make sure width of shaft is rounded the same way on both ends. */
         x = Round(x);
-        y = Round(y);  // [HGM] make sure width of shaft is rounded the same way on both ends
+        y = Round(y);
 
         arrow[6].x = Round(x - j);
         arrow[6].y = Round(y + j * dx);
@@ -1184,7 +1189,7 @@ static void DrawArrowBetweenPoints(int s_x, int s_y, int d_x, int d_y) {
     }
 
     DrawPolygon(arrow, 7);
-    // Polygon( hdc, arrow, 7 );
+    /* Polygon(hdc, arrow, 7); */
 }
 
 static void ArrowDamage(int s_col, int s_row, int d_col, int d_row) {
@@ -1233,7 +1238,8 @@ static void DrawArrowBetweenSquares(int s_col, int s_row, int d_col, int d_row) 
     delta_y = abs(d_y - s_y);
 
     if (d_y > s_y && 2 * (d_y - s_y) > abs(d_x - s_x)) {
-        d_y += squareSize / 2 - squareSize / 4;  // [HGM] round towards same centers on all sides!
+        /* [HGM] round towards same centers on all sides! */
+        d_y += squareSize / 2 - squareSize / 4;
     } else if (d_y < s_y && 2 * (s_y - d_y) > abs(d_x - s_x)) {
         d_y += squareSize / 2 + squareSize / 4;
     } else {
@@ -1252,7 +1258,7 @@ static void DrawArrowBetweenSquares(int s_col, int s_row, int d_col, int d_row) 
     s_y += squareSize / 2;
 
     /* Adjust width */
-    A_WIDTH = squareSize / 14.;  //[HGM] make float
+    A_WIDTH = squareSize / 14.;
 
     DrawArrowBetweenPoints(s_x, s_y, d_x, d_y);
     ArrowDamage(s_col, s_row, d_col, d_row);
