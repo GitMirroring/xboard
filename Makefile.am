@@ -18,7 +18,6 @@ xaw_dependent_front_end_sources = \
     bitmaps/icon_black.bm \
     bitmaps/icon_white.bm \
     xaw/xboard.c \
-    xaw/xboard.h \
     xaw/xengineoutput.c \
     xaw/xgamelist.c \
     xaw/xgamelist.h \
@@ -32,7 +31,6 @@ gtk_dependent_front_end_sources = \
     gtk/button_labels.c \
     gtk/button_labels.h \
     gtk/xboard.c \
-    gtk/xboard.h \
     gtk/xoptions.c \
     gtk/xtimer.c \
     gtk/xengineoutput.c
@@ -96,6 +94,7 @@ xboard_SOURCES = \
     usounds.c \
     usystem.c \
     usystem.h \
+    xboard.h \
     xboard2.h \
     $(front_end_sources) \
     $(zippy_sources)
