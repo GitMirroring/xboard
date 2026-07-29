@@ -1127,7 +1127,7 @@ int main(int argc, char ** argv) {
     initialSquareSize = squareSize;  // [HGM] remember for saving font info
     if (BOARD_WIDTH != 8) {
         squareSize = (squareSize * 8 + BOARD_WIDTH / 2) / BOARD_WIDTH;  // keep width the same
-        lineGap = (squareSize < 37 ? 1 : squareSize < 59 ? 2 : squareSize < 116 ? 3 : 4);
+        lineGap = line_gap(squareSize);
     }
 
     defaultLineGap = lineGap;
@@ -1761,13 +1761,14 @@ void ReSize(WindowPlacement * wp) {
     }
     if (appData.overrideLineGap < 0) {  // do second iteration with adjusted lineGap
         int oldSqx = sqx;
-        lg = lineGap = sqx < 37 ? 1 : sqx < 59 ? 2 : sqx < 116 ? 3 : 4;
+        lineGap = line_gap(sqx);
+        lg = lineGap;
         sqx = (w - lg) / BOARD_WIDTH - lg;
         sqy = (h - lg) / BOARD_HEIGHT - lg;
         if (sqy < sqx) {
             sqx = sqy;
         }
-        lg = sqx < 37 ? 1 : sqx < 59 ? 2 : sqx < 116 ? 3 : 4;
+        lg = line_gap(sqx);
         if (sqx == oldSqx + 1 && lg == lineGap + 1) {
             sqx = oldSqx, squareSize = 0;  // prevent oscillations, force resize by kludge
         }

@@ -176,6 +176,13 @@ void SelectPieces(VariantClass v) {
     }
 }
 
+int line_gap(int const square_size) {
+    if (square_size < 37) return 1;
+    if (square_size < 59) return 2;
+    if (square_size < 116) return 3;
+    return 4;
+}
+
 void InitDrawingSizes(int boardSize, int flags) {
     /* [HGM] resize is functional now, but for board format changes only (number of ranks, files) */
     int boardWidth, boardHeight;
@@ -192,7 +199,7 @@ void InitDrawingSizes(int boardSize, int flags) {
         /* keep total width fixed */
         squareSize = ((squareSize + lineGap) * oldNrOfFiles + 0.5 * BOARD_WIDTH) / BOARD_WIDTH;
         if (appData.overrideLineGap < 0) {
-            lineGap = squareSize < 37 ? 1 : squareSize < 59 ? 2 : squareSize < 116 ? 3 : 4;
+            lineGap = line_gap(squareSize);
         }
         squareSize -= lineGap;
         CreatePNGPieces(appData.pieceDirectory);

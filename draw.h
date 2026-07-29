@@ -69,6 +69,7 @@ void DrawSegment(int x, int y, int * lastX, int * lastY, int p);
 void DrawRectangle(int left, int top, int right, int bottom, int side, int style);
 void DrawEvalText(char * buf, int cbBuf, int y);
 void DrawText(char * string, int x, int y, int align);
+int line_gap(int square_size);
 extern Option * disp;
 extern char svgDir[];
 
