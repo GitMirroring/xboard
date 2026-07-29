@@ -223,7 +223,12 @@ XFontStruct * clockFontStruct;
 Font coordFontID, countFontID;
 XFontStruct *coordFontStruct, *countFontStruct;
 #else
-void *shellWidget, *formWidget, *boardWidget, *titleWidget, *dropMenu, *menuBarWidget;
+void * shellWidget = 0;
+void * boardWidget = 0;
+void * menuBarWidget = 0;
+void * titleWidget = 0;
+void * dropMenu = 0;
+/* void * formWidget; */
 GtkWidget * mainwindow;
 #endif
 Option * optList;  // contains all widgets of main window
@@ -1190,14 +1195,33 @@ int main(int argc, char ** argv) {
 #endif
     InitDrawingHandle(optList + W_BOARD);
     shellWidget = shells[BoardWindow];
+    assert(shellWidget);
     currBoard = &optList[W_BOARD];
     boardWidget = optList[W_BOARD].handle;
+    assert(boardWidget);
 
 #if GTK_CHECK_VERSION(3, 0, 0)
     g_signal_connect(boardWidget, "draw", G_CALLBACK(BoardDrawProc), currBoard);
 #endif
 
     menuBarWidget = optList[W_MENU].handle;
+    assert(menuBarWidget);
+    /* TODO: See if we can do all of this initialization work earlier, while the menu bar and its items are being set up. */
+    gtk_widget_set_size_request(menuBarWidget, 1, -1);
+#if GTK_CHECK_VERSION(3, 0, 0)
+    gtk_widget_set_halign(menuBarWidget, GTK_ALIGN_START);
+#endif
+    for (i = 1; mainOptions[i].type == DropDown; ++i) {
+        GtkWidget * item = (GtkWidget *)mainOptions[i].handle;
+        if (item) {
+            GtkWidget * label = gtk_bin_get_child(GTK_BIN(item));
+            assert(label && GTK_IS_LABEL(label));
+#if GTK_CHECK_VERSION(3, 0, 0)
+            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+#endif
+        }
+    }
+
     dropMenu = optList[W_DROP].handle;
     titleWidget = optList[optList[W_TITLE].type != Skip ? W_TITLE : W_SMALL].handle;
 
@@ -1334,7 +1358,7 @@ int main(int argc, char ** argv) {
     }
 
     UpdateLogos(TRUE);
-// XtSetKeyboardFocus(shellWidget, formWidget);
+    /* XtSetKeyboardFocus(shellWidget, formWidget); */
 #ifdef TODO_GTK
     XSetInputFocus(xDisplay, XtWindow(formWidget), RevertToPointerRoot, CurrentTime);
 #endif
@@ -1730,6 +1754,7 @@ void CoDrag(GtkWidget * sh, WindowPlacement * wp) {
     gtk_window_resize(GTK_WINDOW(sh), wp->width, wp->height);
 }
 
+
 void ReSize(WindowPlacement * wp) {
     GtkAllocation a;
     int sqx, sqy, i, w, h, lg = lineGap;
@@ -1804,16 +1829,8 @@ void ReSize(WindowPlacement * wp) {
         ASSIGN(appData.boardSize, sizeDefaults[h].name);
     }
 #ifndef OSXAPP
-    if (sizeDefaults[h].tinyLayout != tinyLayout) {  // alter clipping of menu names to conform to board width
-        int clip = (tinyLayout = sizeDefaults[h].tinyLayout) + 1;
-        char text[MSG_SIZ];
-        for (h = 1; mainOptions[h].type == DropDown; h++) {
-            strncpy(text, _(mainOptions[h].name), MSG_SIZ);
-            if (clip != 1) {
-                text[clip + (text[clip - 1] == '_')] = NULLCHAR;
-            }
-            gtk_menu_item_set_label((GtkMenuItem *)mainOptions[h].handle, text);
-        }
+    if (sizeDefaults[h].tinyLayout != tinyLayout) {
+        tinyLayout = sizeDefaults[h].tinyLayout;
     }
 #endif
     if (sqx != squareSize && !appData.fixedSize) {
@@ -1861,7 +1878,6 @@ gboolean DragProc(gpointer data) {
         g_source_remove(delayedDragTag);
     }
     delayedDragTag = 0;
-
     do {
         GetActualPlacement(shellWidget, &wpNew);
         int const moved = (wpNew.x != wpMain.x) || (wpNew.y != wpMain.y);

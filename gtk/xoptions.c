@@ -2068,14 +2068,6 @@ tBox:
             case DropDown:
                 top--;
                 msg = _(option[i].name);  // write name on the menu button
-#ifndef OSXAPP
-                if (tinyLayout) {  // clip menu text to keep menu bar small
-                    int clip = tinyLayout + 1;
-                    strcpy(def, msg + (msg[clip - 1] == '_'));
-                    def[clip] = NULLCHAR;
-                    msg = def;
-                }
-#endif
                 /*
                 XtSetArg(args[j], XtNmenuName, XtNewString(option[i].name));
                 j++;
@@ -2091,6 +2083,7 @@ tBox:
             case BarBegin:
                 menuBar = gtk_menu_bar_new();
                 gtk_widget_show(menuBar);
+                option[i].handle = menuBar;
                 boxStart = i;
                 break;
             case BoxBegin:
