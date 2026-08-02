@@ -1669,10 +1669,14 @@ void CoDrag(Widget sh, WindowPlacement * wp) {
     XtSetValues(sh, args, j);
 }
 
-void ReSize(WindowPlacement * wp) {
-    int sqx, sqy, w, h;
+void do_resize(WindowPlacement const * const wp) {
+    int sqx;
+    int sqy;
+    int width;
+    int height;
+    /* Return if the window was not actually resized. */
     if (wp->width == wpMain.width && wp->height == wpMain.height) {
-        return;  // not sized
+        return;
     }
     sqx = (wp->width - lineGap - marginW) / BOARD_WIDTH - lineGap;
     sqy = (wp->height - lineGap - marginH) / BOARD_HEIGHT - lineGap;
@@ -1680,38 +1684,43 @@ void ReSize(WindowPlacement * wp) {
         sqx = sqy;
     }
     if (sqx != squareSize) {
-        squareSize = sqx;  // adopt new square size
-        CreatePNGPieces(appData.pieceDirectory);  // make newly scaled pieces
-        InitDrawingSizes(0, 0);  // creates grid etc.
+        /* Adopt a new square size. */
+        squareSize = sqx;
+        /* Make newly scaled pieces. */
+        CreatePNGPieces(appData.pieceDirectory);
+        /* Create grid, etc. */
+        InitDrawingSizes(0, 0);
     } else {
         resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
     }
-    w = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    h = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
-    if (optList[W_BOARD].max > w) {
-        optList[W_BOARD].max = w;
+    width = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    height = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
+    if (optList[W_BOARD].max > width) {
+        optList[W_BOARD].max = width;
     }
-    if (optList[W_BOARD].value > h) {
-        optList[W_BOARD].value = h;
+    if (optList[W_BOARD].value > height) {
+        optList[W_BOARD].value = height;
     }
 }
 
 static XtIntervalId delayedDragID = 0;
 
 void DragProc(void) {
-    static int busy;
+    static int busy = 0;
     if (busy) {
         return;
     }
-
     busy = 1;
+
     GetActualPlacement(shellWidget, &wpNew);
-    if (wpNew.x == wpMain.x && wpNew.y == wpMain.y &&  // not moved
-     wpNew.width == wpMain.width && wpNew.height == wpMain.height) {  // not sized
+    int const moved = (wpNew.x != wpMain.x) || (wpNew.y != wpNew.y);
+    int const sized = (wpNew.width != wpMain.width) || (wpNew.height != wpMain.height);
+    if (!moved && !sized) {
         busy = 0;
-        return;  // false alarm
+        return;
     }
-    ReSize(&wpNew);
+
+    do_resize(&wpNew);
     if (shellUp[EngOutDlg]) {
         CoDrag(shells[EngOutDlg], &wpEngineOutput);
     }
@@ -1726,8 +1735,8 @@ void DragProc(void) {
     }
     wpMain = wpNew;
     DrawPosition(TRUE, NULL);
-    delayedDragID =
-     0;  // now drag executed, make sure next DelayedDrag will not cancel timer event (which could now be used by other)
+    /* now drag executed, make sure next DelayedDrag will not cancel timer event (which could now be used by other) */
+    delayedDragID = 0;
     busy = 0;
 }
 

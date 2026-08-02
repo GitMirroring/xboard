@@ -1795,29 +1795,38 @@ void CoDrag(GtkWidget * sh, WindowPlacement * wp) {
 }
 
 
-void ReSize(WindowPlacement * wp) {
+void do_resize(WindowPlacement const * const wp) {
     GtkAllocation a;
-    int sqx, sqy, i, w, h, lg = lineGap;
+    int sqx;
+    int sqy;
+    int i;
+    int width;
+    int height;
+    int size_bucket = 0;
+    int lg = lineGap;
+    /* Return if the window was not actually resized. */
     if (wp->width == wpMain.width && wp->height == wpMain.height) {
-        return;  // not sized
+        return;
     }
     gtk_widget_get_allocation(optList[W_DROP + 1].handle, &a);  // table that should contain everything
-    w = a.width;
-    h = a.height;
+    width = a.width;
+    height = a.height;
     gtk_widget_get_allocation(shellWidget, &a);
-    if (a.width < w || a.height < h) {  // outer window smaller than dialog content?
-        w = a.width - w;
-        h = a.height - h;  // subtract matrgins, measured as table minus board dimensions
+    /* Is the outer window smaller than the dialog content? */
+    if (a.width < width || a.height < height) {
+        /* Subtract margins, measured as table minus board dimensions. */
+        width = a.width - width;
+        height = a.height - height;
         gtk_widget_get_allocation(optList[W_BOARD].handle, &a);
-        w += a.width;
-        h += a.height;
+        width += a.width;
+        height += a.height;
     } else {
         gtk_widget_get_allocation(optList[W_BOARD].handle, &a);
-        w = a.width;
-        h = a.height;
+        width = a.width;
+        height = a.height;
     }
-    sqx = (w - lg) / BOARD_WIDTH - lg;
-    sqy = (h - lg) / BOARD_HEIGHT - lg;
+    sqx = (width - lg) / BOARD_WIDTH - lg;
+    sqy = (height - lg) / BOARD_HEIGHT - lg;
     if (sqy < sqx) {
         sqx = sqy;
     }
@@ -1828,8 +1837,8 @@ void ReSize(WindowPlacement * wp) {
         int oldSqx = sqx;
         lineGap = line_gap(sqx);
         lg = lineGap;
-        sqx = (w - lg) / BOARD_WIDTH - lg;
-        sqy = (h - lg) / BOARD_HEIGHT - lg;
+        sqx = (width - lg) / BOARD_WIDTH - lg;
+        sqy = (height - lg) / BOARD_HEIGHT - lg;
         if (sqy < sqx) {
             sqx = sqy;
         }
@@ -1838,20 +1847,23 @@ void ReSize(WindowPlacement * wp) {
             sqx = oldSqx, squareSize = 0;  // prevent oscillations, force resize by kludge
         }
     }
-    for (h = 0; sizeDefaults[h + 1].name && sizeDefaults[h].squareSize * 8 > sqx * BOARD_WIDTH; h++) {
-    }
-    if (initialSquareSize != sizeDefaults[h].squareSize && !appData.fixedSize) {  // boardSize changed
-        initialSquareSize = sizeDefaults[h].squareSize;  // used for saving font
-        ChangeFont(
-         1, &appData.clockFont, CLOCK_FONT, initialSquareSize, CLOCK_FONT_NAME, 2 * (sizeDefaults[h].clockFontPxlSize + 1) / 3);
-        ChangeFont(1, &appData.font, MESSAGE_FONT, initialSquareSize, DEFAULT_FONT_NAME, sizeDefaults[h].coordFontPxlSize);
-        ChangeFont(0, &appData.icsFont, CONSOLE_FONT, initialSquareSize, CONSOLE_FONT_NAME, sizeDefaults[h].coordFontPxlSize);
-        ChangeFont(0, &appData.tagsFont, EDITTAGS_FONT, initialSquareSize, TAGS_FONT_NAME, sizeDefaults[h].coordFontPxlSize);
-        ChangeFont(0, &appData.commentFont, COMMENT_FONT, initialSquareSize, COMMENT_FONT_NAME, sizeDefaults[h].coordFontPxlSize);
-        ChangeFont(
-         0, &appData.gameListFont, GAMELIST_FONT, initialSquareSize, GAMELIST_FONT_NAME, sizeDefaults[h].coordFontPxlSize);
-        ChangeFont(
-         0, &appData.historyFont, MOVEHISTORY_FONT, initialSquareSize, HISTORY_FONT_NAME, sizeDefaults[h].coordFontPxlSize);
+    for (; sizeDefaults[size_bucket + 1].name && sizeDefaults[size_bucket].squareSize * 8 > sqx * BOARD_WIDTH; ++size_bucket) {}
+    if (initialSquareSize != sizeDefaults[size_bucket].squareSize && !appData.fixedSize) {  // boardSize changed
+        initialSquareSize = sizeDefaults[size_bucket].squareSize;  // used for saving font
+        ChangeFont(1, &appData.clockFont, CLOCK_FONT, initialSquareSize, CLOCK_FONT_NAME,
+         2 * (sizeDefaults[size_bucket].clockFontPxlSize + 1) / 3);
+        ChangeFont(1, &appData.font, MESSAGE_FONT, initialSquareSize, DEFAULT_FONT_NAME,
+         sizeDefaults[size_bucket].coordFontPxlSize);
+        ChangeFont(0, &appData.icsFont, CONSOLE_FONT, initialSquareSize, CONSOLE_FONT_NAME,
+         sizeDefaults[size_bucket].coordFontPxlSize);
+        ChangeFont(0, &appData.tagsFont, EDITTAGS_FONT, initialSquareSize, TAGS_FONT_NAME,
+         sizeDefaults[size_bucket].coordFontPxlSize);
+        ChangeFont(0, &appData.commentFont, COMMENT_FONT, initialSquareSize, COMMENT_FONT_NAME,
+         sizeDefaults[size_bucket].coordFontPxlSize);
+        ChangeFont(0, &appData.gameListFont, GAMELIST_FONT, initialSquareSize, GAMELIST_FONT_NAME,
+         sizeDefaults[size_bucket].coordFontPxlSize);
+        ChangeFont(0, &appData.historyFont, MOVEHISTORY_FONT, initialSquareSize, HISTORY_FONT_NAME,
+         sizeDefaults[size_bucket].coordFontPxlSize);
         DisplayBothClocks();
         ApplyFont(&mainOptions[W_MESSG], NULL);
         for (i = 1; i < 6; i++) {
@@ -1867,11 +1879,11 @@ void ReSize(WindowPlacement * wp) {
         AppendColorized(&chatOptions[6], NULL, 0);
     }
     if (!strchr(appData.boardSize, ',')) {
-        ASSIGN(appData.boardSize, sizeDefaults[h].name);
+        ASSIGN(appData.boardSize, sizeDefaults[size_bucket].name);
     }
 #ifndef OSXAPP
-    if (sizeDefaults[h].tinyLayout != tinyLayout) {
-        tinyLayout = sizeDefaults[h].tinyLayout;
+    if (sizeDefaults[size_bucket].tinyLayout != tinyLayout) {
+        tinyLayout = sizeDefaults[size_bucket].tinyLayout;
     }
 #endif
     if (sqx != squareSize && !appData.fixedSize) {
@@ -1884,10 +1896,8 @@ void ReSize(WindowPlacement * wp) {
     } else {
         resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
     }
-    w = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    h = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
-    optList[W_BOARD].max = w;
-    optList[W_BOARD].value = h;
+    optList[W_BOARD].max = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    optList[W_BOARD].value = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     optList[W_BOARD].min |= REPLACE;
     if (twoBoards && shellUp[DummyDlg]) {
         SecondaryBoardPopUp();
@@ -1908,7 +1918,7 @@ void ReSize(WindowPlacement * wp) {
 static unsigned int delayedDragTag = 0;
 
 gboolean DragProc(gpointer data) {
-    static int busy;
+    static int busy = 0;
     if (busy++) {
         /* Prevent recursive calling. */
         return FALSE;
@@ -1922,14 +1932,14 @@ gboolean DragProc(gpointer data) {
     do {
         GetActualPlacement(shellWidget, &wpNew);
         int const moved = (wpNew.x != wpMain.x) || (wpNew.y != wpMain.y);
-        int const sized = (wpNew.width != wpMain.width) || (wpNew.height != wpNew.height);
+        int const sized = (wpNew.width != wpMain.width) || (wpNew.height != wpMain.height);
         if (!moved && !sized) {
-            assert(!moved && !sized);
             busy = 0;
             break;
         }
+
         /* N.B.: Resizing can be interrupted by other events. */
-        ReSize(&wpNew);
+        do_resize(&wpNew);
         if (appData.useStickyWindows) {
             if (shellUp[EngOutDlg]) {
                 CoDrag(shells[EngOutDlg], &wpEngineOutput);
