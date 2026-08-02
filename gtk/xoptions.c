@@ -453,7 +453,7 @@ Widget CreateMenuItem(Widget menu, char * msg, XtCallbackProc CB, int n) {
     }
     XtSetArg(args[j], XtNlabel, msg);
     entry = XtCreateManagedWidget("item", smeBSBObjectClass, menu, args, j + 1);
-    XtAddCallback(entry, XtNcallback, CB, (caddr_t)(intptr_t)n);
+    XtAddCallback(entry, XtNcallback, CB, (void *)(intptr_t)n);
     return entry;
 }
 #endif

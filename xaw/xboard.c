@@ -212,10 +212,10 @@ XFontSet CreateFontSet(char * base_fnt_lst);
 #else
 char * FindFont(char * pattern, int targetPxlSize);
 #endif
-void ReadBitmap(Pixmap * pm, String name, unsigned char bits[], u_int wreq, u_int hreq);
-void EventProc(Widget widget, caddr_t unused, XEvent * event);
+void ReadBitmap(Pixmap * pm, String name, unsigned char bits[], unsigned int wreq, unsigned int hreq);
+void EventProc(Widget widget, void * unused, XEvent * event);
 void DelayedDrag(void);
-static void MoveTypeInProc(Widget widget, caddr_t unused, XEvent * event);
+static void MoveTypeInProc(Widget widget, void * unused, XEvent * event);
 void HandlePV(Widget w, XEvent * event, String * params, Cardinal * nParams);
 void DrawPositionProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 void CommentClick(Widget w, XEvent * event, String * params, Cardinal * nParams);
@@ -648,7 +648,7 @@ void ResizeBoardWindow(int widthInPixels, int heightInPixels) {
 static int MakeOneColor(char * name, Pixel * color) {
     XrmValue vFrom, vTo;
     if (!appData.monoMode) {
-        vFrom.addr = (caddr_t)name;
+        vFrom.addr = name;
         vFrom.size = strlen(name);
         XtConvert(shellWidget, XtRString, &vFrom, XtRPixel, &vTo);
         if (vTo.addr == NULL) {
@@ -1523,7 +1523,7 @@ char * FindFont(char * pattern, int targetPxlSize) {
 }
 #endif
 
-void ReadBitmap(Pixmap * pm, String name, unsigned char bits[], u_int wreq, u_int hreq) {
+void ReadBitmap(Pixmap * pm, String name, unsigned char bits[], unsigned int wreq, unsigned int hreq) {
     if (bits != NULL) {
         *pm = XCreateBitmapFromData(xDisplay, xBoardWindow, (char *)bits, wreq, hreq);
     }
@@ -1749,7 +1749,7 @@ void DelayedDrag(void) {
      XtAppAddTimeOut(appContext, 200, (XtTimerCallbackProc)DragProc, (XtPointer)0);  // and schedule new one 50 msec later
 }
 
-void EventProc(Widget widget, caddr_t unused, XEvent * event) {
+void EventProc(Widget widget, void * unused, XEvent * event) {
     if (XtIsRealized(widget) && event->type == ConfigureNotify || appData.useStickyWindows) {
         DelayedDrag();  // as long as events keep coming in faster than 50 msec, they destroy each other
     }
@@ -2021,7 +2021,7 @@ int ShiftKeys(void) {  // bassic primitive for determining if modifier keys are 
     return k;
 }
 
-static void MoveTypeInProc(Widget widget, caddr_t unused, XEvent * event) {
+static void MoveTypeInProc(Widget widget, void * unused, XEvent * event) {
     char buf[10];
     KeySym sym;
     int n = XLookupString(&(event->xkey), buf, 10, &sym, NULL);
@@ -2296,7 +2296,7 @@ typedef struct {
     void * closure;
 } InputSource;
 
-void DoInputCallback(caddr_t closure, int * source, XtInputId * xid) {
+void DoInputCallback(void * closure, int * source, XtInputId * xid) {
     InputSource * is = (InputSource *)closure;
     int count;
     int error;

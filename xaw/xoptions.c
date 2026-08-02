@@ -365,14 +365,17 @@ static void SpinCallback(Widget w, XtPointer client_data, XtPointer call_data) {
     SetWidgetText(opt, buf, shellUp[TransientDlg] ? TransientDlg : MasterDlg);
 }
 
-static void ComboSelect(Widget w, caddr_t addr, caddr_t index)  // callback for all combo items
-{
+/* Callback for all combo items. */
+static void ComboSelect(Widget w, void * addr, void * index) {
     Arg args[16];
-    Option * opt = dialogOptions[((intptr_t)addr) >> 24];  // applicable option list
-    int i = ((intptr_t)addr) >> 16 & 255;  // option number
+    /* applicable option list */
+    Option * opt = dialogOptions[((intptr_t)addr) >> 24];
+    /* option number */
+    int i = ((intptr_t)addr) >> 16 & 255;
     int j = 0xffff & (intptr_t)addr;
 
-    values[i] = j;  // store selected value in Option struct, for retrieval at OK
+    /* store selected value in Option struct, for retrieval at OK */
+    values[i] = j;
 
     if (opt[i].type == Graph || opt[i].min & COMBO_CALLBACK && (!currentCps || shellUp[BrowserDlg])) {
         ((ButtonCallback *)opt[i].target)(i);
@@ -402,7 +405,7 @@ Widget CreateMenuItem(Widget menu, char * msg, XtCallbackProc CB, int n) {
     }
     XtSetArg(args[j], XtNlabel, msg);
     entry = XtCreateManagedWidget("item", smeBSBObjectClass, menu, args, j + 1);
-    XtAddCallback(entry, XtNcallback, CB, (caddr_t)(intptr_t)n);
+    XtAddCallback(entry, XtNcallback, CB, (void *)(intptr_t)n);
     return entry;
 }
 
@@ -763,7 +766,7 @@ void SetColor(char * colorName, Option * box) {  // sets the color of a widget
     Pixel buttonColor;
     XrmValue vFrom, vTo;
     if (!appData.monoMode) {
-        vFrom.addr = (caddr_t)colorName;
+        vFrom.addr = (void *)colorName;
         vFrom.size = strlen(colorName);
         XtConvert(shellWidget, XtRString, &vFrom, XtRPixel, &vTo);
         if (vTo.addr == NULL) {
@@ -786,7 +789,8 @@ void ColorChanged(Widget w, XtPointer data, XEvent * event, Boolean * b) {  // f
     }
 }
 
-static void GraphEventProc(Widget widget, caddr_t client_data, XEvent * event) {  // handle expose and mouse events on Graph widget
+/* handle expose and mouse events on Graph widget */
+static void GraphEventProc(Widget widget, void * client_data, XEvent * event) {
     Dimension w, h;
     Arg args[16];
     int j, button = 10, f = 1, sizing = 0;
@@ -900,13 +904,15 @@ void GraphExpose(Option * opt, int x, int y, int w, int h) {
     e.y = y;
     e.width = w;
     e.height = h;
+    /* Kludge to suppress sizing. */
     e.count = -1;
-    e.type = Expose;  // count = -1: kludge to suppress sizing
-    GraphEventProc(opt->handle, (caddr_t)opt, (XEvent *)&e);  // fake expose event
+    e.type = Expose;
+    /* Fake expose event. */
+    GraphEventProc(opt->handle, (void *)opt, (XEvent *)&e);
 }
 
-static void GenericCallback(
- Widget w, XtPointer client_data, XtPointer call_data) {  // all Buttons in a dialog (including OK, cancel) invoke this
+/* all Buttons in a dialog (including OK, cancel) invoke this */
+static void GenericCallback(Widget w, XtPointer client_data, XtPointer call_data) {
     String name;
     Arg args[16];
     char buf[MSG_SIZ];
