@@ -191,7 +191,7 @@ void SendToProgram(char * message, ChessProgramState * cps);
 # error Unexpected API_USED_FOR_DRAWING_GUI value in xboard.h.
 #endif
 
-// from xoptions.c
+/* from xoptions.c */
 #if API_USED_FOR_DRAWING_GUI == 0
 void SetFocus(Widget w, XtPointer data, XEvent * event, Boolean * b);
 void TypeInProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
@@ -210,7 +210,7 @@ void TabProc(Widget w, XEvent * event, String * prms, Cardinal * nprms);
 # error Unexpected API_USED_FOR_DRAWING_GUI value in xboard.h.
 #endif
 
-// from xengineoutput.c
+/* from xengineoutput.c */
 #if API_USED_FOR_DRAWING_GUI == 0
 void SelectPV(Widget w, XEvent * event, String * params, Cardinal * nParams);
 void StopPV(Widget w, XEvent * event, String * params, Cardinal * nParams);

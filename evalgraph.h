@@ -1,8 +1,7 @@
 /*
  * evalgraph.h -- Evaluation Graph window
  *
- * Copyright 2000, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Copyright 2000, 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -47,13 +46,13 @@ extern int MarginX;
 extern int MarginW;
 extern int MarginH;
 
-// calls from back-end part into front-end part
+/* calls from back-end part into front-end part */
 void DrawSegment(int x, int y, int * lastX, int * lastY, int p);
 void DrawRectangle(int left, int top, int right, int bottom, int side, int style);
 void DrawEvalText(char * buf, int cbBuf, int y);
 void EvalGraphSet(int first, int last, int current, ChessProgramStats_Move * pvInfo);
 
-// calls of front-end part into back-end part
+/* calls of front-end part into back-end part */
 extern int GetMoveIndexFromPoint(int x, int y);
 extern void PaintEvalGraph(void);
 extern char * MakeEvalTitle(char * title);

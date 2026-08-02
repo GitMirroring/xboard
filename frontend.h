@@ -1,8 +1,7 @@
 /*
  * frontend.h -- Interface exported by all XBoard front ends
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
  * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
@@ -130,7 +129,7 @@ Boolean ParseSettingsFile(char * name, char ** addr);
 void ScheduleDelayedEvent(DelayedEventCallback cb, long millisec);
 DelayedEventCallback GetDelayedEvent(void);
 void CancelDelayedEvent(void);
-// [HGM] mouse: next six used by mouse handler, which was moved to backend
+
 extern int fromX, fromY, toX, toY;
 void PromotionPopUp(char choice);
 void DragPieceBegin(int x, int y, Boolean instantly);

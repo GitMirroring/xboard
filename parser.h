@@ -1,12 +1,9 @@
 /*
  * parser.h -- Interface to XBoard move parser
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -55,7 +52,7 @@
 extern void yynewfile(FILE * f);
 extern void yynewstr(char * s);
 
-// [HGM] yylex now globally invisible, all calls must use wrapper
+/* [HGM] yylex now globally invisible, all calls must use wrapper */
 extern int Myylex(void);
 extern ChessMove yylexstr(int boardIndex, char * s, char * buf, int buflen);
 extern char currentMoveString[];

@@ -1,12 +1,9 @@
 /*
  * menus.h -- platform-indendent menu handling code for XBoard
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * The following terms apply to Digital Equipment Corporation's copyright
  * interest in XBoard:
@@ -118,13 +115,11 @@ void HighlightDraggingProc(void);
 void HighlightLastMoveProc(void);
 void HighlightArrowProc(void);
 void MoveSoundProc(void);
-// void IcsAlarmProc (void);
 void OneClickProc(void);
 void PeriodicUpdatesProc(void);
 void PonderNextMoveProc(void);
 void PopupMoveErrorsProc(void);
 void PopupExitMessageProc(void);
-// void PremoveProc (void);
 void ShowCoordsProc(void);
 void ShowThinkingProc(void);
 void HideThinkingProc(void);
@@ -163,17 +158,17 @@ void EditBookProc(void);
 void InitMenuMarkers(void);
 void FontsProc(void);
 
-// in ngamelist.c
+/* in ngamelist.c */
 void ShowGameListProc(void);
 
-// in nhistory.c
+/* in nhistory.c */
 void HistoryShowProc(void);
 
-// only here because it is the only header shared by xoptions.c and usystem.c
+/* only here because it is the only header shared by xoptions.c and usystem.c */
 void SetTextColor(char ** cnames, int fg, int bg, int attr);
 void ConsoleWrite(char * message, int count);
 
-// must be moved to xengineoutput.h
+/* must be moved to xengineoutput.h */
 
 void EngineOutputProc(void);
 void EvalGraphProc(void);

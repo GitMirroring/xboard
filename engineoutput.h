@@ -1,8 +1,7 @@
 /*
  * wengineo.h -- Clipboard routines for WinBoard
  *
- * Copyright 2000, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Copyright 2000, 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -24,7 +23,7 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-// [HGM] define numbers to indicate icons, for referring to them in platform-independent way
+/* [HGM] define numbers to indicate icons, for referring to them in platform-independent way */
 #define nColorBlack 1
 #define nColorWhite 2
 #define nColorUnknown 3
@@ -33,7 +32,7 @@
 #define nThinking 6
 #define nAnalyzing 7
 
-// [HGM] same for output fields (note that there are two of each type, one per color)
+/* [HGM] same for output fields (note that there are two of each type, one per color) */
 #define nColorIcon 1
 #define nLabel 2
 #define nStateIcon 3
@@ -58,10 +57,10 @@ extern int windowMode;
 extern char exclusionHeader[];
 extern int highTextStart[2], highTextEnd[2], endPV;
 
-// back-end called by front-end
+/* back-end called by front-end */
 void SetEngineState(int which, enum ENGINE_STATE state, char * state_data);
 
-// front-end called by back-end
+/* front-end called by back-end */
 void SetEngineColorIcon(int which);
 void SetIcon(int which, int field, int nIcon);
 void DoSetWindowText(int which, int field, char * s_label);
@@ -72,8 +71,8 @@ int EngineOutputDialogExists(void);
 void SetEngineOutputTitle(char * title);
 void Collapse(int colNr);
 
-// XB only
+/* XBoard only */
 void InitEngineOutput(Option * opt, Option * memo2);
 
-// XB only
+/* XBoard only */
 void DrawWidgetIcon(Option * opt, int nIcon);

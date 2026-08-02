@@ -1,7 +1,7 @@
 /*
  * dialogs.h -- shared variables for generic dialog popup of XBoard
  *
- * Copyright 2000, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Copyright 2000, 2009-2016, 2026 Free Software Foundation, Inc.
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -20,30 +20,31 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-// [HGM] Some remarks about the generic dialog creator of XBoard:
-// GenericPopUp is needed to create a dialog from the lists of options supplied by the engines.
-// But once it is there, it provides a very easy way for creating other settings dialogs as well,
-// by letting XBoard provide its own, compiled-in lists of XBoard options (located in dialogs.c).
-// The Option struct uses the following fields (E = for engine options, X = for XBoard options):
-//                    Option types                  | XBoard-only ->
-// TYPE    NAME       spin check string combo button box label list graph menu break end
-// int     value       E     E    (h)    X/E         [w]       (h)   (h)
-// int     min        X/E         (2)    (3)         (1)  (1)  (1)   (1)  (3)   (1)  (4)
-// int     max        X/E   (w)   (w)    (w)   (w)   (w)  (w)  (w)   (w)
-// void*   handle     X/E   X/E   X/E    X/E   X/E    X    X    X     X    X
-// void*   target      X     X     X     X/C    C          X    X     C    C
-// char*   textValue              X/E    X/E    *
-// char ** choice                  C     X/E    *                          X
-// enum    type       X/E   X/E   X/E    X/E    X     X    X    X     X    X     X    X
-// char *  name       X/E   X/E   X/E    X/E    X          X    X     X    X
-// char ** font                    X            X          X    X                       (GTK only)
-// File and Path options are like String (but get a browse button added in the dialog), and Slider
-// is like Spin. Menu can be PopUp or PopDown; both need the COMBO_CALLBACK bit (3) set!
-// (h) or (w) means the field optionally (when non-null) specifies the height or width of the main
-// control element (excluding accompanying description texts). [w] means the width is written there.
-// C specifies the 'target' is a user-supplied callback function, which will be executed when the
-// option is exercised.
-
+/*
+[HGM] Some remarks about the generic dialog creator of XBoard:
+GenericPopUp is needed to create a dialog from the lists of options supplied by the engines.
+But once it is there, it provides a very easy way for creating other settings dialogs as well,
+by letting XBoard provide its own, compiled-in lists of XBoard options (located in dialogs.c).
+The Option struct uses the following fields (E = for engine options, X = for XBoard options):
+                   Option types                  | XBoard-only ->
+TYPE    NAME       spin check string combo button box label list graph menu break end
+int     value       E     E    (h)    X/E         [w]       (h)   (h)
+int     min        X/E         (2)    (3)         (1)  (1)  (1)   (1)  (3)   (1)  (4)
+int     max        X/E   (w)   (w)    (w)   (w)   (w)  (w)  (w)   (w)
+void*   handle     X/E   X/E   X/E    X/E   X/E    X    X    X     X    X
+void*   target      X     X     X     X/C    C          X    X     C    C
+char*   textValue              X/E    X/E    *
+char ** choice                  C     X/E    *                          X
+enum    type       X/E   X/E   X/E    X/E    X     X    X    X     X    X     X    X
+char *  name       X/E   X/E   X/E    X/E    X          X    X     X    X
+char ** font                    X            X          X    X                       (GTK only)
+File and Path options are like String (but get a browse button added in the dialog), and Slider
+is like Spin. Menu can be PopUp or PopDown; both need the COMBO_CALLBACK bit (3) set!
+(h) or (w) means the field optionally (when non-null) specifies the height or width of the main
+control element (excluding accompanying description texts). [w] means the width is written there.
+C specifies the 'target' is a user-supplied callback function, which will be executed when the
+option is exercised.
+*/
 
 /* Flags Option.min used (2) for TextBox (-string): */
 #define T_VSCRL (1 << 0)
@@ -84,40 +85,48 @@
 
 /* Board widget numbers, MUST correspond to mainOptions array */
 
-#define W_MENU 0  // main menu bar
-#define W_ENGIN 6  // engine menu
+/* main menu bar */
+#define W_MENU 0
+/* engine menu */
+#define W_ENGIN 6
 #define W_TITLE 10
 #define W_WHITE 12
 #define W_BLACK 13
-#define W_SMALL 15  // title in small layout
+/* title in small layout */
+#define W_SMALL 15
 #define W_MESSG 16
-#define W_BUTTON 17  // button bar
+/* button bar */
+#define W_BUTTON 17
 #define W_PAUSE 20
 #define W_BOARD 24
 #define W_MENUW 25
 #define W_MENUB 26
-#define W_DROP 27  // drop (popup) menu
+/* drop (popup) menu */
+#define W_DROP 27
 
-typedef enum {  // identifier of dialogs done by GenericPopup
-    TransientDlg = 0,  // transient: grabs mouse events and is destroyed at pop-down (so other dialog can use this ID next time)
+/* identifier of dialogs done by GenericPopUp */
+typedef enum {
+    /* Grabs mouse events and is destroyed at pop-down (so other dialog can use this ID next time) */
+    TransientDlg = 0,
     CommentDlg,
     TagsDlg,
     TextMenuDlg,
     InputBoxDlg,
     ChatDlg,
     DummyDlg,
-    HistoryDlg,  // persistent: no grab and reused
+    HistoryDlg, /* persistent: no grab and reused */
     GameListDlg,
     EngOutDlg,
     EvalGraphDlg,
-    PromoDlg,  // this and beyond are destroyed at pop-down
+    PromoDlg, /* this and beyond are destroyed at pop-down */
     ErrorDlg,
-    AskDlg,  // this and beyond do grab mouse events (and are destroyed)
+    AskDlg, /* this and beyond do grab mouse events (and are destroyed) */
     FatalDlg,
     BoardWindow,
     BrowserDlg,
     MasterDlg,
-    NrOfDialogs  // dummy for total
+    /* Just for the convenience of having the total number of different ids available. */
+    NrOfDialogs
 } DialogClass;
 
 typedef int MemoCallback(Option * opt, int n, int x, int y, char * text, int index);
@@ -128,7 +137,6 @@ typedef int OKCallback(int n);
 
 extern char commentTranslations[];
 extern char historyTranslations[];
-// extern Pixel timerBackgroundPixel;
 extern int values[];
 extern ChessProgramState * currentCps;
 extern int dialogError;
@@ -158,7 +166,6 @@ void Show(Option * opt, int hide);
 int IcsHist(int dir, Option * opt, DialogClass dlg);
 void HighlightText(Option * opt, int from, int to, Boolean highlight);
 void SetColor(char * colorName, Option * box);
-// void ColorChanged (Widget w, XtPointer data, XEvent *event, Boolean *b);
 void SetInsertPos(Option * opt, int pos);
 void HardSetFocus(Option * opt, DialogClass dlg);
 void CursorAtEnd(Option * opt);
@@ -188,7 +195,7 @@ void Browse(DialogClass dlg, char * label, char * proposed, char * ext, Boolean 
 void FileNamePopUpWrapper(
  char * label, char * def, char * filter, FileProc proc, Boolean pathFlag, char * openMode, char ** openName, FILE ** openFP);
 
-// in draw.c
+/* in draw.c */
 void InitDrawingParams(int reload);
 void InitDrawingHandle(Option * opt);
 void ExposeRedraw(Option * opt, int x, int y, int w, int h);
@@ -221,6 +228,6 @@ void LockBoardSize(int after);
 void Preview(int n, char * s);
 void DrawPosition(int fullRedraw, Board b);
 
-// in ngamelist.c
+/* in ngamelist.c */
 int GameListClicks(int direction);
 void SetFilter(void);

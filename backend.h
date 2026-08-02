@@ -1,8 +1,7 @@
 /*
  * backend.h -- Interface exported by XBoard back end
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
  * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
@@ -319,53 +318,78 @@ typedef enum {
     Skip
 } Control;
 
-// TODO: Avoid stashing arbitrary additional information within name.
-// To find some examples, look for name + MSG_SIZ - 100 and name + MSG_SIZ - 104.
-typedef struct XB_OPT {  // [HGM] options: descriptor of UCI-style option
-    int value;  // current setting, starts as default
-    int min;  // Also used for flags
+/* TODO: Avoid stashing arbitrary additional information within name.
+
+   To find some examples, look for name + MSG_SIZ - 100 and name + MSG_SIZ - 104. */
+
+/* Descriptor of a UCI-style option. */
+typedef struct XB_OPT {
+    /* current setting, starts as default */
+    int value;
+    /* Also used for flags */
+    int min;
     int max;
-    void * handle;  // for use by front end
-    void * target;  // for use by front end
-    char * textValue;  // points to beginning of text value in name field
-    char ** choice;  // points to array of combo choices in cps->combo
+    /* handle and target are for use by front end */
+    void * handle;
+    void * target;
+    /* points to beginning of text value in name field */
+    char * textValue;
+    /* points to array of combo choices in cps->combo */
+    char ** choice;
     Control type;
-    char * name;  // holds both option name and text value (in allocated memory)
+    /* holds both option name and text value (in allocated memory) */
+    char * name;
     char ** font;
 } Option;
 
+#define MAX_OPTIONS 200
 typedef struct XB_CPS {
     char * which;
     int maybeThinking;
     ProcRef pr;
     InputSourceRef isr;
-    char * twoMachinesColor; /* "white\n" or "black\n" */
+    /* "white\n" or "black\n" */
+    char * twoMachinesColor;
     char * program;
     char * host;
     char * dir;
     struct XB_CPS * other;
     char * initString;
     char * computerString;
-    int sendTime; /* 0=don't, 1=do, 2=test */
+    /* 0=don't, 1=do, 2=test */
+    int sendTime;
     int sendDrawOffers;
     int useSigint;
     int useSigterm;
-    int offeredDraw; /* countdown */
+    /* countdown */
+    int offeredDraw;
     int reuse;
-    int useSetboard; /* 0=use "edit"; 1=use "setboard" */
-    int extendedEdit; /* 1=also set holdings with "edit" */
-    int useSAN; /* 0=use coordinate notation; 1=use SAN */
-    int usePing; /* 0=not OK to use ping; 1=OK */
+    /* 0=use "edit"; 1=use "setboard" */
+    int useSetboard;
+    /* 1=also set holdings with "edit" */
+    int extendedEdit;
+    /* 0=use coordinate notation; 1=use SAN */
+    int useSAN;
+    /* 0=not OK to use ping; 1=OK */
+    int usePing;
     int lastPing;
     int lastPong;
-    int usePlayother; /* 0=not OK to use playother; 1=OK */
-    int useColors; /* 0=avoid obsolete white/black commands; 1=use them */
-    int useUsermove; /* 0=just send move; 1=send "usermove move" */
-    int sendICS; /* 0=don't use "ics" command; 1=do */
-    int sendName; /* 0=don't use "name" command; 1=do */
-    int sdKludge; /* 0=use "sd DEPTH" command; 1=use "depth\nDEPTH" */
-    int stKludge; /* 0=use "st TIME" command; 1=use "level 1 TIME" */
-    int excludeMoves; /* 0=don't use "exclude" command; 1=do */
+    /* 0=not OK to use playother; 1=OK */
+    int usePlayother;
+    /* 0=avoid obsolete white/black commands; 1=use them */
+    int useColors;
+    /* 0=just send move; 1=send "usermove move" */
+    int useUsermove;
+    /* 0=don't use "ics" command; 1=do */
+    int sendICS;
+    /* 0=don't use "name" command; 1=do */
+    int sendName;
+    /* 0=use "sd DEPTH" command; 1=use "depth\nDEPTH" */
+    int sdKludge;
+    /* 0=use "st TIME" command; 1=use "level 1 TIME" */
+    int stKludge;
+    /* 0=don't use "exclude" command; 1=do */
+    int excludeMoves;
     char * tidy;
     int matchWins;
     char * variants;
@@ -375,67 +399,101 @@ typedef struct XB_CPS {
     int initDone;
     int pseudo;
 
-    /* Added by Tord: */
-    int useFEN960; /* 0=use "KQkq" style FENs, 1=use "HAha" style FENs */
-    int useOOCastle; /* 0="O-O" notation for castling, 1="king capture rook" notation */
-    /* End of additions by Tord */
+    /* 0=use "KQkq" style FENs, 1=use "HAha" style FENs */
+    int useFEN960;
+    /* 0="O-O" notation for castling, 1="king capture rook" notation */
+    int useOOCastle;
 
-    int scoreIsAbsolute; /* [AS] 0=don't know (standard), 1=score is always from white side */
-    int isUCI; /* [AS] 0=no (Winboard), 1=UCI (requires Polyglot) */
-    int hasOwnBookUCI; /* [AS] 0=use GUI or Polyglot book, 1=has own book */
+    /* 0=don't know (standard), 1=score is always from white side */
+    int scoreIsAbsolute;
+    /* 0=no (CECP), 1=UCI (requires Polyglot) */
+    int isUCI;
+    /* 0=use GUI or Polyglot book, 1=has own book */
+    int hasOwnBookUCI;
 
-    /* [HGM] time odds */
-    float timeOdds; /* factor through which we divide time for this engine  */
-    int debug; /* [HGM] ignore engine debug lines starting with '#'    */
-    int maxNrOfSessions; /* [HGM] secondary TC: max args in 'level' command */
-    int accumulateTC; /* [HGM] secondary TC: how to handle extra sessions   */
-    int drawDepth; /* [HGM] egbb: search depth to play egbb draws        */
-    int nps; /* [HGM] nps: factor for node count to replace time   */
+    /* [HGM] time odds: factor through which we divide time for this engine */
+    float timeOdds;
+    /* [HGM] ignore engine debug lines starting with '#' */
+    int debug;
+    /* [HGM] secondary TC: max args in 'level' command */
+    int maxNrOfSessions;
+    /* [HGM] secondary TC: how to handle extra sessions */
+    int accumulateTC;
+    /* [HGM] egbb: search depth to play egbb draws */
+    int drawDepth;
+    /* [HGM] nps: factor for node count to replace time */
+    int nps;
     int supportsNPS;
-    int alphaRank; /* [HGM] shogi: engine uses shogi-type coordinates    */
-    int maxCores; /* [HGM] SMP: engine understands cores command        */
-    int memSize; /* [HGM] memsize: engine understands memory command   */
-    char * egtFormats; /* [HGM] EGT: supported tablebase formats             */
-    int bookSuspend; /* [HGM] book: go was deferred because of book hit    */
-    int pause; /* [HGM] pause: 1=supports it, 2=actually paused      */
-    int dice; /* [HGM] dice: engine understands pips command        */
-    int highlight; /* [HGM] engine wants to get lift and put commands    */
-    int nrOptions; /* [HGM] options: remembered option="..." features    */
-#define MAX_OPTIONS 200
+    /* [HGM] shogi: engine uses shogi-type coordinates */
+    int alphaRank;
+    /* [HGM] SMP: engine understands cores command */
+    int maxCores;
+    /* [HGM] memsize: engine understands memory command */
+    int memSize;
+    /* [HGM] EGT: supported tablebase formats */
+    char * egtFormats;
+    /* [HGM] book: go was deferred because of book hit */
+    int bookSuspend;
+    /* [HGM] pause: 1=supports it, 2=actually paused */
+    int pause;
+    /* [HGM] dice: engine understands pips command */
+    int dice;
+    /* [HGM] engine wants to get lift and put commands */
+    int highlight;
+    /* [HGM] options: remembered option="..." features */
+    int nrOptions;
     Option option[MAX_OPTIONS];
     int comboCnt;
     char * comboList[20 * MAX_OPTIONS];
     char * optionSettings;
-    void * programLogo; /* [HGM] logo: bitmap of the logo                    */
-    char * fenOverride; /* [HGM} FRC: force FEN casling & ep fields by hand  */
-    char userError; /* [HGM] crash: flag to suppress fatal-error messages*/
-    char reload; /* [HGM] options: flag to resend options with xreuse */
+    /* [HGM] logo: bitmap of the logo */
+    void * programLogo;
+    /* [HGM} FRC: force FEN casling & ep fields by hand */
+    char * fenOverride;
+    /* [HGM] crash: flag to suppress fatal-error messages*/
+    char userError;
+    /* [HGM] options: flag to resend options with xreuse */
+    char reload;
 } ChessProgramState;
 
 extern ChessProgramState first, second;
 
-/* Search stats from chessprogram */
+/* Search stats from chess program */
 typedef struct {
-    char movelist[2 * MSG_SIZ]; /* Last PV we were sent */
-    int depth; /* Current search depth */
-    int nr_moves; /* Total nr of root moves */
-    int moves_left; /* Moves remaining to be searched */
-    char move_name[MOVE_LEN]; /* Current move being searched, if provided */
-    uint64_t nodes; /* # of nodes searched */
-    int time; /* Search time (centiseconds) */
-    int score; /* Score (centipawns) */
-    int got_only_move; /* If last msg was "(only move)" */
-    int got_fail; /* 0 - nothing, 1 - got "--", 2 - got "++" */
-    int ok_to_send; /* handshaking between send & recv */
-    int line_is_book; /* 1 if movelist is book moves */
-    int seen_stat; /* 1 if we've seen the stat01: line */
+    /* Last PV we were sent */
+    char movelist[2 * MSG_SIZ];
+    /* Current search depth */
+    int depth;
+    /* Total number of root moves */
+    int nr_moves;
+    /* Moves remaining to be searched. */
+    int moves_left;
+    /* Current move being searched, if provided */
+    char move_name[MOVE_LEN];
+    /* # of nodes searched */
+    uint64_t nodes;
+    /* Search time (centiseconds) */
+    int time;
+    /* Score (centipawns) */
+    int score;
+    /* If last msg was "(only move)" */
+    int got_only_move;
+    /* 0 - nothing, 1 - got "--", 2 - got "++" */
+    int got_fail;
+    /* handshaking between send & recv */
+    int ok_to_send;
+    /* 1 if movelist is book moves */
+    int line_is_book;
+    /* 1 if we've seen the stat01: line */
+    int seen_stat;
 } ChessProgramStats;
 
 extern ChessProgramStats_Move pvInfoList[MAX_MOVES];
 extern Boolean shuffleOpenings;
 extern ChessProgramStats programStats;
 extern int remoteEchoOption;
-extern int opponentKibitzes;  // used by wengineo.c
+/* used by wengineo.c */
+extern int opponentKibitzes;
 extern int errorExitStatus;
 extern char * recentEngines;
 extern char * currentEngine[];
@@ -444,7 +502,7 @@ extern char engineVariant[];
 void SaveEngineSettings(int n);
 void SaveEngineList(void);
 char * EngineDefinedVariant(ChessProgramState * cps, int n);
-// [HGM] really in front-end, but CPS not known in frontend.h
+/* [HGM] really in front-end, but CPS not known in frontend.h */
 void SettingsPopUp(ChessProgramState * cps);
 int WaitForEngine(ChessProgramState * cps, DelayedEventCallback x);
 void Load(ChessProgramState * cps, int n);
@@ -461,11 +519,14 @@ void SendToICS(char * s);
 int PosFlags(int n);
 
 
-/* A point in time */
-// TODO: Modernize how this structure is defined and used.
+/* A point in time.
+
+   TODO: Modernize how this structure is defined and used. */
 typedef struct {
-    long sec; /* Assuming this is >= 32 bits */
-    int ms; /* Assuming this is >= 16 bits */
+    /* Assuming this is >= 32 bits */
+    long sec;
+    /* Assuming this is >= 16 bits */
+    int ms;
 } TimeMark;
 
 extern TimeMark programStartTime;

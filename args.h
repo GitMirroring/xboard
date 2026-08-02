@@ -1,11 +1,9 @@
 /*
  * args.c -- Option parsing and saving for X and Windows versions of XBoard
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -46,16 +44,19 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see http://www.gnu.org/licenses/.  *
+ * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.
  */
 
-// Note: this file is not a normal header, but contains executable code
-// for #inclusion in winboard.c and xboard.c, rather than separate compilation,
-// so that it can make use of the proper context of #defined symbols and
-// declarations in those files.
+/* N.B.: this file is not a normal header, but contains executable code
+   for #inclusion in winboard.c and xboard.c, rather than separate compilation,
+   so that it can make use of the proper context of #defined symbols and
+   declarations in those files.
+
+   TODO: Untangle things so that we only have normal headers and source files.
+*/
 
 typedef enum {
     ArgString,
@@ -78,33 +79,48 @@ typedef enum {
     ArgMaster,
     ArgX,
     ArgY,
-    ArgZ  // [HGM] placement: for window-placement options stored relative to main window
+    /* [HGM] placement: for window-placement options stored relative to main window */
+    ArgZ
 } ArgType;
 
 typedef void * ArgIniType;
 
-#define INVALID (ArgIniType)6915 /* Some number unlikely to be needed as default for anything */
-#define MAX_ARG_LEN 128 * 1024 /* [AS] For Roger Brown's very long list! */
+/* Some number unlikely to be needed as default for anything */
+#define INVALID (ArgIniType)6915
+/* [AS] For Roger Brown's very long list! */
+#define MAX_ARG_LEN 128 * 1024
 
 typedef struct {
     char * argName;
     ArgType argType;
-    /***
+#if 0
     union {
-      String *pString;       // ArgString
-      int *pInt;             // ArgInt
-      float *pFloat;         // ArgFloat
-      Boolean *pBoolean;     // ArgBoolean
-      COLORREF *pColor;      // ArgColor
-      ColorClass cc;         // ArgAttribs
-      String *pFilename;     // ArgFilename
-      BoardSize *pBoardSize; // ArgBoardSize
-      int whichFont;         // ArgFont
-      DCB *pDCB;             // ArgCommSettings
-      String *pFilename;     // ArgSettingsFilename
+        /* ArgString */
+        String * pString;
+        /* ArgInt */
+        int * pInt;
+        /* ArgFloat */
+        float * pFloat;
+        /* ArgBoolean */
+        Boolean * pBoolean;
+        /* ArgColor */
+        COLORREF * pColor;
+        /* ArgAttribs (TODO: should this be a pointer?) */
+        ColorClass cc;
+        /* ArgFilename */
+        String * pFilename;
+        /* ArgBoardSize */
+        BoardSize * pBoardSize;
+        /* ArgFont (TODO: should this be a pointer?) */
+        int whichFont;
+        /* ArgCommSettings */
+        DCB * pDCB;
+        /* ArgSettingsFilename */
+        String * pFilename;
     } argLoc;
-    ***/
+#else
     void * argLoc;
+#endif
     Boolean save;
     ArgIniType defaultValue;
 } ArgDescriptor;
@@ -155,7 +171,7 @@ void PopUpStartupDialog(void);
 typedef char GetFunc(void * getClosure);
 void ParseArgs(GetFunc get, void * cl);
 
-// [HGM] this is an exact duplicate of something in winboard.c. Move to backend.c?
+/* [HGM] This is an exact duplicate of something in winboard.c.  Move to backend.c? */
 char * defaultTextAttribs[] = {COLOR_SHOUT, COLOR_SSHOUT, COLOR_CHANNEL1, COLOR_CHANNEL, COLOR_KIBITZ, COLOR_TELL, COLOR_CHALLENGE,
  COLOR_REQUEST, COLOR_SEEK, COLOR_NORMAL, "#000000"};
 
@@ -229,7 +245,8 @@ ArgDescriptor argDescriptors[] = {
  {"titleInWindow", ArgBoolean, (void *)&appData.titleInWindow, XBOARD, (ArgIniType)FALSE},
  {"title", ArgTrue, (void *)&appData.titleInWindow, FALSE, INVALID},
  {"xtitle", ArgFalse, (void *)&appData.titleInWindow, FALSE, INVALID},
- {"flashCount", ArgInt, (void *)&appData.flashCount, XBOARD, INVALID}, // let X handle this
+ /* let X handle this */
+ {"flashCount", ArgInt, (void *)&appData.flashCount, XBOARD, INVALID},
  {"flashRate", ArgInt, (void *)&appData.flashRate, XBOARD, (ArgIniType)FLASH_RATE},
  {"pieceImageDirectory", ArgFilename, (void *)&appData.pieceDirectory, TRUE, (ArgIniType) ""},
  {"pid", ArgFilename, (void *)&appData.pieceDirectory, FALSE, INVALID},
@@ -273,7 +290,8 @@ ArgDescriptor argDescriptors[] = {
  {"xtelnet", ArgFalse, (void *)&appData.useTelnet, FALSE, INVALID},
  {"-telnet", ArgFalse, (void *)&appData.useTelnet, FALSE, INVALID},
  {"telnetProgram", ArgFilename, (void *)&appData.telnetProgram, FALSE, (ArgIniType)TELNET_PROGRAM},
- {"internetChessserverHelper", ArgFilename, (void *)&appData.icsHelper, FALSE, INVALID}, // for XB
+ /* for XBoard */
+ {"internetChessserverHelper", ArgFilename, (void *)&appData.icsHelper, FALSE, INVALID},
  {"icshelper", ArgFilename, (void *)&appData.icsHelper, FALSE, (ArgIniType) ""},
  {"seekGraph", ArgBoolean, (void *)&appData.seekGraph, TRUE, (ArgIniType)FALSE},
  {"sg", ArgTrue, (void *)&appData.seekGraph, FALSE, INVALID},
@@ -344,26 +362,31 @@ ArgDescriptor argDescriptors[] = {
  {"popup", ArgTrue, (void *)&appData.popupMoveErrors, FALSE, INVALID},
  {"xpopup", ArgFalse, (void *)&appData.popupMoveErrors, FALSE, INVALID},
  {"-popup", ArgFalse, (void *)&appData.popupMoveErrors, FALSE, INVALID},
- {"popUpErrors", ArgBoolean, (void *)&appData.popupMoveErrors, FALSE,
-  INVALID}, /* only so that old WinBoard.ini files from betas can be read */
+ /* only so that old WinBoard.ini files from betas can be read.  TODO: eliminate */
+ {"popUpErrors", ArgBoolean, (void *)&appData.popupMoveErrors, FALSE, INVALID},
  {"clockFont", ArgFont, (void *)CLOCK_FONT, TRUE, INVALID},
  {"messageFont", ArgFont, (void *)MESSAGE_FONT, TRUE, INVALID},
- {"font", ArgFont, (void *)MESSAGE_FONT, FALSE, INVALID}, /* only so that old .xboardrc files will parse. -font does not work from
-  the command line because it is captured by the X libraries. */
+ /* only so that old .xboardrc files will parse. -font does not work from the command line because it is captured by the X libraries. */
+ {"font", ArgFont, (void *)MESSAGE_FONT, FALSE, INVALID},
  {"coordFont", ArgFont, (void *)COORD_FONT, TRUE, INVALID},
  {"tagsFont", ArgFont, (void *)EDITTAGS_FONT, TRUE, INVALID},
  {"commentFont", ArgFont, (void *)COMMENT_FONT, TRUE, INVALID},
  {"icsFont", ArgFont, (void *)CONSOLE_FONT, TRUE, INVALID},
- {"moveHistoryFont", ArgFont, (void *)MOVEHISTORY_FONT, TRUE, INVALID}, /* [AS] */
- {"gameListFont", ArgFont, (void *)GAMELIST_FONT, TRUE, INVALID}, /* [HGM] */
- {"boardSize", ArgBoardSize, (void *)&boardSize, TRUE, (ArgIniType)-1}, /* must come after all fonts */
+ {"moveHistoryFont", ArgFont, (void *)MOVEHISTORY_FONT, TRUE, INVALID},
+ {"gameListFont", ArgFont, (void *)GAMELIST_FONT, TRUE, INVALID},
+ /* must come after all fonts */
+ {"boardSize", ArgBoardSize, (void *)&boardSize, TRUE, (ArgIniType)-1},
  {"size", ArgBoardSize, (void *)&boardSize, FALSE, INVALID},
- {"ringBellAfterMoves", ArgBoolean, (void *)&appData.ringBellAfterMoves, FALSE,
-  (ArgIniType)TRUE}, /* historical; kept only so old winboard.ini files will parse */
- {"bell", ArgTrue, (void *)&appData.ringBellAfterMoves, FALSE, INVALID}, // for XB
- {"xbell", ArgFalse, (void *)&appData.ringBellAfterMoves, FALSE, INVALID}, // for XB
- {"movesound", ArgTrue, (void *)&appData.ringBellAfterMoves, FALSE, INVALID}, // for XB
- {"xmovesound", ArgFalse, (void *)&appData.ringBellAfterMoves, FALSE, INVALID}, // for XB
+ /* historical; kept only so old winboard.ini files will parse.  TODO: eliminate */
+ {"ringBellAfterMoves", ArgBoolean, (void *)&appData.ringBellAfterMoves, FALSE, (ArgIniType)TRUE},
+ /* for XBoard */
+ {"bell", ArgTrue, (void *)&appData.ringBellAfterMoves, FALSE, INVALID},
+ /* for XBoard */
+ {"xbell", ArgFalse, (void *)&appData.ringBellAfterMoves, FALSE, INVALID},
+ /* for XBoard */
+ {"movesound", ArgTrue, (void *)&appData.ringBellAfterMoves, FALSE, INVALID},
+ /* for XBoard */
+ {"xmovesound", ArgFalse, (void *)&appData.ringBellAfterMoves, FALSE, INVALID},
  {"alwaysOnTop", ArgBoolean, (void *)&alwaysOnTop, TRUE, INVALID},
  {"top", ArgTrue, (void *)&alwaysOnTop, FALSE, INVALID},
  {"xtop", ArgFalse, (void *)&alwaysOnTop, FALSE, INVALID},
@@ -463,7 +486,8 @@ ArgDescriptor argDescriptors[] = {
  {"-colorize", ArgFalse, (void *)&appData.colorize, FALSE, INVALID},
  {"colorShout", ArgAttribs, (void *)ColorShout, TRUE, INVALID},
  {"colorSShout", ArgAttribs, (void *)ColorSShout, TRUE, INVALID},
- {"colorCShout", ArgAttribs, (void *)ColorSShout, FALSE, INVALID}, // for XB
+ /* for XBoard */
+ {"colorCShout", ArgAttribs, (void *)ColorSShout, FALSE, INVALID},
  {"colorChannel1", ArgAttribs, (void *)ColorChannel1, TRUE, INVALID},
  {"colorChannel", ArgAttribs, (void *)ColorChannel, TRUE, INVALID},
  {"colorKibitz", ArgAttribs, (void *)ColorKibitz, TRUE, INVALID},
@@ -475,7 +499,8 @@ ArgDescriptor argDescriptors[] = {
  {"colorBackground", ArgColor, (void *)7, TRUE, COLOR_BKGD},
  {"soundShout", ArgFilename, (void *)&appData.soundShout, TRUE, (ArgIniType) ""},
  {"soundSShout", ArgFilename, (void *)&appData.soundSShout, TRUE, (ArgIniType) ""},
- {"soundCShout", ArgFilename, (void *)&appData.soundSShout, FALSE, (ArgIniType) ""}, // for XB
+ /* for XBoard */
+ {"soundCShout", ArgFilename, (void *)&appData.soundSShout, FALSE, (ArgIniType) ""},
  {"soundChannel1", ArgFilename, (void *)&appData.soundChannel1, TRUE, (ArgIniType) ""},
  {"soundChannel", ArgFilename, (void *)&appData.soundChannel, TRUE, (ArgIniType) ""},
  {"soundKibitz", ArgFilename, (void *)&appData.soundKibitz, TRUE, (ArgIniType) ""},
@@ -496,7 +521,8 @@ ArgDescriptor argDescriptors[] = {
  {"reuse", ArgTrue, (void *)&appData.reuseFirst, FALSE, INVALID},
  {"xreuse", ArgFalse, (void *)&appData.reuseFirst, FALSE, INVALID},
  {"-reuse", ArgFalse, (void *)&appData.reuseFirst, FALSE, INVALID},
- {"reuseChessPrograms", ArgBoolean, (void *)&appData.reuseFirst, FALSE, INVALID}, /* backward compat only */
+ /* backward compat only.  TODO: eliminate */
+ {"reuseChessPrograms", ArgBoolean, (void *)&appData.reuseFirst, FALSE, INVALID},
  {"reuseSecond", ArgBoolean, (void *)&appData.reuseSecond, FALSE, (ArgIniType)TRUE},
  {"reuse2", ArgTrue, (void *)&appData.reuseSecond, FALSE, INVALID},
  {"xreuse2", ArgFalse, (void *)&appData.reuseSecond, FALSE, INVALID},
@@ -630,7 +656,7 @@ ArgDescriptor argDescriptors[] = {
  {"defaultEngineInstallDir", ArgFilename, (void *)&appData.defEngDir, FALSE, (ArgIniType) "."},
  {"defaultInstallProtocol", ArgInt, (void *)&appData.defProtocol, TRUE, (ArgIniType)0},
 
- // [HGM] tournament options
+ /* [HGM] tournament options */
  {"tourneyFile", ArgFilename, (void *)&appData.tourneyFile, FALSE, (ArgIniType) ""},
  {"tf", ArgFilename, (void *)&appData.tourneyFile, FALSE, INVALID},
  {"participants", ArgString, (void *)&appData.participants, FALSE, (ArgIniType) ""},
@@ -790,11 +816,14 @@ ArgDescriptor argDescriptors[] = {
  {"useInternalWrap", ArgTrue, (void *)&appData.useInternalWrap, FALSE, INVALID}, /* noJoin usurps this if set */
  {"openCommand", ArgString, (void *)&appData.sysOpen, FALSE, "xdg-open"},
 
- // [HGM] placement: put all window layouts last in ini file, but man X,Y before all others
- {"minX", ArgZ, (void *)&minX, FALSE, INVALID}, // [HGM] placement: to make sure auxiliary windows can be placed
+ /* [HGM] placement: put all window layouts last in ini file, but min X,Y before all others placement: to make sure auxiliary
+    windows can be placed */
+ {"minX", ArgZ, (void *)&minX, FALSE, INVALID},
  {"minY", ArgZ, (void *)&minY, FALSE, INVALID},
- {"winWidth", ArgInt, (void *)&wpMain.width, TRUE, INVALID}, // [HGM] placement: dummies to remember right & bottom
- {"winHeight", ArgInt, (void *)&wpMain.height, TRUE, INVALID}, //   for attaching auxiliary windows to them
+ /* [HGM] placement: dummy value to remember right  for attaching auxiliary windows to them */
+ {"winWidth", ArgInt, (void *)&wpMain.width, TRUE, INVALID},
+ /* [HGM] placement: dummy value to remember bottom for attaching auxiliary windows to them */
+ {"winHeight", ArgInt, (void *)&wpMain.height, TRUE, INVALID},
  {"x", ArgInt, (void *)&wpMain.x, TRUE, (ArgIniType)CW_USEDEFAULT},
  {"y", ArgInt, (void *)&wpMain.y, TRUE, (ArgIniType)CW_USEDEFAULT},
  {"icsUp", ArgBoolean, (void *)&wpConsole.visible, XBOARD, (ArgIniType)FALSE},
@@ -857,9 +886,10 @@ void ExitArgError(char * msg, char * badArg, Boolean quit) {
     }
 
     if (!quit) {
+        /* DisplayError does not work yet at this stage.  TODO: use stderr? */
         printf(_("%s in settings file\n"), buf);
         return;
-    }  // DisplayError does not work yet at this stage...
+    }
     DisplayFatalError(buf, 0, 2);
     exit(2);
 }
@@ -878,10 +908,11 @@ void AppendToSettingsFile(char * line) {
             }
             buf[i] = NULLCHAR;
             if (!strcmp(line, buf)) {
-                return;  // line occurs
+                /* line occurs */
+                return;
             }
         } while (c != EOF);
-        // line did not occur; add it
+        /* line did not occur; add it */
         fclose(f);
         if (f = fopen(SETTINGS_FILE, "a")) {
             TimeMark now;
@@ -916,7 +947,8 @@ char FileGet(void * getClosure) {
 
     c = getc(f);
     if (c == '\r') {
-        c = getc(f);  // work around DOS format files by bypassing the '\r' completely
+        /* work around DOS format files by bypassing the '\r' completely */
+        c = getc(f);
     }
     if (c == EOF) {
         return NULLCHAR;
@@ -925,16 +957,15 @@ char FileGet(void * getClosure) {
     }
 }
 
-/* Parse settings file named "name". If file found, return the
-   full name in fullname and return TRUE; else return FALSE */
+/* Parse settings file named "name".  If file found, return the full name in fullname and return TRUE, else return FALSE. */
 Boolean ParseSettingsFile(char * name, char ** addr) {
     FILE * f;
     int ok, len;
     char buf[MSG_SIZ], fullname[MSG_SIZ];
 
-
     ok = MySearchPath(installDir, name, fullname);
-    if (!ok && strchr(name, '.') == NULL) {  // append default file-name extension '.ini' when needed
+    if (!ok && strchr(name, '.') == NULL) {
+        /* append default file-name extension '.ini' when needed */
         len = snprintf(buf, MSG_SIZ, "%s.ini", name);
         if ((len < 0 || len >= MSG_SIZ) && appData.debugMode) {
             fprintf(
@@ -948,7 +979,7 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
     if (ok) {
         f = fopen(fullname, "r");
 #ifdef XBOARD_DATA_DIR
-        if (f == NULL && *fullname != '/' && !addr) {  // when a relative name did not work
+        if (f == NULL && *fullname != '/' && !addr) {  /* when a relative name did not work */
             len = snprintf(buf, MSG_SIZ, "~/.xboard/themes/conf/%s", name);
             if ((len < 0 || len >= MSG_SIZ) && appData.debugMode) {
                 fprintf(
@@ -957,7 +988,8 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
                     name);
             }
 
-            ok = MySearchPath(installDir, buf, fullname);  // first look in user's own files
+	    /* first look in user's own files */
+            ok = MySearchPath(installDir, buf, fullname);
             if (ok)
                 f = fopen(fullname, "r");
 
@@ -970,7 +1002,8 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
                         dataDir);
                 }
 
-                ok = MySearchPath(buf, name, fullname);  // also look in standard place
+		/* also look in standard place */
+                ok = MySearchPath(buf, name, fullname);
                 if (ok)
                     f = fopen(fullname, "r");
             }
@@ -996,7 +1029,8 @@ void ParseArgs(GetFunc get, void * cl) {
     char *q, *r, *s;
     int i, octval;
     char ch;
-    int posarg = 4;  // default is game file
+    /* default is game file */
+    int posarg = 4;
 
     ch = get(cl);
     for (;;) {
@@ -1029,14 +1063,17 @@ void ParseArgs(GetFunc get, void * cl) {
             }
             if (ad->argName == NULL) {
                 char endChar = (ch && ch != '\n' && (ch = get(cl)) == '{' ? '}' : '\n');
-                ExitArgError(_("Unrecognized argument %s"), argName, get != &FileGet);  // [HGM] make unknown argument non-fatal
+                /* [HGM] make unknown argument non-fatal */
+                ExitArgError(_("Unrecognized argument %s"), argName, get != &FileGet);
                 while (ch != endChar && ch != NULLCHAR) {
-                    ch = get(cl);  // but skip rest of line it is on (or until closing '}' )
+                    /* but skip rest of line it is on (or until closing '}' ) */
+                    ch = get(cl);
                 }
                 if (ch == '}') {
                     ch = get(cl);
                 }
-                continue;  // so that when it is in a settings file, it is the only setting that will be purged from it
+                /* so that when it is in a settings file, it is the only setting that will be purged from it */
+                continue;
             }
         } else if (ch == '@') {
             /* Indirection file */
@@ -1049,7 +1086,8 @@ void ParseArgs(GetFunc get, void * cl) {
             strncpy(argName, ad->argName, sizeof(argName) / sizeof(argName[0]));
         }
 
-        if (ad->argType == ArgTwo) {  // [HGM] kludgey arg type, not suitable for saving
+        /* [HGM] kludgey arg type, not suitable for saving */
+        if (ad->argType == ArgTwo) {
             *(Boolean *)ad->argLoc = 2;
             continue;
         }
@@ -1070,8 +1108,7 @@ void ParseArgs(GetFunc get, void * cl) {
         }
         q = argValue;
         if (ch == '{') {
-            // Quoting with { }.  No characters have to (or can) be escaped.
-            // Thus the string cannot contain a '}' character.
+            /* Quoting with { }.  No characters have to (or can) be escaped.  Thus, the string cannot contain a '}' character. */
             start = ch;
             ch = get(cl);
             while (start) {
@@ -1092,8 +1129,8 @@ void ParseArgs(GetFunc get, void * cl) {
                 }
             }
         } else if (ch == '\'' || ch == '"') {
-            // Quoting with ' ' or " ", with \ as escape character.
-            // Inconvenient for long strings that may contain Windows filenames.
+            /* Quoting with ' ' or " ", with \ as escape character.  Inconvenient for long strings that may contain Windows
+	       filenames. */
             start = ch;
             ch = get(cl);
             while (start) {
@@ -1169,29 +1206,38 @@ not_special:
                 }
             }
         } else {
-            while ((ch != ' ' || posflag) && ch != NULLCHAR && ch != '\t' && ch != '\n') {  // space allowed in positional arg
+            /* space allowed in positional arg */
+            while ((ch != ' ' || posflag) && ch != NULLCHAR && ch != '\t' && ch != '\n') {
                 *q++ = ch;
                 ch = get(cl);
             }
         }
         *q = NULLCHAR;
 
-        if (posflag) {  // positional argument: the argName was implied, and per default set as -lgf
-            int len = strlen(argValue) - 4;  // start of filename extension
+        if (posflag) {
+	    /* positional argument: the argName was implied, and per default set as -lgf */
+            /* start of filename extension  TODO: should look for last '.' character */
+	    int len = strlen(argValue) - 4;
             if (len < 0) {
                 len = 0;
             }
             if (!StrCaseCmp(argValue + len, ".trn")) {
-                ad = &argDescriptors[2];  // correct implied type to -tf
-                appData.tourney = TRUE;  // let it parse -tourneyOptions later
+                /* correct implied type to -tf */
+                ad = &argDescriptors[2];
+                /* let it parse -tourneyOptions later */
+                appData.tourney = TRUE;
             } else if (!StrCaseCmp(argValue + len, ".fen") || !StrCaseCmp(argValue + len, ".epd")) {
-                ad = &argDescriptors[1];  // correct implied type to -lpf
+                /* correct implied type to -lpf */
+                ad = &argDescriptors[1];
                 appData.viewer = TRUE;
             } else if (!StrCaseCmp(argValue + len, ".ini") || !StrCaseCmp(argValue + len, ".xop")) {
-                ad = &argDescriptors[0];  // correct implied type to -opt
+                /* correct implied type to -opt */
+                ad = &argDescriptors[0];
             } else if (GetEngineLine(argValue, 11)) {
-                ad = &argDescriptors[3];  // correct implied type to -is
-            } else {  // keep default -lgf, but let it imply viewer mode as well
+                /* correct implied type to -is */
+                ad = &argDescriptors[3];
+            } else {
+                /* keep default -lgf, but let it imply viewer mode as well */
                 appData.viewer = TRUE;
             }
             strncpy(argName, ad->argName, sizeof(argName) / sizeof(argName[0]));
@@ -1203,26 +1249,20 @@ not_special:
             break;
 
         case ArgX: {
-            // [HGM] placement: translate stored relative to absolute
-            // (this is really kludgey, it should be done where used...)
+            /* [HGM] placement: translate stored relative to absolute (this is really kludgey, it should be done where used...) */
             int value = ValidateInt(argValue);
-            // Values that were previously stored can include
-            // unreasonable coordinate values (e.g., 2147483539).
-            // Therefore, we temporarily force using a lower precision
-            // so that we obtain a coordinate that is actually plausible.
+            /* Values that were previously stored can include unreasonable coordinate values (e.g., 2147483539).  Therefore, we
+	       temporarily force using a lower precision so that we obtain a coordinate that is actually plausible. */
             value = (int)((int16_t)value);
             value += wpMain.x;
             *(int *)ad->argLoc = (int)value;
         } break;
 
         case ArgY: {
-            // [HGM] placement: translate stored relative to absolute
-            // (this is really kludgey, it should be done where used...)
+            /* [HGM] placement: translate stored relative to absolute (this is really kludgey, it should be done where used...) */
             int value = ValidateInt(argValue);
-            // Values that were previously stored can include
-            // unreasonable coordinate values (e.g., 2147483539).
-            // Therefore, we temporarily force using a lower precision
-            // so that we obtain a coordinate that is actually plausible.
+            /* Values that were previously stored can include unreasonable coordinate values (e.g., 2147483539).  Therefore, we
+	       temporarily force using a lower precision so that we obtain a coordinate that is actually plausible. */
             value = (int)((int16_t)value);
             value += wpMain.y;
             *(int *)ad->argLoc = (int)value;
@@ -1239,25 +1279,31 @@ not_special:
 
         case ArgString:
         case ArgFilename:
+            /* Look for ~~ at the beginning of the argument value. */
             if (argValue[0] == '~' && argValue[1] == '~') {
-                char buf[4 * MSG_SIZ];  // expand ~~
+                /* It is present, so we need to expand it. */
+                char buf[4 * MSG_SIZ];
                 snprintf(buf, 4 * MSG_SIZ, "%s%s", dataDir, argValue + 2);
                 ASSIGN(*(char **)ad->argLoc, buf);
                 break;
             }
-            if (replace) {  // previous -replace option makes this string option conditional
+            if (replace) {
+                /* previous -replace option makes this string option conditional */
                 int differs = strcmp(*(char **)ad->argLoc, (char *)replace);
+                /* previous -replace option also expires in the process */
                 free(replace);
-                replace = NULL;  // but expires in the process
+                replace = NULL;
                 if (differs) {
-                    break;  // only use to replace the given string
+                    /* only use to replace the given string */
+                    break;
                 }
             }
             ASSIGN(*(char **)ad->argLoc, argValue);
             break;
 
-        case ArgBackupSettingsFile:  // no-op if non-default settings-file already successfully read
+        case ArgBackupSettingsFile:
             if (strcmp(*(char **)ad->argLoc, SETTINGS_FILE)) {
+                /* A non-default settings file has already been successfully read, so do nothing. */
                 break;
             }
         case ArgSettingsFilename: {
@@ -1292,7 +1338,7 @@ not_special:
 
         case ArgAttribs: {
             ColorClass cc = (ColorClass)ad->argLoc;
-            ParseTextAttribs(cc, argValue);  // [HGM] wrapper for platform independency
+            ParseTextAttribs(cc, argValue);
         } break;
 
         case ArgBoardSize:
@@ -1315,27 +1361,40 @@ not_special:
             q = *(char **)ad->argLoc;
             r = NULL;
             s = argValue;
-            if (argValue[0] == '#') {  // group specification
+            if (argValue[0] == '#') {
+                /* group specification */
                 r = strstr(argValue, "\\n");
                 if (r) {
-                    *r++ = '\n', *r++ = NULLCHAR, s = r, r = argValue;  // split s into line-to-add (s) and group (r)
+                    /* split s into line-to-add (s) and group (r) */
+                    *r++ = '\n';
+                    *r++ = NULLCHAR;
+                    s = r;
+                    r = argValue;
                 }
             }
-            if ((saveDate == 0 || saveDate - dateStamp < 0) && !strstr(q, s)) {  // not seen before, and line does not occur yet
+            if ((saveDate == 0 || saveDate - dateStamp < 0) && !strstr(q, s)) {
+                /* not seen before, and line does not occur yet */
                 int l = strlen(q) + strlen(s);
-                if (r) {  // must be put in group r
+                if (r) {
+                    /* must be put in group r */
                     char * p = strstr(q, r);
-                    if (p) {  // group already exists
-                        p += strlen(r) - 1;  // determine insertion point (immediately after group header line)
+                    if (p) {
+                        /* group already exists */
+                        /* determine insertion point (immediately after group header line) */
+                        p += strlen(r) - 1;
                         *(char **)ad->argLoc = malloc(l + 2);
-                        *p++ = NULLCHAR;  // spit old value (q) at insertion point into q and p
-                        snprintf(*(char **)ad->argLoc, l + 2, "%s\n%s\n%s", q, s, p);  // insert (with newline)
-                    } else {  // group did not exist, create at end
+                        /* split old value (q) at insertion point into q and p */
+                        *p++ = NULLCHAR;
+                        /* insert (with newline) */
+                        snprintf(*(char **)ad->argLoc, l + 2, "%s\n%s\n%s", q, s, p);
+                    } else {
+                        /* group did not exist, create at end */
                         l += strlen(r) + 8;
                         *(char **)ad->argLoc = malloc(l);
                         snprintf(*(char **)ad->argLoc, l, "%s%s%s\n# end\n", q, r, s);
                     }
-                } else {  // no group, just add line at end
+                } else {
+                    /* no group, just add line at end */
                     *(char **)ad->argLoc = malloc(l + 2);
                     snprintf(*(char **)ad->argLoc, l + 2, "%s%s\n", q, s);
                 }
@@ -1358,7 +1417,6 @@ void ParseArgsFromString(char * p) { ParseArgs(StringGet, &p); }
 void ParseArgsFromFile(FILE * f) { ParseArgs(FileGet, f); }
 
 void ParseIcsTextMenu(char * icsTextMenuString) {
-    // int flags = 0;
     IcsTextMenuEntry * e = icsTextMenuEntry;
     char * p = icsTextMenuString;
     while (e->item != NULL && e < icsTextMenuEntry + ICS_TEXT_MENU_SIZE) {
@@ -1434,7 +1492,8 @@ void SetDefaultTextAttribs(void) {
     }
 }
 
-void SetDefaultsFromList(void) {  // [HGM] ini: take defaults from argDescriptor list
+/* [HGM] ini: take defaults from argDescriptor list */
+void SetDefaultsFromList(void) {
     int i;
 
     for (i = 0; argDescriptors[i].argName != NULL; i++) {
@@ -1465,8 +1524,11 @@ void SetDefaultsFromList(void) {  // [HGM] ini: take defaults from argDescriptor
             case ArgColor:
                 ParseColor((int)(intptr_t)argDescriptors[i].argLoc, (char *)argDescriptors[i].defaultValue);
                 break;
-            case ArgFloat:  // floats cannot be casted to int without precision loss
-            default:;  // some arg types cannot be initialized through table
+            case ArgFloat:
+                /* floats cannot be casted to int without precision loss */
+            default:
+                /* some arg types cannot be initialized through table */
+                ;
             }
         }
     }
@@ -1477,18 +1539,19 @@ void InitAppData(char * lpCmdLine) {
     char buf[MAX_ARG_LEN], currDir[MSG_SIZ];
     char * p;
 
-    /* Initialize to defaults */
-    SetDefaultsFromList();  // this sets most defaults
+    /* Initialize most defaults */
+    SetDefaultsFromList();
 
-    // some parameters for which there are no options!
-    appData.Iconic = FALSE; /*unused*/
+    /* Set some parameters for which there are no options. */
+    /* TODO: Verify that Iconic is unused, then remove. */
+    appData.Iconic = FALSE;
     appData.icsEngineAnalyze = FALSE;
 
-    // float: casting to int is not harmless, so default cannot be contained in table
+    /* float: casting to int is not harmless, so default cannot be contained in table */
     appData.timeDelay = TIME_DELAY;
     appData.timeIncrement = -314159;
 
-    // some complex, platform-dependent stuff that could not be handled from table
+    /* some complex, platform-dependent stuff that could not be handled from table */
     SetDefaultTextAttribs();
     SetFontDefaults();
     SetCommPortDefaults();
@@ -1523,10 +1586,11 @@ void InitAppData(char * lpCmdLine) {
         DisplayFatalError("Recompile with BOARD_RANKS or BOARD_FILES, to support this size", 0, 2);
     }
 
-    if (!*appData.secondChessProgram) {  // [HGM] scp defaults to fcp
+    if (!*appData.secondChessProgram) {
+        /* [HGM] scp defaults to fcp */
         ASSIGN(appData.secondChessProgram, appData.firstChessProgram);
         ASSIGN(appData.secondDirectory, appData.firstDirectory);
-        appData.secondIsUCI = appData.firstIsUCI;  // copy type too!
+        appData.secondIsUCI = appData.firstIsUCI;
     }
 
     /* [HGM] After parsing the options from the .ini file, and overruling them
@@ -1541,31 +1605,37 @@ void InitAppData(char * lpCmdLine) {
         char buf[MSG_SIZ], *q = buf;
         int len;
 
-        if (p != NULL) {  // engine command line contains WinBoard options
-            len = snprintf(buf, MSG_SIZ, p + 6, f, f, f, f, f, f, f, f, f, f);  // replace %s in them by "first"
+        /* Does the engine command line contains WinBoard options? */
+        if (p != NULL) {
+            /* replace %s in them by "first" */
+            len = snprintf(buf, MSG_SIZ, p + 6, f, f, f, f, f, f, f, f, f, f);
             if ((len >= MSG_SIZ) && appData.debugMode) {
                 fprintf(debugFP, "InitAppData: buffer truncated.\n");
             }
 
             ParseArgs(StringGet, &q);
-            p[-1] = 0;  // cut them offengine command line
+            /* cut them off the engine command line */
+            p[-1] = 0;
         }
     }
-    // now do same for second chess program
+    /* Now, do the same for the second chess program. */
     if (appData.secondChessProgram != NULL) {
         char * p = StrStr(appData.secondChessProgram, "WBopt");
         static char * s = "second";
         char buf[MSG_SIZ], *q = buf;
         int len;
 
-        if (p != NULL) {  // engine command line contains WinBoard options
-            len = snprintf(buf, MSG_SIZ, p + 6, s, s, s, s, s, s, s, s, s, s);  // replace %s in them by "first"
+        /* Does the engine command line contains WinBoard options? */
+        if (p != NULL) {
+            /* replace %s in them by "first" */
+            len = snprintf(buf, MSG_SIZ, p + 6, s, s, s, s, s, s, s, s, s, s);
             if ((len >= MSG_SIZ) && appData.debugMode) {
                 fprintf(debugFP, "InitAppData: buffer truncated.\n");
             }
 
             ParseArgs(StringGet, &q);
-            p[-1] = 0;  // cut them offengine command line
+            /* cut them off the engine command line */
+            p[-1] = 0;
         }
     }
 
@@ -1576,17 +1646,21 @@ void InitAppData(char * lpCmdLine) {
     if (appData.icsActive || appData.noChessProgram) {
         chessProgram = FALSE; /* not local chess program mode */
     }
-    if (appData.timeIncrement == -314159) {  // new storage mechanism of (mps,inc) in use and no -inc on command line
-        if (appData.movesPerSession <= 0) {  // new encoding of incremental mode
+    if (appData.timeIncrement == -314159) {
+        /* new storage mechanism of (mps, inc) in use and no -inc on command line */
+        if (appData.movesPerSession <= 0) {
+            /* new encoding of incremental mode */
             appData.timeIncrement = -appData.movesPerSession / 1000.;
         } else {
             appData.timeIncrement = -1;
         }
     }
     if (appData.movesPerSession <= 0) {
-        appData.movesPerSession = MOVES_PER_SESSION;  // mps <= 0 is invalid in any case
+        /* mps <= 0 is invalid in any case */
+        appData.movesPerSession = MOVES_PER_SESSION;
     }
-    if (*appData.defaultPathEGTB) {  // append value of deprecated -defaultPathEGTB to -egtFormats
+    if (*appData.defaultPathEGTB) {
+        /* append value of deprecated -defaultPathEGTB to -egtFormats */
         snprintf(buf, MAX_ARG_LEN, "%s%snalimov:%s", appData.egtFormats, (*appData.egtFormats ? "," : ""), appData.defaultPathEGTB);
         ASSIGN(appData.egtFormats, buf);
         ASSIGN(appData.defaultPathEGTB, "");
@@ -1606,7 +1680,8 @@ void InitAppData(char * lpCmdLine) {
         appData.savePositionFile = strdup(buf);
     }
 
-    if (autoClose) {  // was called for updating settingsfile only
+    if (autoClose) {
+        /* was called for updating settingsfile only */
         if (saveSettingsOnExit) {
             SaveSettings(settingsFileName);
         }
@@ -1680,11 +1755,12 @@ void SaveSettings(char * name) {
     /* [AS] Engine output */
     wpEngineOutput.visible = EngineOutputIsUp();
 
-    // [HGM] in WB we have to copy sound names to appData first
+    /* [HGM] in WB we have to copy sound names to appData first */
     ExportSounds();
 
     if (appData.timeIncrement >= 0) {
-        appData.movesPerSession = -1000 * appData.timeIncrement;  // kludge to store mps & inc as one
+        /* kludge to store mps & inc as one */
+        appData.movesPerSession = -1000 * appData.timeIncrement;
     }
 
     for (ad = argDescriptors; ad->argName != NULL; ad++) {
@@ -1695,11 +1771,10 @@ void SaveSettings(char * name) {
         case ArgString: {
             char * p = *(char **)ad->argLoc;
             if (p == NULL) {
-                break;  // just in case
+                break;
             }
             if ((strchr(p, '\\') || strchr(p, '\n')) && !strchr(p, '}')) {
-                /* Quote multiline values or \-containing values
-                   with { } if possible */
+                /* Quote multiline values or \-containing values with { } if possible */
                 fprintf(f, OPTCHAR "%s" SEPCHAR "{%s}\n", ad->argName, p);
             } else {
                 /* Else quote with " " */
@@ -1734,11 +1809,11 @@ void SaveSettings(char * name) {
             fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc);
             break;
         case ArgX:
-            // [HGM] placement: store relative value
+            /* placement: store relative value */
             fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.x);
             break;
         case ArgY:
-            // [HGM] placement: store relative value
+            /* placement: store relative value */
             fprintf(f, OPTCHAR "%s" SEPCHAR "%d\n", ad->argName, *(int *)ad->argLoc - wpMain.y);
             break;
         case ArgFloat:
@@ -1765,7 +1840,7 @@ void SaveSettings(char * name) {
             break;
         case ArgFilename:
             if (*(char **)ad->argLoc == NULL) {
-                break;  // just in case
+                break;
             }
             {
                 char buf[MSG_SIZ];
@@ -1802,8 +1877,10 @@ void SaveSettings(char * name) {
     appData.movesPerSession = mps;
 }
 
-Boolean GetArgValue(char * name) {  // retrieve (as text) current value of string or int argument given by name
-    // (this is used for maing the values available in the adapter command)
+/* Retrieve (as text) the current value of the string or int argument given by name.
+
+   This is used for making the values available in the adapter command. */
+Boolean GetArgValue(char * name) {
     ArgDescriptor * ad;
     int len;
 
