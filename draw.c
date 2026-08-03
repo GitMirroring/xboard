@@ -124,13 +124,10 @@ void SwitchWindow(int main) {
     // CsBoardWindow = DRAWABLE(currBoard);
 }
 
-
-static void NewCanvas(Option * graph) {
-    int w;
-    int h;
+void NewCanvas(Option * graph) {
+    int const w = graph->max;
+    int const h = graph->value;
     cairo_t * cr;
-    w = graph->max;
-    h = graph->value;
     if (graph->choice) {
         cairo_surface_destroy((cairo_surface_t *)graph->choice);
     }
@@ -182,36 +179,6 @@ void SelectPieces(VariantClass v) {
     }
 }
 
-int line_gap(int const square_size) {
-    if (square_size < 37) return 1;
-    if (square_size < 59) return 2;
-    if (square_size < 116) return 3;
-    return 4;
-}
-
-int desired_board_width_in_pixels(int const board_column_count, int square_size, int line_gap) {
-    return line_gap + board_column_count * (square_size + line_gap);
-}
-
-int desired_board_height_in_pixels(int const board_row_count, int square_size, int line_gap) {
-    return line_gap + board_row_count * (square_size + line_gap);
-}
-
-void resize_board_window(int const board_column_count, int const board_row_count, int * const square_size_ptr, int const line_gap) {
-    int desired_width;
-    int desired_height;
-    int minimum_acceptable_width = 0;
-    do {
-        desired_width = desired_board_width_in_pixels(board_column_count, *square_size_ptr, line_gap);
-        if (minimum_acceptable_width <= desired_width) {
-            break;
-        }
-        ++(*square_size_ptr);
-    } while (1);
-    desired_height = desired_board_height_in_pixels(board_row_count, *square_size_ptr, line_gap);
-    ResizeBoardWindow(desired_width, desired_height);
-}
-
 void InitDrawingSizes(int boardSize, int flags) {
     /* [HGM] resize is functional now, but for board format changes only (number of ranks, files) */
     int boardWidth, boardHeight;
@@ -228,7 +195,7 @@ void InitDrawingSizes(int boardSize, int flags) {
         /* keep total width fixed */
         squareSize = ((squareSize + lineGap) * oldNrOfFiles + 0.5 * BOARD_WIDTH) / BOARD_WIDTH;
         if (appData.overrideLineGap < 0) {
-            lineGap = line_gap(squareSize);
+            lineGap = default_line_gap(squareSize);
         }
         squareSize -= lineGap;
         CreatePNGPieces(appData.pieceDirectory);
@@ -244,9 +211,9 @@ void InitDrawingSizes(int boardSize, int flags) {
     if (appData.overrideLineGap >= 0) {
         lineGap = appData.overrideLineGap;
     }
+    boardWidth = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    boardHeight = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
 
-    boardWidth = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    boardHeight = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     /* Resize only if the size actually changed. */
     if ((boardWidth != oldWidth) || (boardHeight != oldHeight)) {
         oldWidth = boardWidth;
@@ -255,7 +222,7 @@ void InitDrawingSizes(int boardSize, int flags) {
         /* Redo texture scaling. */
         CreateAnyPieces(0);
         /* Inhibit shell resizing. */
-        resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
+        ResizeBoardWindow(boardWidth, boardHeight);
         DelayedDrag();
     }
 
@@ -283,7 +250,7 @@ void ExposeRedraw(Option * graph, int x, int y, int w, int h) {  // copy a selec
 
 static int modV[2], modH[2];
 
-static void CreatePNGBoard(char * s, int kind) {
+void CreatePNGBoard(char * s, int kind) {
     float w, h;
     static float n[2] = {1., 1.};
     if (!appData.useBitmaps || s == NULL || *s == 0 || *s == '*') {
@@ -426,11 +393,11 @@ RsvgHandle * LoadSVG(char * dir, int color, int piece, int retry) {
     return NULL;
 }
 
-static void Wint(FILE * f, int n) {  // write 32-bit int, lsb first
+void Wint(FILE * f, int n) {  // write 32-bit int, lsb first
     fprintf(f, "%c%c%c%c", n & 255, n >> 8 & 255, n >> 16 & 255, n >> 24 & 255);
 }
 
-static void SaveWindowsBitmap(ChessSquare piece, int color, int * data, int stride, int w, int h, int bpp) {
+void SaveWindowsBitmap(ChessSquare piece, int color, int * data, int stride, int w, int h, int bpp) {
     int i, v, line = (w * bpp + 3) >> 2, size = line * 4 * h;
     char buf[100];
     FILE * f;
@@ -481,7 +448,7 @@ static void SaveWindowsBitmap(ChessSquare piece, int color, int * data, int stri
 
 void InscribeKanji(cairo_surface_t * canvas, ChessSquare piece, int x, int y);
 
-static void ScaleOnePiece(int color, int piece, char * pieceDir) {
+void ScaleOnePiece(int color, int piece, char * pieceDir) {
     float w, h;
     char buf[MSG_SIZ];
     cairo_surface_t *img, *cs;
@@ -599,7 +566,7 @@ void CreateAnyPieces(int p) {  // [HGM] taken out of main
     CreatePNGBoard(appData.darkBackTextureFile, 0);
 }
 
-static void ClearPieces(void) {
+void ClearPieces(void) {
     int i, p;
     for (i = 0; i < 2; i++) {
         for (p = 0; p < BlackPawn; p++) {
@@ -755,12 +722,12 @@ void CreateGrid(void) {
     }
     for (i = 0; i < BOARD_HEIGHT + 1; i++) {
         gridSegments[i].x1 = 0;
-        gridSegments[i].x2 = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+        gridSegments[i].x2 = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
         gridSegments[i].y1 = gridSegments[i].y2 = lineGap / 2 + (i * (squareSize + lineGap));
     }
     for (j = 0; j < BOARD_WIDTH + 1; j++) {
         gridSegments[j + i].y1 = 0;
-        gridSegments[j + i].y2 = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
+        gridSegments[j + i].y2 = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
         gridSegments[j + i].x1 = gridSegments[j + i].x2 = lineGap / 2 + (j * (squareSize + lineGap));
     }
 }
@@ -818,7 +785,7 @@ void DrawBorder(int x, int y, int type, int odd) {
     // GraphExpose(currBoard, x - lineGap/2, y - lineGap/2, squareSize+2*lineGap+odd, squareSize+2*lineGap+odd);
 }
 
-static int CutOutSquare(int x, int y, int * x0, int * y0, int kind) {
+int CutOutSquare(int x, int y, int * x0, int * y0, int kind) {
     int W = BOARD_WIDTH, H = BOARD_HEIGHT;
     int nx = x / (squareSize + lineGap), ny = y / (squareSize + lineGap);
     *x0 = 0;
@@ -870,8 +837,8 @@ void DrawLogo(Option * opt, void * logo) {
     GraphExpose(opt, 0, 0, opt->max, opt->value);
 }
 
-static void BlankSquare(cairo_surface_t * dest, int x, int y, int color, ChessSquare piece,
- int fac) {  // [HGM] extra param 'fac' for forcing destination to (0,0) for copying to animation buffer
+/* [HGM] extra param 'fac' for forcing destination to (0, 0) for copying to animation buffer */
+void BlankSquare(cairo_surface_t * dest, int x, int y, int color, ChessSquare piece, int fac) {
     int x0, y0, texture = color < 2 && (useTexture & color + 1) && CutOutSquare(x, y, &x0, &y0, color);
     cairo_t * cr;
 
@@ -911,7 +878,7 @@ static void BlankSquare(cairo_surface_t * dest, int x, int y, int color, ChessSq
     cairo_destroy(cr);
 }
 
-static void pngDrawPiece(cairo_surface_t * dest, ChessSquare piece, int square_color, int x, int y) {
+void pngDrawPiece(cairo_surface_t * dest, ChessSquare piece, int square_color, int x, int y) {
     int kind;
     cairo_t * cr;
 
@@ -961,8 +928,8 @@ void DrawDot(int marker, int x, int y, int r) {  // used for atomic captures; no
     GraphExpose(currBoard, x - r, y - r, 2 * r, 2 * r);
 }
 
-static void DrawUnicode(cairo_surface_t * canvas, char * string, int x, int y, char id, int flip, int size, int vpos) {
-    //	cairo_text_extents_t te;
+void DrawUnicode(cairo_surface_t * canvas, char * string, int x, int y, char id, int flip, int size, int vpos) {
+    /*cairo_text_extents_t te;*/
     cairo_t * cr;
     int s = 1 - 2 * flip;
     PangoLayout * layout;
@@ -1078,15 +1045,15 @@ void InscribeKanji(cairo_surface_t * canvas, ChessSquare piece, int x, int y) {
     DrawUnicode(canvas, buf, x, y, PieceToChar(n), flip, size, i);
 }
 
-void DrawOneSquare(int x, int y, ChessSquare piece, int square_color, int marker, char * tString, char * bString,
- int align) {  // basic front-end board-draw function: takes care of everything that can be in square:
-    // piece, background, coordinate/count, marker dot
-
+/* Draws everything that can be in a square: piece, background, coordinate/count, marker dot. */
+void DrawOneSquare(int x, int y, ChessSquare piece, int square_color, int marker, char * tString, char * bString, int align) {
     if (piece == EmptySquare) {
         BlankSquare(CsBoardWindow(currBoard), x, y, square_color, piece, 1);
     } else {
         pngDrawPiece(CsBoardWindow(currBoard), piece, square_color, x, y);
-        // if(appData.inscriptions[0]) InscribeKanji(CsBoardWindow(currBoard), piece, x, y);
+        /* if(appData.inscriptions[0]) {
+            InscribeKanji(CsBoardWindow(currBoard), piece, x, y);
+        } */
     }
 
     if (align) {  // square carries inscription (coord or piece count)
@@ -1103,15 +1070,11 @@ void DrawOneSquare(int x, int y, ChessSquare piece, int square_color, int marker
     }
 }
 
-/****	Animation code by Hugh Fisher, DCS, ANU. ****/
-
-/*	Masks for XPM pieces. Black and white pieces can have
-        different shapes, but in the interest of retaining my
-        sanity pieces must have the same outline on both light
-        and dark squares, and all pieces must use the same
-        background square colors/images.		*/
-
+/* Masks for XPM pieces.  Black and white pieces can have different shapes, but in the interest of simplicity, pieces must have
+   the same outline on both light and dark squares, and all pieces must use the same background square colors/images. */
 static cairo_surface_t * c_animBufs[3 * NrOfAnims];  // newBuf, saveBuf
+
+/* Animation code by Hugh Fisher, DCS, ANU. */
 
 static void InitAnimState(AnimNr anr) {
     if (c_animBufs[anr]) {

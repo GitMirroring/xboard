@@ -138,7 +138,6 @@ int flock(int f, int code);
 #include "evalgraph.h"
 #include "engineoutput.h"
 #include "gettext.h"
-#include "draw.h"
 
 #ifdef ENABLE_NLS
 # define _(s) gettext(s)
@@ -2859,8 +2858,8 @@ int DrawSeekGraph(void) {
     if (!seekGraphUp) {
         return FALSE;
     }
-    h = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap) + 2 * border;
-    w = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap) + 2 * border;
+    h = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap) + 2 * border;
+    w = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap) + 2 * border;
 
     DrawSeekBackground(0, 0, w, h);
     DrawSeekAxis(hMargin, h - 1 - vMargin, w - 5, h - 1 - vMargin);

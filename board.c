@@ -1011,8 +1011,8 @@ void DrawPositionX(int repaint, Board board) {
     DrawDragPiece();
 
     if (exposeAll) {
-        GraphExpose(currBoard, 0, 0, desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap),
-         desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
+        GraphExpose(currBoard, 0, 0, desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap),
+         desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
     } else {
         for (i = 0; i < BOARD_HEIGHT; i++) {
             for (j = 0; j < BOARD_WIDTH; j++) {

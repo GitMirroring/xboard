@@ -1,12 +1,9 @@
 /*
  * xboard.c -- X front end for XBoard
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * The following terms apply to Digital Equipment Corporation's copyright
  * interest in XBoard:
@@ -1155,9 +1152,8 @@ int main(int argc, char ** argv) {
         lineGap = appData.overrideLineGap;
     }
 
-    /* For GTK but not Xaw, height treated separately (hacked). */
-    boardWidth = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    boardHeight = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
+    boardWidth = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    boardHeight = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
 
     /*
      * Determine what fonts to use.
@@ -1691,10 +1687,11 @@ void do_resize(WindowPlacement const * const wp) {
         /* Create grid, etc. */
         InitDrawingSizes(0, 0);
     } else {
-        resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
+        ResizeBoardWindow(desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap),
+         desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
     }
-    width = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    height = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
+    width = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    height = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     if (optList[W_BOARD].max > width) {
         optList[W_BOARD].max = width;
     }
@@ -1713,7 +1710,7 @@ void DragProc(void) {
     busy = 1;
 
     GetActualPlacement(shellWidget, &wpNew);
-    int const moved = (wpNew.x != wpMain.x) || (wpNew.y != wpNew.y);
+    int const moved = (wpNew.x != wpMain.x) || (wpNew.y != wpMain.y);
     int const sized = (wpNew.width != wpMain.width) || (wpNew.height != wpMain.height);
     if (!moved && !sized) {
         busy = 0;
@@ -1762,7 +1759,7 @@ void DrawPositionProc(Widget w, XEvent * event, String * prms, Cardinal * nprms)
 
 
 void HandlePV(Widget w, XEvent * event, String * params, Cardinal * nParams) {  // [HGM] pv: walk PV
-    MovePV(event->xmotion.x, event->xmotion.y, desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
+    MovePV(event->xmotion.x, event->xmotion.y, desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
 }
 
 extern int savedIndex; /* gross that this is global */

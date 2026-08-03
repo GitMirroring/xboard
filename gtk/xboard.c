@@ -1,8 +1,7 @@
 /*
  * xboard.c -- X front end for XBoard
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
  * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
@@ -154,13 +153,13 @@
 
 #include "gtk/button_labels.h"
 
-/* TODO: macOS support seems hacked in uncomfortably.  Certainly, clobbering LOCALEDIR (or XBOARD_LOCALE_DIR) from within the source
-   code is not the way this should be done.  It may be best to remove the attempt to support macOS entirely, unless we can obtain
-   appropriate access to such a machine. */
+/* TODO: macOS support seems hacked in uncomfortably.  Certainly, clobbering XBOARD_LOCALE_DIR from within the source code is not
+   the way this should be done.  It may be best to remove the attempt to support macOS entirely, unless we can obtain appropriate
+   access to such a machine. */
 #ifdef OSXAPP
 # include <gtkmacintegration/gtkosxapplication.h>
 /* prevent pathname of positional file argument provided by OS X being be mistaken for option name
-   (price is that we won't recognize Windows option format anymore) */
+   (price is that we won't recognize Windows option format anymore). */
 # define SLASH '-'
 # define IMG ".png"
 /* redefine some defaults */
@@ -1171,7 +1170,7 @@ int main(int argc, char ** argv) {
     if (BOARD_WIDTH != 8) {
         /* keep width the same */
         squareSize = (squareSize * 8 + BOARD_WIDTH / 2) / BOARD_WIDTH;
-        lineGap = line_gap(squareSize);
+        lineGap = default_line_gap(squareSize);
     }
 
     defaultLineGap = lineGap;
@@ -1179,9 +1178,9 @@ int main(int argc, char ** argv) {
         lineGap = appData.overrideLineGap;
     }
 
-    /* For GTK but not Xaw, height treated separately (hacked). */
-    boardWidth = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    /* boardHeight = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap); */
+    /* In the GTK version of xboard.c, height is treated separately (hacked). */
+    boardWidth = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    /*boardHeight = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);*/
 
     /*
      * Determine what fonts to use.
@@ -1835,14 +1834,14 @@ void do_resize(WindowPlacement const * const wp) {
     }
     if (appData.overrideLineGap < 0) {  // do second iteration with adjusted lineGap
         int oldSqx = sqx;
-        lineGap = line_gap(sqx);
+        lineGap = default_line_gap(sqx);
         lg = lineGap;
         sqx = (width - lg) / BOARD_WIDTH - lg;
         sqy = (height - lg) / BOARD_HEIGHT - lg;
         if (sqy < sqx) {
             sqx = sqy;
         }
-        lg = line_gap(sqx);
+        lg = default_line_gap(sqx);
         if (sqx == oldSqx + 1 && lg == lineGap + 1) {
             sqx = oldSqx, squareSize = 0;  // prevent oscillations, force resize by kludge
         }
@@ -1894,10 +1893,11 @@ void do_resize(WindowPlacement const * const wp) {
         /* Create grid, et cetera. */
         InitDrawingSizes(0, 0);
     } else {
-        resize_board_window(BOARD_WIDTH, BOARD_HEIGHT, &squareSize, lineGap);
+        ResizeBoardWindow(desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap),
+         desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
     }
-    optList[W_BOARD].max = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    optList[W_BOARD].value = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
+    optList[W_BOARD].max = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    optList[W_BOARD].value = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     optList[W_BOARD].min |= REPLACE;
     if (twoBoards && shellUp[DummyDlg]) {
         SecondaryBoardPopUp();
@@ -2322,8 +2322,8 @@ void LockBoardSize(int after) {
     if (oldMessgFont && !strcmp(oldMessgFont, appData.font) && oldClockFont && !strcmp(oldClockFont, appData.clockFont) && after < 2) {
         return;
     }
-    w = desired_board_width_in_pixels(BOARD_WIDTH, squareSize, lineGap);
-    h = desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
+    w = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
+    h = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     if (after & 1) {
         ASSIGN(oldClockFont, appData.clockFont);
         ASSIGN(oldMessgFont, appData.font);
@@ -2332,7 +2332,6 @@ void LockBoardSize(int after) {
         /* Liberate the board. */
         gtk_widget_set_size_request(optList[W_BOARD].handle, -1, -1);
     } else {
-        /* before */
         /* Protect the board widget. */
         gtk_widget_set_size_request(optList[W_BOARD].handle, w, h);
     }

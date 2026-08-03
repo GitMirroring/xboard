@@ -46,3 +46,14 @@
  ** See the file ChangeLog for a revision history.  */
 
 #include "common.h"
+
+int default_line_gap(int const square_size) {
+    if (square_size < 37) return 1;
+    if (square_size < 59) return 2;
+    if (square_size < 116) return 3;
+    return 4;
+}
+
+int desired_board_dimension_in_pixels(int const board_row_or_column_count, int const square_size, int const line_gap) {
+    return line_gap + board_row_or_column_count * (square_size + line_gap);
+}

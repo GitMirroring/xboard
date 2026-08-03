@@ -1,8 +1,7 @@
 /*
  * common.h -- Common definitions for X and Windows NT versions of XBoard
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
  * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
@@ -1113,5 +1112,8 @@ void DisplayError(String message, int error);
 #define fenOverride2 fenOverride[1]
 #define firstOptions engOptions[0]
 #define secondOptions engOptions[1]
+
+int default_line_gap(int square_size);
+int desired_board_dimension_in_pixels(int board_row_or_column_count, int square_size, int line_gap);
 
 #endif /* GNU_XBOARD_COMMON_H */

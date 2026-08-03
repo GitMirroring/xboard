@@ -93,7 +93,7 @@ int MemoProc(Option * opt, int n, int x, int y, char * text, int index) {  // us
         if (!pressed) {
             return FALSE;  // only motion with button 3 down is of interest
         }
-        MovePV(x, y, 500 /*desired_board_height_in_pixels(BOARD_HEIGHT, squareSize, lineGap)*/);
+        MovePV(x, y, 500 /*desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap)*/);
         break;
     case 3:  // press button 3
         pressed = 1;

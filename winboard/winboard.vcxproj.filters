@@ -93,6 +93,9 @@
     <ClCompile Include="..\zippy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="winboard.rc">

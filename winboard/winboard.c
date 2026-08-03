@@ -111,7 +111,6 @@
 # include "wsnap.h"
 
 # define SLASH '/'
-# define DATADIR "~~"
 
 // void InitEngineUCI( const char * iniDir, ChessProgramState * cps );
 
