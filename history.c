@@ -38,10 +38,14 @@
 #include "backend.h"
 
 /* templates for low-level front-end tasks (requiring platform-dependent implementation) */
-void ClearHistoryMemo(void);  // essential
-int AppendToHistoryMemo(char * text, int bold, int colorNr);  // essential (coloring / styling optional)
-void HighlightMove(int from, int to, Boolean highlight);  // optional (can be dummy)
-void ScrollToCurrent(int caretPos);  // optional (can be dummy)
+/* essential */
+void ClearHistoryMemo(void);
+/* essential (coloring / styling optional) */
+int AppendToHistoryMemo(char * text, int bold, int colorNr);
+/* optional (can be dummy) */
+void HighlightMove(int from, int to, Boolean highlight);
+/* optional (can be dummy) */
+void ScrollToCurrent(int caretPos);
 
 /* templates for front-end entry point to allow inquiring about front-end state */
 Boolean MoveHistoryDialogExists(void);
@@ -72,7 +76,6 @@ static HistoryMove histMoves[MAX_MOVES];
 
 /* Note: in the following code a "Memo" is a Rich Edit control (it's Delphi lingo) */
 
-// back-end after replacing Windows data-types by equivalents
 static Boolean OnlyCurrentPositionChanged(void) {
     Boolean result = FALSE;
 
@@ -91,7 +94,6 @@ static Boolean OnlyCurrentPositionChanged(void) {
     return result;
 }
 
-// back-end, after replacing Windows data types
 static Boolean OneMoveAppended(void) {
     Boolean result = FALSE;
 
@@ -104,7 +106,6 @@ static Boolean OneMoveAppended(void) {
     return result;
 }
 
-// back-end, now that color and font-style are passed as numbers
 static void AppendMoveToMemo(int index) {
     char buf[64];
 
@@ -117,7 +118,8 @@ static void AppendMoveToMemo(int index) {
     /* Move number */
     if ((index % 2) == 0) {
         sprintf(buf, "%d.%s ", (index / 2) + 1, index & 1 ? ".." : "");
-        AppendToHistoryMemo(buf, 1, 0);  // [HGM] 1 means bold, 0 default color
+        /* [HGM] 1 means bold, 0 default color */
+        AppendToHistoryMemo(buf, 1, 0);
     }
 
     /* Move text */
@@ -131,12 +133,11 @@ static void AppendMoveToMemo(int index) {
     if (appData.showEvalInMoveHistory && currPvInfo[index].depth > 0) {
         sprintf(
          buf, "{%s%.2f/%d} ", currPvInfo[index].score >= 0 ? "+" : "", currPvInfo[index].score / 100.0, currPvInfo[index].depth);
-
-        AppendToHistoryMemo(buf, 0, 1);  // [HGM] 1 means gray
+        /* [HGM] 1 means gray */
+        AppendToHistoryMemo(buf, 0, 1);
     }
 }
 
-// back-end
 void RefreshMemoContent(void) {
     int i;
 
@@ -147,14 +148,12 @@ void RefreshMemoContent(void) {
     }
 }
 
-// back-end part taken out of HighlightMove to determine character positions
 static void DoHighlight(int index, int onoff) {
     if (index >= 0 && index < MAX_MOVES) {
         HighlightMove(histMoves[index].memoOffset, histMoves[index].memoOffset + histMoves[index].memoLength, onoff);
     }
 }
 
-// back-end, now that a wrapper is provided for the front-end code to do the actual scrolling
 void MemoContentUpdated(void) {
     int caretPos;
 
@@ -180,21 +179,20 @@ void MemoContentUpdated(void) {
     }
 
     ScrollToCurrent(caretPos);
-    DoHighlight(currCurrent, TRUE);  // [HGM] moved last, because in X some scrolling methods spoil highlighting
+    /* [HGM] moved last, because in X some scrolling methods spoil highlighting */
+    DoHighlight(currCurrent, TRUE);
 }
 
-// back-end. Must be called as double-click call-back on move-history text edit
 void FindMoveByCharIndex(int char_index) {
     int index;
 
     for (index = currFirst; index < currLast; index++) {
         if (char_index >= histMoves[index].memoOffset && char_index < (histMoves[index].memoOffset + histMoves[index].memoLength)) {
-            ToNrEvent(index + 1);  // moved here from call-back
+            ToNrEvent(index + 1);
         }
     }
 }
 
-// back-end. In WinBoard called by call-back, but could be called directly by SetIfExists?
 void UpdateMoveHistory(void) {
     /* Update the GUI */
     if (OnlyCurrentPositionChanged()) {
@@ -208,10 +206,8 @@ void UpdateMoveHistory(void) {
     MemoContentUpdated();
 }
 
-// back-end
 void MoveHistorySet(char movelist[][2 * MOVE_LEN], int first, int last, int current, ChessProgramStats_Move * pvInfo) {
     /* [AS] Danger! For now we rely on the movelist parameter being a static variable! */
-
     currMovelist = movelist;
     currFirst = first;
     currLast = last;
@@ -219,6 +215,7 @@ void MoveHistorySet(char movelist[][2 * MOVE_LEN], int first, int last, int curr
     currPvInfo = pvInfo;
 
     if (MoveHistoryDialogExists()) {
-        UpdateMoveHistory();  // [HGM] call this directly, in stead of through call-back
+        /* [HGM] call this directly, instead of through call-back */
+        UpdateMoveHistory();
     }
 }

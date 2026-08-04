@@ -1,7 +1,7 @@
 /*
  * xgamelist.c -- Game list window, part of X front end for XBoard
  *
- * Copyright 1995, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -93,7 +93,8 @@ char filterTranslations[] = "<Key>Return: SetFilterProc() \n";
 
 void LoadSelectedProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
     if (GameListClicks(atoi(prms[0]))) {
-        return;  // if no game loaded, no focus transfer
+        /* if no game loaded, no focus transfer */
+        return;
     }
     XSync(xDisplay, FALSE);
     XSetInputFocus(xDisplay, XtWindow(boardWidget), RevertToPointerRoot, CurrentTime);

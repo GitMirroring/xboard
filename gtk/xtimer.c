@@ -95,7 +95,7 @@ void FireDelayedEvent(void * data) {
 
 void ScheduleDelayedEvent(DelayedEventCallback cb, long millisec) {
     if (delayedEventTimerTag && delayedEventCallback == cb) {
-        // [HGM] alive: replace, rather than add or flush identical event
+        /* [HGM] alive: replace, rather than add or flush identical event */
         g_source_remove(delayedEventTimerTag);
     }
     delayedEventCallback = cb;
@@ -144,7 +144,7 @@ void StartLoadGameTimer(long millisec) { loadGameTimerTag = g_timeout_add(millis
 unsigned int analysisClockTag = 0;
 
 int AnalysisClockCallback(void * data) {
-    if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || appData.icsEngineAnalyze) {  // [DM]
+    if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || appData.icsEngineAnalyze) {
         AnalysisPeriodicEvent(0);
     }
     return 1;

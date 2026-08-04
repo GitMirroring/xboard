@@ -396,11 +396,6 @@ void HighlightArrowProc(void) {
     MARK_MENU_ITEM("Options.HighlightWithArrow", appData.highlightMoveWithArrow);
 }
 
-void IcsAlarmProc(void) {
-    appData.icsAlarm = !appData.icsAlarm;
-    // MARK_MENU_ITEM("Options.ICSAlarm", appData.icsAlarm);
-}
-
 void MoveSoundProc(void) {
     appData.ringBellAfterMoves = !appData.ringBellAfterMoves;
     MARK_MENU_ITEM("Options.MoveSound", appData.ringBellAfterMoves);
@@ -424,11 +419,6 @@ void PopupExitMessageProc(void) {
 void PopupMoveErrorsProc(void) {
     appData.popupMoveErrors = !appData.popupMoveErrors;
     MARK_MENU_ITEM("Options.PopupMoveErrors", appData.popupMoveErrors);
-}
-
-void PremoveProc(void) {
-    appData.premove = !appData.premove;
-    // MARK_MENU_ITEM("Options.Premove", appData.premove);
 }
 
 void ShowCoordsProc(void) {

@@ -336,7 +336,7 @@ int solvingTime, totalTime, jawsClock;
 #define TN_SGA 0003
 #define TN_PORT 23
 
-char * safeStrCpy(char * dst, const char * src, size_t count) {  // [HGM] made safe
+char * safeStrCpy(char * dst, const char * src, size_t count) {
     int i;
     assert(dst != NULL);
     assert(src != NULL);
@@ -348,7 +348,8 @@ char * safeStrCpy(char * dst, const char * src, size_t count) {  // [HGM] made s
         }
     }
     if (i == count && dst[count - 1] != NULLCHAR) {
-        dst[count - 1] = '\0';  // make sure incomplete copy still null-terminated
+        /* make sure incomplete copy still null-terminated */
+        dst[count - 1] = '\0';
         if (appData.debugMode) {
             fprintf(debugFP, "safeStrCpy: copying %s into %s didn't work, not enough space %d\n", src, dst, (int)count);
         }
@@ -372,10 +373,12 @@ int PosFlags(int index) {
     switch (gameInfo.variant) {
     case VariantSuicide:
         flags &= ~F_ALL_CASTLE_OK;
-    case VariantGiveaway:  // [HGM] moved this case label one down: seems Giveaway does have castling on ICC!
+    /* [HGM] Giveaway does have castling on ICC. */
+    case VariantGiveaway:
         flags |= F_IGNORE_CHECK;
     case VariantLosers:
-        flags |= F_MANDATORY_CAPTURE;  //[HGM] losers: sets flag so TestLegality rejects non-capts if capts exist
+        /* [HGM] losers: sets flag so TestLegality rejects non-capts if capts exist */
+        flags |= F_MANDATORY_CAPTURE;
         break;
     case VariantAtomic:
         flags |= F_IGNORE_CHECK | F_ATOMIC_CAPTURE;
@@ -385,7 +388,7 @@ int PosFlags(int index) {
         break;
     case VariantCapaRandom:
     case VariantFischeRandom:
-        flags |= F_FRC_TYPE_CASTLING; /* [HGM] enable this through flag */
+        flags |= F_FRC_TYPE_CASTLING;
     case VariantNoCastle:
     case VariantShatranj:
     case VariantCourier:
@@ -406,13 +409,16 @@ int PosFlags(int index) {
         break;
     }
     if (appData.fischerCastling) {
-        flags |= F_FRC_TYPE_CASTLING, flags &= ~F_ALL_CASTLE_OK;  // [HGM] fischer
+        flags |= F_FRC_TYPE_CASTLING, flags &= ~F_ALL_CASTLE_OK;
     }
     return flags;
 }
 
-FILE *gameFileFP, *debugFP, *serverFP;
-char * currentDebugFile;  // [HGM] debug split: to remember name
+FILE * gameFileFP;
+FILE * debugFP;
+FILE * serverFP;
+/* [HGM] debug split: to remember name */
+char * currentDebugFile;
 
 /*
     [AS] Note: sometimes, the sscanf() function is used to parse the input
@@ -469,12 +475,13 @@ int adjudicateLossPlies = 6;
 char white_holding[64], black_holding[64];
 TimeMark lastNodeCountTime;
 long lastNodeCount = 0;
-int shiftKey, controlKey;  // [HGM] set by mouse handler
+/* [HGM] shiftKey and controlKey are set by mouse handler */
+int shiftKey;
+int controlKey;
 
 int have_sent_ICS_logon = 0;
 int movesPerSession;
-int suddenDeath, whiteStartMove,
- blackStartMove; /* [HGM] for implementation of 'any per time' sessions, as in first part of byoyomi TC */
+int suddenDeath, whiteStartMove, blackStartMove; /* [HGM] for implementation of 'any per time' sessions, as in first part of byoyomi TC */
 long whiteTimeRemaining, blackTimeRemaining, timeControl, timeIncrement, lastWhite, lastBlack, activePartnerTime;
 Boolean adjustedClock;
 long timeControl_2; /* [AS] Allow separate time controls */
@@ -500,18 +507,22 @@ AppData appData;
 
 Board boards[MAX_MOVES];
 /* [HGM] Following 7 needed for accurate legality tests: */
-signed char castlingRank[BOARD_FILES];  // and corresponding ranks
+signed char castlingRank[BOARD_FILES]; /* and corresponding ranks */
 unsigned char initialRights[BOARD_FILES];
-int nrCastlingRights;  // For TwoKings, or to implement castling-unknown status
+/* For TwoKings, or to implement castling-unknown status */
+int nrCastlingRights;
 int initialRulePlies, FENrulePlies;
-FILE * serverMoves = NULL;  // next two for broadcasting (/serverMoves option)
+FILE * serverMoves = NULL;
+/* loadFlag and shuffleOpenings are for broadcasting (/serverMoves option) */
 int loadFlag = 0;
 Boolean shuffleOpenings;
-int mute;  // mute all sounds
+/* mute all sounds */
+int mute;
 
-// [HGM] vari: next 12 to save and restore variations
+/* beginning of saving and restoring variations */
 #define MAX_VARIATIONS 10
-int framePtr = MAX_MOVES - 1;  // points to free stack entry
+/* points to free stack entry */
+int framePtr = MAX_MOVES - 1;
 int storedGames = 0;
 int savedFirst[MAX_VARIATIONS];
 int savedLast[MAX_VARIATIONS];
@@ -524,6 +535,7 @@ Boolean PopTail(Boolean annotate);
 void PushInner(int firstMove, int lastMove);
 void PopInner(Boolean annotate);
 void CleanupTail(void);
+/* end of saving and restoring variations */
 
 ChessSquare FIDEArray[2][BOARD_FILES] = {
  {WhiteRook, WhiteKnight, WhiteBishop, WhiteQueen, WhiteKing, WhiteBishop, WhiteKnight, WhiteRook},
@@ -618,25 +630,25 @@ ChessSquare GothicArray[2][BOARD_FILES] = {
  {WhiteRook, WhiteKnight, WhiteBishop, WhiteQueen, WhiteMarshall, WhiteKing, WhiteAngel, WhiteBishop, WhiteKnight, WhiteRook},
  {BlackRook, BlackKnight, BlackBishop, BlackQueen, BlackMarshall, BlackKing, BlackAngel, BlackBishop, BlackKnight, BlackRook}
 };
-# else  // !GOTHIC
+# else /* !GOTHIC */
 #  define GothicArray CapablancaArray
-# endif  // !GOTHIC
+# endif /* !GOTHIC */
 
 # ifdef FALCON
 ChessSquare FalconArray[2][BOARD_FILES] = {
  {WhiteRook, WhiteKnight, WhiteBishop, WhiteFalcon, WhiteQueen, WhiteKing, WhiteFalcon, WhiteBishop, WhiteKnight, WhiteRook},
  {BlackRook, BlackKnight, BlackBishop, BlackFalcon, BlackQueen, BlackKing, BlackFalcon, BlackBishop, BlackKnight, BlackRook}
 };
-# else  // !FALCON
+# else /* !FALCON */
 #  define FalconArray CapablancaArray
-# endif  // !FALCON
+# endif /* !FALCON */
 
-#else  // !(BOARD_FILES>=10)
+#else /* !(BOARD_FILES>=10) */
 # define XiangqiPosition FIDEArray
 # define CapablancaArray FIDEArray
 # define GothicArray FIDEArray
 # define GreatArray FIDEArray
-#endif  // !(BOARD_FILES>=10)
+#endif /* !(BOARD_FILES>=10) */
 
 #if (BOARD_FILES >= 12)
 ChessSquare CourierArray[2][BOARD_FILES] = {
@@ -659,10 +671,10 @@ ChessSquare ChuArray[6][BOARD_FILES] = {
  {BlackDagger, BlackSword,  BlackRook,   BlackCardinal, BlackDragon, BlackQueen,    BlackLion,     BlackDragon, BlackCardinal, BlackRook,
   BlackSword,                                                                                                                                         BlackDagger}
 };
-#else  // !(BOARD_FILES>=12)
+#else /* !(BOARD_FILES>=12) */
 # define CourierArray CapablancaArray
 # define ChuArray CapablancaArray
-#endif  // !(BOARD_FILES>=12)
+#endif /* !(BOARD_FILES>=12) */
 
 
 Board initialPosition;
@@ -689,15 +701,16 @@ void ClearProgramStats(void) {
     programStats.nr_moves = 0;
     programStats.moves_left = 0;
     programStats.nodes = 0;
-    programStats.time = -1;  // [HGM] PGNtime: make invalid to recognize engine output
+    /* [HGM] PGNtime: make invalid to recognize engine output */
+    programStats.time = -1;
     programStats.score = 0;
     programStats.got_only_move = 0;
     programStats.got_fail = 0;
     programStats.line_is_book = 0;
 }
 
-void CommonEngineInit(
- void) {  // [HGM] moved some code here from InitBackend1 that has to be done after both engines have contributed their settings
+/* [HGM] moved some code here from InitBackend1 that has to be done after both engines have contributed their settings */
+void CommonEngineInit(void) {
     if (appData.firstPlaysBlack) {
         first.twoMachinesColor = "black\n";
         second.twoMachinesColor = "white\n";
@@ -770,7 +783,8 @@ char * engineNames[] = {
     such as "%s engine" / "%s chess program" / "%s machine" - all meaning the same thing. */
  N_("second")};
 
-void InitEngine(ChessProgramState * cps, int n) {  // [HGM] all engine initialiation put in a function that does one engine
+/* [HGM] all engine initialiation put in a function that does one engine */
+void InitEngine(ChessProgramState * cps, int n) {
 
     ClearOptions(cps);
 
@@ -789,7 +803,7 @@ void InitEngine(ChessProgramState * cps, int n) {  // [HGM] all engine initialia
     cps->useSigint = TRUE;
     cps->useSigterm = TRUE;
     cps->reuse = appData.reuse[n];
-    cps->nps = appData.NPS[n];  // [HGM] nps: copy nodes per second
+    cps->nps = appData.NPS[n];
     cps->useSetboard = FALSE;
     cps->useSAN = FALSE;
     cps->usePing = FALSE;
@@ -814,10 +828,8 @@ void InitEngine(ChessProgramState * cps, int n) {  // [HGM] all engine initialia
     cps->reload = FALSE;
     cps->pseudo = appData.pseudo[n];
 
-    /* New features added by Tord: */
     cps->useFEN960 = FALSE;
     cps->useOOCastle = TRUE;
-    /* End of new features added by Tord. */
     cps->fenOverride = appData.fenOverride[n];
 
     /* [HGM] time odds: set factor for each machine */
@@ -839,9 +851,10 @@ void InitEngine(ChessProgramState * cps, int n) {  // [HGM] all engine initialia
     /* [HGM] options */
     cps->optionSettings = appData.engOptions[n];
 
-    cps->scoreIsAbsolute = appData.scoreIsAbsolute[n]; /* [AS] */
-    cps->isUCI = appData.isUCI[n]; /* [AS] */
-    cps->hasOwnBookUCI = appData.hasOwnBookUCI[n]; /* [AS] */
+    /* [AS] scoreIsAbsolute, isUCI, hasOwnBookUCI */
+    cps->scoreIsAbsolute = appData.scoreIsAbsolute[n];
+    cps->isUCI = appData.isUCI[n];
+    cps->hasOwnBookUCI = appData.hasOwnBookUCI[n];
     cps->highlight = 0;
 
     if (appData.protocolVersion[n] > PROTOVER || appData.protocolVersion[n] < 1) {
@@ -858,7 +871,8 @@ void InitEngine(ChessProgramState * cps, int n) {  // [HGM] all engine initialia
         cps->protocolVersion = appData.protocolVersion[n];
     }
 
-    InitEngineUCI(installDir, cps);  // [HGM] moved here from winboard.c, to make available in xboard
+    /* [HGM] moved here from winboard.c, to make available in xboard */
+    InitEngineUCI(installDir, cps);
     ParseFeatures(appData.featureDefaults, cps);
 }
 
@@ -868,7 +882,7 @@ GameMode oldMode, tryNr;
 
 extern char *engineName, *engineDir, *engineChoice, *engineLine, *nickName, *params;
 extern Boolean isUCI, hasBook, storeVariant, v1, addToList, useNick;
-char *insert, *wbOptions, *currentEngine[2];  // point in ChessProgramNames were we should insert new engine
+char *insert, *wbOptions, *currentEngine[2]; /* point in ChessProgramNames were we should insert new engine */
 static char newEngineCommand[MSG_SIZ];
 
 void FloatToFront(char ** list, char * engineLine) {
@@ -881,21 +895,28 @@ void FloatToFront(char ** list, char * engineLine) {
     tidy[0] = buf[0] = '\n';
     strcat(tidy, "\n");
     strncpy(buf + 1, *list, MSG_SIZ - 50);
-    if (p = strstr(buf, tidy)) {  // tidy name appears in list
+    if (p = strstr(buf, tidy)) {
+        /* tidy name appears in list */
         q = strchr(++p, '\n');
         if (q == NULL) {
-            return;  // malformed, don't touch
+            /* malformed, don't touch */
+            return;
         }
-        while (*p++ = *++q)
-            ;  // squeeze out
+        while (*p++ = *++q) {
+            /* squeeze out */
+	}
     }
-    strcat(tidy, buf + 1);  // put list behind tidy name
+    /* put list behind tidy name */
+    strcat(tidy, buf + 1);
     p = tidy + 1;
     while (q = strchr(p, '\n')) {
-        i++, r = p, p = q + 1;  // count entries in new list
+        i++;
+        r = p;
+        p = q + 1; /* count entries in new list */
     }
     if (i > appData.recentEngines) {
-        *r = NULLCHAR;  // if maximum rached, strip off last
+        /* if maximum rached, strip off last */
+        *r = NULLCHAR;
     }
     ASSIGN(*list, tidy + 1);
 }
@@ -918,7 +939,8 @@ void AddToEngineList(int i) {
         } else {
             buf[0] = NULLCHAR;
         }
-        quote = strchr(p, '"') ? '\'' : '"';  // use single quotes around engine command if it contains double quotes
+	/* use single quotes around engine command if it contains double quotes */
+        quote = strchr(p, '"') ? '\'' : '"';
         snprintf(buf + strlen(buf), MSG_SIZ - strlen(buf), "%c%s%c -fd \"%s\"%s%s%s%s%s%s%s%s", quote, p, quote,
          appData.directory[i], useNick ? " -fn \"" : "", useNick ? nickName : "", useNick ? "\"" : "",
          v1 ? " -firstProtocolVersion 1" : "", hasBook ? "" : " -fNoOwnBookUCI",
@@ -956,17 +978,23 @@ void LoadEngine(void) {
         return;
     }
     if (tryNr) {
-        v1 |= (tryNr == 2), tryNr = 0, AddToEngineList(0);  // deferred to after protocol determination
+        /* deferred to after protocol determination */
+        v1 |= (tryNr == 2);
+        tryNr = 0;
+        AddToEngineList(0);
     }
-    CommonEngineInit();  // recalculate time odds
+    /* recalculate time odds */
+    CommonEngineInit();
     if (gameInfo.variant != StringToVariant(appData.variant)) {
-        // we changed variant when loading the engine; this forces us to reset
+        /* we changed variant when loading the engine; this forces us to reset */
         Reset(TRUE, savCps != &first);
-        oldMode = BeginningOfGame;  // to prevent restoring old mode
+        /* to prevent restoring old mode */
+        oldMode = BeginningOfGame;
     }
     InitChessProgram(savCps, FALSE);
     if (gameMode == EditGame) {
-        SendToProgram("force\n", savCps);  // in EditGame mode engine must be in force mode
+        /* in EditGame mode engine must be in force mode */
+        SendToProgram("force\n", savCps);
     }
     DisplayMessage("", "");
     if (startedFromSetupPosition) {
@@ -983,7 +1011,8 @@ void LoadEngine(void) {
 }
 
 void ReplaceEngine(ChessProgramState * cps, int n) {
-    oldMode = gameMode;  // remember mode, so it can be restored after loading sequence is complete
+    /* remember mode, so it can be restored after loading sequence is complete */
+    oldMode = gameMode;
     keepInfo = 1;
     if (oldMode != BeginningOfGame) {
         EditGameEvent();
@@ -995,9 +1024,11 @@ void ReplaceEngine(ChessProgramState * cps, int n) {
     InitEngine(cps, n);
     UpdateLogos(TRUE);
     if (n && !tryNr) {
-        return;  // only startup first engine immediately; second can wait (unless autodetect)
+        /* only startup first engine immediately; second can wait (unless autodetect) */
+        return;
     }
-    savCps = cps;  // parameter to LoadEngine passed as globals, to allow scheduled calling :-(
+    /* parameter to LoadEngine passed as globals, to allow scheduled calling :-( */
+    savCps = cps;
     LoadEngine();
 }
 
@@ -20267,9 +20298,7 @@ void GetTimeMark(TimeMark * tm) {
 #if HAVE_GETTIMEOFDAY
 
     struct timeval timeVal;
-    struct timezone timeZone;
-
-    gettimeofday(&timeVal, &timeZone);
+    gettimeofday(&timeVal, (struct timezone *)NULL);
     tm->sec = (long)timeVal.tv_sec;
     tm->ms = (int)(timeVal.tv_usec / 1000l);
 

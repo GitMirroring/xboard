@@ -1,12 +1,9 @@
 /*
  * moves.c - Move generation and checking
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -84,11 +81,11 @@ SameColor (ChessSquare piece1, ChessSquare piece2)
 {
     return ((int) piece1 >= (int) WhitePawn &&   /* [HGM] can be > King ! */
             (int) piece1 <  (int) BlackPawn &&
-	    (int) piece2 >= (int) WhitePawn &&
+            (int) piece2 >= (int) WhitePawn &&
             (int) piece2 <  (int) BlackPawn)
       ||   ((int) piece1 >= (int) BlackPawn &&
             (int) piece1 <  (int) EmptySquare &&
-	    (int) piece2 >= (int) BlackPawn &&
+            (int) piece2 >= (int) BlackPawn &&
             (int) piece2 <  (int) EmptySquare);
 }
 #else
@@ -107,7 +104,8 @@ unsigned char autoProm[EmptySquare + 1];
 char PieceToChar(ChessSquare p) {
     int c;
     if ((int)p < 0 || (int)p >= (int)EmptySquare) {
-        return ('?'); /* [HGM] for safety */
+        /* [HGM] for safety */
+        return ('?');
     }
     c = pieceToChar[(int)p];
     if (c & 128) {
@@ -119,7 +117,8 @@ char PieceToChar(ChessSquare p) {
 char PieceSuffix(ChessSquare p) {
     int c;
     if ((int)p < 0 || (int)p >= (int)EmptySquare) {
-        return 0; /* [HGM] for safety */
+        /* [HGM] for safety */
+        return 0;
     }
     c = pieceToChar[(int)p];
     if (c < 128) {
@@ -128,8 +127,8 @@ char PieceSuffix(ChessSquare p) {
     return SUFFIXES[c - 128 >> 6];
 }
 
-int PieceToNumber(ChessSquare p) /* [HGM] holdings: count piece type, ignoring non-participating piece types */
-{
+/* [HGM] holdings: count piece type, ignoring non-participating piece types */
+int PieceToNumber(ChessSquare p) {
     int i = 0;
     ChessSquare start = (int)p >= (int)BlackPawn ? BlackPawn : WhitePawn;
 
@@ -167,10 +166,12 @@ void CopyBoard(Board to, Board from) {
             to[i][j] = from[i][j];
         }
     }
-    for (j = 0; j < BOARD_FILES; j++) {  // [HGM] gamestate: copy castling rights and ep status
+    for (j = 0; j < BOARD_FILES; j++) {
+        /* [HGM] gamestate: copy castling rights and ep status */
         to[VIRGIN][j] = from[VIRGIN][j], to[CASTLING][j] = from[CASTLING][j];
     }
-    to[HOLDINGS_SET] = 0;  // flag used in ICS play
+    /* flag used in ICS play */
+    to[HOLDINGS_SET] = 0;
 }
 
 int CompareBoards(Board board1, Board board2) {
@@ -186,16 +187,19 @@ int CompareBoards(Board board1, Board board2) {
     return TRUE;
 }
 
-char defaultName[] = "PNBRQ......................................K"  // white
-                     "pnbrq......................................k";  // black
-char shogiName[] = "PNBRLS...G.++++++..........................K"  // white
-                   "pnbrls...g.++++++..........................k";  // black
-char xqName[] = "PH.R.AE..K.C................................"  // white
-                "ph.r.ae..k.c................................";  // black
+/* clang-format off */
+/* Upper-case letters are for White; lower-case letters are for Black. */
+char defaultName[] = "PNBRQ......................................K"
+                     "pnbrq......................................k";
+char shogiName[]   = "PNBRLS...G.++++++..........................K"
+                     "pnbrls...g.++++++..........................k";
+char xqName[]      = "PH.R.AE..K.C................................"
+                     "ph.r.ae..k.c................................";
+/* clang-format on */
 
-char * CollectPieceDescriptors(void) {  // make a line of piece descriptions for use in the PGN Piece tag:
-    // dump all engine defined pieces, and pieces with non-standard names,
-    // but suppress black pieces that are the same as their white counterpart
+/* Make a line of piece descriptions for use in the PGN Piece tag.  Dump all engine-defined pieces, and pieces with non-standard
+   names, but suppress black pieces that are the same as their white counterpart. */
+char * CollectPieceDescriptors(void) {
     ChessSquare p;
     static char buf[MSG_SIZ], s[2];
     char *m, *pieceName = defaultName;
@@ -205,7 +209,8 @@ char * CollectPieceDescriptors(void) {  // make a line of piece descriptions for
         return "";
     }
     if (gameInfo.variant == VariantChu) {
-        return "";  // for now don't do this for Chu Shogi
+        /* For now, don't do this for Chu Shogi. */
+        return "";
     }
     if (gameInfo.variant == VariantShogi) {
         pieceName = shogiName;
@@ -215,7 +220,8 @@ char * CollectPieceDescriptors(void) {  // make a line of piece descriptions for
     }
     for (p = WhitePawn; p < EmptySquare; p++) {
         if ((c = pieceToChar[p]) == '.' || c == '~') {
-            continue;  // does not participate
+            /* does not participate */
+            continue;
         }
         m = pieceDesc[p];
         d = (c == '+' ? pieceToChar[DEMOTED(p)] : c);
@@ -228,9 +234,10 @@ char * CollectPieceDescriptors(void) {  // make a line of piece descriptions for
         } else  // white or unpaired black
             if ((p < BlackPawn || CharToPiece(d & ~32) != EmptySquare) &&  // white or lone black
              !pieceDesc[p] /*&& pieceName[p] == c*/) {
-                continue;  // orthodox piece known by its usual name
+                /* orthodox piece known by its usual name */
+                continue;
             }
-        // TODO: listing pieces because of unusual name can only be done if we have accurate Betza of all defaults
+        /* TODO: listing pieces because of unusual name can only be done if we have accurate Betza of all defaults */
         if (!m) {
             m = defaultDesc[p];
         }
@@ -300,44 +307,45 @@ int LoadPieceDesc(char * s) {
     return ok;
 }
 
-// [HGM] gen: configurable move generation from Betza notation sent by engine.
-// Some notes about two-leg moves: GenPseudoLegal() works in two modes, depending on whether a 'kill-
-// square has been set: without one is generates all moves, and a global int legNr flags in bits 0 and 1
-// if the move has 1 or 2 legs. Only the marking of squares makes use of this info, by only marking
-// target squares of leg 1 (rejecting null move). A dummy move with MoveType 'FirstLeg' to the relay square
-// is generated, so a cyan marker can be put there, and other functions can ignore such a move. When the
-// user selects this square, it becomes the kill-square. Once a kill-square is set, only 2-leg moves are
-// generated that use that square as relay, plus 1-leg moves, so the 1-leg move that goes to the kill-square
-// can be marked during 2nd-leg entry to terminate the move there. For judging the pseudo-legality of the
-// 2nd leg, the from-square has to be considered empty, although the moving piece is still on it.
+/* [HGM] gen: configurable move generation from Betza notation sent by engine.
+
+Some notes about two-leg moves: GenPseudoLegal() works in two modes, depending on whether a 'kill- square has been set: without one
+is generates all moves, and a global int legNr flags in bits 0 and 1 if the move has 1 or 2 legs. Only the marking of squares makes
+use of this info, by only marking target squares of leg 1 (rejecting null move). A dummy move with MoveType 'FirstLeg' to the relay
+square is generated, so a cyan marker can be put there, and other functions can ignore such a move. When the user selects this
+square, it becomes the kill-square. Once a kill-square is set, only 2-leg moves are generated that use that square as relay, plus
+1-leg moves, so the 1-leg move that goes to the kill-square can be marked during 2nd-leg entry to terminate the move there. For
+judging the pseudo-legality of the 2nd leg, the from-square has to be considered empty, although the moving piece is still on it. */
 
 Boolean pieceDefs;
 
-// alphabet      "abcdefghijklmnopqrstuvwxyz"
+/* clang-format off */
+/* alphabet       "abcdefghijklmnopqrstuvwxyz" */
 char symmetry[] = "FBNW.FFW.NKN.NW.QR....W..N";
-char xStep[] = "2110.130.102.10.00....0..2";
-char yStep[] = "2132.133.313.20.11....1..3";
-char dirType[] = "01000104000200000260050000";
-char upgrade[] = "AFCD.BGH.JQL.NO.KW....R..Z";
-char rotate[] = "DRCA.WHG.JKL.NO.QB....F..Z";
+char xStep[]    = "2110.130.102.10.00....0..2";
+char yStep[]    = "2132.133.313.20.11....1..3";
+char dirType[]  = "01000104000200000260050000";
+char upgrade[]  = "AFCD.BGH.JQL.NO.KW....R..Z";
+char rotate[]   = "DRCA.WHG.JKL.NO.QB....F..Z";
 
-// alphabet   "a b    c d e f    g h    i j k l    m n o p q r    s    t u v    w x y z "
-int dirs1[] = {0, 0x3c, 0, 0, 0, 0xc3, 0, 0, 0, 0, 0, 0xf0, 0, 0, 0, 0, 0, 0x0f, 0, 0, 0, 0, 0, 0, 0, 0};
+/* alphabet   "a     b  c  d  e     f  g     h  i  j  k     l  m  n  o  p  q     r     s  t  u     v  w  x  y  z " */
+int dirs1[] = {0, 0x3c, 0, 0, 0, 0xc3, 0,    0, 0, 0, 0, 0xf0, 0, 0, 0, 0, 0, 0x0f,    0, 0, 0,    0, 0, 0, 0, 0};
 int dirs2[] = {0, 0x18, 0, 0, 0, 0x81, 0, 0xff, 0, 0, 0, 0x60, 0, 0, 0, 0, 0, 0x06, 0x66, 0, 0, 0x99, 0, 0, 0, 0};
 int dirs3[] = {0, 0x38, 0, 0, 0, 0x83, 0, 0xff, 0, 0, 0, 0xe0, 0, 0, 0, 0, 0, 0x0e, 0xee, 0, 0, 0xbb, 0, 0, 0, 0};
 int dirs4[] = {0, 0x10, 0, 0, 0, 0x01, 0, 0xff, 0, 0, 0, 0x40, 0, 0, 0, 0, 0, 0x04, 0x44, 0, 0, 0x11, 0, 0, 0, 0};
 
+/* rotation matrices for each direction */
 int rot[][4] = {
-  // rotation matrices for each direction
- {1,  0,  0,  1 },
- {0,  1,  1,  0 },
- {0,  1,  -1, 0 },
- {1,  0,  0,  -1},
- {-1, 0,  0,  -1},
- {0,  -1, -1, 0 },
- {0,  -1, 1,  0 },
- {-1, 0,  0,  1 }
+ { 1,  0,  0,  1},
+ { 0,  1,  1,  0},
+ { 0,  1, -1,  0},
+ { 1,  0,  0, -1},
+ {-1,  0,  0, -1},
+ { 0, -1, -1,  0},
+ { 0, -1,  1,  0},
+ {-1,  0,  0,  1}
 };
+/* clang-format on */
 
 void OK(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * cl) { (*(int *)cl)++; }
 
@@ -3058,10 +3066,8 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
         closure->kind = AmbiguousMove;
     }
     if (illegal) {
-        /* Note: If more than one illegal move matches, but no legal
-           moves, we return IllegalMove, not AmbiguousMove.  Caller
-           can look at closure->count to detect this.
-        */
+        /* Note: If more than one illegal move matches, but no legal moves, we return IllegalMove, not AmbiguousMove.  Caller can
+           look at closure->count to detect this. */
         closure->kind = IllegalMove;
     }
 }
@@ -3087,23 +3093,25 @@ void CoordsToAlgebraicCallback(Board board, int flags, ChessMove kind, int rf, i
      (board[rf][ff] == cl->piece || PieceToChar(board[rf][ff]) == '~' && (ChessSquare)(DEMOTED(board[rf][ff])) == cl->piece)) {
         if (rf == cl->rf) {
             if (ff == cl->ff) {
-                cl->kind = kind; /* this is the move we want */
+                /* this is the move we want */
+                cl->kind = kind;
             } else {
-                cl->file++; /* need file to rule out this move */
+                /* need file to rule out this move */
+                cl->file++;
             }
         } else {
             if (ff == cl->ff) {
-                cl->rank++; /* need rank to rule out this move */
+                /* need rank to rule out this move */
+                cl->rank++;
             } else {
-                cl->either++; /* rank or file will rule out this move */
+                /* rank or file will rule out this move */
+                cl->either++;
             }
         }
     }
 }
 
-/* Convert coordinates to normal algebraic notation.
-   promoChar must be NULLCHAR or 'x' if not a promotion.
-*/
+/* Convert coordinates to normal algebraic notation.  promoChar must be NULLCHAR or 'x' if not a promotion. */
 ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int ft, int promoChar, char out[MOVE_LEN]) {
     ChessSquare piece;
     ChessMove kind;
@@ -3119,7 +3127,8 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
         /* Bughouse piece drop */
         c = PieceToChar((ChessSquare)ff);
         if (c == '+') {
-            c = pieceNickName[ff];  // must have nickname for promote drop
+            /* must have nickname for promote drop */
+            c = pieceNickName[ff];
         }
         *outp++ = ToUpper(c);
         *outp++ = '@';
@@ -3224,13 +3233,10 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
                 snprintf(out, MOVE_LEN, "O-O-O%c%c%c", promoChar ? '/' : 0, ToUpper(promoChar), ff + AAA);
             }
 
-            /* This notation is always unambiguous, unless there are
-               kings on both the d and e files, with "wild castling"
-               possible for the king on the d file and normal castling
-               possible for the other.  ICS rules for wild 9
-               effectively make castling illegal for either king in
-               this situation.  So I am not going to worry about it;
-               I'll just generate an ambiguous O-O in this case.
+            /* This notation is always unambiguous, unless there are kings on both the d and e files, with "wild castling" possible
+               for the king on the d file and normal castling possible for the other.  ICS rules for wild 9 effectively make
+               castling illegal for either king in this situation.  So I am not going to worry about it; I'll just generate an
+               ambiguous O-O in this case.
             */
             return LegalityTest(board, flags, rf, ff, rt, ft, promoChar);
         }
@@ -3240,18 +3246,18 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
         /* Piece move */
         cl.rf = rf;
         cl.ff = ff;
-        cl.rt = rFilter = rt;  // [HGM] speed: filter on to-square
+        /* [HGM] speed: filter on to-square */
+        cl.rt = rFilter = rt;
         cl.ft = fFilter = ft;
         cl.piece = piece;
         cl.kind = IllegalMove;
         cl.rank = cl.file = cl.either = 0;
         c = PieceToChar(piece);
-        GenLegal(board, flags, CoordsToAlgebraicCallback, (void *)&cl, c != '~' ? piece : (DEMOTED(piece)));  // [HGM] speed
+        /* [HGM] speed */
+        GenLegal(board, flags, CoordsToAlgebraicCallback, (void *)&cl, c != '~' ? piece : (DEMOTED(piece)));
 
         if (cl.kind == IllegalMove && !(flags & F_IGNORE_CHECK)) {
-            /* Generate pretty moves for moving into check, but
-               still return IllegalMove.
-            */
+            /* Generate pretty moves for moving into check, but still return IllegalMove. */
             GenLegal(board, flags | F_IGNORE_CHECK, CoordsToAlgebraicCallback, (void *)&cl, c != '~' ? piece : (DEMOTED(piece)));
             if (cl.kind == IllegalMove) {
                 break;
@@ -3259,13 +3265,12 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
             cl.kind = IllegalMove;
         }
 
-        /* Style is "Nf3" or "Nxf7" if this is unambiguous,
-           else "Ngf3" or "Ngxf7",
-           else "N1f3" or "N5xf7",
-           else "Ng1f3" or "Ng5xf7".
+        /* Style is "Nf3" or "Nxf7" if this is unambiguous, else "Ngf3" or "Ngxf7", else "N1f3" or "N5xf7", else "Ng1f3" or
+           "Ng5xf7".
         */
         if (c == '+') {
-            c = pieceNickName[piece];  // prefer any nick over +X notation
+            /* prefer any nick over +X notation */
+            c = pieceNickName[piece];
             if (c < 'A') {
                 *outp++ = c = '+';
             }
@@ -3303,17 +3308,19 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
             *outp++ = (rt + ONE - '0') % 10 + '0';
         }
         if (autoProm[piece]) {
-            promoChar = 0;  // no promotion suffix for implied promotions
+            /* no promotion suffix for implied promotions */
+            promoChar = 0;
         }
         if (IS_SHOGI(gameInfo.variant)) {
             /* [HGM] in Shogi non-pawns can promote */
-            *outp++ = promoChar;  // Don't bother to correct move type, return value is never used!
-        } else if (gameInfo.variant == VariantChuChess && promoChar ||
-         gameInfo.variant != VariantSuper && promoChar &&
-          (piece == WhiteLance || piece == BlackLance)) {  // Lance sometimes represents Pawn
+            *outp++ = promoChar;  /* Don't bother to correct move type, return value is never used! */
+        } else if (gameInfo.variant == VariantChuChess && promoChar || gameInfo.variant != VariantSuper && promoChar &&
+          (piece == WhiteLance || piece == BlackLance)) {
+            /* Lance sometimes represents Pawn */
             *outp++ = '=';
             *outp++ = ToUpper(promoChar);
-        } else if (gameInfo.variant == VariantSChess && promoChar) {  // and in S-Chess we have gating
+        } else if (gameInfo.variant == VariantSChess && promoChar) {
+            /* and in S-Chess we have gating */
             ChessSquare victim = board[rt][ft];
             if (piece == WhiteRook && victim == WhiteKing || piece == BlackRook && victim == BlackKing) {
                 strncpy(out, "O-O-O", MOVE_LEN);
@@ -3329,25 +3336,21 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
         return cl.kind;
 
     case EmptySquare:
-        /* Moving a nonexistent piece */
+        /* Moving a nonexistent piece. */
         break;
     }
 
-    /* Not a legal move, even ignoring check.
-       If there was a piece on the from square,
-       use style "Ng1g3" or "Ng1xe8";
-       if there was a pawn or nothing (!),
-       use style "g1g3" or "g1xe8".  Use "x"
-       if a piece was on the to square, even
-       a piece of the same color.
-    */
+    /* Not a legal move, even ignoring check.  If there was a piece on the from square, use style "Ng1g3" or "Ng1xe8"; if there was
+       a pawn or nothing(!), use style "g1g3" or "g1xe8".  Use "x" if a piece was on the to square, even a piece of the same
+       color. */
     outp = out;
     c = 0;
     if (piece != EmptySquare && piece != WhitePawn && piece != BlackPawn) {
         int r, f;
         for (r = 0; r < BOARD_HEIGHT; r++) {
             for (f = BOARD_LEFT; f <= BOARD_RGHT; f++) {
-                c += (board[r][f] == piece);  // count on-board pieces of given type
+                /* count on-board pieces of given type */
+                c += (board[r][f] == piece);
             }
         }
         *outp = PieceToChar(piece);
@@ -3359,7 +3362,8 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
             outp++;
         }
     }
-    if (c != 1) {  // [HGM] but if there is only one piece of the mentioned type, no from-square, thank you!
+    /* [HGM] but if there is only one piece of the mentioned type, no from-square, thank you! */
+    if (c != 1) {
         *outp++ = ff + AAA;
         if (rf + ONE <= '9') {
             *outp++ = rf + ONE;
@@ -3388,8 +3392,7 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
     return IllegalMove;
 }
 
-// [HGM] XQ: the following code serves to detect perpetual chasing (Asian rules)
-
+/* [HGM] XQ: the following code serves to detect perpetual chasing (Asian rules) */
 typedef struct {
     /* Input */
     int rf, ff, rt, ft;
@@ -3397,9 +3400,10 @@ typedef struct {
     int recaptures;
 } ChaseClosure;
 
-// I guess the following variables logically belong in the closure too, but I was too lazy and used globals
-
-int preyStackPointer, chaseStackPointer;
+/* A previous developer acknowledged that the following variables logically belong in the closure too, but stated that they were too
+   lazy, so they used globals. */
+int preyStackPointer;
+int chaseStackPointer;
 
 struct {
     unsigned char rf, ff, rt, ft;
@@ -3410,28 +3414,31 @@ struct {
 } preyStack[100];
 
 
-// there are three new callbacks for use with GenLegal: for adding captures, deleting them, and finding a recapture
+/* there are three new callbacks for use with GenLegal: for adding captures, deleting them, and finding a recapture */
 
-extern void AtacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure);
-
-void AttacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft,
- void * closure) {  // For adding captures that can lead to chase indictment to the chaseStack
+/* For adding captures that can lead to chase indictment to the chaseStack */
+void AttacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure) {
     if (board[rt][ft] == EmptySquare) {
-        return;  // non-capture
+        /* non-capture */
+        return;
     }
     if (board[rt][ft] == WhitePawn && rt < BOARD_HEIGHT / 2) {
-        return;  // Pawn before river can be chased
+        /* Pawn before river can be chased */
+        return;
     }
     if (board[rt][ft] == BlackPawn && rt >= BOARD_HEIGHT / 2) {
-        return;  // Pawn before river can be chased
+        /* Pawn before river can be chased */
+        return;
     }
     if (board[rf][ff] == WhitePawn || board[rf][ff] == BlackPawn) {
-        return;  // Pawns are allowed to chase
+        /* Pawns are allowed to chase */
+        return;
     }
     if (board[rf][ff] == WhiteWazir || board[rf][ff] == BlackWazir) {
-        return;  // King is allowed to chase
+        /* King is allowed to chase */
+        return;
     }
-    // move cannot be excluded from being a chase trivially (based on attacker and victim); save it on chaseStack
+    /* move cannot be excluded from being a chase trivially (based on attacker and victim); save it on chaseStack */
     chaseStack[chaseStackPointer].rf = rf;
     chaseStack[chaseStackPointer].ff = ff;
     chaseStack[chaseStackPointer].rt = rt;
@@ -3439,38 +3446,39 @@ void AttacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int
     chaseStackPointer++;
 }
 
-extern void ExistingAtacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure);
-
-void ExistingAttacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft,
- void * closure) {  // for removing pre-exsting captures from the chaseStack, to be left with newly created ones
+/* for removing pre-exsting captures from the chaseStack, to be left with newly created ones */
+void ExistingAttacksCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure) {
     int i;
-    register ChaseClosure * cl = (ChaseClosure *)closure;  // closure tells us the move played in the repeat loop
+    /* closure tells us the move played in the repeat loop */
+    ChaseClosure * cl = (ChaseClosure *)closure;
 
     if (board[rt][ft] == EmptySquare) {
-        return;  // no capture
+        /* no capture */
+        return;
     }
-    if (rf == cl->rf && ff == cl->ff) {  // attacks with same piece from new position are not considered new
+    /* attacks with same piece from new position are not considered new */
+    if (rf == cl->rf && ff == cl->ff) {
         rf = cl->rt;
         ff = cl->ft;  // doctor their fromSquare so they will be recognized in chaseStack
     }
-    // search move in chaseStack, and delete it if it occurred there (as we know now it is not a new capture)
+    /* search move in chaseStack, and delete it if it occurred there (as we know now it is not a new capture) */
     for (i = 0; i < chaseStackPointer; i++) {
         if (chaseStack[i].rf == rf && chaseStack[i].ff == ff && chaseStack[i].rt == rt && chaseStack[i].ft == ft) {
-            // move found on chaseStack, delete it by overwriting with move popped from top of chaseStack
+            /* move found on chaseStack, delete it by overwriting with move popped from top of chaseStack */
             chaseStack[i] = chaseStack[--chaseStackPointer];
             break;
         }
     }
 }
 
-extern void ProtectedCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure);
-
-void ProtectedCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft,
- void * closure) {  // for determining if a piece (given through the closure) is protected
-    register ChaseClosure * cl = (ChaseClosure *)closure;  // closure tells us where to recapture
+/* for determining if a piece (given through the closure) is protected */
+void ProtectedCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure) {
+    /* closure tells us where to recapture */
+    ChaseClosure * cl = (ChaseClosure *)closure;
 
     if (rt == cl->rt && ft == cl->ft) {
-        cl->recaptures++;  // count legal recaptures to this square
+        /* count legal recaptures to this square */
+        cl->recaptures++;
     }
     if (appData.debugMode && board[rt][ft] != EmptySquare) {
         fprintf(debugFP, "try %c%c%c%c=%d\n", ff + AAA, rf + ONE, ft + AAA, rt + ONE, cl->recaptures);
@@ -3479,19 +3487,22 @@ void ProtectedCallback(Board board, int flags, ChessMove kind, int rf, int ff, i
 
 extern char moveList[MAX_MOVES][MOVE_LEN];
 
-int PerpetualChase(int first,
- int last) {  // this routine detects if the side to move in the 'first' position is perpetually chasing (when not checking)
+/* this routine detects if the side to move in the 'first' position is perpetually chasing (when not checking) */
+int PerpetualChase(int first, int last) {
     int i, j, k, tail;
     ChaseClosure cl;
     ChessSquare captured;
 
-    preyStackPointer = 0;  // clear stack of chased pieces
-    for (i = first; i < last; i += 2) {  // for all positions with same side to move
+    /* clear stack of chased pieces */
+    preyStackPointer = 0;
+    /* for all positions with same side to move */
+    for (i = first; i < last; i += 2) {
         if (appData.debugMode) {
             fprintf(debugFP, "judge position %i\n", i);
         }
-        chaseStackPointer = 0;  // clear stack that is going to hold possible chases
-        // determine all captures possible after the move, and put them on chaseStack
+        /* clear stack that is going to hold possible chases */
+        chaseStackPointer = 0;
+        /* determine all captures possible after the move, and put them on chaseStack */
         GenLegal(boards[i + 1], PosFlags(i), AttacksCallback, &cl, EmptySquare);
         if (appData.debugMode) {
             int n;
@@ -3518,13 +3529,14 @@ int PerpetualChase(int first,
             }
             fprintf(debugFP, ": new capts after %c%c%c%c\n", cl.ff + AAA, cl.rf + ONE, cl.ft + AAA, cl.rt + ONE);
         }
-        // chaseSack now contains all captures made possible by the move
-        for (j = 0; j < chaseStackPointer; j++) {  // run through chaseStack to identify true chases
+        /* chaseSack now contains all captures made possible by the move */
+        for (j = 0; j < chaseStackPointer; j++) {
+            /* We now run through chaseStack to identify true chases. */
             int attacker = (int)boards[i + 1][chaseStack[j].rf][chaseStack[j].ff];
             int victim = (int)boards[i + 1][chaseStack[j].rt][chaseStack[j].ft];
 
             if (attacker >= (int)BlackPawn) {
-                attacker = BLACK_TO_WHITE attacker;  // convert to white, as piecee type
+                attacker = BLACK_TO_WHITE attacker;  // convert to white, as piece type
             }
             if (victim >= (int)BlackPawn) {
                 victim = BLACK_TO_WHITE victim;
@@ -3547,33 +3559,36 @@ int PerpetualChase(int first,
             // the attack is on a lower piece, or on a pinned or blocked equal one
             CopyBoard(xqCheckers, nullBoard);
             xqCheckers[EP_STATUS] = 1;
-            CheckTest(
-             boards[i + 1], PosFlags(i + 1), -1, -1, -1, -1, FALSE);  // if we deliver check with our move, the checkers get marked
+            CheckTest(boards[i + 1], PosFlags(i + 1), -1, -1, -1, -1, FALSE);  // if we deliver check with our move, the checkers get marked
             // test if the victim is protected by a true protector. First make the capture.
             captured = boards[i + 1][chaseStack[j].rt][chaseStack[j].ft];
             boards[i + 1][chaseStack[j].rt][chaseStack[j].ft] = boards[i + 1][chaseStack[j].rf][chaseStack[j].ff];
             boards[i + 1][chaseStack[j].rf][chaseStack[j].ff] = EmptySquare;
-            // Then test if the opponent can recapture
-            cl.recaptures = 0;  // prepare closure to pass recapture square and count moves to it
+            /* Then test if the opponent can recapture */
+            /* prepare closure to pass recapture square and count moves to it */
+            cl.recaptures = 0;
             cl.rt = chaseStack[j].rt;
             cl.ft = chaseStack[j].ft;
             if (appData.debugMode) {
                 fprintf(debugFP, "test if we can recapture %c%c\n", cl.ft + AAA, cl.rt + ONE);
             }
-            xqCheckers[EP_STATUS] =
-             2;  // causes GenLegal to ignore the checks we delivered with the move, in real life evaded before we captured
-            GenLegal(boards[i + 1], PosFlags(i + 1), ProtectedCallback, &cl, EmptySquare);  // try all moves
-            xqCheckers[EP_STATUS] = 0;  // disable quasi-legal moves again
-            // unmake the capture
+            /* causes GenLegal to ignore the checks we delivered with the move, in real life evaded before we captured */
+            xqCheckers[EP_STATUS] = 2;
+            /* try all moves */
+            GenLegal(boards[i + 1], PosFlags(i + 1), ProtectedCallback, &cl, EmptySquare);
+            /* disable quasi-legal moves again */
+            xqCheckers[EP_STATUS] = 0;
+            /* unmake the capture */
             boards[i + 1][chaseStack[j].rf][chaseStack[j].ff] = boards[i + 1][chaseStack[j].rt][chaseStack[j].ft];
             boards[i + 1][chaseStack[j].rt][chaseStack[j].ft] = captured;
-            // if a recapture was found, piece is protected, and we are not chasing it.
-            if (cl.recaptures) {  // attacked piece was defended by true protector, no chase
-                chaseStack[j] = chaseStack[--chaseStackPointer];  // so delete from chaseStack
-                j--; /* ! */
+            /* if a recapture was found, piece is protected, and we are not chasing it. */
+            if (cl.recaptures) {
+                /* attacked piece was defended by true protector, no chase, so delete from chaseStack. */
+                chaseStack[j] = chaseStack[--chaseStackPointer];
+                j--;
             }
         }
-        // chaseStack now contains all moves that chased
+        /* chaseStack now contains all moves that chased */
         if (appData.debugMode) {
             int n;
             for (n = 0; n < chaseStackPointer; n++) {
@@ -3582,7 +3597,8 @@ int PerpetualChase(int first,
             }
             fprintf(debugFP, ": chases\n");
         }
-        if (i == first) {  // copy all people chased by first move of repeat cycle to preyStack
+        if (i == first) {
+            /* copy all people chased by first move of repeat cycle to preyStack */
             for (j = 0; j < chaseStackPointer; j++) {
                 preyStack[j].rank = chaseStack[j].rt;
                 preyStack[j].file = chaseStack[j].ft;
@@ -3592,20 +3608,23 @@ int PerpetualChase(int first,
         tail = 0;
         for (j = 0; j < chaseStackPointer; j++) {
             for (k = 0; k < preyStackPointer; k++) {
-                // search the victim of each chase move on the preyStack (first occurrence)
+                /* search the victim of each chase move on the preyStack (first occurrence) */
                 if (chaseStack[j].ft == preyStack[k].file && chaseStack[j].rt == preyStack[k].rank) {
                     if (k < tail) {
-                        break;  // piece was already identified as still being chased
+                        /* piece was already identified as still being chased */
+                        break;
                     }
-                    preyStack[preyStackPointer] = preyStack[tail];  // move chased piece to bottom part of preyStack
-                    preyStack[tail] = preyStack[k];  // by swapping
+                    /* Move chased piece to bottom part of preyStack by swapping. */
+                    preyStack[preyStackPointer] = preyStack[tail];
+                    preyStack[tail] = preyStack[k];
                     preyStack[k] = preyStack[preyStackPointer];
                     tail++;
                     break;
                 }
             }
         }
-        preyStackPointer = tail;  // keep bottom part of preyStack, popping pieces unchased on move i.
+        /* keep bottom part of preyStack, popping pieces unchased on move i. */
+        preyStackPointer = tail;
         if (appData.debugMode) {
             int n;
             for (n = 0; n < preyStackPointer; n++) {
@@ -3613,7 +3632,7 @@ int PerpetualChase(int first,
             }
             fprintf(debugFP, "always chased upto ply %d\n", i);
         }
-        // now adjust the location of the chased pieces according to opponent move
+        /* now adjust the location of the chased pieces according to opponent move */
         for (j = 0; j < preyStackPointer; j++) {
             if (preyStack[j].rank == moveList[i + 1][1] - ONE && preyStack[j].file == moveList[i + 1][0] - AAA + BOARD_LEFT) {
                 preyStack[j].rank = moveList[i + 1][3] - ONE;
@@ -3622,6 +3641,8 @@ int PerpetualChase(int first,
             }
         }
     }
+
+    /* if any piece was left on preyStack, it has been perpetually chased, and we return the [?] */
     return preyStackPointer ? 256 * (preyStack[preyStackPointer].file - BOARD_LEFT + AAA) + (preyStack[preyStackPointer].rank + ONE)
-                            : 0;  // if any piece was left on preyStack, it has been perpetually chased,and we return the
+     : 0;
 }

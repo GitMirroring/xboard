@@ -72,8 +72,7 @@ static void InitializeEvalGraph(Option * opt, int w, int h) {
     initDone = TRUE;
 }
 
-// The following stuff is really back-end (but too little to bother with a separate file)
-
+/* The following stuff is really back-end (but too little to bother with a separate file) */
 static void EvalClick(int x, int y) {
     int index = GetMoveIndexFromPoint(x, y);
 
@@ -87,7 +86,8 @@ static Option graphOptions[] = {
  {0,   2,    0,   NULL, NULL,                  "",   NULL, EndMark, ""}
 };
 
-static void DisplayEvalGraph(void) {  // back-end painting; calls back front-end primitives for lines, rectangles and text
+/* back-end painting; calls back front-end primitives for lines, rectangles and text */
+static void DisplayEvalGraph(void) {
     char * t = MakeEvalTitle(_(title[differentialView]));
     nWidthPB = disp->max;
     nHeightPB = disp->value;
@@ -115,7 +115,8 @@ static Option * EvalCallback(int button, int x, int y) {
         if (dir > 0) {
             appData.zoom = dir;
         }
-    case 10:  // expose event
+    case 10:
+        /* expose event */
         /* Create or recreate paint box if needed */
         if (x != nWidthPB || y != nHeightPB) {
             InitializeEvalGraph(&graphOptions[0], x, y);
@@ -125,17 +126,20 @@ static Option * EvalCallback(int button, int x, int y) {
         DisplayEvalGraph();
         break;
     case 1:
-        EvalClick(x, y);  // left button
+        /* left button */
+        EvalClick(x, y);
     default:
-        break;  // other buttons ignored
+        /* other buttons ignored */
+        break;
     }
-    return NULL;  // no context menu!
+    /* no context menu! */
+    return NULL;
 }
 
 void EvalGraphPopUp(void) {
     if (GenericPopUp(graphOptions, _(title[differentialView]), EvalGraphDlg, BoardWindow, NONMODAL, appData.topLevel)) {
-        InitializeEvalGraph(
-         &graphOptions[0], wpEvalGraph.width, wpEvalGraph.height);  // first time: add callbacks and initialize pens
+        /* first time: add callbacks and initialize pens */
+        InitializeEvalGraph(&graphOptions[0], wpEvalGraph.width, wpEvalGraph.height);
         disp = graphOptions;
     } else {
         SetDialogTitle(EvalGraphDlg, _(title[differentialView]));
@@ -144,13 +148,15 @@ void EvalGraphPopUp(void) {
 
     MarkMenu("View.EvaluationGraph", EvalGraphDlg);
 
-    // ShowThinkingEvent(); // [HGM] thinking: might need to prompt engine for thinking output
+    /* [HGM] thinking: TODO: might need to prompt engine for thinking output?
+       ShowThinkingEvent(); */
 }
 
 void EvalGraphPopDown(void) {
     PopDown(EvalGraphDlg);
 
-    // ShowThinkingEvent(); // [HGM] thinking: might need to shut off thinking output
+    /* [HGM] thinking: TODO: might need to shut off thinking output?
+       ShowThinkingEvent(); */
 }
 
 Boolean EvalGraphIsUp(void) { return shellUp[EvalGraphDlg]; }
@@ -163,8 +169,7 @@ void EvalGraphProc(void) {
     }
 }
 
-// This function is the interface to the back-end.
-
+/* This function is the interface to the back-end. */
 void EvalGraphSet(int first, int last, int current, ChessProgramStats_Move * pvInfo) {
     /* [AS] Danger! For now we rely on the pvInfo parameter being a static variable! */
 

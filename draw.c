@@ -82,7 +82,7 @@
 /* C doesn't guarantee that M_PI is defined anyway. */
 double const tau = 6.28318530717958647692528676655900577;
 
-// This is defined in {gtk|xaw}/xboard.c.  We do not want to make it available to other code by placing it in draw.h.
+/* This is defined in {gtk|xaw}/xboard.c.  We do not want to make it available to other code by placing it in draw.h. */
 void ResizeBoardWindow(int widthInPixels, int heightInPixels);
 
 #ifdef ENABLE_NLS
@@ -98,10 +98,14 @@ void ResizeBoardWindow(int widthInPixels, int heightInPixels);
 Boolean cairoAnimate;
 Option * currBoard;
 cairo_surface_t * csBoardWindow;
-static cairo_surface_t * pngPieceImages[2][(int)BlackPawn + 1];  // png 256 x 256 images
-static cairo_surface_t * pngPieceBitmaps[2][(int)BlackPawn + 1];  // scaled pieces as used
-static cairo_surface_t * pngPieceBitmaps2[2][(int)BlackPawn + 1];  // scaled pieces in store
-static RsvgHandle * svgPieces[2][(int)BlackPawn + 1];  // vector pieces in store
+/* png 256 x 256 images */
+static cairo_surface_t * pngPieceImages[2][(int)BlackPawn + 1];
+/* scaled pieces as used */
+static cairo_surface_t * pngPieceBitmaps[2][(int)BlackPawn + 1];
+/* scaled pieces in store */
+static cairo_surface_t * pngPieceBitmaps2[2][(int)BlackPawn + 1];
+/* vector pieces in store */
+static RsvgHandle * svgPieces[2][(int)BlackPawn + 1];
 static cairo_surface_t *pngBoardBitmap[2], *pngOriginalBoardBitmap[2];
 int useTexture, textureW[2], textureH[2];
 
@@ -121,7 +125,7 @@ struct {
 
 void SwitchWindow(int main) {
     currBoard = (main ? &mainOptions[W_BOARD] : &dualOptions[3]);
-    // CsBoardWindow = DRAWABLE(currBoard);
+    /* CsBoardWindow = DRAWABLE(currBoard); */
 }
 
 void NewCanvas(Option * graph) {
@@ -154,15 +158,17 @@ void SelectPieces(VariantClass v) {
     for (i = 0; i < 2; i++) {
         int p;
         for (p = 0; p <= (int)WhiteKing + 1; p++) {
-            pngPieceBitmaps[i][p] = pngPieceBitmaps2[i][p];  // defaults
+            /* defaults */
+            pngPieceBitmaps[i][p] = pngPieceBitmaps2[i][p];
         }
-        if (v == VariantShogi && BOARD_HEIGHT != 7) {  // no exceptions in Tori Shogi
+        if (v == VariantShogi && BOARD_HEIGHT != 7) { /* no exceptions in Tori Shogi */
             pngPieceBitmaps[i][(int)WhiteCannon] = pngPieceBitmaps2[i][(int)WhiteTokin];
             pngPieceBitmaps[i][(int)WhiteNightrider] = pngPieceBitmaps2[i][(int)WhitePKnight];
             pngPieceBitmaps[i][(int)WhiteGrasshopper] = pngPieceBitmaps2[i][(int)WhitePLance];
             pngPieceBitmaps[i][(int)WhiteSilver] = pngPieceBitmaps2[i][(int)WhitePSilver];
             pngPieceBitmaps[i][(int)WhiteQueen] = pngPieceBitmaps2[i][(int)WhiteLance];
-            pngPieceBitmaps[i][(int)WhiteFalcon] = pngPieceBitmaps2[i][(int)WhiteMonarch];  // for Sho Shogi
+            /* for Sho Shogi */
+            pngPieceBitmaps[i][(int)WhiteFalcon] = pngPieceBitmaps2[i][(int)WhiteMonarch];
         }
 #ifdef GOTHIC
         if (v == VariantGothic) {
@@ -234,7 +240,8 @@ void InitDrawingSizes(int boardSize, int flags) {
     CreateAnimVars();
 }
 
-void ExposeRedraw(Option * graph, int x, int y, int w, int h) {  // copy a selected part of the buffer bitmap to the display
+/* Copy a selected part of the buffer bitmap to the display. */
+void ExposeRedraw(Option * graph, int x, int y, int w, int h) {
 #if API_USED_FOR_DRAWING_GUI == 3
     if (graph && graph->handle && GTK_IS_WIDGET(graph->handle))
         gtk_widget_queue_draw_area(GTK_WIDGET(graph->handle), x, y, w, h);
@@ -257,7 +264,8 @@ void CreatePNGBoard(char * s, int kind) {
         useTexture &= ~(kind + 1);
         return;
     }
-    textureW[kind] = 0;  // prevents bitmap from being used if not succesfully loaded
+    /* prevents bitmap from being used if not succesfully loaded */
+    textureW[kind] = 0;
     if (strstr(s, ".png")) {
         cairo_surface_t * img = cairo_image_surface_create_from_png(s);
         if (cairo_surface_status(img) == CAIRO_STATUS_SUCCESS) {
@@ -276,19 +284,25 @@ void CreatePNGBoard(char * s, int kind) {
             transparency[kind] = cairo_image_surface_get_format(img) == CAIRO_FORMAT_ARGB32;
             n[kind] = 1.;
             modV[kind] = modH[kind] = -1;
+            /* find last '-' */
             while ((q = strchr(p + 1, '-'))) {
-                p = q;  // find last '-'
+                p = q;
             }
             if (strlen(p) < 11 && sscanf(p, "-%dx%d.pn%c", &f, &r, &c) == 3 && c == 'g') {
                 if (f == 0 || r == 0) {
-                    f = BOARD_WIDTH, r = BOARD_HEIGHT;  // 0x0 means 'fits any', so make it fit
+                    /* 0x0 means 'fits any', so make it fit */
+                    f = BOARD_WIDTH;
+                    r = BOARD_HEIGHT;
                 }
-                textureW[kind] = (w * BOARD_WIDTH) / f;  // sync cutting locations with square pattern
+                /* sync cutting locations with square pattern */
+                textureW[kind] = (w * BOARD_WIDTH) / f;
                 textureH[kind] = (h * BOARD_HEIGHT) / r;
-                n[kind] = (r * squareSize + 0.99) / h;  // scale to make it fit exactly vertically
+                /* scale to make it fit exactly vertically */
+                n[kind] = (r * squareSize + 0.99) / h;
                 modV[kind] = r;
                 modH[kind] = f;
-            } else if ((p = strstr(s, "xq")) && (p == s || p[-1] == '/')) {  // assume full-board image for Xiangqi
+            } else if ((p = strstr(s, "xq")) && (p == s || p[-1] == '/')) {
+                /* assume full-board image for Xiangqi */
                 while (0.8 * squareSize * BOARD_WIDTH > n[kind] * w || 0.8 * squareSize * BOARD_HEIGHT > n[kind] * h) {
                     n[kind]++;
                 }
@@ -300,13 +314,13 @@ void CreatePNGBoard(char * s, int kind) {
             if (n[kind] == 1.) {
                 pngBoardBitmap[kind] = img;
             } else {
-                // create scaled-up copy of the raw png image when it was too small
+                /* create scaled-up copy of the raw png image when it was too small */
                 cairo_surface_t * cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, n[kind] * w, n[kind] * h);
                 cairo_t * cr = cairo_create(cs);
                 pngBoardBitmap[kind] = cs;
                 textureW[kind] *= n[kind];
                 textureH[kind] *= n[kind];
-                //		cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
+                /* cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE); */
                 cairo_scale(cr, n[kind], n[kind]);
                 cairo_set_source_surface(cr, img, 0, 0);
                 cairo_paint(cr);
@@ -316,7 +330,8 @@ void CreatePNGBoard(char * s, int kind) {
     }
 }
 
-char * pngPieceNames[] =  // must be in same order as internal piece encoding
+/* N.B.: These must be in the same order as the internal piece encoding. */
+char * pngPieceNames[] =
  {"Pawn", "Knight", "Bishop", "Rook", "Queen", "Advisor", "Elephant", "Archbishop", "Marshall", "Gold", "Commoner", "Canon",
   "Nightrider", "CrownedBishop", "CrownedRook", "Crown", "Chancellor", "Hawk", "Lance", "Cobra", "Unicorn", "Lion", "Sword",
   "Zebra", "Camel", "Tower", "Wolf", "Hat", "Duck", "Lance", "Dragon", "Gnu", "Cub", "LShield", "Pegasus", "Wizard", "Copper",
@@ -324,7 +339,8 @@ char * pngPieceNames[] =  // must be in same order as internal piece encoding
   "RShield", "Prince", "Phoenix", "Kylin", "Drunk", "Right", "GoldPawn", "GoldKnight", "PromoHorse", "PromoDragon", "GoldLance",
   "GoldSilver", "HSword", "PromoSword", "PromoHSword", "Princess", "King", "Ducky", NULL};
 
-char * backupPiece[] = {  // pieces that map on other in default theme ("Crown" - "Drunk")
+/* pieces that map on other in default theme ("Crown" - "Drunk") */
+char * backupPiece[] = {
  "Princess", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, "Chancellor", NULL, NULL,
  "Knight", NULL, "Commoner", NULL, NULL, NULL, "Canon", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, "King", "Queen",
  "Lion", "Elephant"};
@@ -346,7 +362,8 @@ RsvgHandle * LoadSVG(char * dir, int color, int piece, int retry) {
 
     if (!svg && *dir) {
         svg = rsvg_handle_new_from_file(buf, &svgerror);
-        if (!svg) {  // failed! If -pid name starts with "sub_" we try to load the piece from the parent directory
+        if (!svg) {
+            /* failed! If -pid name starts with "sub_" we try to load the piece from the parent directory */
             char *p = buf, *q;
             safeStrCpy(buf, dir, MSG_SIZ);
             while ((q = strchr(p, '/'))) {
@@ -356,12 +373,14 @@ RsvgHandle * LoadSVG(char * dir, int color, int piece, int retry) {
                 if (p == buf) {
                     safeStrCpy(buf, ".", MSG_SIZ);
                 } else {
-                    p[-1] = NULLCHAR;  // strip last directory off path
+                    /* strip last directory off path */
+                    p[-1] = NULLCHAR;
                 }
                 return LoadSVG(buf, color, piece, retry);
             }
         }
-        if (!svg && *appData.inscriptions) {  // if there is no piece-specific SVG, but we make inscriptions, try general background
+        /* If there is no piece-specific SVG, but we make inscriptions, try general background. */
+        if (!svg && *appData.inscriptions) {
             snprintf(buf, MSG_SIZ, "%s/%sTile.svg", dir, color ? "Black" : "White");
             svg = rsvg_handle_new_from_file(buf, &svgerror);
         }
@@ -384,7 +403,7 @@ RsvgHandle * LoadSVG(char * dir, int color, int piece, int retry) {
 
         return svg;
     }
-    if (!retry && piece >= WhiteGrasshopper && piece <= WhiteDrunk) {  // pieces that are only different in kanji sets
+    if (!retry && piece >= WhiteGrasshopper && piece <= WhiteDrunk) { /* pieces that are only different in kanji sets */
         return LoadSVG(dir, color, piece, 1);
     }
     if (svgerror) {
@@ -393,7 +412,8 @@ RsvgHandle * LoadSVG(char * dir, int color, int piece, int retry) {
     return NULL;
 }
 
-void Wint(FILE * f, int n) {  // write 32-bit int, lsb first
+/* write 32-bit int, lsb first */
+void Wint(FILE * f, int n) {
     fprintf(f, "%c%c%c%c", n & 255, n >> 8 & 255, n >> 16 & 255, n >> 24 & 255);
 }
 
@@ -410,19 +430,32 @@ void SaveWindowsBitmap(ChessSquare piece, int color, int * data, int stride, int
         return;
     }
     fprintf(f, "BM");
+    /* file size */
     Wint(f, size + 54);
+    /* reserved */
     Wint(f, 0);
+    /* image offset */
     Wint(f, 54);
-    Wint(f, 40);  // file size, reserved, image offset, header size
+    /* header size */
+    Wint(f, 40);
+    /* width */
     Wint(f, w);
+    /* height */
     Wint(f, h);
-    Wint(f, 8 * bpp << 16 | 1);  // width, height, planes & bits/pix
-    Wint(f, 0);  // compression
-    Wint(f, size);
-    Wint(f, 3780);
-    Wint(f, 3780);
+    /* planes and bits/pix */
+    Wint(f, 8 * bpp << 16 | 1);
+    /* compression */
     Wint(f, 0);
-    Wint(f, 0);  // image size, pix/m (H and V), color-table size (2x)
+    /* image size */
+    Wint(f, size);
+    /* pix/m (horizontal) */
+    Wint(f, 3780);
+    /* pix/m (vertical) */
+    Wint(f, 3780);
+    /* colour table sizes (next two) */
+    Wint(f, 0);
+    Wint(f, 0);
+
     for (v = h - 1; v >= 0; v--) {
         for (i = 0; i < w; i++) {
             int pix = data[stride * v + i], r = pix >> 16 & 255, g = pix >> 8 & 255, b = pix & 255, a = pix >> 24 & 255;
@@ -437,7 +470,8 @@ void SaveWindowsBitmap(ChessSquare piece, int color, int * data, int stride, int
         }
         i *= bpp;
         while (i++ < line * 4) {
-            fprintf(f, "%c", 0);  // padding
+            /* padding */
+            fprintf(f, "%c", 0);
         }
     }
     fclose(f);
@@ -458,35 +492,40 @@ void ScaleOnePiece(int color, int piece, char * pieceDir) {
     g_type_init();
 #endif
 
-    svgPieces[color][piece] =
-     LoadSVG("", color, piece, 0);  // this fills pngPieceImages if we had cached svg with bitmap of wanted size
+    /* This fills pngPieceImages if we had cached svg with bitmap of wanted size. */
+    svgPieces[color][piece] = LoadSVG("", color, piece, 0);
 
-    if (!pngPieceImages[color][piece]) {  // we don't have cached bitmap (implying we did not have cached svg)
-        if (*pieceDir) {  // user specified piece directory
+    if (!pngPieceImages[color][piece]) {
+        /* We don't have cached bitmap (implying we did not have cached svg). */
+        if (*pieceDir) {
+            /* The user specified a piece directory. */
             snprintf(buf, MSG_SIZ, "%s/%s%s.png", pieceDir, color ? "Black" : "White", pngPieceNames[piece]);
-            img = cairo_image_surface_create_from_png(buf);  // try if there are png pieces there
-            if (cairo_surface_status(img) != CAIRO_STATUS_SUCCESS) {  // there were not
-                svgPieces[color][piece] = LoadSVG(pieceDir, color, piece, 0);  // so try if he has svg there
+            /* Perhaps there are PNG pieces there? */
+            img = cairo_image_surface_create_from_png(buf);
+            if (cairo_surface_status(img) != CAIRO_STATUS_SUCCESS) {
+                /* No, there were not.  Perhaps there are SVG pieces there? */
+                svgPieces[color][piece] = LoadSVG(pieceDir, color, piece, 0);
             } else {
                 pngPieceImages[color][piece] = img;
             }
         }
     }
 
-    if (!pngPieceImages[color][piece]) {  // we still did not manage to acquire a piece bitmap
+    if (!pngPieceImages[color][piece]) {
+        /* We still did not manage to acquire a piece bitmap. */
         static int warned = 0;
-        if (!(svgPieces[color][piece] = LoadSVG(svgDir, color, piece, 0))  // try to fall back on installed svg
-         && !warned && strcmp(pngPieceNames[piece], "Tile")) {  // but do not complain about missing 'Tile'
+        if (!(svgPieces[color][piece] = LoadSVG(svgDir, color, piece, 0)) /* try to fall back on installed svg */ && !warned
+         && strcmp(pngPieceNames[piece], "Tile") /* but do not complain about missing 'Tile' */) {
             char * msg = _("No default pieces installed!\nSelect your own using '-pieceImageDirectory'.");
-            printf("%s (%s)\n", msg, pngPieceNames[piece]);  // give up
+            printf("%s (%s)\n", msg, pngPieceNames[piece]);
             DisplayError(msg, 0);
-            warned = 1;  // prevent error message being repeated for each piece type
+            warned = 1; /* Prevent the error message from being repeated for each missing piece type. */
         }
     }
 
     img = pngPieceImages[color][piece];
 
-    // create new bitmap to hold scaled piece image (and remove any old)
+    /* create new bitmap to hold scaled piece image (and remove any old) */
     if (pngPieceBitmaps2[color][piece]) {
         cairo_surface_destroy(pngPieceBitmaps2[color][piece]);
     }
@@ -496,7 +535,7 @@ void ScaleOnePiece(int color, int piece, char * pieceDir) {
         return;
     }
 
-    // scaled copying of the raw png image
+    /* scaled copying of the raw png image */
     cr = cairo_create(cs);
     w = cairo_image_surface_get_width(img);
     h = cairo_image_surface_get_height(img);
@@ -507,14 +546,18 @@ void ScaleOnePiece(int color, int piece, char * pieceDir) {
     if (appData.inscriptions[0]) {
         InscribeKanji(cs, piece + BlackPawn * color, 0, 0);
     }
-    // sprintf(buf, "%c2%d.png", color ? 'b' : 'w', piece);
-    // if(piece < 66) cairo_surface_write_to_png(cs, buf);
+    /* sprintf(buf, "%c2%d.png", color ? 'b' : 'w', piece); */
+    /* if (piece < 66) {
+           cairo_surface_write_to_png(cs, buf);
+    } */
 
-    if (!appData.trueColors || !*pieceDir) {  // operate on bitmap to color it (king-size hack...)
+    if (!appData.trueColors || !*pieceDir) {
+        /* operate on bitmap to color it (king-size hack...) */
         int stride = cairo_image_surface_get_stride(cs) / 4;
         int * buf = (int *)cairo_image_surface_get_data(cs);
         int i, j, p;
-        sscanf(color ? appData.blackPieceColor + 1 : appData.whitePieceColor + 1, "%x", &p);  // replacement color
+        /* replacement color */
+        sscanf(color ? appData.blackPieceColor + 1 : appData.whitePieceColor + 1, "%x", &p);
         cairo_surface_flush(cs);
         SaveWindowsBitmap(piece, color, buf, stride, squareSize, squareSize, 4);
         for (i = 0; i < squareSize; i++) {
@@ -522,22 +565,31 @@ void ScaleOnePiece(int color, int piece, char * pieceDir) {
                 int r, a;
                 float f;
                 unsigned int c = buf[i * stride + j];
+                /* alpha */
                 a = c >> 24;
-                r = c >> 16 & 255;  // alpha and red, where red is the 'white' weight, since white is #FFFFCC in the source images
-                f = (color ? a - r : r) / 255.;  // fraction of black or white in the mix that has to be replaced
-                buf[i * stride + j] = c & 0xff000000;  // alpha channel is kept at same opacity
+                /* red, where red is the 'white' weight, since white is #FFFFCC in the source images */
+                r = c >> 16 & 255;
+                /* fraction of black or white in the mix that has to be replaced */
+                f = (color ? a - r : r) / 255.;
+                /* alpha channel is kept at same opacity */
+                buf[i * stride + j] = c & 0xff000000;
+                /* add desired fraction of new color */
                 buf[i * stride + j] += ((int)(f * (p & 0xff0000)) & 0xff0000) + ((int)(f * (p & 0xff00)) & 0xff00) +
-                 (int)(f * (p & 0xff));  // add desired fraction of new color
+                 (int)(f * (p & 0xff));
                 if (color) {
-                    buf[i * stride + j] += r | r << 8 | r << 16;  // details on black pieces get their weight added in pure white
+                    /* details on black pieces get their weight added in pure white */
+                    buf[i * stride + j] += r | r << 8 | r << 16;
                 }
                 if (appData.monoMode) {
                     if (a < 64) {
-                        buf[i * stride + j] = 0;  // if not opaque enough, totally transparent
+                        /* if not opaque enough, totally transparent */
+                        buf[i * stride + j] = 0;
                     } else if (2 * r < a) {
-                        buf[i * stride + j] = 0xff000000;  // if not light enough, totally black
+                        /* if not light enough, totally black */
+                        buf[i * stride + j] = 0xff000000;
                     } else {
-                        buf[i * stride + j] = 0xffffffff;  // otherwise white
+                        /* otherwise white */
+                        buf[i * stride + j] = 0xffffffff;
                     }
                 }
             }
@@ -551,14 +603,15 @@ void CreatePNGPieces(char * pieceDir) {
     for (p = 0; pngPieceNames[p]; p++) {
         ScaleOnePiece(0, p, pieceDir);
         if (p == BlackPawn) {
-            break;  // no black Duck
+            /* no black Duck */
+            break;
         }
         ScaleOnePiece(1, p, pieceDir);
     }
     SelectPieces(gameInfo.variant);
 }
 
-void CreateAnyPieces(int p) {  // [HGM] taken out of main
+void CreateAnyPieces(int p) {
     if (p) {
         CreatePNGPieces(appData.pieceDirectory);
     }
@@ -593,11 +646,13 @@ void Preview(int n, char * s) {
     static Boolean changed[4];
     changed[n] = TRUE;
     switch (n) {
-    case 0:  // restore true setting
+    case 0:
+        /* restore true setting */
         if (changed[3]) {
             ClearPieces();
         }
-        CreateAnyPieces(changed[3]);  // recomputes textures and (optionally) pieces
+        /* recomputes textures and (optionally) pieces */
+        CreateAnyPieces(changed[3]);
         for (n = 0; n < 4; n++) {
             changed[n] = FALSE;
         }
@@ -614,7 +669,7 @@ void Preview(int n, char * s) {
     DrawPosition(TRUE, NULL);
 }
 
-// [HGM] seekgraph: some low-level drawing routines (by JC, mostly)
+/* [HGM] seekgraph: some low-level drawing routines (by JC, mostly) */
 
 float Color(char * col, int n) {
     int c;
@@ -711,7 +766,7 @@ void DrawSeekDot(int x, int y, int colorNr) {
 }
 
 void InitDrawingHandle(Option * opt) {
-    // CsBoardWindow = DRAWABLE(opt);
+    /* CsBoardWindow = DRAWABLE(opt); */
     currBoard = opt;
 }
 
@@ -746,7 +801,8 @@ void DrawGrid(void) {
 
     /* lines in X */
     for (i = 0; i < BOARD_WIDTH + BOARD_HEIGHT + 2; i++) {
-        int h = (gridSegments[i].y1 == gridSegments[i].y2);  // horizontal
+        /* horizontal */
+        int h = (gridSegments[i].y1 == gridSegments[i].y2);
         cairo_move_to(cr, gridSegments[i].x1 + !h * odd, gridSegments[i].y1 + h * odd);
         cairo_line_to(cr, gridSegments[i].x2 + !h * odd, gridSegments[i].y2 + h * odd);
         cairo_stroke(cr);
@@ -773,8 +829,9 @@ void DrawBorder(int x, int y, int type, int odd) {
         col = appData.premoveHighlightColor;
         break;
     default:
+        /* This isn't supposed to ever happen. */
         col = "#808080";
-        break;  // cannot happen
+        break;
     }
     cr = cairo_create(CsBoardWindow(currBoard));
     cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
@@ -782,7 +839,7 @@ void DrawBorder(int x, int y, int type, int odd) {
     SetPen(cr, lineGap, col, 0);
     cairo_stroke(cr);
     cairo_destroy(cr);
-    // GraphExpose(currBoard, x - lineGap/2, y - lineGap/2, squareSize+2*lineGap+odd, squareSize+2*lineGap+odd);
+    /* GraphExpose(currBoard, x - lineGap/2, y - lineGap/2, squareSize+2*lineGap+odd, squareSize+2*lineGap+odd); */
 }
 
 int CutOutSquare(int x, int y, int * x0, int * y0, int kind) {
@@ -794,7 +851,9 @@ int CutOutSquare(int x, int y, int * x0, int * y0, int kind) {
         return 0;
     }
     if (modV[kind] > 0) {
-        nx %= modH[kind], ny %= modV[kind];  // tile fixed-format board periodically to extend it
+        /* tile fixed-format board periodically to extend it */
+        nx %= modH[kind];
+        ny %= modV[kind];
     }
     if (textureW[kind] < W * squareSize) {
         *x0 = (textureW[kind] - squareSize) * nx / (W - 1);
@@ -820,13 +879,14 @@ void DrawLogo(Option * opt, void * logo) {
     cr = cairo_create(CsBoardWindow(opt));
     cairo_rectangle(cr, 0, 0, opt->max, opt->value);
     cairo_set_source_rgba(cr, 0.5, 0.5, 0.5, 1.0);
-    cairo_fill(cr);  // paint background in case logo does not exist
+    /* Paint the background, in case the logo does not exist. */
+    cairo_fill(cr);
     if (logo) {
         img = cairo_image_surface_create_from_png(logo);
         if (cairo_surface_status(img) == CAIRO_STATUS_SUCCESS) {
             w = cairo_image_surface_get_width(img);
             h = cairo_image_surface_get_height(img);
-            // cairo_scale(cr, (float)appData.logoSize/w, appData.logoSize/(2.*h));
+            /* cairo_scale(cr, (float)appData.logoSize/w, appData.logoSize/(2.*h)); */
             cairo_scale(cr, (float)opt->max / w, (float)opt->value / h);
             cairo_set_source_surface(cr, img, 0, 0);
             cairo_paint(cr);
@@ -844,8 +904,8 @@ void BlankSquare(cairo_surface_t * dest, int x, int y, int color, ChessSquare pi
 
     cr = cairo_create(dest);
 
-    if (!texture || transparency[color])  // draw color also (as background) when texture could be transparent
-    {  // evenly colored squares
+    if (!texture || transparency[color]) /* draw color also (as background) when texture could be transparent */ {
+        /* evenly colored squares */
         char * col = NULL;
         switch (color) {
         case 0:
@@ -861,8 +921,9 @@ void BlankSquare(cairo_surface_t * dest, int x, int y, int color, ChessSquare pi
             col = "#6080C0";
             break;
         default:
+            /* This isn't supposed to ever happen. */
             col = "#808080";
-            break;  // cannot happen
+            break;
         }
         SetPen(cr, 2.0, col, 0);
         cairo_rectangle(cr, fac * x, fac * y, squareSize, squareSize);
@@ -892,12 +953,16 @@ void pngDrawPiece(cairo_surface_t * dest, ChessSquare piece, int square_color, i
         piece = WhiteZebra;
     }
     if (appData.upsideDown && flipView) {
-        kind = 1 - kind;  // swap white and black pieces
+        /* swap white and black pieces */
+        kind = 1 - kind;
     }
     if (square_color == 3) {
-        piece = BlackPawn, kind = 0;  // Ducky
+        /* Ducky */
+        piece = BlackPawn;
+        kind = 0;
     }
-    BlankSquare(dest, x, y, square_color, piece, 1);  // erase previous contents with background
+    /* Erase the previous contents with the proper background colour. */
+    BlankSquare(dest, x, y, square_color, piece, 1);
     cr = cairo_create(dest);
     cairo_set_source_surface(cr, pngPieceBitmaps[kind][piece], x, y);
     cairo_paint(cr);
@@ -923,13 +988,13 @@ void DoDrawDot(cairo_surface_t * cs, int marker, int x, int y, int r) {
     cairo_destroy(cr);
 }
 
-void DrawDot(int marker, int x, int y, int r) {  // used for atomic captures; no need to draw on backup
+/* Used for atomic captures; no need to draw on backup. */
+void DrawDot(int marker, int x, int y, int r) {
     DoDrawDot(CsBoardWindow(currBoard), marker, x, y, r);
     GraphExpose(currBoard, x - r, y - r, 2 * r, 2 * r);
 }
 
 void DrawUnicode(cairo_surface_t * canvas, char * string, int x, int y, char id, int flip, int size, int vpos) {
-    /*cairo_text_extents_t te;*/
     cairo_t * cr;
     int s = 1 - 2 * flip;
     PangoLayout * layout;
@@ -965,7 +1030,7 @@ void DrawText(char * string, int x, int y, int align) {
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
 
     cairo_set_font_size(cr, align < 0 ? 2 * squareSize / 3 : squareSize / 4);
-    // calculate where it goes
+    /* calculate where it goes */
     cairo_text_extents(cr, string, &te);
 
     if (align == 1) {
@@ -1001,13 +1066,15 @@ void InscribeKanji(cairo_surface_t * canvas, ChessSquare piece, int x, int y) {
     }
     p = appData.inscriptions;
     if (*p > '0' && *p < '3') {
-        nr = *p++ - '0';  // nr of kanji per piece
+        nr = *p++ - '0';  /* nr of kanji per piece */
     }
     n = piece;
     i = 0;
     while (piece > WhitePawn) {
         if (*p == '/') {
-            p++, piece = n - WhitePBishop;  // secondary series
+            p++;
+            /* secondary series */
+            piece = n - WhitePBishop;
         }
         if (*p++ == NULLCHAR) {
             if (n != WhiteKing) {
@@ -1018,22 +1085,26 @@ void InscribeKanji(cairo_surface_t * canvas, ChessSquare piece, int x, int y) {
         }
         oldq = q;
         q = p - 1;
+        /* Skip UTF-8 continuation bytes. */
         while ((*p & 0xc0) == 0x80) {
-            p++;  // skip UTF-8 continuation bytes
+            p++;
         }
         if (*q != '.' && ++i < nr) {
-            continue;  // yet more kanji for the current piece
+            /* Yet more kanji for the current piece. */
+            continue;
         }
         piece--;
         i = 0;
     }
     strncpy(buf, p, 20);
-    for (q = buf; (*++q & 0xc0) == 0x80;)
-        ;  // skip first unicode
+    for (q = buf; (*++q & 0xc0) == 0x80;) {
+        /* skip first unicode */
+    }
     if (nr > 1) {
         p = q;
         while ((*++p & 0xc0) == 0x80) {
-        }  // skip second unicode
+            /* skip second unicode */
+        }
         *p = NULLCHAR;
         size = 30;
         i = -12;
@@ -1056,25 +1127,27 @@ void DrawOneSquare(int x, int y, ChessSquare piece, int square_color, int marker
         } */
     }
 
-    if (align) {  // square carries inscription (coord or piece count)
+    if (align) { /* square carries inscription (coord or piece count) */
         if (align > 1) {
-            DrawText(tString, x, y, align);  // top (rank or count)
+            /* top (rank or count) */
+            DrawText(tString, x, y, align);
         }
         if (bString && *bString) {
-            DrawText(bString, x, y, 1);  // bottom (always lower right file ID)
+            /* bottom (always lower right file ID) */
+            DrawText(bString, x, y, 1);
         }
     }
 
-    if (marker) {  // print fat marker dot, if requested
+    if (marker) {
         DoDrawDot(CsBoardWindow(currBoard), marker, x + squareSize / 4, y + squareSize / 4, squareSize / 2);
     }
 }
 
+/* Animation code by Hugh Fisher, DCS, ANU. */
+
 /* Masks for XPM pieces.  Black and white pieces can have different shapes, but in the interest of simplicity, pieces must have
    the same outline on both light and dark squares, and all pieces must use the same background square colors/images. */
-static cairo_surface_t * c_animBufs[3 * NrOfAnims];  // newBuf, saveBuf
-
-/* Animation code by Hugh Fisher, DCS, ANU. */
+static cairo_surface_t * c_animBufs[3 * NrOfAnims];
 
 static void InitAnimState(AnimNr anr) {
     if (c_animBufs[anr]) {
@@ -1120,7 +1193,8 @@ void CopyRectangle(AnimNr anr, int srcBuf, int destBuf, int srcX, int srcY, int 
     cairo_rectangle(cr, destX, destY, width, height);
     cairo_fill(cr);
     cairo_destroy(cr);
-    if (c_animBufs[anr + destBuf] == CsBoardWindow(currBoard)) {  // suspect that GTK needs this!
+    /* Someone suspected that GTK 2 needed this. */
+    if (c_animBufs[anr + destBuf] == CsBoardWindow(currBoard)) {
         GraphExpose(currBoard, destX, destY, width, height);
     }
 }
@@ -1137,7 +1211,8 @@ void DoDrawPolygon(cairo_surface_t * cs, Pnt arrow[], int nr) {
     for (i = 0; i < nr; i++) {
         cairo_line_to(cr, arrow[i].x, arrow[i].y);
     }
-    if (appData.monoMode) {  // should we always outline arrow?
+    /* Should we always outline an arrow? */
+    if (appData.monoMode) {
         cairo_line_to(cr, arrow[0].x, arrow[0].y);
         SetPen(cr, 2, "#000000", 0);
         cairo_stroke_preserve(cr);
@@ -1145,16 +1220,17 @@ void DoDrawPolygon(cairo_surface_t * cs, Pnt arrow[], int nr) {
     SetPen(cr, 2, appData.highlightSquareColor, 0);
     cairo_fill(cr);
 
-    /* free memory */
     cairo_destroy(cr);
 }
 
 void DrawPolygon(Pnt arrow[], int nr) {
     DoDrawPolygon(CsBoardWindow(currBoard), arrow, nr);
-    // if(!dual) DoDrawPolygon(csBoardBackup, arrow, nr);
+    /* if (!dual) {
+        DoDrawPolygon(csBoardBackup, arrow, nr);
+    } */
 }
 
-//-------------------- Eval Graph drawing routines (formerly in xevalgraph.h) --------------------
+/* -------------------- Eval Graph drawing routines (formerly in xevalgraph.h) -------------------- */
 
 static void ChoosePen(cairo_t * cr, int i) {
     switch (i) {
@@ -1179,7 +1255,7 @@ static void ChoosePen(cairo_t * cr, int i) {
     }
 }
 
-// [HGM] front-end, added as wrapper to avoid use of LineTo and MoveToEx in other routines (so they can be back-end)
+/* [HGM] front-end, added as wrapper to avoid use of LineTo and MoveToEx in other routines (so they can be back-end) */
 void DrawSegment(int x, int y, int * lastX, int * lastY, int penType) {
     static int curX, curY;
 
@@ -1201,7 +1277,7 @@ void DrawSegment(int x, int y, int * lastX, int * lastY, int penType) {
     curY = y;
 }
 
-// front-end wrapper for drawing functions to do rectangles
+/* front-end wrapper for drawing functions to do rectangles */
 void DrawRectangle(int left, int top, int right, int bottom, int side, int style) {
     cairo_t * cr;
 
@@ -1230,16 +1306,15 @@ void DrawRectangle(int left, int top, int right, int bottom, int side, int style
     cairo_destroy(cr);
 }
 
-// front-end wrapper for putting text in graph
+/* front-end wrapper for putting text in graph */
 void DrawEvalText(char * buf, int cbBuf, int y) {
-    // the magic constants 8 and 5 should really be derived from the font size somehow
+    /* TODO: The magic constants 8 and 5 should really be derived from the font size somehow. */
     cairo_text_extents_t extents;
     cairo_t * cr = cairo_create(CsBoardWindow(disp));
 
     /* GTK-TODO this has to go into the font-selection */
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, 12.0);
-
 
     cairo_text_extents(cr, buf, &extents);
 
@@ -1250,7 +1325,5 @@ void DrawEvalText(char * buf, int cbBuf, int y) {
     cairo_set_source_rgb(cr, 0, 1.0, 0);
     cairo_set_line_width(cr, 0.1);
     cairo_stroke(cr);
-
-    /* free memory */
     cairo_destroy(cr);
 }

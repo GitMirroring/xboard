@@ -987,7 +987,7 @@ typedef struct {
 #define GLT_TIME_CONTROL 't'
 #define GLT_VARIANT 'v'
 #define GLT_OUT_OF_BOOK 'a'
-#define GLT_RESULT_COMMENT 'c' /* [HGM] rescom */
+#define GLT_RESULT_COMMENT 'c'
 
 /* Event, players, result, date */
 #define GLT_DEFAULT_TAGS "eprd"

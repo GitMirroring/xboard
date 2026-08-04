@@ -1,7 +1,7 @@
 /*
  * New (WinBoard-style) Move history for XBoard
  *
- * Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Copyright 2009-2016, 2026 Free Software Foundation, Inc.
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -39,21 +39,22 @@
 # define N_(s) s
 #endif
 
-// templates for calls into back-end (= history.c; should be moved to history.h header shared with it!)
+/* templates for calls into back-end (= history.c; should be moved to history.h header shared with it!) */
 void RefreshMemoContent(void);
 void MemoContentUpdated(void);
 
-// variables in xoptions.c
+/* variables in xoptions.c */
 extern Option historyOptions[];
 
-// ------------- low-level front-end actions called by MoveHistory back-end -----------------
+/* ------------- low-level front-end actions called by MoveHistory back-end ----------------- */
 
 void ClearHistoryMemo(void) { SetWidgetText(&historyOptions[0], "", HistoryDlg); }
 
-// the bold argument says 0 = normal, 1 = bold typeface
-// the colorNr argument says 0 = font-default, 1 = gray
+/* the bold argument says 0 = normal, 1 = bold typeface
+   the colorNr argument says 0 = font-default, 1 = gray */
 int AppendToHistoryMemo(char * text, int bold, int colorNr) {
-    return AppendText(&historyOptions[0], text);  // for now ignore bold & color stuff, as Xaw cannot handle that
+    /* for now ignore bold & color stuff, as Xaw cannot handle that */
+    return AppendText(&historyOptions[0], text);
 }
 
 void HighlightMove(int from, int to, Boolean highlight) { HighlightText(&historyOptions[0], from, to, highlight); }
@@ -61,11 +62,14 @@ void HighlightMove(int from, int to, Boolean highlight) { HighlightText(&history
 char * historyText;
 
 int SelectMove(Option * opt, int n, int x, int y, char * text, int index) {
+    /* only on button-1 and 3 press */
     if (n != 3 && n != 1) {
-        return FALSE;  // only on button-1 and 3 press
+        return FALSE;
     }
-    FindMoveByCharIndex(index);  // [HGM] also does the actual moving to it, now
-    return (n == 3);  // suppress context menu for button 3, but allow selection with button 1
+    /* [HGM] also does the actual moving to it, now */
+    FindMoveByCharIndex(index);
+    /* suppress context menu for button 3, but allow selection with button 1 */
+    return (n == 3);
 }
 
 Option historyOptions[] = {
@@ -76,7 +80,7 @@ Option historyOptions[] = {
 
 void ScrollToCurrent(int caretPos) { ScrollToCursor(&historyOptions[0], caretPos); }
 
-// ------------ standard entry points into MoveHistory code -----------
+/* ------------ standard entry points into MoveHistory code ----------- */
 
 Boolean MoveHistoryIsUp(void) { return shellUp[HistoryDlg]; }
 

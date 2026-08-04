@@ -133,7 +133,7 @@
 # include <locale.h>
 #endif
 
-// [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are.
+/* [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are. */
 #include "common.h"
 
 #include "frontend.h"
@@ -224,7 +224,7 @@ static int parse_cpair(ColorClass cc, char * str) {
     return 0;
 }
 
-void ParseIcsTextColors(void) {  // [HGM] tken out of main(), so it can be called from ICS-Options dialog
+void ParseIcsTextColors(void) {
     if (parse_cpair(ColorShout, appData.colorShout) < 0 || parse_cpair(ColorSShout, appData.colorSShout) < 0 ||
      parse_cpair(ColorChannel1, appData.colorChannel1) < 0 || parse_cpair(ColorChannel, appData.colorChannel) < 0 ||
      parse_cpair(ColorKibitz, appData.colorKibitz) < 0 || parse_cpair(ColorTell, appData.colorTell) < 0 ||
@@ -237,8 +237,8 @@ void ParseIcsTextColors(void) {  // [HGM] tken out of main(), so it can be calle
     }
     textColors[ColorNone].fg = textColors[ColorNone].bg = -1;
     textColors[ColorNone].attr = 0;
-    SetTextColor(cnames, textColors[ColorNormal].fg - 30, textColors[ColorNormal].bg - 40,
-     -2);  // kludge to announce background color to front-end
+    /* kludge to announce background color to front-end */
+    SetTextColor(cnames, textColors[ColorNormal].fg - 30, textColors[ColorNormal].bg - 40, -2);
 }
 
 char * oldICSInteractionTitle;
@@ -261,7 +261,8 @@ void Colorize(ColorClass cc, int continuation) {
     char buf[MSG_SIZ];
     int count, outCount, error;
 
-    SetTextColor(cnames, textColors[(int)cc].fg - 30, textColors[(int)cc].bg - 40, textColors[(int)cc].attr);  // for GTK widget
+    /* for GTK widget */
+    SetTextColor(cnames, textColors[(int)cc].fg - 30, textColors[(int)cc].bg - 40, textColors[(int)cc].attr);
 
     if (textColors[(int)cc].bg > 0) {
         if (textColors[(int)cc].fg > 0) {
@@ -308,7 +309,8 @@ char * ExpandPathName(char * path) {
     }
 
     if (*s == '~') {
-        if (s[1] == '~') {  // use ~~ for XBoard's private data directory
+        /* use ~~ for XBoard's private data directory */
+        if (s[1] == '~') {
             snprintf(d, 4 * MSG_SIZ, "%s%s", dataDir, s + 2);
         } else if (*(s + 1) == '/') {
             safeStrCpy(d, getpwuid(getuid())->pw_dir, 4 * MSG_SIZ);
@@ -336,8 +338,8 @@ char * ExpandPathName(char * path) {
     return static_buf;
 }
 
-int MySearchPath(
- char * installDir, char * name, char * fullname) {  // just append installDir and name. Perhaps ExpandPath should be used here?
+int MySearchPath(char * installDir, char * name, char * fullname) {
+    /* Just append installDir and name.  TODO: Perhaps ExpandPath should be used here? */
     name = ExpandPathName(name);
     if (name && name[0] == '/') {
         safeStrCpy(fullname, name, MSG_SIZ);
@@ -347,7 +349,8 @@ int MySearchPath(
     return 1;
 }
 
-int MyGetFullPathName(char * name, char * fullname) {  // should use ExpandPath?
+int MyGetFullPathName(char * name, char * fullname) {
+    /* TODO: Should this use ExpandPath? */
     name = ExpandPathName(name);
     safeStrCpy(fullname, name, MSG_SIZ);
     return 1;
@@ -381,10 +384,8 @@ int StartChildProcess(char * cmdLine, char * dir, ProcRef * pr, int priority) {
         fprintf(debugFP, "StartChildProcess (dir=\"%s\") %s\n", dir, cmdLine);
     }
 
-    /* We do NOT feed the cmdLine to the shell; we just
-       parse it into blank-separated arguments in the
-       most simple-minded way possible.
-       */
+    /* We do NOT feed the cmdLine to the shell.  We just parse it into blank-separated arguments in the most simple-minded way
+       possible. */
     i = 0;
     safeStrCpy(buf, cmdLine, sizeof(buf) / sizeof(buf[0]));
     p = buf;
@@ -408,18 +409,25 @@ int StartChildProcess(char * cmdLine, char * dir, ProcRef * pr, int priority) {
     SetUpChildIO(to_prog, from_prog);
 
     if ((pid = fork()) == 0) {
-        /* Child process */
-        // [HGM] PSWBTM: made order resistant against case where fd of created pipe was 0 or 1
-        close(to_prog[1]);  // first close the unused pipe ends
+        /* We are in the child process. */
+
+        /* [HGM] PSWBTM: made order resistant against case where fd of created pipe was 0 or 1 */
+        /* First, close the unused pipe ends. */
+        close(to_prog[1]);
         close(from_prog[0]);
-        dup2(to_prog[0], 0);  // to_prog was created first, nd is the only one to use 0 or 1
+        /* to_prog was created first, nd is the only one to use 0 or 1 */
+        dup2(to_prog[0], 0);
         dup2(from_prog[1], 1);
+        /* If 0 or 1, then dup2 already closed the original */
         if (to_prog[0] >= 2) {
-            close(to_prog[0]);  // if 0 or 1, the dup2 already cosed the original
+            close(to_prog[0]);
         }
-        close(from_prog[1]);  // and closing again loses one of the pipes!
-        if (fileno(stderr) >= 2) {  // better safe than sorry...
-            dup2(1, fileno(stderr)); /* force stderr to the pipe */
+        /* and closing again loses one of the pipes! */
+        close(from_prog[1]);
+        /* better safe than sorry... */
+        if (fileno(stderr) >= 2) {
+            /* force stderr to the pipe */
+            dup2(1, fileno(stderr));
         }
 
         if (dir[0] != NULLCHAR && chdir(dir) != 0) {
@@ -427,11 +435,12 @@ int StartChildProcess(char * cmdLine, char * dir, ProcRef * pr, int priority) {
             exit(1);
         }
 
-        nice(priority);  // [HGM] nice: adjust priority of engine proc
+        /* [HGM] Adjust the priority of the engine process. */
+        nice(priority);
 
         execvp(argv[0], argv);
 
-        /* If we get here, exec failed */
+        /* If we get here, exec failed. */
         perror(argv[0]);
         exit(1);
     }
@@ -449,11 +458,11 @@ int StartChildProcess(char * cmdLine, char * dir, ProcRef * pr, int priority) {
     return 0;
 }
 
-// [HGM] kill: implement the 'hard killing' of AS's Winboard_x
+/* [HGM] kill: implement the 'hard killing' of AS's Winboard_x */
 static int pid;
 
 static void AlarmCallBack(int n) {
-    kill(pid, SIGKILL);  // kill forcefully
+    kill(pid, SIGKILL);
     return;
 }
 
@@ -465,18 +474,21 @@ void DestroyChildProcess(ProcRef pr, int signalType) {
     }
     cp->kind = CPNone;
     if (signalType & 1) {
-        kill(cp->pid, signalType == 9 ? SIGKILL : SIGTERM);  // [HGM] kill: for 9 hard-kill immediately
+        /* [HGM] kill: for 9, hard-kill immediately */
+        kill(cp->pid, signalType == 9 ? SIGKILL : SIGTERM);
     }
     signal(SIGALRM, AlarmCallBack);
     pid = cp->pid;
     if (signalType & 4) {
-        alarm(1 + appData.delayAfterQuit);  // [HGM] kill: schedule hard kill if so requested
+        /* [HGM] kill: schedule hard kill if so requested */
+        alarm(1 + appData.delayAfterQuit);
     }
     /* Process is exiting either because of the kill or because of
        a quit command sent by the backend; either way, wait for it to die.
     */
     wait((int *)0);
-    alarm(0);  // cancel alarm if still pending
+    /* cancel alarm if still pending */
+    alarm(0);
     close(cp->fdFrom);
     close(cp->fdTo);
 }
@@ -487,24 +499,25 @@ char * BufferCommandOutput(char * command, int size) {
         int count;
         FILE * f;
 #if 0
-	ChildProc *pr;
-	StartChildProcess(command, ".", (ProcRef) &pr);    // run command in daughter process
-	f = fdopen(pr->fdFrom, "r");
-	count = fread(res, 1, size-1, f);  // read its output
-	fclose(f);
-	DestroyChildProcess((ProcRef) pr, 9);
-	free(pr);
+        ChildProc *pr;
+        /* run command in daughter process */
+        StartChildProcess(command, ".", (ProcRef) &pr);
+        f = fdopen(pr->fdFrom, "r");
+        count = fread(res, 1, size-1, f);
+        fclose(f);
+        DestroyChildProcess((ProcRef) pr, 9);
+        free(pr);
 #else
         f = popen(command, "r");
         if (!f) {
             return res;
         }
-        count = fread(res, 1, size - 1, f);  // read its output
+        count = fread(res, 1, size - 1, f);
         pclose(f);
 #endif
         res[count > 0 ? count : 0] = NULLCHAR;
     }
-    return res;  // return buffer with output
+    return res;
 }
 
 void InterruptChildProcess(ProcRef pr) {
@@ -513,7 +526,8 @@ void InterruptChildProcess(ProcRef pr) {
     if (cp->kind != CPReal) {
         return;
     }
-    (void)kill(cp->pid, SIGINT); /* stop it thinking */
+    /* stop it thinking */
+    (void)kill(cp->pid, SIGINT);
 }
 
 int OpenTelnet(char * host, char * port, ProcRef * pr) {
@@ -727,7 +741,8 @@ static int get_term_width(void) {
     int fd, default_width;
 
     fd = STDIN_FILENO;
-    default_width = 79;  // this is FICS default anyway...
+    /* This value was at least the default for FICS at one point. */
+    default_width = 79;
 
 #if !defined(TIOCGWINSZ) && defined(TIOCGSIZE)
     struct ttysize win;

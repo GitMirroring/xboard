@@ -1,8 +1,7 @@
 /*
  * pgntags.c -- Functions to manage PGN tags
  *
- * Copyright 1995, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -93,8 +92,6 @@ int ParsePGNTag(char * tag, GameInfo * gameInfo) {
         }
         success = TRUE;
     } else if (StrCaseCmp(name, "TimeControl") == 0) {
-        //	int tc, mps, inc = -1;
-        //	if(sscanf(value, "%d/%d", &mps, &tc) == 2 || )
         success = StrSavePtr(value, &gameInfo->timeControl) != NULL;
     } else if (StrCaseCmp(name, "FEN") == 0) {
         success = StrSavePtr(value, &gameInfo->fen) != NULL;
@@ -105,7 +102,8 @@ int ParsePGNTag(char * tag, GameInfo * gameInfo) {
         /* xboard-defined extension */
         int oldVariant = gameInfo->variant;
         success = StrSavePtr(value, &gameInfo->variantName) != NULL;
-        if (*value && strcmp(value, engineVariant)) {  // keep current engine-defined variant if it matches
+        if (*value && strcmp(value, engineVariant)) {
+            /* keep current engine-defined variant if it matches */
             gameInfo->variant = StringToVariant(value);
         }
         if (oldVariant != VariantNormal) {
@@ -179,16 +177,16 @@ void PrintPGNTags(FILE * fp, GameInfo * gameInfo) {
 }
 
 
-/* Return a non-static buffer with a games info.
- */
+/* Return a non-static buffer with a games info. */
 char * PGNTags(GameInfo * gameInfo) {
     size_t len;
     char * buf;
     char * p;
 
-    // First calculate the needed buffer size.
-    // Then we don't have to check the buffer size later.
-    len = 12 + 11 + 11 + 12 + 12 + 12 + 25 + 1;  // The first 7 tags
+    /* We first calculate the needed buffer size, so we don't have to check the buffer size later. */
+
+    /* The first 7 tags */
+    len = 12 + 11 + 11 + 12 + 12 + 12 + 25 + 1;
     if (gameInfo->event) {
         len += strlen(gameInfo->event);
     }

@@ -1577,8 +1577,7 @@ void ParseAttribs(COLORREF * color, int * effects, char * argValue) {
     *color = ParseColorName(e);
 }
 
-void ParseTextAttribs(ColorClass cc, char * s) {  // [HGM] front-end wrapper that does the platform-dependent call
-    // for XBoard we would set (&appData.colorShout)[cc] = strdup(s);
+void ParseTextAttribs(ColorClass cc, char * s) {
     ParseAttribs(&textAttribs[cc].color, &textAttribs[cc].effects, s);
 }
 

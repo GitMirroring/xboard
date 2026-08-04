@@ -1,11 +1,9 @@
 /*
  * zippy.c -- Implements Zippy the Pinhead chess player on ICS in XBoard
  *
- * Copyright 1991 by Digital Equipment Corporation, Maynard,
- * Massachusetts.
+ * Copyright 1991 by Digital Equipment Corporation, Maynard, Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -79,14 +77,14 @@
 #include "backend.h"
 #include "backendz.h"
 
-// [HGM] book
 char * SendMoveToBookUser(int nr, ChessProgramState * cps, int initial);
 
 void HandleMachineMove(char * message, ChessProgramState * cps);
 
 static char zippyPartner[MSG_SIZ];
 static char zippyLastOpp[MSG_SIZ];
-static char zippyOffender[MSG_SIZ];  // [HGM] aborter
+/* [HGM] aborter */
+static char zippyOffender[MSG_SIZ];
 static int zippyConsecGames;
 static time_t zippyLastGameEnd;
 
@@ -96,13 +94,13 @@ extern int myrandom(void);
 void ZippyInit(void) {
     char * p;
 
-    /* Get name of Zippy lines file */
+    /* Get the name of the Zippy lines file. */
     p = getenv("ZIPPYLINES");
     if (p != NULL) {
         appData.zippyLines = p;
     }
 
-    /* Get word that Zippy thinks is insulting */
+    /* Get a word that Zippy thinks is insulting. */
     p = getenv("ZIPPYPINHEAD");
     if (p != NULL) {
         appData.zippyPinhead = p;
@@ -120,7 +118,7 @@ void ZippyInit(void) {
         appData.zippyPassword2 = p;
     }
 
-    /* Joke feature for people who try an old password */
+    /* Joke feature for people who try an old password. */
     p = getenv("ZIPPYWRONGPASSWORD");
     if (p != NULL) {
         appData.zippyWrongPassword = p;
@@ -1004,7 +1002,7 @@ void ZippyGameEnd(ChessMove result, char * resultDetails) {
     if (forwardMostMove < appData.zippyShortGame) {
         safeStrCpy(zippyOffender, zippyLastOpp, sizeof(zippyOffender) / sizeof(zippyOffender[0]));
     } else {
-        zippyOffender[0] = 0;  // [HGM] aborter
+        zippyOffender[0] = 0;
     }
 }
 
@@ -1109,9 +1107,9 @@ int ZippyMatch(char * buf, int * i) {
 
     /* FICS wild/nonstandard forms */
     if (looking_at(buf, i, "Challenge: * (*) *(*) * * * * Loaded from *")) {
-        /* note: star_match[2] can include "[white] " or "[black] "
-           before our own name. */
-        if (star_match[8] == NULL || star_match[8][0] == 0) {  // [HGM] chessd: open-source ICS has file on next line
+        /* note: star_match[2] can include "[white] " or "[black] " before our own name. */
+        /* [HGM] chessd: open-source ICS has file on next line */
+        if (star_match[8] == NULL || star_match[8][0] == 0) {
             ZippyHandleChallenge(star_match[4], star_match[5], star_match[6], star_match[7], StripHighlightAndTitle(star_match[0]));
         } else {
             ZippyHandleChallenge(star_match[4], star_match[8], star_match[6], star_match[7], StripHighlightAndTitle(star_match[0]));
@@ -1120,23 +1118,20 @@ int ZippyMatch(char * buf, int * i) {
     }
 
     if (looking_at(buf, i, "Challenge: * (*) *(*) * * * * : * * Loaded from *")) {
-        /* note: star_match[2] can include "[white] " or "[black] "
-           before our own name. */
+        /* note: star_match[2] can include "[white] " or "[black] " before our own name. */
         ZippyHandleChallenge(star_match[4], star_match[10], star_match[8], star_match[9], StripHighlightAndTitle(star_match[0]));
         return TRUE;
     }
 
     /* Regular forms */
     if (looking_at(buf, i, "Challenge: * (*) *(*) * * * * : * *") | looking_at(buf, i, "Challenge: * (*) *(*) * * * * * *")) {
-        /* note: star_match[2] can include "[white] " or "[black] "
-           before our own name. */
+        /* note: star_match[2] can include "[white] " or "[black] " before our own name. */
         ZippyHandleChallenge(star_match[4], star_match[5], star_match[8], star_match[9], StripHighlightAndTitle(star_match[0]));
         return TRUE;
     }
 
     if (looking_at(buf, i, "Challenge: * (*) *(*) * * * *")) {
-        /* note: star_match[2] can include "[white] " or "[black] "
-           before our own name. */
+        /* note: star_match[2] can include "[white] " or "[black] " before our own name. */
         ZippyHandleChallenge(star_match[4], star_match[5], star_match[6], star_match[7], StripHighlightAndTitle(star_match[0]));
         return TRUE;
     }
@@ -1191,7 +1186,7 @@ void ZippyFirstBoard(int moveNum, int basetime, int increment) {
     int w, b;
     char * opp = (gameMode == IcsPlayingWhite ? gameInfo.black : gameInfo.white);
     Boolean sentPos = FALSE;
-    char * bookHit = NULL;  // [HGM] book
+    char * bookHit = NULL;
 
     if (!first.initDone) {
         /* Game is starting prematurely.  We can't deal with this */
@@ -1261,7 +1256,7 @@ void ZippyFirstBoard(int moveNum, int basetime, int increment) {
                         SendTimeRemaining(&first, TRUE);
                     }
                 }
-                bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);  // [HGM] book: send go or retrieve book move
+                bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);
             } else {
                 /* Engine's opponent is on move now */
                 if (first.usePlayother) {
@@ -1287,8 +1282,7 @@ void ZippyFirstBoard(int moveNum, int basetime, int increment) {
                         SendTimeRemaining(&first, TRUE);
                     }
                 }
-                //	      SendToProgram("go\n", &first);
-                bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);  // [HGM] book: send go or retrieve book move
+                bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);
             }
         }
     } else if (gameMode == IcsPlayingBlack) {
@@ -1312,8 +1306,7 @@ void ZippyFirstBoard(int moveNum, int basetime, int increment) {
                         SendTimeRemaining(&first, FALSE);
                     }
                 }
-                //	      SendToProgram("go\n", &first);
-                bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);  // [HGM] book: send go or retrieve book move
+                bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);
             } else {
                 /* Engine's opponent is on move now */
                 if (first.usePlayother) {
@@ -1332,8 +1325,9 @@ void ZippyFirstBoard(int moveNum, int basetime, int increment) {
         }
     }
 
-    if (bookHit) {  // [HGM] book: simulate book reply
-        static char bookMove[MSG_SIZ];  // a bit generous?
+    if (bookHit) {
+        /* [HGM] book: simulate book reply */
+        static char bookMove[MSG_SIZ];
 
         programStats.depth = programStats.nodes = programStats.time = programStats.score = programStats.got_only_move = 0;
         sprintf(programStats.movelist, "%s (xbook)", bookHit);

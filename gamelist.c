@@ -370,7 +370,8 @@ int GameListBuild(FILE * f) {
                 PackMove(fromX, fromY, toX, toY, boards[scratch][toY][toX]);
             }
             break;
-        case WhiteWins:  // [HGM] rescom: save last comment as result details
+        /* [HGM] result comment: save last comment as result details */
+        case WhiteWins:
         case BlackWins:
         case GameIsDrawn:
         case GameUnfinished:
@@ -378,7 +379,8 @@ int GameListBuild(FILE * f) {
                 break;
             }
             if (currentListGame->gameInfo.result == GameUnfinished) {
-                currentListGame->gameInfo.result = cm;  // correct result tag with actual result
+                /* correct result tag with actual result */
+                currentListGame->gameInfo.result = cm;
             }
             if (currentListGame->gameInfo.resultDetails != NULL) {
                 free(currentListGame->gameInfo.resultDetails);
@@ -420,7 +422,8 @@ int GameListBuild(FILE * f) {
         printf("GameListBuild %ld msec\n", SubtractTimeMarks(&t2, &t));
     }
     quickFlag = 0;
-    PackGame(boards[scratch]);  // for appending end-of-game marker.
+    /* for appending end-of-game marker. */
+    PackGame(boards[scratch]);
     DisplayTitle("WinBoard");
     rewind(f);
     yyskipmoves = FALSE;
@@ -428,8 +431,7 @@ int GameListBuild(FILE * f) {
 }
 
 
-/* Clear an existing GameInfo structure.
- */
+/* Clear an existing GameInfo structure. */
 void ClearGameInfo(GameInfo * gameInfo) {
     if (gameInfo->event != NULL) {
         free(gameInfo->event);
@@ -482,7 +484,8 @@ char * GameListLineOld(int number, GameInfo * gameInfo) {
     return ret;
 }
 
-#define MAX_FIELD_LEN 80 /* To avoid overflowing the buffer */
+/* To avoid overflowing the buffer */
+#define MAX_FIELD_LEN 80
 
 char * GameListLine(int number, GameInfo * gameInfo) {
     char buffer[2 * MSG_SIZ];
@@ -536,7 +539,7 @@ char * GameListLine(int number, GameInfo * gameInfo) {
             break;
         case GLT_VARIANT:
             strncpy(buf, gameInfo->variantName ? gameInfo->variantName : VariantName(gameInfo->variant), MAX_FIELD_LEN);
-            // strncpy( buf, VariantName(gameInfo->variant), MAX_FIELD_LEN );
+            /*strncpy( buf, VariantName(gameInfo->variant), MAX_FIELD_LEN);*/
             break;
         case GLT_OUT_OF_BOOK:
             strncpy(buf, gameInfo->outOfBook ? gameInfo->outOfBook : "?", MAX_FIELD_LEN);
@@ -583,15 +586,15 @@ char * GameListLineFull(int number, GameInfo * gameInfo) {
 
     return ret;
 }
-// --------------------------------------- Game-List options dialog --------------------------------------
+/* --------------------------------------- Game-List options dialog -------------------------------------- */
 
-// back-end
+/* back-end */
 typedef struct {
     char id;
     char * name;
 } GLT_Item;
 
-// back-end: translation table tag id-char <-> full tag name
+/* back-end: translation table tag id-char <-> full tag name */
 static GLT_Item GLT_ItemInfo[] = {
  {GLT_EVENT,          "Event"         },
  {GLT_SITE,           "Site"          },
@@ -604,13 +607,13 @@ static GLT_Item GLT_ItemInfo[] = {
  {GLT_TIME_CONTROL,   "Time Control"  },
  {GLT_VARIANT,        "Variant"       },
  {GLT_OUT_OF_BOOK,    PGN_OUT_OF_BOOK },
- {GLT_RESULT_COMMENT, "Result Comment"}, // [HGM] rescom
+ {GLT_RESULT_COMMENT, "Result Comment"},
  {0,                  0               }
 };
 
 char lpUserGLT[LPUSERGLT_SIZE];
 
-// back-end: convert the tag id-char to a full tag name
+/* back-end: convert the tag id-char to a full tag name */
 char * GLT_FindItem(char id) {
     char * result = 0;
 
@@ -628,7 +631,7 @@ char * GLT_FindItem(char id) {
     return result;
 }
 
-// back-end: build the list of tag names
+/* back-end: build the list of tag names */
 void GLT_TagsToList(char * tags) {
     char * pc = tags;
 
@@ -653,7 +656,7 @@ void GLT_TagsToList(char * tags) {
     GLT_DeSelectList();
 }
 
-// back-end: retrieve item from dialog and translate to id-char
+/* back-end: retrieve item from dialog and translate to id-char */
 char GLT_ListItemToTag(int index) {
     char result = '\0';
     char name[MSG_SIZ];
@@ -674,7 +677,7 @@ char GLT_ListItemToTag(int index) {
     return result;
 }
 
-// back-end: add items id-chars one-by-one to temp tags string
+/* back-end: add items id-chars one-by-one to temp tags string */
 void GLT_ParseList(void) {
     char * pc = lpUserGLT;
     int idx = 0;

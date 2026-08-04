@@ -165,7 +165,7 @@
 # include <X11/Xaw/AsciiText.h>
 #endif
 
-// [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are.
+/* [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are. */
 #include "common.h"
 
 #include "bitmaps/icon_white.bm"
@@ -240,10 +240,12 @@ int xtVersion = XtSpecificationRelease;
 int xScreen;
 Display * xDisplay;
 Window xBoardWindow;
-Pixel lowTimeWarningColor, dialogColor, buttonColor;  // used in widgets
+/* used in widgets */
+Pixel lowTimeWarningColor, dialogColor, buttonColor;
 Pixmap iconPixmap, wIconPixmap, bIconPixmap, xMarkPixmap;
 Widget shellWidget, formWidget, boardWidget, titleWidget, dropMenu, menuBarWidget;
-Option * optList;  // contains all widgets of main window
+/* contains all widgets of main window */
+Option * optList;
 #if ENABLE_NLS
 XFontSet fontSet, clockFontSet;
 #else
@@ -255,7 +257,8 @@ XFontStruct *coordFontStruct, *countFontStruct;
 XtAppContext appContext;
 char * layoutName;
 
-char installDir[] = ".";  // [HGM] UCI: needed for UCI; probably needs run-time initializtion
+/* [HGM] UCI: needed for UCI; probably needs run-time initializtion */
+char installDir[] = ".";
 
 Position commentX = -1, commentY = -1;
 Dimension commentW, commentH;
@@ -263,8 +266,9 @@ typedef unsigned int BoardSize;
 BoardSize boardSize;
 Boolean chessProgram;
 
-int minX, minY;  // [HGM] placement: volatile limits on upper-left corner
-int smallLayout = 0, tinyLayout = 0, marginW, marginH,  // [HGM] for run-time resizing
+/* [HGM] placement: volatile limits on upper-left corner */
+int minX, minY;
+int smallLayout = 0, tinyLayout = 0, marginW, marginH, /* [HGM] for run-time resizing */
  fromX = -1, fromY = -1, toX, toY, commentUp = FALSE, errorExitStatus = -1, defaultLineGap;
 Dimension textHeight;
 Pixel timerForegroundPixel, timerBackgroundPixel;
@@ -286,9 +290,7 @@ WindowPlacement wpGameList;
 WindowPlacement wpTags;
 WindowPlacement wpDualBoard;
 
-
-/* This magic number is the number of intermediate frames used
-   in each half of the animation. For short moves it's reduced
+/* kFactor is the default number of intermediate frames used in each half of the animation, though for short moves, it gets reduced
    by 1. The total number of frames will be factor * 2 + 1.  */
 #define kFactor 4
 
@@ -331,7 +333,7 @@ XtActionsRec boardActions[] = {
  {"HandlePV",         HandlePV                    },
  {"SelectPV",         SelectPV                    },
  {"StopPV",           StopPV                      },
- {"MenuItem",         KeyBindingProc              }, // [HGM] generic handler for key bindings
+ {"MenuItem",         KeyBindingProc              },
  {"QuitProc",         QuitWrapper                 },
  {"ManProc",          ManInner                    },
  {"TempBackwardProc", TempBackwardProc            },
@@ -379,8 +381,8 @@ char ICSInputTranslations[] = "<Key>Up: UpKeyProc() \n "
                               "<Key>Down: DownKeyProc() \n "
                               "<Key>Return: EnterKeyProc() \n";
 
-// [HGM] vari: another hideous kludge: call extend-end first so we can be sure select-start works,
-//             as the widget is destroyed before the up-click can call extend-end
+/* [HGM] vari: another hideous kludge: call extend-end first so we can be sure select-start works, as the widget is destroyed before
+   the up-click can call extend-end */
 char commentTranslations[] = "<Btn3Down>: extend-end(PRIMARY) select-start() CommentClick() \n";
 
 String xboardResources[] = {"*Error*translations: #override\\n <Key>Return: ErrorPopDown()", NULL};
@@ -402,12 +404,12 @@ void BoardToTop(void) {
     Arg args[16];
     XtSetArg(args[0], XtNiconic, FALSE);
     XtSetValues(shellWidget, args, 1);
-
-    XtPopup(shellWidget, XtGrabNone); /* Raise if lowered  */
+    /* Raise if lowered  */
+    XtPopup(shellWidget, XtGrabNone);
 }
 
-//---------------------------------------------------------------------------------------------------------
-// some symbol definitions to provide the proper (= XBoard) context for the code in args.h
+/*--------------------------------------------------------------------------------------------------------- */
+/* some symbol definitions to provide the proper (= XBoard) context for the code in args.h */
 #define XBOARD TRUE
 #define JAWS_ARGS
 #define CW_USEDEFAULT (1 << 31)
@@ -418,62 +420,67 @@ void BoardToTop(void) {
 #define OPTCHAR "-"
 #define SEPCHAR " "
 
-// The option definition and parsing code common to XBoard and WinBoard is collected in this file
+/* The option definition and parsing code common to XBoard and WinBoard is collected in this file. */
 #include "args.h"
 
-// front-end part of option handling
+/* front-end part of option handling */
 
-// [HGM] This platform-dependent table provides the location for storing the color info
+/* [HGM] This platform-dependent table provides the location for storing the color info. */
 extern char *crWhite, *crBlack;
 
 void * colorVariable[] = {&appData.whitePieceColor, &appData.blackPieceColor, &appData.lightSquareColor, &appData.darkSquareColor,
  &appData.highlightSquareColor, &appData.premoveHighlightColor, &appData.lowTimeWarningColor, NULL, NULL, NULL, NULL, NULL,
  &crWhite, &crBlack, NULL};
 
-// [HGM] font: keep a font for each square size, even non-stndard ones
+/* [HGM] font: keep a font for each square size, even non-stndard ones. */
 #define NUM_SIZES 18
 #define MAX_SIZE 130
 Boolean fontIsSet[NUM_FONTS], fontValid[NUM_FONTS][MAX_SIZE];
 char * fontTable[NUM_FONTS][MAX_SIZE];
 
-void ParseFont(char * name, int number) {  // in XBoard, only 2 of the fonts are currently implemented, and we just copy their name
+/* In XBoard, only 2 of the fonts are currently implemented, and we just copy their name. */
+void ParseFont(char * name, int number) {
     int size;
     if (sscanf(name, "size%d:", &size)) {
-        // [HGM] font: font is meant for specific boardSize (likely from settings file);
-        //       defer processing it until we know if it matches our board size
-        if (strstr(name, "-*-") &&  // only pay attention to things that look like X-fonts
-         size >= 0 && size < MAX_SIZE) {  // for now, fixed limit
+        /* [HGM] font is meant for specific boardSize (likely from settings file); defer processing it until we know if it matches our board size */
+        if (strstr(name, "-*-") /* only pay attention to things that look like X-fonts */ && size >= 0 && size < MAX_SIZE) {
             fontTable[number][size] = strdup(strchr(name, ':') + 1);
             fontValid[number][size] = TRUE;
         }
         return;
     }
     switch (number) {
-    case 0:  // CLOCK_FONT
+    case 0:
+        /* CLOCK_FONT */
         appData.clockFont = strdup(name);
         break;
-    case 1:  // MESSAGE_FONT
+    case 1:
+        /* MESSAGE_FONT */
         appData.font = strdup(name);
         break;
-    case 2:  // COORD_FONT
+    case 2:
+        /* COORD_FONT */
         appData.coordFont = strdup(name);
         break;
     default:
         return;
     }
-    fontIsSet[number] = TRUE;  // [HGM] font: indicate a font was specified (not from settings file)
+    /* [HGM] font: indicate a font was specified (not from settings file) */
+    fontIsSet[number] = TRUE;
 }
 
-void SetFontDefaults(void) {  // only 2 fonts currently
+/* only 2 fonts currently */
+void SetFontDefaults(void) {
     appData.clockFont = CLOCK_FONT_NAME;
     appData.coordFont = COORD_FONT_NAME;
     appData.font = DEFAULT_FONT_NAME;
 }
 
-void CreateFonts(void) {  // no-op, until we identify the code for this already in XBoard and move it here
-}
+/* For now, this is a no-op.  TODO: identify the code for this already in XBoard and move it here. */
+void CreateFonts(void) {}
 
-void ParseColor(int n, char * name) {  // in XBoard, just copy the color-name string
+void ParseColor(int n, char * name) {
+    /* In XBoard, just copy the color-name string. */
     if (colorVariable[n] && *name == '#') {
         *(char **)colorVariable[n] = strdup(name);
     }
@@ -485,64 +492,71 @@ void ParseTextAttribs(ColorClass cc, char * s) { (&appData.colorShout)[cc] = str
 
 void ParseBoardSize(void * addr, char * name) { appData.boardSize = strdup(name); }
 
-void LoadAllSounds(void) {  // In XBoard the sound-playing program takes care of obtaining the actual sound
-}
+/* In XBoard, the sound-playing program takes care of obtaining the actual sound */
+void LoadAllSounds(void) {}
 
-void SetCommPortDefaults(void) {  // for now, this is a no-op, as the corresponding option does not exist in XBoard
-}
+/* for now, this is a no-op, as the corresponding option does not exist in XBoard */
+void SetCommPortDefaults(void) {}
 
-// [HGM] args: these three cases taken out to stay in front-end
+/* [HGM] args: these three cases taken out to stay in front-end */
 void SaveFontArg(FILE * f, ArgDescriptor * ad) {
     char * name;
     int i, n = (int)(intptr_t)ad->argLoc;
     switch (n) {
-    case 0:  // CLOCK_FONT
+    case 0:
+        /* CLOCK_FONT */
         name = appData.clockFont;
         break;
-    case 1:  // MESSAGE_FONT
+    case 1:
+        /* MESSAGE_FONT */
         name = appData.font;
         break;
-    case 2:  // COORD_FONT
+    case 2:
+        /* COORD_FONT */
         name = appData.coordFont;
         break;
     default:
         return;
     }
-    for (i = 0; i < NUM_SIZES; i++) {  // [HGM] font: current font becomes standard for current size
-        if (sizeDefaults[i].squareSize == squareSize) {  // only for standard sizes!
+    /* [HGM] font: current font becomes standard for current size */
+    for (i = 0; i < NUM_SIZES; i++) {
+        /* only for standard sizes! */
+        if (sizeDefaults[i].squareSize == squareSize) {
             fontTable[n][squareSize] = strdup(name);
             fontValid[n][squareSize] = TRUE;
             break;
         }
     }
     for (i = 0; i < MAX_SIZE; i++) {
-        if (fontValid[n][i]) {  // [HGM] font: store all standard fonts
+        /* [HGM] font: store all standard fonts */
+        if (fontValid[n][i]) {
             fprintf(f, OPTCHAR "%s" SEPCHAR "\"size%d:%s\"\n", ad->argName, i, fontTable[n][i]);
         }
     }
 }
 
-void ExportSounds(void) {  // nothing to do, as the sounds are at all times represented by their text-string names already
-}
+/* nothing to do, as the sounds are at all times represented by their text-string names already */
+void ExportSounds(void) {}
 
-void SaveAttribsArg(FILE * f,
- ArgDescriptor * ad) {  // here the "argLoc" defines a table index. It could have contained the 'ta' pointer itself, though
+void SaveAttribsArg(FILE * f, ArgDescriptor * ad) {
+    /* here the "argLoc" defines a table index. It could have contained the 'ta' pointer itself, though */
     fprintf(f, OPTCHAR "%s" SEPCHAR "%s\n", ad->argName, (&appData.colorShout)[(int)(intptr_t)ad->argLoc]);
 }
 
-void SaveColor(FILE * f,
- ArgDescriptor * ad) {  // in WinBoard the color is an int and has to be converted to text. In X it would be a string already?
+void SaveColor(FILE * f, ArgDescriptor * ad) {
+    /* in WinBoard the color is an int and has to be converted to text. In X it would be a string already? */
     if (colorVariable[(int)(intptr_t)ad->argLoc]) {
         fprintf(f, OPTCHAR "%s" SEPCHAR "%s\n", ad->argName, *(char **)colorVariable[(int)(intptr_t)ad->argLoc]);
     }
 }
 
-void SaveBoardSize(FILE * f, char * name, void * addr) {  // wrapper to shield back-end from BoardSize & sizeInfo
+/* wrapper to shield back-end from BoardSize & sizeInfo */
+void SaveBoardSize(FILE * f, char * name, void * addr) {
     fprintf(f, OPTCHAR "%s" SEPCHAR "%s\n", name, appData.boardSize);
 }
 
-void ParseCommPortSettings(char * s) {  // no such option in XBoard (yet)
-}
+/* no such option in XBoard (yet) */
+void ParseCommPortSettings(char * s) {}
 
 int frameX, frameY;
 
@@ -556,24 +570,28 @@ void GetActualPlacement(Widget wg, WindowPlacement * wp) {
     }
 
     win = XtWindow(wg);
-    XGetWindowAttributes(xDisplay, win, &winAt);  // this works, where XtGetValues on XtNx, XtNy does not!
+    /* this works, where XtGetValues on XtNx, XtNy does not! */
+    XGetWindowAttributes(xDisplay, win, &winAt);
     XTranslateCoordinates(xDisplay, win, winAt.root, -winAt.border_width, -winAt.border_width, &rx, &ry, &dummy);
     wp->x = rx - winAt.x;
     wp->y = ry - winAt.y;
     wp->height = winAt.height;
     wp->width = winAt.width;
     frameX = winAt.x;
-    frameY = winAt.y;  // remember to decide if windows touch
+    frameY = winAt.y;
+    /* TODO: remember to decide if windows touch */
 }
 
-void GetPlacement(DialogClass dlg, WindowPlacement * wp) {  // wrapper to shield back-end from widget type
+/* wrapper to shield back-end from widget type */
+void GetPlacement(DialogClass dlg, WindowPlacement * wp) {
     if (shellUp[dlg]) {
         GetActualPlacement(shells[dlg], wp);
     }
 }
 
-void GetWindowCoords(void) {  // wrapper to shield use of window handles from back-end (make addressible by number?)
-    // In XBoard this will have to wait until awareness of window parameters is implemented
+/* wrapper to shield use of window handles from back-end (make addressible by number?) */
+/* In XBoard this will have to wait until awareness of window parameters is implemented */
+void GetWindowCoords(void) {
     GetActualPlacement(shellWidget, &wpMain);
     if (shellUp[EngOutDlg]) {
         GetActualPlacement(shells[EngOutDlg], &wpEngineOutput);
@@ -595,17 +613,18 @@ void GetWindowCoords(void) {  // wrapper to shield use of window handles from ba
     }
 }
 
-void PrintCommPortSettings(FILE * f, char * name) {  // This option does not exist in XBoard
-}
+/* This option does not exist in XBoard */
+void PrintCommPortSettings(FILE * f, char * name) {}
 
 void EnsureOnScreen(int * x, int * y, int minX, int minY) { return; }
 
-int MainWindowUp(void) {  // [HGM] args: allows testing if main window is realized from back-end
+/* [HGM] args: allows testing if main window is realized from back-end */
+int MainWindowUp(void) {
     return xBoardWindow != 0;
 }
 
-void PopUpStartupDialog(void) {  // start menu not implemented in XBoard
-}
+/* start menu not implemented in XBoard */
+void PopUpStartupDialog(void) {}
 
 /* TODO: Properly handle individual arguments that exceed 1023 characters.
 
@@ -674,8 +693,8 @@ int MakeColors(void) {
     return forceMono;
 }
 
-void InitializeFonts(
- int clockFontPxlSize, int coordFontPxlSize, int fontPxlSize) {  // detervtomine what fonts to use, and create them
+/* determine what fonts to use, and create them */
+void InitializeFonts(int clockFontPxlSize, int coordFontPxlSize, int fontPxlSize) {
     XrmValue vTo;
     XrmDatabase xdb;
 
@@ -704,8 +723,10 @@ void InitializeFonts(
         XFontsOfFontSet(coordFontSet, &font_struct_list, &font_name_list);
         coordFontID = XLoadFont(xDisplay, font_name_list[0]);
         coordFontStruct = XQueryFont(xDisplay, coordFontID);
-        fontSize = XExtentsOfFontSet(fontSet);  // [HGM] figure out how much vertical space font takes
-        textHeight = fontSize->max_logical_extent.height + 5;  // add borderWidth
+        /* [HGM] figure out how much vertical space font takes */
+        fontSize = XExtentsOfFontSet(fontSet);
+        /* add borderWidth */
+        textHeight = fontSize->max_logical_extent.height + 5;
     }
 #else
     appData.font = FindFont(appData.font, fontPxlSize);
@@ -715,9 +736,10 @@ void InitializeFonts(
     clockFontStruct = XQueryFont(xDisplay, clockFontID);
     coordFontID = XLoadFont(xDisplay, appData.coordFont);
     coordFontStruct = XQueryFont(xDisplay, coordFontID);
-    // textHeight in !NLS mode!
+    /* textHeight in !NLS mode! */
 #endif
-    countFontID = coordFontID;  // [HGM] holdings
+    /* [HGM] holdings */
+    countFontID = coordFontID;
     countFontStruct = coordFontStruct;
 
     xdb = XtDatabase(xDisplay);
@@ -783,18 +805,20 @@ char * PrintArg(ArgType t) {
 }
 
 char * GenerateGlobalTranslationTable(void) {
-    /* go through all menu items and extract the keyboard shortcuts, so that X11 can load them */
+    /* Go through all menu items and extract the keyboard shortcuts, so that X11 can load them. */
     char * output[2];
 
     int i, j, n = 0;
     MenuItem * mi;
 
-    output[0] = strdup("");  // build keystrokes with and wo mod keys separately
-    output[1] = strdup("");  // so the more specific can preceed the other
+    /* Build keystrokes with and without modifier keys separately, so that the more specific can preceed the other. */
+    output[0] = strdup("");
+    output[1] = strdup("");
 
     /* loop over all menu entries */
     for (i = 0; menuBar[i - n].mi || !n++; i++) {
-        mi = menuBar[i + n].mi;  // kludge to access 'noMenu' behind sentinel
+        /* kludge to access 'noMenu' behind sentinel */
+        mi = menuBar[i + n].mi;
         for (j = 0; mi[j].proc; j++) {
             if (mi[j].accel) {
                 int ctrl = 0;
@@ -819,7 +843,8 @@ char * GenerateGlobalTranslationTable(void) {
                 if (test == NULL) {
                     key = strdup(mi[j].accel);
                 } else {
-                    key = strdup(++test);  // remove ">"
+                    /* remove ">" */
+                    key = strdup(++test);
                 }
 
                 /* instead of shift X11 uses the uppercase letter directly*/
@@ -854,7 +879,7 @@ char * GenerateGlobalTranslationTable(void) {
                     strncat(mods, "Shift ", 6);
                 };
 
-                // remove trailing space
+                /* remove trailing space */
                 if (isspace(mods[strlen(mods) - 1])) {
                     mods[strlen(mods) - 1] = '\0';
                 }
@@ -903,8 +928,9 @@ void PrintOptions(void) {
     while (p->argName) {
         if (p->argType == ArgCommSettings) {
             p++;
+            /* XBoard has no comm port. */
             continue;
-        }  // XBoard has no comm port
+        }
         snprintf(buf + len, MSG_SIZ, "-%s%s", p->argName, PrintArg(p->argType));
         if (p->save) {
             strcat(buf + len, "*");
@@ -944,10 +970,12 @@ int main(int argc, char ** argv) {
     char * p;
     int forceMono = FALSE;
 
-    extern Option chatOptions[];  // FIXME: adapt Chat window, removing ICS pane and Hide button
+    /* FIXME: adapt Chat window, removing ICS pane and Hide button */
+    extern Option chatOptions[];
     chatOptions[6].type = chatOptions[10].type = Skip;
 
-    srandom(time(0));  // [HGM] book: make random truly random
+    /* [HGM] book: make random truly random */
+    srandom(time(0));
 
     setbuf(stdout, NULL);
     setbuf(stderr, NULL);
@@ -963,7 +991,8 @@ int main(int argc, char ** argv) {
         exit(0);
     }
 
-    if (argc > 1 && !strcmp(argv[1], "--show-config")) {  // [HGM] install: called to print config info
+    /* [HGM] install: called to print config info */
+    if (argc > 1 && !strcmp(argv[1], "--show-config")) {
         typedef struct {
             char *name, *value;
         } Config;
@@ -1016,7 +1045,8 @@ int main(int argc, char ** argv) {
     snprintf(gameCopyFilename, i, "%s/.xboard%05uc.pgn", p, getpid());
     snprintf(gamePasteFilename, i, "%s/.xboard%05up.pgn", p, getpid());
 
-    {  // [HGM] initstring: kludge to fix bad bug. expand '\n' characters in init string and computer string.
+    /* [HGM] initstring: kludge to fix bad bug. expand '\n' characters in init string and computer string. */
+    {
         static char buf[MSG_SIZ];
         EscapeExpand(buf, appData.firstInitString);
         appData.firstInitString = strdup(buf);
@@ -1081,7 +1111,8 @@ int main(int argc, char ** argv) {
             exit(2);
         }
         if (BOARD_WIDTH > 8) {
-            squareSize = (squareSize * 8 + BOARD_WIDTH / 2) / BOARD_WIDTH;  // scale height
+            /* scale height */
+            squareSize = (squareSize * 8 + BOARD_WIDTH / 2) / BOARD_WIDTH;
         }
         if (i < 7) {
             /* Find some defaults; use the nearest known size */
@@ -1127,7 +1158,8 @@ int main(int argc, char ** argv) {
             if (szd->name == NULL) {
                 szd--;
             }
-            appData.boardSize = strdup(szd->name);  // [HGM] settings: remember name for saving settings
+            /* [HGM] settings: remember name for saving settings */
+            appData.boardSize = strdup(szd->name);
         } else {
             while (szd->name != NULL && StrCaseCmp(szd->name, appData.boardSize) != 0) {
                 szd++;
@@ -1144,7 +1176,7 @@ int main(int argc, char ** argv) {
         fontPxlSize = szd->fontPxlSize;
         smallLayout = szd->smallLayout;
         tinyLayout = szd->tinyLayout;
-        // [HGM] font: use defaults from settings file if available and not overruled
+        /* [HGM] font: use defaults from settings file if available and not overruled */
     }
 
     defaultLineGap = lineGap;
@@ -1211,7 +1243,8 @@ int main(int argc, char ** argv) {
     XtSetArg(args[0], XtNbackground, &timerBackgroundPixel);
     XtSetArg(args[1], XtNforeground, &timerForegroundPixel);
     XtGetValues(optList[W_WHITE].handle, args, 2);
-    if (appData.showButtonBar) {  // can't we use timer pixels for this? (Or better yet, just black & white?)
+    /* TODO: can't we use timer pixels for this? (Or better yet, just black & white?) */
+    if (appData.showButtonBar) {
         XtSetArg(args[0], XtNbackground, &buttonBackgroundPixel);
         XtSetArg(args[1], XtNforeground, &buttonForegroundPixel);
         XtGetValues(optList[W_PAUSE].handle, args, 2);
@@ -1293,7 +1326,8 @@ int main(int argc, char ** argv) {
         EngineOutputPopUp();
     }
 
-    gameInfo.boardWidth = 0;  // [HGM] pieces: kludge to ensure InitPosition() calls InitDrawingSizes()
+    /* [HGM] pieces: kludge to ensure InitPosition() calls InitDrawingSizes() */
+    gameInfo.boardWidth = 0;
     InitPosition(TRUE);
 
     InitBackEnd2();
@@ -1302,7 +1336,6 @@ int main(int argc, char ** argv) {
         if (appData.icsActive) {
             /* We now wait until we see "login:" from the ICS before
                sending the logon script (problems with timestamp otherwise) */
-            /*ICSInitScript();*/
             if (appData.icsInputBox) {
                 ICSInputBoxPopUp();
             }
@@ -1319,12 +1352,11 @@ int main(int argc, char ** argv) {
     }
 
     UpdateLogos(TRUE);
-    // XtSetKeyboardFocus(shellWidget, formWidget);
     XSetInputFocus(xDisplay, XtWindow(formWidget), RevertToPointerRoot, CurrentTime);
 
     XtAppMainLoop(appContext);
     if (appData.debugMode) {
-        fclose(debugFP);  // [DM] debug
+        fclose(debugFP);
     }
     return 0;
 }
@@ -1343,20 +1375,18 @@ void IntSigHandler(int sig) { ExitEvent(sig); }
 void CmailSigHandler(int sig) {
     int dummy = 0;
     int error;
-
-    signal(SIGUSR1, SIG_IGN); /* suspend handler     */
-
-    /* Activate call-back function CmailSigHandlerCallBack()             */
+    /* suspend handler */
+    signal(SIGUSR1, SIG_IGN);
+    /* Activate call-back function CmailSigHandlerCallBack() */
     OutputToProcess(cmailPR, (char *)(&dummy), sizeof(int), &error);
-
-    signal(SIGUSR1, CmailSigHandler); /* re-activate handler */
+    /* re-activate handler */
+    signal(SIGUSR1, CmailSigHandler);
 }
 
 void CmailSigHandlerCallBack(InputSourceRef isr, void * closure, char * message, int count, int error) {
     BoardToTop();
-    ReloadCmailMsgEvent(TRUE); /* Reload cmail msg  */
+    ReloadCmailMsgEvent(TRUE);
 }
-/**** end signal code ****/
 
 
 #define Abs(n) ((n) < 0 ? -(n) : (n))
@@ -1446,7 +1476,7 @@ XFontSet CreateFontSet(char * base_fnt_lst) {
     }
     return fntSet;
 }
-#else  // not ENABLE_NLS
+#else /* !ENABLE_NLS */
 /*
  * Find a font that matches "pattern" that is as close as
  * possible to the targetPxlSize.  Prefer fonts that are k
@@ -1553,8 +1583,8 @@ void SetMenuEnables(Enables * enab) {
     }
 }
 
-void KeyBindingProc(Widget w, XEvent * event, String * prms,
- Cardinal * nprms) {  // [HGM] new method of key binding: specify MenuItem(FlipView) in stead of FlipViewProc in translation string
+/* [HGM] new method of key binding: specify MenuItem(FlipView) instead of FlipViewProc in translation string */
+void KeyBindingProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
     MenuItem * item;
     if (*nprms == 0) {
         return;
@@ -1618,21 +1648,24 @@ void CoDrag(Widget sh, WindowPlacement * wp) {
     int j = 0, touch = 0, fudge = 2;
     GetActualPlacement(sh, wp);
     if (abs(wpMain.x + wpMain.width + 2 * frameX - wp->x) < fudge) {
+        /* right touch */
         touch = 1;
-    } else  // right touch
-        if (abs(wp->x + wp->width + 2 * frameX - wpMain.x) < fudge) {
-            touch = 2;
-        } else  // left touch
-            if (abs(wpMain.y + wpMain.height + frameX + frameY - wp->y) < fudge) {
-                touch = 3;
-            } else  // bottom touch
-                if (abs(wp->y + wp->height + frameX + frameY - wpMain.y) < fudge) {
-                    touch = 4;  // top touch
-                }
-    if (!touch) {
-        return;  // only windows that touch co-move
+    } else if (abs(wp->x + wp->width + 2 * frameX - wpMain.x) < fudge) {
+        /* left touch */
+        touch = 2;
+    } else if (abs(wpMain.y + wpMain.height + frameX + frameY - wp->y) < fudge) {
+        /* bottom touch */
+        touch = 3;
+    } else if (abs(wp->y + wp->height + frameX + frameY - wpMain.y) < fudge) {
+        /* top touch */
+        touch = 4;
     }
-    if (touch < 3 && wpNew.height != wpMain.height) {  // left or right and height changed
+    if (!touch) {
+        /* only windows that touch co-move */
+        return;
+    }
+    if (touch < 3 && wpNew.height != wpMain.height) {
+        /* left or right, and height changed */
         int heightInc = wpNew.height - wpMain.height;
         double fracTop = Fraction(wp->y, wpMain.y, wpMain.y + wpMain.height + frameX + frameY);
         double fracBot = Fraction(wp->y + wp->height + frameX + frameY + 1, wpMain.y, wpMain.y + wpMain.height + frameX + frameY);
@@ -1641,7 +1674,8 @@ void CoDrag(Widget sh, WindowPlacement * wp) {
         if (heightInc) {
             XtSetArg(args[j], XtNheight, wp->height + heightInc), j++;
         }
-    } else if (touch > 2 && wpNew.width != wpMain.width) {  // top or bottom and width changed
+    } else if (touch > 2 && wpNew.width != wpMain.width) {
+        /* top or bottom, and width changed */
         int widthInc = wpNew.width - wpMain.width;
         double fracLeft = Fraction(wp->x, wpMain.x, wpMain.x + wpMain.width + 2 * frameX);
         double fracRght = Fraction(wp->x + wp->width + 2 * frameX + 1, wpMain.x, wpMain.x + wpMain.width + 2 * frameX);
@@ -1740,15 +1774,17 @@ void DragProc(void) {
 
 void DelayedDrag(void) {
     if (delayedDragID) {
-        XtRemoveTimeOut(delayedDragID);  // cancel pending
+        /* cancel pending */
+        XtRemoveTimeOut(delayedDragID);
     }
-    delayedDragID =
-     XtAppAddTimeOut(appContext, 200, (XtTimerCallbackProc)DragProc, (XtPointer)0);  // and schedule new one 50 msec later
+    /* and schedule new one 200ms later */
+    delayedDragID = XtAppAddTimeOut(appContext, 200, (XtTimerCallbackProc)DragProc, (XtPointer)0);
 }
 
 void EventProc(Widget widget, void * unused, XEvent * event) {
     if (XtIsRealized(widget) && event->type == ConfigureNotify || appData.useStickyWindows) {
-        DelayedDrag();  // as long as events keep coming in faster than 50 msec, they destroy each other
+        /* as long as events keep coming in sufficiently quickly, they destroy each other */
+        DelayedDrag();
     }
 }
 
@@ -1757,12 +1793,13 @@ void EventProc(Widget widget, void * unused, XEvent * event) {
  */
 void DrawPositionProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { DrawPosition(TRUE, NULL); }
 
-
-void HandlePV(Widget w, XEvent * event, String * params, Cardinal * nParams) {  // [HGM] pv: walk PV
+/* [HGM] pv: walk PV */
+void HandlePV(Widget w, XEvent * event, String * params, Cardinal * nParams) {
     MovePV(event->xmotion.x, event->xmotion.y, desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap));
 }
 
-extern int savedIndex; /* gross that this is global */
+/* TODO: gross that this is global */
+extern int savedIndex;
 
 void CommentClick(Widget w, XEvent * event, String * params, Cardinal * nParams) {
     String val;
@@ -1776,7 +1813,8 @@ void CommentClick(Widget w, XEvent * event, String * params, Cardinal * nParams)
     if (savedIndex != currentMove) {
         ToNrEvent(savedIndex);
     }
-    LoadVariation(index, val);  // [HGM] also does the actual moving to it, now
+    /* [HGM] also does the actual moving to it, now */
+    LoadVariation(index, val);
 }
 
 
@@ -1863,10 +1901,13 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
  unsigned long * length_return, int * format_return) {
     char * selection_tmp;
 
-    // if (!selected_fen_position) return FALSE; /* should never happen */
+    /* It used to never be the case that there was no selected FEN position:
+    if (!selected_fen_position) return FALSE; */
     if (*target == XA_STRING || *target == XA_UTF8_STRING(xDisplay)) {
-        if (!selected_fen_position) {  // since it never happens, we use it for indicating a game is being sent
-            FILE * f = fopen(gameCopyFilename, "r");  // This code, taken from SendGameSelection, now merges the two
+        /* But, because it never happened, someone started using it for indicating that a game is being sent! */
+        if (!selected_fen_position) {
+            /* This code, taken from SendGameSelection, now merges the two */
+            FILE * f = fopen(gameCopyFilename, "r");
             long len;
             size_t count;
             if (f == NULL) {
@@ -1884,9 +1925,8 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
             }
             selection_tmp[len] = NULLCHAR;
         } else {
-            /* note: since no XtSelectionDoneProc was registered, Xt will
-             * automatically call XtFree on the value returned.  So have to
-             * make a copy of it allocated with XtMalloc */
+            /* N.B.: Because no XtSelectionDoneProc was registered, Xt will automatically call XtFree on the value returned.  So, we
+               have to make a copy of it that is allocated with XtMalloc */
             selection_tmp = XtMalloc(strlen(selected_fen_position) + 16);
             safeStrCpy(selection_tmp, selected_fen_position, strlen(selected_fen_position) + 16);
         }
@@ -1894,7 +1934,7 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
         *value_return = selection_tmp;
         *length_return = strlen(selection_tmp);
         *type_return = *target;
-        *format_return = 8; /* bits per byte */
+        *format_return = 8 /* bits per byte */;
         return TRUE;
     } else if (*target == XA_TARGETS(xDisplay)) {
         Atom * targets_tmp = (Atom *)XtMalloc(2 * sizeof(Atom));
@@ -1904,10 +1944,9 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
         *type_return = XA_ATOM;
         *length_return = 2;
 #if 0
-    // This code leads to a read of value_return out of bounds on 64-bit systems.
-    // Other code which I have seen always sets *format_return to 32 independent of
-    // sizeof(Atom) without adjusting *length_return. For instance see TextConvertSelection()
-    // at http://cgit.freedesktop.org/xorg/lib/libXaw/tree/src/Text.c -- BJ
+    /* This code leads to a read of value_return out of bounds on 64-bit systems.  Other code which a previous developer saw always
+       set *format_return to 32 independent of sizeof(Atom) without adjusting *length_return.  For instance, see
+       TextConvertSelection() at http://cgit.freedesktop.org/xorg/lib/libXaw/tree/src/Text.c. */
     *format_return = 8 * sizeof(Atom);
     if (*format_return > 32) {
       *length_return *= *format_return / 32;
@@ -1922,16 +1961,12 @@ Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * 
     }
 }
 
-/* note: when called from menu all parameters are NULL, so no clue what the
- * Widget which was clicked on was, or what the click event was
- */
+/* N.B.: When called from menu, all parameters are NULL!  Therefore, we know neither which Widget was clicked nor what the click
+   event actually was. */
 void CopySomething(char * src) {
     selected_fen_position = src;
-    /*
-     * Set both PRIMARY (the selection) and CLIPBOARD, since we don't
-     * have a notion of a position that is selected but not copied.
-     * See http://www.freedesktop.org/wiki/Specifications/ClipboardsWiki
-     */
+    /* Set both PRIMARY (the selection) and CLIPBOARD, since we don't have a notion of a position that is selected but not copied.
+       See http://www.freedesktop.org/wiki/Specifications/ClipboardsWiki */
     XtOwnSelection(
      menuBarWidget, XA_PRIMARY, CurrentTime, SendPositionSelection, NULL /* lose_ownership_proc */, NULL /* transfer_done_proc */);
     XtOwnSelection(menuBarWidget, XA_CLIPBOARD(xDisplay), CurrentTime, SendPositionSelection, NULL /* lose_ownership_proc */,
@@ -2005,7 +2040,8 @@ void PasteGameProc(void) {
 
 void QuitWrapper(Widget w, XEvent * event, String * prms, Cardinal * nprms) { QuitProc(); }
 
-int ShiftKeys(void) {  // bassic primitive for determining if modifier keys are pressed
+/* bassic primitive for determining if modifier keys are pressed */
+int ShiftKeys(void) {
     long int codes[] = {XK_Meta_L, XK_Meta_R, XK_Control_L, XK_Control_R, XK_Shift_L, XK_Shift_R};
     char keys[32];
     int i, j, k = 0;
@@ -2022,22 +2058,16 @@ static void MoveTypeInProc(Widget widget, void * unused, XEvent * event) {
     char buf[10];
     KeySym sym;
     int n = XLookupString(&(event->xkey), buf, 10, &sym, NULL);
-    if (n == 1 && *buf >= 32  // printable
-     && !(ShiftKeys() & 0x3c)  // no Alt, Ctrl
-    ) {
+    if (n == 1 && *buf >= 32 /* printable */ && !(ShiftKeys() & 0x3c) /* no Alt, Ctrl */) {
         BoxAutoPopUp(buf);
     }
 }
 
-static void UpKeyProc(
- Widget w, XEvent * event, String * prms, Cardinal * nprms) {  // [HGM] input: let up-arrow recall previous line from history
-    IcsKey(1);
-}
+/* [HGM] input: let up-arrow recall previous line from history */
+static void UpKeyProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { IcsKey(1); }
 
-static void DownKeyProc(
- Widget w, XEvent * event, String * prms, Cardinal * nprms) {  // [HGM] input: let down-arrow recall next line from history
-    IcsKey(-1);
-}
+/* [HGM] input: let down-arrow recall next line from history */
+static void DownKeyProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { IcsKey(-1); }
 
 static void EnterKeyProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) { IcsKey(0); }
 
@@ -2062,7 +2092,8 @@ void TempForwardProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) 
     TempBackwardActive = FALSE;
 }
 
-void ManInner(Widget w, XEvent * event, String * prms, Cardinal * nprms) {  // called as key binding
+/* called as key binding */
+void ManInner(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
     char buf[MSG_SIZ];
     String name;
     if (nprms && *nprms > 0) {
@@ -2074,7 +2105,8 @@ void ManInner(Widget w, XEvent * event, String * prms, Cardinal * nprms) {  // c
     system(buf);
 }
 
-void ManProc(void) {  // called from menu
+/* called from menu */
+void ManProc(void) {
     ManInner(NULL, NULL, NULL, NULL);
 }
 
@@ -2150,7 +2182,7 @@ void FireDelayedEvent(void) {
 
 void ScheduleDelayedEvent(DelayedEventCallback cb, long millisec) {
     if (delayedEventTimerXID && delayedEventCallback == cb) {
-        // [HGM] alive: replace, rather than add or flush identical event
+        /* [HGM] alive: replace, rather than add or flush identical event */
         XtRemoveTimeOut(delayedEventTimerXID);
     }
     delayedEventCallback = cb;
@@ -2198,7 +2230,7 @@ void StartLoadGameTimer(long millisec) {
 XtIntervalId analysisClockXID = 0;
 
 void AnalysisClockCallback(XtPointer arg, XtIntervalId * id) {
-    if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || appData.icsEngineAnalyze) {  // [DM]
+    if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || appData.icsEngineAnalyze) {
         AnalysisPeriodicEvent(0);
         StartAnalysisClock();
     }
@@ -2406,8 +2438,9 @@ void FrameDelay(int time) {
 
 #endif
 
-static int FindLogo(char * place, char * name, char * buf) {  // check if file exists in given place
+static int FindLogo(char * place, char * name, char * buf) {
     FILE * f;
+    /* check if file exists in given place */
     if (!place) {
         return 0;
     }
@@ -2424,12 +2457,13 @@ static void LoadLogo(ChessProgramState * cps, int n, Boolean ics) {
     if (appData.logo[n][0]) {
         logoName = appData.logo[n];
     } else if (appData.autoLogo) {
-        if (ics) {  // [HGM] logo: in ICS mode second can be used for ICS
+        if (ics) {
+            /* [HGM] logo: in ICS mode second can be used for ICS */
             sprintf(buf, "%s/%s.png", appData.logoDir, appData.icsHost);
-        } else {  // engine; cascade
-            if (!FindLogo(appData.logoDir, cps->tidy, buf) &&  // first try user log folder
-             !FindLogo(appData.directory[n], "logo", buf) &&  // then engine directory
-             !FindLogo("/usr/local/share/games/plugins/logos", cps->tidy, buf)) {  // then system folders
+        } else {
+            /* First, try the user logo directory, then the engine directory, then a system directory. */
+            if (!FindLogo(appData.logoDir, cps->tidy, buf) && !FindLogo(appData.directory[n], "logo", buf)
+             && !FindLogo("/usr/local/share/games/plugins/logos", cps->tidy, buf)) {
                 FindLogo("/usr/share/games/plugins/logos", cps->tidy, buf);
             }
         }

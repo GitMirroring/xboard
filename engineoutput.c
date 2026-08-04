@@ -70,11 +70,11 @@ typedef struct {
     int moveKey;
 } EngineOutputData;
 
-// called by other front-end
+/* called by other front-end */
 void EngineOutputUpdate(FrontEndProgramStats * stats);
 void OutputKibitz(int window, char * text);
 
-// module back-end routines
+/* module back-end routines */
 static void VerifyDisplayMode(void);
 static void UpdateControls(EngineOutputData * ed);
 
@@ -103,7 +103,7 @@ void MakeEngineOutputTitle(void) {
     if (!EngineOutputIsUp()) {
         return;
     }
-    // figure out value of 50-move counter
+    /* Figure out the value of the 50-move counter. */
     count = currentMove;
     while ((signed char)boards[count][EP_STATUS] <= EP_NONE && count > backwardMostMove) {
         count--;
@@ -126,7 +126,6 @@ void MakeEngineOutputTitle(void) {
     SetEngineOutputTitle(title);
 }
 
-// back end, due to front-end wrapper for SetWindowText, and new SetIcon arguments
 void SetEngineState(int which, enum ENGINE_STATE state, char * state_data) {
     int x_which = 1 - which;
 
@@ -157,9 +156,7 @@ void SetEngineState(int which, enum ENGINE_STATE state, char * state_data) {
     }
 }
 
-// back end, now the front-end wrapper ClearMemo is used, and ed no longer contains handles.
-void SetProgramStats(FrontEndProgramStats * stats)  // now directly called by back-end
-{
+void SetProgramStats(FrontEndProgramStats * stats) {
     EngineOutputData ed;
     int clearMemo = FALSE;
     int which, depth, multi;
@@ -174,7 +171,8 @@ void SetProgramStats(FrontEndProgramStats * stats)  // now directly called by ba
     }
 
     if (gameMode == IcsObserving && !appData.icsEngineAnalyze) {
-        return;  // [HGM] kibitz: shut up engine if we are observing an ICS game
+        /* [HGM] kibitz: silence the engine if we are observing an ICS game. */
+        return;
     }
 
     which = stats->which;
@@ -185,7 +183,8 @@ void SetProgramStats(FrontEndProgramStats * stats)  // now directly called by ba
     }
 
     if (appData.epd && which) {
-        return;  // do not write second pane in -epd mode
+        /* do not write second pane in -epd mode */
+        return;
     }
 
     if (!EngineOutputDialogExists()) {
@@ -212,14 +211,14 @@ void SetProgramStats(FrontEndProgramStats * stats)  // now directly called by ba
     }
 
     if (ed.pv != 0 && ed.pv[0] == ' ') {
-        if (strncmp(ed.pv, " no PV", 6) == 0) { /* Hack on hack! :-O */
+        /* Hack on hack! :-O */
+        if (strncmp(ed.pv, " no PV", 6) == 0) {
             ed.pv = "";
         }
     }
 
-    /* Clear memo if needed */
-    if (lastDepth[which] > depth ||
-     (lastDepth[which] == depth && depth <= 1 && ed.pv[0])) {  // no reason to clear if we won't add line
+    /* Clear memo if needed.  There's no reason to clear if we won't add a line. */
+    if (lastDepth[which] > depth || (lastDepth[which] == depth && depth <= 1 && ed.pv[0])) {
         clearMemo = TRUE;
     }
 
@@ -262,13 +261,16 @@ void SetProgramStats(FrontEndProgramStats * stats)  // now directly called by ba
     if (ed.pv && ed.pv[0] && ParseOneMove(ed.pv, currentMove, &moveType, &ff, &rf, &ft, &rt, &pc)) {
         ed.moveKey = (ff << 24 | rf << 16 | ft << 8 | rt) ^ pc * 87161;
     } else {
-        ed.moveKey = ed.nodes;  // kludge to get unique key unlikely to match any move
+        /* kludge to get unique key unlikely to match any move */
+        ed.moveKey = ed.nodes;
     }
 
     /* Update */
-    lastDepth[which] = depth == 1 && ed.nodes == 0 ? 0 : depth;  // [HGM] info-line kudge
+    /* [HGM] info-line kludge */
+    lastDepth[which] = depth == 1 && ed.nodes == 0 ? 0 : depth;
     if (endPV < 0) {
-        lastForwardMostMove[which] = forwardMostMove;  // not during PV walk!
+        /* not during PV walk! */
+        lastForwardMostMove[which] = forwardMostMove;
     }
 
     UpdateControls(&ed);
@@ -278,7 +280,6 @@ void SetProgramStats(FrontEndProgramStats * stats)  // now directly called by ba
 #define ENGINE_COLOR_BLACK 'b'
 #define ENGINE_COLOR_UNKNOWN ' '
 
-// pure back end
 static char GetEngineColor(int which) {
     char result = ENGINE_COLOR_UNKNOWN;
 
@@ -303,14 +304,15 @@ static char GetEngineColor(int which) {
             result = cps->twoMachinesColor[0];
             result = result == 'w' ? ENGINE_COLOR_WHITE : ENGINE_COLOR_BLACK;
             break;
-        default:;  // does not happen, but suppresses pedantic warnings
+        default:
+            /* This place in the code should be unreachable. */
+            ;
         }
     }
 
     return result;
 }
 
-// pure back end
 static char GetActiveEngineColor(void) {
     char result = ENGINE_COLOR_UNKNOWN;
 
@@ -321,7 +323,6 @@ static char GetActiveEngineColor(void) {
     return result;
 }
 
-// pure back end
 static int IsEnginePondering(int which) {
     int result = FALSE;
 
@@ -345,13 +346,14 @@ static int IsEnginePondering(int which) {
             }
         }
         break;
-    default:;  // does not happen, but suppresses pedantic warnings
+    default:
+        /* This place in the code should be unreachable. */
+        ;
     }
 
     return result;
 }
 
-// back end
 static void SetDisplayMode(int mode) {
     if (windowMode != mode) {
         windowMode = mode;
@@ -360,13 +362,13 @@ static void SetDisplayMode(int mode) {
     }
 }
 
-// pure back end
 static void VerifyDisplayMode(void) {
     int mode;
 
     /* Get proper mode for current game */
     switch (gameMode) {
-    case IcsObserving:  // [HGM] ICS analyze
+    /* [HGM] ICS analyze */
+    case IcsObserving:
         if (!appData.icsEngineAnalyze) {
             return;
         }
@@ -380,7 +382,8 @@ static void VerifyDisplayMode(void) {
         break;
     case IcsPlayingWhite:
     case IcsPlayingBlack:
-        mode = appData.zippyPlay && opponentKibitzes;  // [HGM] kibitz
+        /* [HGM] kibitz */
+        mode = appData.zippyPlay && opponentKibitzes;
         break;
     case TwoMachinesPlay:
         mode = 1;
@@ -393,7 +396,7 @@ static void VerifyDisplayMode(void) {
     SetDisplayMode(mode);
 }
 
-// back end. Determine what icon to set in the color-icon field, and print it
+/* Determine what icon to set in the color-icon field, and print it. */
 void SetEngineColorIcon(int which) {
     char color = GetEngineColor(which);
     int nicon = 0;
@@ -411,9 +414,10 @@ void SetEngineColorIcon(int which) {
 
 #define MAX_NAME_LENGTH 32
 
-// [HGM] multivar: sort Thinking Output within one depth on score
+/* [HGM] multivar: sort Thinking Output within one depth on score */
 
-static int MateFlip(int n) {  // map mate-score to monotonous scale, so sorting compares them correctly
+/* Map mate scores to a monotonic scale, so sorting compares them correctly. */
+static int MateFlip(int n) {
     if (n >= MATE_SCORE) {
         return 2 * MATE_SCORE - n;
     }
@@ -428,11 +432,14 @@ static int InsertionPoint(int len, EngineOutputData * ed) {
     char failType;
 
     if (ed->nodes == 0 && ed->score == 0 && ed->time == 0) {
-        newScore = 1e6;  // info lines inserted on top
+        /* info lines inserted on top */
+        newScore = 1e6;
     }
-    if (ed->depth != curDepth[n]) {  // depth has changed
+    if (ed->depth != curDepth[n]) {
+        /* depth has changed */
         curDepth[n] = ed->depth;
-        nrVariations[n] = 0;  // throw away everything we had
+        /* throw away everything we had */
+        nrVariations[n] = 0;
     }
     i = strlen(ed->pv);
     if (i > 0) {
@@ -442,20 +449,20 @@ static int InsertionPoint(int len, EngineOutputData * ed) {
     if (failType != '?' && failType != '!') {
         failType = ' ';
     }
-    // loop through all lines. Note even / odd used for different panes
+    /* loop through all lines. Note even / odd used for different panes */
     for (i = nrVariations[n] - 2; i >= 0; i -= 2) {
-        // put new item behind those we haven't looked at
+        /* put new item behind those we haven't looked at */
         offs = textEnd[i + n];
         textEnd[i + n + 2] = offs + len;
         scores[i + n + 2] = newScore;
         keys[i + n + 2] = ed->moveKey;
         fail[i + n + 2] = failType;
-        if (ed->moveKey != keys[i + n] &&  // same move always tops previous one (as a higher score must be a fail low)
-         MateFlip(newScore) < MateFlip(scores[i + n]) && fail[i + n] == ' ') {
+        /* same move always tops previous one (as a higher score must be a fail low) */
+        if (ed->moveKey != keys[i + n] && MateFlip(newScore) < MateFlip(scores[i + n]) && fail[i + n] == ' ') {
             break;
         }
-        // if it had higher score as previous, move previous in stead
-        scores[i + n + 2] = ed->moveKey == keys[i + n] ? newScore : scores[i + n];  // correct scores of fail-low/high searches
+        /* Correct the scores of searches that fail high or now. */
+        scores[i + n + 2] = ed->moveKey == keys[i + n] ? newScore : scores[i + n];
         textEnd[i + n + 2] = textEnd[i + n] + len;
         keys[i + n + 2] = keys[i + n];
         fail[i + n + 2] = fail[i + n];
@@ -471,9 +478,11 @@ static int InsertionPoint(int len, EngineOutputData * ed) {
     return offs + strlen(header[ed->which]);
 }
 
-static char spaces[] = "            ";  // [HGM] align: spaces for padding
+/* [HGM] align: spaces for padding */
+static char spaces[] = "            ";
 
-static void Format(char * buf, int val) {  // [HGM] tbhits: print a positive integer with trailing whitespace to give it fixed width
+/* [HGM] tbhits: print a positive integer with trailing whitespace to give it fixed width */
+static void Format(char * buf, int val) {
     if (val < 1000000) {
         int h = val, i = 0;
         while (h > 0) {
@@ -489,10 +498,7 @@ static void Format(char * buf, int val) {  // [HGM] tbhits: print a positive int
     }
 }
 
-// pure back end, now SetWindowText is called via wrapper DoSetWindowText
 static void UpdateControls(EngineOutputData * ed) {
-    // int isPondering = FALSE;
-
     char s_label[MAX_NAME_LENGTH + 32];
     int h;
     char * name = ed->name;
@@ -506,8 +512,10 @@ static void UpdateControls(EngineOutputData * ed) {
     strncpy(s_label, name, MAX_NAME_LENGTH);
     s_label[MAX_NAME_LENGTH - 1] = '\0';
 
-    if (pvStart) {  // [HGM] tbhits: plit up old PV into extra infos and real PV
-        while (strchr(pvStart, '\t')) {  // locate last tab before non-int (real PV starts after that)
+    if (pvStart) {
+        /* [HGM] tbhits: split up old PV into extra infos and real PV */
+        /* locate last tab before non-int (real PV starts after that) */
+        while (strchr(pvStart, '\t')) {
             for (q = pvStart; isdigit(*q) || *q == ' '; q++)
                 ;
             if (*q != '\t') {
@@ -545,8 +553,7 @@ static void UpdateControls(EngineOutputData * ed) {
         SetEngineState(ed->which, STATE_PONDERING, buf);
     } else if (gameMode == TwoMachinesPlay) {
         SetEngineState(ed->which, STATE_THINKING, "");
-    } else if (gameMode == AnalyzeMode || gameMode == AnalyzeFile ||
-     (gameMode == IcsObserving && appData.icsEngineAnalyze)) {  // [HGM] ICS-analyze
+    } else if (gameMode == AnalyzeMode || gameMode == AnalyzeFile || (gameMode == IcsObserving && appData.icsEngineAnalyze)) {
         char buf[64];
         int time_secs = ed->time / 100;
         int time_mins = time_secs / 60;
@@ -600,9 +607,12 @@ static void UpdateControls(EngineOutputData * ed) {
 
         /* Nodes */
         if (ed->nodes < 1000000) {
-            int h = ed->nodes, i = 0;
+            int h = ed->nodes;
+            i = 0;
+            /* [HGM] align: count digits; pad with 2 spaces for every missing digit */
             while (h > 0) {
-                h /= 10, i++;  // [HGM] align: count digits; pad with 2 spaces for every missing digit
+                h /= 10;
+                i++;
             }
             snprintf(s_nodes, sizeof(s_nodes), "%llu %s\t", ed->nodes, spaces + 2 * i);
         } else {
@@ -618,14 +628,14 @@ static void UpdateControls(EngineOutputData * ed) {
         for (i = hits = 0; i < 5; i++) {
             params[i] = 0;
         }
-        // fprintf(stderr, "%s\n%s\n", ed->pv, pvStart);
-        if (pvStart != ed->pv) {  // check if numbers before PV
+        /* check if numbers before PV */
+        if (pvStart != ed->pv) {
             strncpy(buf, ed->pv, 256);
             buf[pvStart - ed->pv] = NULLCHAR;
             extra = sscanf(buf, "%d %d %d %d %d", params, params + 1, params + 2, params + 3, params + 4);
-            // fprintf(stderr, "extra=%d len=%d\n", extra, pvStart - ed->pv);
             if (extra) {
-                hits = params[extra - 1], params[extra - 1] = 0;  // last one is tbhits
+                /* last one is tbhits */
+                hits = params[extra - 1], params[extra - 1] = 0;
             }
         }
         Format(s_seld, params[0]);
@@ -663,8 +673,9 @@ static void UpdateControls(EngineOutputData * ed) {
             snprintf(s_time, sizeof(s_time) / sizeof(s_time[0]), "%d:%02d.%02d\t", time_secs / 60, time_secs % 60, time_cent);
         }
 
+        /* [HGM] hide: erase columns the user has hidden */
         if (columnMask & 2) {
-            s_score[0] = NULLCHAR;  // [HGM] hide: erase columns the user has hidden
+            s_score[0] = NULLCHAR;
         }
         if (columnMask & 4) {
             s_nodes[0] = NULLCHAR;
@@ -710,27 +721,32 @@ static void UpdateControls(EngineOutputData * ed) {
 
 static char * titles[] = {"score\t", "nodes\t", "time\t", "tbhits\t", "knps\t", "seldep\t"};
 
-void Collapse(int n) {  // handle click on column headers, to hide / show them
+/* handle click on column headers, to hide / show them */
+void Collapse(int n) {
     int i, j, nr = 0, m = ~columnMask, Ncol = 7;
     for (i = 0; columnHeader[i] && i < n; i++) {
         nr += (columnHeader[i] == '\t');
     }
     if (!nr) {
-        return;  // depth always shown, so clicks on it ignored
+        /* depth always shown, so clicks on it ignored */
+        return;
     }
     for (i = j = 0; i < Ncol; i++) {
+        /* count hidden columns */
         if (m & 1 << i) {
-            j++;  // count hidden columns
+            j++;
         }
     }
-    if (nr < j) {  // shown column clicked: hide it
+    if (nr < j) {
+        /* shown column clicked: hide it */
         for (i = j = 0; i < Ncol; i++) {
             if (m & 1 << i && j++ == nr) {
                 break;
             }
         }
         columnMask |= 1 << i;
-    } else {  // hidden column clicked: show it
+    } else {
+        /* hidden column clicked: show it */
         m = ~m;
         nr -= j;
         for (i = j = 0; i < Ncol; i++) {
@@ -740,7 +756,7 @@ void Collapse(int n) {  // handle click on column headers, to hide / show them
         }
         columnMask &= ~(1 << i);
     }
-    // create new header line
+    /* create new header line */
     strcpy(columnHeader, "dep\t");
     m = ~columnMask;
     for (i = j = 1; i < Ncol; i++) {
@@ -748,7 +764,8 @@ void Collapse(int n) {  // handle click on column headers, to hide / show them
             strcat(columnHeader, titles[i - 1]), j++;
         }
     }
-    if (j != Ncol) {  // list hidden columns, so user ca click them
+    if (j != Ncol) {
+        /* List hidden columns, so user can click them. */
         m = ~m;
         strcat(columnHeader, "(not shown:  ");
         for (i = 1; i < Ncol; i++) {
@@ -761,14 +778,15 @@ void Collapse(int n) {  // handle click on column headers, to hide / show them
     strcat(columnHeader, "\n");
 }
 
-// [HGM] kibitz: write kibitz line; split window for it if necessary
+/* [HGM] kibitz: write kibitz line; split window for it if necessary */
 void OutputKibitz(int window, char * text) {
     static int currentLineEnd[2];
     int where = 0;
     if (!EngineOutputIsUp()) {
         return;
     }
-    if (!opponentKibitzes && !appData.epd) {  // on first kibitz of game, clear memos
+    if (!opponentKibitzes && !appData.epd) {
+        /* on first kibitz of game, clear memos */
         DoClearMemo(1);
         currentLineEnd[1] = 0;
         if (gameMode == IcsObserving) {
@@ -776,22 +794,25 @@ void OutputKibitz(int window, char * text) {
             currentLineEnd[0] = 0;
         }
     }
-    opponentKibitzes = TRUE;  // this causes split window DisplayMode in ICS modes.
+    /* this causes split window DisplayMode in ICS modes. */
+    opponentKibitzes = TRUE;
     VerifyDisplayMode();
-    strncpy(text + strlen(text) - 1, "\r\n", 4);  // to not lose line breaks on copying
+    /* to not lose line breaks on copying */
+    strncpy(text + strlen(text) - 1, "\r\n", 4);
     if (gameMode == IcsObserving) {
         DoSetWindowText(0, nLabel, gameInfo.white);
         SetIcon(0, nColorIcon, nColorWhite);
         SetIcon(0, nStateIcon, nClear);
     }
-    DoSetWindowText(1, nLabel, gameMode == IcsPlayingBlack ? gameInfo.white : gameInfo.black);  // opponent name
+    /* opponent name */
+    DoSetWindowText(1, nLabel, gameMode == IcsPlayingBlack ? gameInfo.white : gameInfo.black);
     SetIcon(1, nColorIcon, gameMode == IcsPlayingBlack ? nColorWhite : nColorBlack);
     SetIcon(1, nStateIcon, nClear);
     if (strstr(text, "\\  ") == text) {
-        where = currentLineEnd[window - 1];  // continuation line
+        /* continuation line */
+        where = currentLineEnd[window - 1];
     }
-    // if(appData.debugMode) fprintf(debugFP, "insert '%s' at %d (end = %d,%d)\n", text, where, currentLineEnd[0],
-    // currentLineEnd[1]);
-    InsertIntoMemo(window - 1, text, where);  // [HGM] multivar: always at top
+    /* [HGM] multivar: always at top */
+    InsertIntoMemo(window - 1, text, where);
     currentLineEnd[window - 1] = where + strlen(text);
 }
