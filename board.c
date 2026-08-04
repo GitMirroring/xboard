@@ -50,9 +50,12 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#define HIGHDRAG 1
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
-#include "config.h"
+#define HIGHDRAG 1
 
 #include <ctype.h>
 #include <errno.h>

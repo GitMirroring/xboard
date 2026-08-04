@@ -20,10 +20,13 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
 /* [HGM] this file is the counterpart of woptions.c, containing xboard popup menus similar to those of WinBoard, to set the most
    common options interactively. */
-
-#include "config.h"
 
 #include <ctype.h>
 #include <errno.h>

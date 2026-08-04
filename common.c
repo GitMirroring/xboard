@@ -45,6 +45,11 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
 #include "common.h"
 
 int default_line_gap(int const square_size) {

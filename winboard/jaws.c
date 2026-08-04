@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * XBoard borrows its colors and the bitmaps.xchess bitmap set from XChess,
  * which was written and is copyrighted by Wayne Christopher.
@@ -52,6 +50,11 @@
  *
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
+
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 // This file collects all patches for the JAWS version, so they can all be included in winboard.c
 // in one big swoop. At the bottom of this file you can read instructions for how to patch

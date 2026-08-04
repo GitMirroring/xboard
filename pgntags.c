@@ -22,11 +22,14 @@
  *
  * ------------------------------------------------------------------------
  *
- * This file could well be a part of backend.c, but I prefer it this
- * way.
- */
+ ** See the file Changelog for a revision history.  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
+/* This file could well be a part of backend.c, but a previous developer preferred it this way. */
 
 #include <errno.h>
 #include <ctype.h>

@@ -1,8 +1,7 @@
 /*
  * lists.c -- Functions to implement a double linked list XBoard
  *
- * Copyright 1995, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -24,12 +23,12 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-/*
- * This file could well be a part of backend.c, but I prefer it this
- * way.
- */
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
-#include "config.h"
+/* This file could well be a part of backend.c, but some previous developer preferred it this way. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,14 +37,11 @@
 #include "lists.h"
 
 
-/* Check, if List l is empty; returns TRUE, if it is, FALSE
- * otherwise.
- */
+/* Check, if List l is empty; returns TRUE, if it is, FALSE otherwise. */
 int ListEmpty(List * l) { return (l->head == (ListNode *)&l->tail); }
 
 
-/* Initialize a list. Must be executed before list is used.
- */
+/* Initialize a list. Must be executed before list is used. */
 void ListNew(List * l) {
     l->head = (ListNode *)&l->tail;
     l->tail = NULL;
@@ -53,8 +49,7 @@ void ListNew(List * l) {
 }
 
 
-/* Remove node n from the list it is inside.
- */
+/* Remove node n from the list it is inside. */
 void ListRemove(ListNode * n) {
     if (n->succ != NULL) { /*  Be safe  */
         n->pred->succ = n->succ;
@@ -65,8 +60,7 @@ void ListRemove(ListNode * n) {
 }
 
 
-/* Delete node n.
- */
+/* Delete node n. */
 void ListNodeFree(ListNode * n) {
     if (n) {
         ListRemove(n);
@@ -75,8 +69,7 @@ void ListNodeFree(ListNode * n) {
 }
 
 
-/* Create a list node with size s. Returns NULL, if out of memory.
- */
+/* Create a list node with size s. Returns NULL, if out of memory. */
 ListNode * ListNodeCreate(size_t s) {
     ListNode * n;
 
@@ -88,8 +81,7 @@ ListNode * ListNodeCreate(size_t s) {
 }
 
 
-/* Insert node n into the list of node m after m.
- */
+/* Insert node n into the list of node m after m. */
 void ListInsert(ListNode * m, ListNode * n) {
     n->succ = m->succ;
     n->pred = m;
@@ -98,19 +90,15 @@ void ListInsert(ListNode * m, ListNode * n) {
 }
 
 
-/* Add node n to the head of list l.
- */
+/* Add node n to the head of list l. */
 void ListAddHead(List * l, ListNode * n) { ListInsert((ListNode *)&l->head, n); }
 
 
-/* Add node n to the tail of list l.
- */
+/* Add node n to the tail of list l. */
 void ListAddTail(List * l, ListNode * n) { ListInsert((ListNode *)l->tailPred, n); }
 
 
-/* Return element with number n of list l. (NULL, if n doesn't exist.)
- * Counting starts with 0.
- */
+/* Return element with number n of list l, or NULL, if n doesn't exist.  Counting starts with 0. */
 ListNode * ListElem(List * l, int n) {
     ListNode * ln;
 

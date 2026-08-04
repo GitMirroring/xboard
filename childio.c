@@ -48,6 +48,11 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
 /* This file splits into two entirely different pieces of code
    depending on whether USE_PTYS is 1.  The whole reason for all
    the pty nonsense is that select() does not work on pipes in System-V
@@ -55,8 +60,6 @@
    XtAppAddInput works by adding its argument to a select that is done
    deep inside Xlib.
 */
-
-#include "config.h"
 
 #if USE_PTYS
 # define _XOPEN_SOURCE 500

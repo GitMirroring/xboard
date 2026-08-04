@@ -1,11 +1,12 @@
 /*
  * wgamelist.c -- Game list window for WinBoard
  *
- * Copyright 1995, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
+ * The following terms apply to the enhanced version of XBoard
+ * distributed by the Free Software Foundation:
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -24,7 +25,10 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 #include <windows.h> /* required for all Windows applications */
 #include <stdio.h>

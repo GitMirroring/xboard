@@ -28,7 +28,10 @@
  * ------------------------------------------------------------------------
  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 #include <stdint.h>
 #include <stdio.h>

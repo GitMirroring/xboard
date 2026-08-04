@@ -23,7 +23,13 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  * ------------------------------------------------------------------------
- */
+ ** See the file ChangeLog for a revision history.  */
+
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>

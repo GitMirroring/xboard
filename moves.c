@@ -49,7 +49,10 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 #include <ctype.h>
 #include <stdio.h>

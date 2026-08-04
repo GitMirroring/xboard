@@ -5,6 +5,10 @@
  *
  * Copyright 2005 Alessandro Scotti
  *
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
+ *
+ * The following terms apply to the enhanced version of XBoard
+ * distributed by the Free Software Foundation:
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -22,6 +26,11 @@
  *
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
+
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 #include "wsnap.h"
 

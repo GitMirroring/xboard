@@ -1,5 +1,34 @@
-#include "gtk/button_labels.h"
+/*
+ * button_labels.c
+ *
+ * Copyright 2026 Free Software Foundation, Inc.
+ *
+ * The following terms apply to the enhanced version of XBoard
+ * distributed by the Free Software Foundation:
+ * ------------------------------------------------------------------------
+ *
+ * GNU XBoard is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at
+ * your option) any later version.
+ *
+ * GNU XBoard is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.  *
+ *
+ *------------------------------------------------------------------------
+ ** See the file ChangeLog for a revision history.  */
 
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
+#include "gtk/button_labels.h"
 
 #include <libintl.h>
 #include <string.h>

@@ -2,6 +2,9 @@
  * xgamelist.c -- Game list window, part of X front end for XBoard
  *
  * Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
+ *
+ * The following terms apply to the enhanced version of XBoard
+ * distributed by the Free Software Foundation:
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -20,7 +23,10 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 #include <ctype.h>
 #include <errno.h>

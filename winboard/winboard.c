@@ -4,9 +4,7 @@
  * Copyright 1991 by Digital Equipment Corporation, Maynard,
  * Massachusetts.
  *
- * Enhancements Copyright 1992-2001, 2002, 2003, 2004, 2005, 2006,
- * 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free
- * Software Foundation, Inc.
+ * Enhancements Copyright 1992-2016, 2026 Free Software Foundation, Inc.
  *
  * Enhancements Copyright 2005 Alessandro Scotti
  *
@@ -55,9 +53,12 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 #if defined(_WIN32) && _WIN32 == 1
-
 
 /* As of 2026-03-16, WINVER and _WIN32_WINNT likely should be pre-set via
    compiler settings to 0x0501 (_WIN32_WINNT_WINXP) when targeting Windows,
@@ -69,9 +70,6 @@
 # ifndef _WIN32_WINNT
 #  error _WIN32_WINNT was expected to be defined, but was not defined.
 # endif
-
-
-# include "config.h"
 
 # include <windows.h>
 # include <winuser.h>

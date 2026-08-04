@@ -25,9 +25,12 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
-#define SHOW_PONDERING
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
-#include "config.h"
+#define SHOW_PONDERING
 
 #include <ctype.h>
 #include <stdint.h>

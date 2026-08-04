@@ -50,6 +50,11 @@
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
 /* [AS] Also useful here for debugging */
 #ifdef _WIN32
 
@@ -92,9 +97,6 @@ int flock(int f, int code);
 # define GetProcAddress dlsym
 
 #endif /* _WIN32 */
-
-
-#include "config.h"
 
 #include <assert.h>
 #include <ctype.h>

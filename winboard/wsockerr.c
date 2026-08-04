@@ -1,7 +1,10 @@
 /*
  * wsockerr.c
  *
- * Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Copyright 2009-2016, 2026 Free Software Foundation, Inc.
+ *
+ * The following terms apply to the enhanced version of XBoard
+ * distributed by the Free Software Foundation:
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -19,6 +22,11 @@
  *
  *------------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
+
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
 
 /* Windows sockets error map */
 /* These messages ought to be in the Windows message catalog! */
