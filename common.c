@@ -52,6 +52,24 @@
 
 #include "common.h"
 
+#if !defined(HAVE_STRDUP)
+#include <stdlib.h>
+char * strdup(char const * const c_str) {
+    size_t length;
+    char * result;
+    if (NULL == c_str) {
+        result = NULL;
+    } else {
+        length = strlen(c_str) + 1;
+        result = malloc(length);
+        if (NULL != result) {
+            memcpy(result, c_str, length);
+        }
+    }
+    return result;
+}
+#endif
+
 int default_line_gap(int const square_size) {
     if (square_size < 37) return 1;
     if (square_size < 59) return 2;

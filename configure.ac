@@ -142,10 +142,10 @@ AC_CHECK_HEADERS_ONCE([pwd.h stropts.h sys/file.h sys/ioctl.h sys/systeminfo.h s
 AC_CHECK_HEADERS([fcntl.h sys/fcntl.h], break)
 AC_CHECK_HEADERS([sys/socket.h lan/socket.h], break)
 
-AC_CHECK_FUNCS_ONCE([_getpty grantpt ptsname setitimer unlockpt usleep])
+AC_CHECK_FUNCS_ONCE([_getpty grantpt ptsname setitimer strdup unlockpt usleep])
+AC_CHECK_FUNCS([gethostname sysinfo], break)
 AC_CHECK_FUNCS([gettimeofday ftime], break)
 AC_CHECK_FUNCS([random rand48], break)
-AC_CHECK_FUNCS([gethostname sysinfo], break)
 
 AC_CHECK_LIB(seq, getpseudotty)
 

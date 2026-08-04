@@ -53,7 +53,14 @@
 #define GNU_XBOARD_COMMON_H
 
 
-/* Begin compatibility grunge  */
+#ifdef HAVE_CONFIG_H
+/* <> is used to support out-of-source autoconf builds. */
+# include <config.h>
+#endif
+
+#ifndef HAVE_STRDUP
+char * strdup(char const * c_str);
+#endif
 
 #ifdef _WIN32
 typedef char Boolean;
@@ -95,7 +102,6 @@ typedef char * String;
 # define usleep(t) _sleep2(((t) + 500) / 1000)
 #endif
 
-/* End compatibility grunge */
 
 #define XBOARD_LITERALIZE(l) #l
 #define XBOARD_STRINGIZE(s) XBOARD_LITERALIZE(s)
