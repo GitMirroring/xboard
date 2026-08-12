@@ -894,25 +894,32 @@ uint64_t hash(int moveNr, int flip, int old) {
 
     switch (v) {
     case VariantNormal:
-    case VariantFischeRandom:  // compatible with normal
+    /* Compatible with normal. */
+    case VariantFischeRandom:
     case VariantNoCastle:
-    case VariantXiangqi:  // for historic reasons; does never collide anyway because of other King type
+    /* For historic reasons.  It never collides anyway, because of the other king type. */
+    case VariantXiangqi:
         break;
-    case VariantGiveaway:  // in opening same as suicide
+    case VariantGiveaway:
+        /* In the opening, the same as suicide. */
         key += VariantSuicide;
         break;
-    case VariantGothic:  // these are special cases of CRC, and can share book
+    /* Gothic and Capablanca are special cases of CRC, so can share book. */
+    case VariantGothic:
     case VariantCapablanca:
         v = VariantCapaRandom;
+        /* Intentionally fall through. */
     default:
-        key += v;  // variant type incorporated in key to allow mixed books without collisions
+        /* The variant type is incorporated into the key to allow mixed books without collisions. */
+        key += v;
     }
 
     for (f = 0; f < BOARD_WIDTH; f++) {
         for (r = 0; r < BOARD_HEIGHT; r++) {
             ChessSquare p = boards[moveNr][r][flip ? BOARD_WIDTH - 1 - f : f];
             if (f == BOARD_LEFT - 1 || f == BOARD_RGHT) {
-                continue;  // between board and holdings
+                /* Between board and holdings. */
+                continue;
             }
             if (p != EmptySquare) {
                 int j = (int)p, promoted = 0;
@@ -921,13 +928,14 @@ uint64_t hash(int moveNr, int flip, int old) {
                     promoted++, j -= WhiteTokin;
                 }
                 if (j > (int)WhiteQueen) {
-                    j++;  // make space for King
+                    /* Make space for king. */
+                    j++;
                 }
                 if (j > (int)WhiteKing) {
                     j = (int)WhiteQueen + 1;
                 }
                 p_enc = 2 * j + ((int)p < (int)BlackPawn);
-                // holdings squares get nmbers immediately after board; first left, then right holdings
+                /* The squares of holdings get numbers immediately after board: first the left holdings, then the right holdings. */
                 if (f == BOARD_LEFT - 2) {
                     squareNr = (BOARD_RGHT - BOARD_LEFT) * BOARD_HEIGHT + r;
                 } else if (f == BOARD_RGHT + 1) {
@@ -935,9 +943,9 @@ uint64_t hash(int moveNr, int flip, int old) {
                 } else {
                     squareNr = (BOARD_RGHT - BOARD_LEFT) * r + (f - BOARD_LEFT);
                 }
-                // note that in normal Chess squareNr < 64 and p_enc < 12. The following code
-                // maps other pieces and squares in this range, and then modify the corresponding
-                // Zobrist random by rotating its bitpattern according to what the piece really was.
+                /* Note that in normal Chess, squareNr < 64 and p_enc < 12.  The following code maps other pieces and squares in
+                   this range, and then modify the corresponding Zobrist random by rotating its bitpattern according to what the
+                   piece really was. */
                 pieceGroup = p_enc / 12;
                 p_enc = p_enc % 12;
                 Zobrist = RandomPiece[64 * p_enc + (squareNr & 63)];
@@ -945,13 +953,16 @@ uint64_t hash(int moveNr, int flip, int old) {
                     Zobrist *= 987654321;
                 }
                 switch (pieceGroup & 3) {
-                case 1:  // pieces 5-10 (FEACWM)
+                case 1:
+                    /* pieces 5-10 (FEACWM) */
                     Zobrist = (Zobrist << 16) ^ (Zobrist >> 48);
                     break;
-                case 2:  // pieces 11-16 (OHIJGD)
+                case 2:
+                    /* pieces 11-16 (OHIJGD) */
                     Zobrist = (Zobrist << 32) ^ (Zobrist >> 32);
                     break;
-                case 3:  // pieces 17-20 (VLSU)
+                case 3:
+                    /* pieces 17-20 (VLSU) */
                     Zobrist = (Zobrist << 48) ^ (Zobrist >> 16);
                     break;
                 }
@@ -964,7 +975,7 @@ uint64_t hash(int moveNr, int flip, int old) {
                 if (squareNr & 128) {
                     Zobrist = (Zobrist << 4) ^ (Zobrist >> 60);
                 }
-                // holdings have separate (additive) key, to encode presence of multiple pieces on same square
+                /* Holdings have separate (additive) key, to encode presence of multiple pieces on same square. */
                 if (f == BOARD_LEFT - 2) {
                     holdingsKey += Zobrist * boards[moveNr][r][f + 1];
                 } else if (f == BOARD_RGHT + 1) {
@@ -996,8 +1007,8 @@ uint64_t hash(int moveNr, int flip, int old) {
     f = boards[moveNr][EP_STATUS];
     if (f >= 0 && f < 8) {
         if (!WhiteOnMove(moveNr)) {
-            // the test for neighboring Pawns might not be needed,
-            // as epStatus already kept track of it, but better safe than sorry.
+            /* The test for neighboring pawns might not be needed, because epStatus already kept track of it, but... better safe
+               than sorry. */
             if ((f > 0 && boards[moveNr][3][f - 1] == BlackPawn) || (f < 7 && boards[moveNr][3][f + 1] == BlackPawn)) {
                 key ^= RandomEnPassant[f];
             }
@@ -1016,7 +1027,7 @@ uint64_t hash(int moveNr, int flip, int old) {
 
 #define MOVE_BUF 100
 
-// fs routines read from memory buffer if no file specified
+/* fs routines read from memory buffer if no file specified */
 
 static unsigned char *memBuf, *memPtr;
 static int bufSize;
@@ -1105,7 +1116,7 @@ int find_key(FILE * f, uint64_t key, entry_t * entry) {
     first = -1;
     if (fsseek(f, -16, SEEK_END)) {
         *entry = entry_none;
-        entry->key = key + 1;  // hack
+        entry->key = key + 1;  /* hack */
         return -1;
     }
     last = fstell(f) / 16;
@@ -1132,7 +1143,7 @@ static int yStep[] = {1, 1, 0, -1, -1, -1, 0, 1};
 
 void move_to_string(char move_s[20], uint16_t move) {
     int f, fr, ff, t, tr, tf, p;
-    int width = BOARD_RGHT - BOARD_LEFT, size;  // allow for alternative board formats
+    int width = BOARD_RGHT - BOARD_LEFT, size;  /* allow for alternative board formats */
 
     size = width * BOARD_HEIGHT;
     p = move / (size * size);
@@ -1147,28 +1158,28 @@ void move_to_string(char move_s[20], uint16_t move) {
 
     if (IS_SHOGI(gameInfo.variant) && p) {
         if (p == 2) {
-            p = 10;  // Lion moves, for boards so big that 10 is out of range
+            p = 10;  /* Lion moves, for boards so big that 10 is out of range */
         } else if (p != 7) {
-            p = 8;  // use '+' for all others that do not explicitly defer
+            p = 8;  /* use '+' for all others that do not explicitly defer */
         }
     }
 
-    // kludge: encode drops as special promotion code
+    /* kludge: encode drops as special promotion code */
     if (gameInfo.holdingsSize && p == 9) {
-        move_s[0] = f + '@';  // from square encodes piece type
-        move_s[1] = '@';  // drop symbol
+        move_s[0] = f + '@';  /* from square encodes piece type */
+        move_s[1] = '@';  /* drop symbol */
         p = 0;
-    } else if (p == 10) {  // decode Lion move
+    } else if (p == 10) {  /* decode Lion move */
         int i = t & 7, j = t >> 3 & 7;
         tf = ff + xStep[i] + xStep[j];
-        tr = fr + yStep[i] + yStep[j];  // calculate true to-square
+        tr = fr + yStep[i] + yStep[j];  /* calculate true to-square */
         snprintf(move_s, 20, "%c%d%c%d,%c%d%c%d", ff + 'a', fr + 1 - (BOARD_HEIGHT == 10), ff + xStep[i] + 'a',
          fr + yStep[i] + 1 - (BOARD_HEIGHT == 10), ff + xStep[i] + 'a', fr + yStep[i] + 1 - (BOARD_HEIGHT == 10), tf + 'a',
          tr + 1 - (BOARD_HEIGHT == 10));
         p = 0;
     }
 
-    // add promotion piece, if any
+    /* add promotion piece, if any */
     if (p) {
         int len = strlen(move_s);
         move_s[len] = promote_pieces[p];
@@ -1179,8 +1190,8 @@ void move_to_string(char move_s[20], uint16_t move) {
         return;
     }
 
-    // correct FRC-style castlings in variant normal.
-    // [HGM] This is buggy code! e1h1 could very well be a normal R or Q move.
+    /* correct FRC-style castlings in variant normal. */
+    /* [HGM] This is buggy code! e1h1 could very well be a normal R or Q move. */
     if (!strcmp(move_s, "e1h1")) {
         safeStrCpy(move_s, "e1g1", 6);
     } else if (!strcmp(move_s, "e1a1")) {
@@ -1193,7 +1204,7 @@ void move_to_string(char move_s[20], uint16_t move) {
 }
 
 int GetBookMoves(FILE * f, int moveNr, entry_t entries[],
- int max) {  // retrieve all entries for given position from book in 'entries', return number.
+ int max) {  /* retrieve all entries for given position from book in 'entries', return number. */
     int flip = sym && MustFlip(moveNr);
     entry_t entry;
     int offset;
@@ -1238,7 +1249,7 @@ int GetBookMoves(FILE * f, int moveNr, entry_t entries[],
 static int dirty;
 
 int ReadFromBookFile(
- int moveNr, char * book, entry_t entries[]) {  // retrieve all entries for given position from book in 'entries', return number.
+ int moveNr, char * book, entry_t entries[]) {  /* retrieve all entries for given position from book in 'entries', return number. */
     static FILE * f = NULL;
     static char curBook[MSG_SIZ];
 
@@ -1252,7 +1263,7 @@ int ReadFromBookFile(
         dirty = 0;
         f = NULL;
     }
-    if (!f || strcmp(book, curBook)) {  // keep book file open until book changed
+    if (!f || strcmp(book, curBook)) {  /* keep book file open until book changed */
         strncpy(curBook, book, MSG_SIZ);
         if (f) {
             fclose(f);
@@ -1269,7 +1280,7 @@ int ReadFromBookFile(
     return GetBookMoves(f, moveNr, entries, MOVE_BUF);
 }
 
-// next three made into subroutines to facilitate future changes in storage scheme (e.g. 2 x 3 bytes)
+/* The next three routines were made into subroutines to facilitate future changes in storage scheme (e.g. 2 x 3 bytes). */
 
 static int wins(entry_t * e) { return e->learnPoints; }
 
@@ -1281,7 +1292,9 @@ static void CountMove(entry_t * e, int result) {
         e->learnCount++;
         break;
     case 1:
-        e->learnCount++;  // count draw as win + loss
+        /* count draw as win + loss */
+        e->learnCount++;
+        /* Intentionally fall through. */
     case 2:
         e->learnPoints++;
         break;
@@ -1315,13 +1328,13 @@ char * MCprobe(int moveNr) {
 
     InitMemBook();
     memBuf = (unsigned char *)memBook;
-    bufSize = bookSize;  // in MC mode book resides in memory
+    bufSize = bookSize;  /* in MC mode book resides in memory */
     count = GetBookMoves(NULL, moveNr, entries, MOVE_BUF);
     if (count < 0) {
-        count = 0;  // don't care about miss yet
+        count = 0;  /* don't care about miss yet */
     }
     memBuf = (unsigned char *)mergeBuf;
-    bufSize = mergeSize;  // there could be moves still waiting to be merged
+    bufSize = mergeSize;  /* there could be moves still waiting to be merged */
     count2 = count + GetBookMoves(NULL, moveNr, entries + count, MOVE_BUF - count);
     if (appData.debugMode) {
         fprintf(debugFP, "MC probe: %d/%d (%d+%d)\n", count, count2, bookSize, mergeSize);
@@ -1339,7 +1352,7 @@ char * MCprobe(int moveNr) {
     tot = games / tot;
     max = min = 0;
     for (i = 0; i < count2; i++) {
-        nominal[i] *= tot;  // normalize so they sum to games
+        nominal[i] *= tot;  /* normalize so they sum to games */
         deficit = nominal[i] - (wins(entries + i) + losses(entries + i));
         if (deficit > max) {
             max = deficit, choice = i;
@@ -1347,18 +1360,18 @@ char * MCprobe(int moveNr) {
         if (deficit < min) {
             min = deficit;
         }
-    }  // note that a single move will never be underplayed
-    if (max - min > 0.5 * sqrt(nominal[choice])) {  // if one of the listed moves is significantly under-played, play it now.
+    }  /* note that a single move will never be underplayed */
+    if (max - min > 0.5 * sqrt(nominal[choice])) {  /* if one of the listed moves is significantly under-played, play it now. */
         move_to_string(move_s, entries[choice].move);
         if (appData.debugMode) {
             fprintf(debugFP, "book move field = %d\n", entries[choice].move);
         }
         return move_s;
     }
-    return NULL;  // otherwise fake book miss to force engine think, hoping for hitherto unplayed move.
+    return NULL;  /* otherwise fake book miss to force engine think, hoping for hitherto unplayed move. */
 }
 
-char * ProbeBook(int moveNr, char * book) {  //
+char * ProbeBook(int moveNr, char * book) {  /**/
     entry_t entries[MOVE_BUF];
     int count;
     int i, j;
@@ -1373,10 +1386,10 @@ char * ProbeBook(int moveNr, char * book) {  //
     }
 
     if ((count = ReadFromBookFile(moveNr, book, entries)) <= 0) {
-        return NULL;  // no book, or no hit
+        return NULL;  /* no book, or no hit */
     }
 
-    if (appData.bookStrength != 50) {  // transform weights
+    if (appData.bookStrength != 50) {  /* transform weights */
         double power = 0, maxWeight = 0.0;
         if (appData.bookStrength) {
             power = (100. - appData.bookStrength) / appData.bookStrength;
@@ -1398,9 +1411,9 @@ char * ProbeBook(int moveNr, char * book) {  //
         total_weight += entries[i].weight;
     }
     if (total_weight == 0) {
-        return NULL;  // force book miss rather than playing moves with weight 0.
+        return NULL;  /* force book miss rather than playing moves with weight 0. */
     }
-    j = (random() & 0xfff) * total_weight >> 12;  // create random < total_weight
+    j = (random() & 0xfff) * total_weight >> 12;  /* create random < total_weight */
     total_weight = 0;
     for (i = 0; i < count; i++) {
         total_weight += entries[i].weight;
@@ -1409,7 +1422,7 @@ char * ProbeBook(int moveNr, char * book) {  //
         }
     }
     if (i >= count) {
-        DisplayFatalError(_("Book Fault"), 0, 1);  // safety catch, cannot happen
+        DisplayFatalError(_("Book Fault"), 0, 1);  /* safety catch, cannot happen */
     }
     move_to_string(move_s, entries[i].move);
     if (appData.debugMode) {
@@ -1436,7 +1449,7 @@ char * MovesToText(int count, entry_t * entries) {
         move_to_string(algMove, entries[i].move);
         if (sscanf(algMove, "%c%d%*c%*d,%c%d%c%d", &c1, &i1, &c2, &i2, &c3, &i3) == 6) {
             snprintf(
-             algMove, 12, "%c%dx%c%d-%c%d", c1, i1, c2, i2, c3, i3);  // cast double-moves in format SAN parser will understand
+             algMove, 12, "%c%dx%c%d-%c%d", c1, i1, c2, i2, c3, i3);  /* cast double-moves in format SAN parser will understand */
         } else if (sscanf(algMove, "%c%d%c%d%c", &c1, &i1, &c2, &i2, &c3) >= 4) {
             CoordsToAlgebraic(
              boards[currentMove], PosFlags(currentMove), i1 - ONE + '0', c1 - AAA, i2 - ONE + '0', c2 - AAA, c3, algMove);
@@ -1447,7 +1460,7 @@ char * MovesToText(int count, entry_t * entries) {
         }
         snprintf(
          p + strlen(p), 40, "%5.1f%% %5d %s%s\n", 100 * entries[i].weight / (totalWeight + 0.001), entries[i].weight, algMove, buf);
-        // lastEntries[i] = entries[i];
+        /* lastEntries[i] = entries[i]; */
     }
     return p;
 }
@@ -1464,12 +1477,12 @@ static int CoordsToMove(int fromX, int fromY, int toX, int toY, char promoChar) 
     if (!promote_pieces[i]) {
         i = 0;
     } else if (i == 9 && gameInfo.variant == VariantChu) {
-        i = 1;  // on 12x12 only 3 promotion codes available, so use 1 to indicate promotion
+        i = 1;  /* on 12x12 only 3 promotion codes available, so use 1 to indicate promotion */
     }
     if (fromY == DROP_RANK) {
         i = 9, from = ToUpper(PieceToChar(fromX)) - '@';
     }
-    if (killX >= 0) {  // multi-leg move
+    if (killX >= 0) {  /* multi-leg move */
         int dx = killX - fromX, dy = killY - fromY;
         for (i = 0; i < 8; i++) {
             if (dx == xStep[i] && dy == yStep[i]) {
@@ -1478,13 +1491,13 @@ static int CoordsToMove(int fromX, int fromY, int toX, int toY, char promoChar) 
                 dy = toY - killY;
                 for (j = 0; j < 8; j++) {
                     if (dx == xStep[j] && dy == yStep[j]) {
-                        // special encoding in to-square, with promoType = 2. Assumes board >= 64 squares!
+                        /* special encoding in to-square, with promoType = 2. Assumes board >= 64 squares! */
                         return i + 8 * j + (2 * width * BOARD_HEIGHT + from) * width * BOARD_HEIGHT;
                     }
                 }
             }
         }
-        i = 0;  // if not a valid Lion move, ignore kill-square and promoChar
+        i = 0;  /* if not a valid Lion move, ignore kill-square and promoChar */
     }
     return to + (i * width * BOARD_HEIGHT + from) * width * BOARD_HEIGHT;
 }
@@ -1498,16 +1511,16 @@ int TextToMoves(char * text, int moveNum, entry_t * entries) {
     char promoChar, valid;
     float dummy;
 
-    entries[0].key = hashKey;  // make sure key is returned even if no moves
+    entries[0].key = hashKey;  /* make sure key is returned even if no moves */
     while ((i = sscanf(text, "%f%%%d", &dummy, &w)) == 2 || (i = sscanf(text, "%d", &w)) == 1) {
         if (i == 2) {
-            text = strchr(text, '%') + 1;  // skip percentage
+            text = strchr(text, '%') + 1;  /* skip percentage */
         }
         if (w == 1) {
-            text = strstr(text, "1 ") + 2;  // skip weight that could be recognized as move number one
+            text = strstr(text, "1 ") + 2;  /* skip weight that could be recognized as move number one */
         }
         valid = ParseOneMove(text, moveNum, &moveType, &fromX, &fromY, &toX, &toY, &promoChar);
-        text = strstr(text, yy_textstr) + strlen(yy_textstr);  // skip what we parsed
+        text = strstr(text, yy_textstr) + strlen(yy_textstr);  /* skip what we parsed */
         if (!valid ||
          moveType != NormalMove && moveType != WhiteDrop && moveType != BlackDrop && moveType != FirstLeg &&
           moveType != WhitePromotion && moveType != BlackPromotion && moveType != WhiteCapturesEnPassant &&
@@ -1602,11 +1615,11 @@ void SaveToBook(char * text) {
         readpos = 16 * (offset + currentCount);
         writepos = 16 * (offset + count);
         fsseek(f, readpos, SEEK_SET);
-        readpos += len1 = fread(buf1, 1, 4096 - 16 * currentCount, f);  // salvage some entries immediately behind change
+        readpos += len1 = fread(buf1, 1, 4096 - 16 * currentCount, f);  /* salvage some entries immediately behind change */
     }
     fsseek(f, 16 * (offset), SEEK_SET);
     for (i = 0; i < count; i++) {
-        entry_to_file(f, entries + i);  // save the change
+        entry_to_file(f, entries + i);  /* save the change */
     }
     if (count != currentCount) {
         do {
@@ -1618,7 +1631,7 @@ void SaveToBook(char * text) {
                 fsseek(f, readpos, SEEK_SET);
                 readpos += len1 = fread(buf1, 1, 4096, f);
             } else {
-                len1 = 0;  // wrote already past old EOF
+                len1 = 0;  /* wrote already past old EOF */
             }
             fsseek(f, writepos, SEEK_SET);
             fwrite(buf2, 1, len2, f);
@@ -1655,7 +1668,7 @@ void Merge(void) {
         memBook[i] = memBook[i - mergeSize];
     }
     if (mergeSize) {
-        DisplayFatalError("merge error", 0, 0);  // impossible
+        DisplayFatalError("merge error", 0, 0);  /* impossible */
     }
     mergeSize = 1;
     mergeBuf[0].key = -1ll;
@@ -1671,14 +1684,14 @@ void AddToBook(int moveNr, int result) {
     extern char moveList[][MOVE_LEN];
 
     if (!moveList[moveNr][0] || moveList[moveNr][0] == '\n') {
-        return;  // could be terminal position
+        return;  /* could be terminal position */
     }
 
     if (appData.debugMode) {
         fprintf(debugFP, "add move %d to book %s", moveNr, moveList[moveNr]);
     }
 
-    // calculate key and book representation of move
+    /* calculate key and book representation of move */
     key = hash(moveNr, flip, 0);
     if (moveList[moveNr][1] == '@') {
         sscanf(moveList[moveNr], "%c@%c%d", &promo, &toX, &toY);
@@ -1693,9 +1706,9 @@ void AddToBook(int moveNr, int result) {
         move = FlipMove(move);
     }
 
-    // if move already in book, just add count
+    /* if move already in book, just add count */
     memBuf = (unsigned char *)memBook;
-    bufSize = bookSize;  // in MC mode book resides in memory
+    bufSize = bookSize;  /* in MC mode book resides in memory */
     offset = find_key(NULL, key, &entry);
     while (memBook[offset].key == key) {
         if (memBook[offset].move == move) {
@@ -1705,9 +1718,9 @@ void AddToBook(int moveNr, int result) {
             offset++;
         }
     }
-    // move did not occur in the main book
+    /* move did not occur in the main book */
     memBuf = (unsigned char *)mergeBuf;
-    bufSize = mergeSize;  // it could be amongst moves still waiting to be merged
+    bufSize = mergeSize;  /* it could be amongst moves still waiting to be merged */
     start = offset = find_key(NULL, key, &entry);
     while (mergeBuf[offset].key == key) {
         if (mergeBuf[offset].move == move) {
@@ -1720,38 +1733,38 @@ void AddToBook(int moveNr, int result) {
             offset++;
         }
     }
-    if (start != offset) {  // position was in mergeBuf, but move is new
+    if (start != offset) {  /* position was in mergeBuf, but move is new */
         if (appData.debugMode) {
             fprintf(debugFP, "add in book merge buf @ %d\n", offset);
         }
         for (i = mergeSize++; i > offset; i--) {
-            mergeBuf[i] = mergeBuf[i - 1];  // make room
+            mergeBuf[i] = mergeBuf[i - 1];  /* make room */
         }
         NewEntry(mergeBuf + offset, key, move, result);
         return;
     }
-    // position was not in mergeBuf; look in hash table
+    /* position was not in mergeBuf; look in hash table */
     i = (key & mask);
     offset = -1;
-    while (hashTab[i].key) {  // search in hash table (necessary because sought item could be re-hashed)
+    while (hashTab[i].key) {  /* search in hash table (necessary because sought item could be re-hashed) */
         if (hashTab[i].key == 1 && offset < 0) {
-            offset = i;  // remember first invalidated entry we pass
+            offset = i;  /* remember first invalidated entry we pass */
         }
-        if (!((hashTab[i].key - key) & ~1)) {  // hit
+        if (!((hashTab[i].key - key) & ~1)) {  /* hit */
             if (hashTab[i].move == move) {
                 CountMove(hashTab + i, result);
                 for (j = mergeSize++; j > start; j--) {
                     mergeBuf[j] = mergeBuf[j - 1];
                 }
             } else {
-                // position already in hash now occurs with different move; move both moves to mergeBuf
+                /* position already in hash now occurs with different move; move both moves to mergeBuf */
                 for (j = mergeSize + 1; j > start + 1; j--) {
                     mergeBuf[j] = mergeBuf[j - 2];
                 }
                 NewEntry(mergeBuf + start + 1, key, move, result);
                 mergeSize += 2;
             }
-            hashTab[i].key = 1;  // kludge to invalidate hash entry
+            hashTab[i].key = 1;  /* kludge to invalidate hash entry */
             mergeBuf[start] = hashTab[i];
             mergeBuf[start].key = key;
             if (mergeSize >= MERGESIZE) {
@@ -1759,9 +1772,9 @@ void AddToBook(int moveNr, int result) {
             }
             return;
         }
-        i = i + 1 & mask;  // wrap!
+        i = i + 1 & mask;  /* wrap! */
     }
-    // position did not yet occur in hash table. Put it there
+    /* position did not yet occur in hash table. Put it there */
     if (offset < 0) {
         offset = i;
     }
@@ -1790,14 +1803,14 @@ void AddGameToBook(int always) {
         result = 0;
         break;
     default:
-        return;  // don't treat games with unknown result
+        return;  /* don't treat games with unknown result */
     }
 
     if (appData.debugMode) {
         fprintf(debugFP, "add game to book (%d-%d)\n", backwardMostMove, forwardMostMove);
     }
     for (i = backwardMostMove; i < forwardMostMove && i < 2 * appData.bookDepth; i++) {
-        AddToBook(i, WhiteOnMove(i) ? result : 2 - result);  // flip result when black moves
+        AddToBook(i, WhiteOnMove(i) ? result : 2 - result);  /* flip result when black moves */
     }
 }
 
@@ -1808,9 +1821,9 @@ void PlayBookMove(char * text, int index) {
     }
     while (*end && *++end != ' ' && *end != '\n')
         ;
-    *end = NULLCHAR;  // find clicked word
+    *end = NULLCHAR;  /* find clicked word */
     if (start != end) {
-        TypeInDoneEvent(start);  // fake it was typed in move type-in
+        TypeInDoneEvent(start);  /* fake it was typed in move type-in */
     }
 }
 
@@ -1819,15 +1832,15 @@ void FlushBook(void) {
     int i;
 
     InitMemBook();
-    Merge();  // flush merge buffer to memBook
+    Merge();  /* flush merge buffer to memBook */
 
     if (f = fopen(appData.polyglotBook, "wb")) {
         sym = strstr(appData.polyglotBook, "-sym.");
         for (i = 0; i < bookSize; i++) {
             entry_t entry = memBook[i];
             entry.weight = entry.learnPoints;
-            //	    entry.learnPoints = 0;
-            //	    entry.learnCount  = 0;
+            /*	    entry.learnPoints = 0; */
+            /*	    entry.learnCount  = 0; */
             entry_to_file(f, &entry);
         }
         fclose(f);
