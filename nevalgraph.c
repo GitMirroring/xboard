@@ -112,12 +112,15 @@ static Option * EvalCallback(int button, int x, int y) {
     case 3:
         dir = 0;
         differentialView = !differentialView;
+        /* Intentionally fall through. */
     case 4:
         dir -= 2;
+        /* Intentionally fall through. */
     case 5:
         if (dir > 0) {
             appData.zoom = dir;
         }
+        /* Intentionally fall through. */
     case 10:
         /* expose event */
         /* Create or recreate paint box if needed */

@@ -406,6 +406,7 @@ void MovesFromString(Board board, int flags, int f, int r, int tx, int ty, int a
         case 'B':
             /* bishop, slide */
             expo = 0;
+            /* Intentionally fall through. */
         case 'F':
             /* diagonal atom (degenerate 4-fold) */
             all = 0xaa;
@@ -434,6 +435,7 @@ void MovesFromString(Board board, int flags, int f, int r, int tx, int ty, int a
         case 'R':
             /* rook, slide */
             expo = 0;
+            /* Intentionally fall through. */
         case 'W':
             /* orthogonal atom (non-deg 4-fold) */
             all = 0x55;
@@ -487,6 +489,7 @@ void MovesFromString(Board board, int flags, int f, int r, int tx, int ty, int a
         case 'Q':
             /* queen, slide */
             expo = 0;
+            /* Intentionally fall through. */
         case 'K':
             /* non-deg (pseudo) 8-fold */
             all = 0xff;
@@ -1274,7 +1277,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
             default:
                 /* can't happen ([HGM] except for fairies...) */
                 break;
-
             case WhitePawn:
                 if (vari != VariantNormal && (vari == VariantXiangqi || vari == VariantJanggi)) {
                     /* [HGM] capture and move straight ahead in Xiangqi */
@@ -1329,7 +1331,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     }
                 }
                 break;
-
             case BlackPawn:
                 if (vari != VariantNormal && (vari == VariantXiangqi || vari == VariantJanggi)) {
                     /* [HGM] capture straight ahead in Xiangqi */
@@ -1360,10 +1361,8 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     callback(board, flags, rf <= promoRank && !autoProm[BlackPawn] ? BlackPromotion : NormalMove, rf, ff, rf - 1,
                      ff, closure);
                 }
-                if (rf >= (BOARD_HEIGHT + 1 >> 1) + 2 && board[rf - 1][ff] == EmptySquare && /* [HGM] grand */
-                 vari != VariantShatranj && /* [HGM] */
-                 vari != VariantCourier && /* [HGM] */
-                 board[rf - 2][ff] == EmptySquare) {
+                if (rf >= (BOARD_HEIGHT + 1 >> 1) + 2 && board[rf - 1][ff] == EmptySquare /* [HGM] grand */
+                 && vari != VariantShatranj && vari != VariantCourier && board[rf - 2][ff] == EmptySquare) {
                     callback(board, flags, NormalMove, rf, ff, rf - 2, ff, closure);
                 }
                 for (s = -1; s <= 1; s += 2) {
@@ -1382,7 +1381,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     }
                 }
                 break;
-
             case WhiteUnicorn:
             case BlackUnicorn:
             case WhiteKnight:
@@ -1402,7 +1400,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     }
                 }
                 break;
-
             case SHOGI WhiteKnight:
                 for (s = -1; s <= 1; s += 2) {
                     if (rf < BOARD_HEIGHT - 2 && ff + s >= BOARD_LEFT && ff + s < BOARD_RGHT &&
@@ -1411,7 +1408,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     }
                 }
                 break;
-
             case SHOGI BlackKnight:
                 for (s = -1; s <= 1; s += 2) {
                     if (rf > 1 && ff + s >= BOARD_LEFT && ff + s < BOARD_RGHT && !SameColor(board[rf][ff], board[rf - 2][ff + s])) {
@@ -1419,7 +1415,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     }
                 }
                 break;
-
             case WhiteCannon:
             case BlackCannon:
                 if (vari == VariantJanggi) {
@@ -1452,25 +1447,26 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     }
                 }
                 break;
-
             /* Gold General (and all its promoted versions) . First do the diagonal forward steps, then proceed as normal Wazir. */
             case SHOGI(PROMO WhitePawn):
                 if (vari == VariantShogi) {
                     goto WhiteGold;
                 }
+                /* Intentionally fall through. */
             case SHOGI(PROMO BlackPawn):
                 if (vari == VariantShogi) {
                     goto BlackGold;
                 }
+                /* Intentionally fall through. */
             case SHOGI WhiteAxe:
             case SHOGI BlackAxe:
                 SlideVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI(PROMO WhiteKnight):
                 if (vari == VariantShogi) {
                     goto WhiteGold;
                 }
+                /* Intentionally fall through. */
             case SHOGI WhiteClaw:
             case SHOGI BlackDrunk:
             case SHOGI BlackAlfil:
@@ -1478,11 +1474,11 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                 StepSideways(board, flags, rf, ff, callback, closure);
                 StepBackward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI(PROMO BlackKnight):
                 if (vari == VariantShogi) {
                     goto BlackGold;
                 }
+                /* Intentionally fall through. */
             case SHOGI BlackClaw:
             case SHOGI WhiteDrunk:
             case SHOGI WhiteAlfil:
@@ -1490,8 +1486,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                 StepSideways(board, flags, rf, ff, callback, closure);
                 StepForward(board, flags, rf, ff, callback, closure);
                 break;
-
-
             case SHOGI WhiteGnu:
             case SHOGI BlackGnu:
                 if (vari == VariantShogi) {
@@ -1501,7 +1495,6 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                 Ferz(board, flags, rf, ff, callback, closure);
                 StepSideways(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI(PROMO WhiteQueen):
             case SHOGI WhiteTokin:
             case SHOGI WhiteWazir:
@@ -1509,7 +1502,6 @@ WhiteGold:
                 StepDiagForward(board, flags, rf, ff, callback, closure);
                 Wazir(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI(PROMO BlackQueen):
             case SHOGI BlackTokin:
             case SHOGI BlackWazir:
@@ -1517,7 +1509,6 @@ BlackGold:
                 StepDiagBackward(board, flags, rf, ff, callback, closure);
                 Wazir(board, flags, rf, ff, callback, closure);
                 break;
-
             case WhiteWazir:
             case BlackWazir:
 janggi:
@@ -1571,7 +1562,7 @@ janggi:
             case SHOGI WhiteAngel:
             case SHOGI BlackAngel:
                 Wazir(board, flags, rf, ff, callback, closure);
-
+                /* Intentionally fall through. */
             case WhiteAlfil:
             case BlackAlfil:
                 if (vari == VariantJanggi) {
@@ -1612,7 +1603,6 @@ janggi:
                     }
                 }
                 break;
-
             /* Make Dragon-Horse also do Dababba moves outside Shogi, for better disambiguation in variant Fairy */
             case WhiteCardinal:
             case BlackCardinal:
@@ -1633,7 +1623,7 @@ janggi:
                         callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
                     }
                 }
-
+                /* Intentionally fall through. */
             /* Shogi Dragon Horse has to continue with Wazir after Bishop */
             case SHOGI WhiteCardinal:
             case SHOGI BlackCardinal:
@@ -1643,12 +1633,11 @@ DragonHorse:
                 Bishop(board, flags, rf, ff, callback, closure);
                 Wazir(board, flags, rf, ff, callback, closure);
                 break;
-
             /* Capablanca Archbishop continues as Knight */
             case WhiteAngel:
             case BlackAngel:
                 Knight(board, flags, rf, ff, callback, closure);
-
+                /* Intentionally fall through. */
             /* Shogi Bishops are ordinary Bishops */
             case SHOGI WhiteBishop:
             case SHOGI BlackBishop:
@@ -1658,7 +1647,6 @@ DragonHorse:
             case BlackBishop:
                 Bishop(board, flags, rf, ff, callback, closure);
                 break;
-
             /* Shogi Lance is unlike anything, and asymmetric at that */
             case SHOGI WhiteQueen:
                 if (vari == VariantChu) {
@@ -1679,7 +1667,6 @@ DragonHorse:
                     }
                 }
                 break;
-
             case SHOGI BlackQueen:
                 if (vari == VariantChu) {
                     goto doQueen;
@@ -1699,7 +1686,6 @@ DragonHorse:
                     }
                 }
                 break;
-
             /* Make Dragon-King Dababba & Rook-like outside Shogi, for better disambiguation in variant Fairy */
             case WhiteDragon:
             case BlackDragon:
@@ -1725,7 +1711,6 @@ DragonHorse:
                 }
                 Rook(board, flags, rf, ff, callback, closure);
                 break;
-
             /* Shogi Dragon King has to continue as Ferz after Rook moves */
             case SHOGI WhiteDragon:
             case SHOGI BlackDragon:
@@ -1736,7 +1721,7 @@ DragonKing:
                 Ferz(board, flags, rf, ff, callback, closure);
                 break;
                 m++;
-
+                /* Intentionally fall through. */
             /* Capablanca Chancellor sets flag to continue as Knight */
             case WhiteMarshall:
             case BlackMarshall:
@@ -1748,7 +1733,6 @@ DragonKing:
                     Knight(board, flags, rf, ff, callback, closure);
                 }
                 break;
-
             case WhiteTower:
             case BlackTower:
                 for (d = 0; d <= 1; d++) {
@@ -1767,20 +1751,19 @@ DragonKing:
                 }
                 Wazir(board, flags, rf, ff, callback, closure);
                 break;
-
             /* Shogi Rooks are ordinary Rooks */
             case WhiteRook:
             case BlackRook:
                 if (vari == VariantJanggi) {
                     PalaceDiags(board, flags, rf, ff, TRUE, callback, closure);
                 }
+                /* Intentionally fall through. */
             case SHOGI WhiteRook:
             case SHOGI BlackRook:
             case SHOGI WhitePRook:
             case SHOGI BlackPRook:
                 Rook(board, flags, rf, ff, callback, closure);
                 break;
-
             case WhiteQueen:
             case BlackQueen:
             case SHOGI WhiteMother:
@@ -1789,31 +1772,29 @@ doQueen:
                 Rook(board, flags, rf, ff, callback, closure);
                 Bishop(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhitePawn:
                 StepForward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI BlackPawn:
                 StepBackward(board, flags, rf, ff, callback, closure);
                 break;
-
             case WhiteMan:
                 if (vari != VariantMakruk && vari != VariantASEAN) {
                     goto commoner;
                 }
+                /* Intentionally fall through. */
             case SHOGI WhiteFerz:
                 Ferz(board, flags, rf, ff, callback, closure);
                 StepForward(board, flags, rf, ff, callback, closure);
                 break;
-
             case BlackMan:
                 if (vari != VariantMakruk && vari != VariantASEAN) {
                     goto commoner;
                 }
+                /* Intentionally fall through. */
             case SHOGI BlackFerz:
                 StepBackward(board, flags, rf, ff, callback, closure);
-
+                /* Intentionally fall through. */
             case WhiteFerz:
             case BlackFerz:
                 if (vari == VariantJanggi) {
@@ -1830,12 +1811,11 @@ doQueen:
                     Ferz(board, flags, rf, ff, callback, closure);
                 }
                 break;
-
             case WhiteSilver:
             case BlackSilver:
                 /* [HGM] superchess: use for Centaur */
                 Knight(board, flags, rf, ff, callback, closure);
-
+                /* Intentionally fall through. */
 commoner:
             case SHOGI WhiteMonarch:
             case SHOGI BlackMonarch:
@@ -1846,7 +1826,6 @@ commoner:
                 Ferz(board, flags, rf, ff, callback, closure);
                 Wazir(board, flags, rf, ff, callback, closure);
                 break;
-
             case WhiteNightrider:
             case BlackNightrider:
                 for (i = -1; i <= 1; i += 2) {
@@ -1871,13 +1850,11 @@ commoner:
                     }
                 }
                 break;
-
 Amazon:
                 Bishop(board, flags, rf, ff, callback, closure);
                 Rook(board, flags, rf, ff, callback, closure);
                 Knight(board, flags, rf, ff, callback, closure);
                 break;
-
             /* Use Lance as Berolina / Spartan Pawn. */
             case WhiteLance:
                 if (vari == VariantSuper) {
@@ -1898,7 +1875,6 @@ Amazon:
                     }
                 }
                 break;
-
             case BlackLance:
                 if (vari == VariantSuper) {
                     goto Amazon;
@@ -1916,7 +1892,6 @@ Amazon:
                     }
                 }
                 break;
-
             case SHOGI WhiteNothing:
             case SHOGI BlackNothing:
             case SHOGI WhiteLion:
@@ -1941,7 +1916,6 @@ Amazon:
                     }
                 }
                 break;
-
             case SHOGI WhiteDagger:
             case SHOGI BlackDagger:
             case SHOGI WhitePDagger:
@@ -1949,20 +1923,20 @@ Amazon:
                 SlideSideways(board, flags, rf, ff, callback, closure);
                 StepVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteCobra:
             case SHOGI BlackCobra:
                 StepVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI(PROMO WhiteFerz):
                 if (vari == VariantShogi) {
                     goto WhiteGold;
                 }
+                /* Intentionally fall through. */
             case SHOGI(PROMO BlackFerz):
                 if (vari == VariantShogi) {
                     goto BlackGold;
                 }
+                /* Intentionally fall through. */
             case SHOGI WhiteSword:
             case SHOGI BlackSword:
             case SHOGI WhitePSword:
@@ -1970,35 +1944,29 @@ Amazon:
                 SlideVertical(board, flags, rf, ff, callback, closure);
                 StepSideways(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteCat:
             case SHOGI BlackCat:
                 Ferz(board, flags, rf, ff, callback, closure);
                 StepVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteCopper:
                 StepDiagForward(board, flags, rf, ff, callback, closure);
                 StepVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI BlackCopper:
                 StepDiagBackward(board, flags, rf, ff, callback, closure);
                 StepVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteHCrown:
             case SHOGI BlackHCrown:
                 Bishop(board, flags, rf, ff, callback, closure);
                 SlideSideways(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteCrown:
             case SHOGI BlackCrown:
                 Bishop(board, flags, rf, ff, callback, closure);
                 SlideVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteUnicorn:
                 Sting(board, flags, rf, ff, 1, 0, callback, closure);
                 callback(board, flags, NormalMove, rf, ff, rf, ff, closure);
@@ -2009,7 +1977,6 @@ Amazon:
                 SlideSideways(board, flags, rf, ff, callback, closure);
                 SlideBackward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI BlackUnicorn:
                 Sting(board, flags, rf, ff, -1, 0, callback, closure);
                 callback(board, flags, NormalMove, rf, ff, rf, ff, closure);
@@ -2020,7 +1987,6 @@ Amazon:
                 SlideSideways(board, flags, rf, ff, callback, closure);
                 SlideForward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteFalcon:
                 Sting(board, flags, rf, ff, 1, 1, callback, closure);
                 Sting(board, flags, rf, ff, 1, -1, callback, closure);
@@ -2031,7 +1997,6 @@ Amazon:
                 Rook(board, flags, rf, ff, callback, closure);
                 SlideDiagBackward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI BlackFalcon:
                 Sting(board, flags, rf, ff, -1, 1, callback, closure);
                 Sting(board, flags, rf, ff, -1, -1, callback, closure);
@@ -2042,27 +2007,22 @@ Amazon:
                 Rook(board, flags, rf, ff, callback, closure);
                 SlideDiagForward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteDolphin:
             case SHOGI BlackHorse:
                 SlideDiagBackward(board, flags, rf, ff, callback, closure);
                 SlideVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI BlackDolphin:
             case SHOGI WhiteHorse:
                 SlideDiagForward(board, flags, rf, ff, callback, closure);
                 SlideVertical(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI WhiteLance:
                 SlideForward(board, flags, rf, ff, callback, closure);
                 break;
-
             case SHOGI BlackLance:
                 SlideBackward(board, flags, rf, ff, callback, closure);
                 break;
-
             /* [HGM] wild: for wildcards, self-capture symbolizes move to anywhere */
             case WhiteFalcon:
             case BlackFalcon:

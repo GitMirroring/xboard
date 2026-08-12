@@ -1308,6 +1308,7 @@ not_special:
                 /* A non-default settings file has already been successfully read, so do nothing. */
                 break;
             }
+            /* Intentionally fall through. */
         case ArgSettingsFilename: {
             if (ParseSettingsFile(argValue, (char **)ad->argLoc)) {
             } else {

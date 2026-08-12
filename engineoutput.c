@@ -375,6 +375,7 @@ static void VerifyDisplayMode(void) {
         if (!appData.icsEngineAnalyze) {
             return;
         }
+        /* Intentionally fall through. */
     case AnalyzeFile:
     case MachinePlaysWhite:
     case MachinePlaysBlack:

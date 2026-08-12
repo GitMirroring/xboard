@@ -116,8 +116,7 @@ Boolean SearchPattern(const char * text, const char * pattern) {
     return result;
 }
 
-/* Delete a ListGame; implies removint it from a list.
- */
+/* Delete a ListGame; implies removint it from a list. */
 static void GameListDeleteGame(ListGame * listGame) {
     if (listGame) {
         if (listGame->gameInfo.event) {
@@ -158,8 +157,7 @@ static void GameListDeleteGame(ListGame * listGame) {
 }
 
 
-/* Free the previous list of games.
- */
+/* Free the previous list of games. */
 static void GameListFree(List * gameList) {
     while (!ListEmpty(gameList)) {
         GameListDeleteGame((ListGame *)gameList->head);
@@ -167,8 +165,7 @@ static void GameListFree(List * gameList) {
 }
 
 
-/* Initialize a new GameInfo structure.
- */
+/* Initialize a new GameInfo structure. */
 void GameListInitGameInfo(GameInfo * gameInfo) {
     gameInfo->event = NULL;
     gameInfo->site = NULL;
@@ -181,8 +178,10 @@ void GameListInitGameInfo(GameInfo * gameInfo) {
     gameInfo->resultDetails = NULL;
     gameInfo->timeControl = NULL;
     gameInfo->extraTags = NULL;
-    gameInfo->whiteRating = -1; /* unknown */
-    gameInfo->blackRating = -1; /* unknown */
+    /* unknown */
+    gameInfo->whiteRating = -1;
+    /* unknown */
+    gameInfo->blackRating = -1;
     gameInfo->variant = VariantNormal;
     gameInfo->variantName = NULL;
     gameInfo->outOfBook = NULL;
@@ -190,10 +189,7 @@ void GameListInitGameInfo(GameInfo * gameInfo) {
 }
 
 
-/* Create empty ListGame; returns ListGame or NULL, if out of memory.
- *
- * Note, that the ListGame is *not* added to any list
- */
+/* Create empty ListGame; returns ListGame or NULL, if out of memory.  Note, that the ListGame is *not* added to any list. */
 static ListGame * GameListCreate(void) {
     ListGame * listGame;
 
@@ -204,8 +200,7 @@ static ListGame * GameListCreate(void) {
 }
 
 
-/* Creates a new game for the gamelist.
- */
+/* Creates a new game for the gamelist. */
 static int GameListNewGame(ListGame ** listGamePtr) {
     if (!(*listGamePtr = (ListGame *)GameListCreate())) {
         GameListFree(&gameList);
@@ -216,9 +211,7 @@ static int GameListNewGame(ListGame ** listGamePtr) {
 }
 
 
-/* Build the list of games in the open file f.
- * Returns 0 for success or error number.
- */
+/* Build the list of games in the open file f.  Returns 0 for success or error number. */
 int GameListBuild(FILE * f) {
     ChessMove cm, lastStart;
     int gameNumber;
@@ -267,10 +260,12 @@ int GameListBuild(FILE * f) {
         case MoveNumberOne:
             switch (lastStart) {
             case GNUChessGame:
-                break; /*  ignore  */
+                /* ignore */
+                break;
             case PGNTag:
                 lastStart = cm;
-                break; /*  Already started */
+                /* Already started. */
+                break;
             case (ChessMove)0:
             case MoveNumberOne:
             case XBoardGame:
@@ -289,7 +284,8 @@ int GameListBuild(FILE * f) {
                 lastStart = cm;
                 break;
             default:
-                break; /*  impossible  */
+                /* impossible */
+                break;
             }
             break;
         case PGNTag:
@@ -323,12 +319,14 @@ int GameListBuild(FILE * f) {
             if (cm != NormalMove) {
                 break;
             }
+            /* Intentionally fall through. */
         case IllegalMove:
             if (appData.testLegality) {
                 break;
             }
+            /* Intentionally fall through. */
         case NormalMove:
-            /* Allow the first game to start with an unnumbered move */
+            /* Allow the first game to start with an unnumbered move. */
             yyskipmoves = FALSE;
             if (lastStart == (ChessMove)0) {
                 if ((error = GameListNewGame(&currentListGame))) {
@@ -345,6 +343,7 @@ int GameListBuild(FILE * f) {
                 }
                 lastStart = MoveNumberOne;
             }
+            /* Intentionally fall through. */
         case WhiteCapturesEnPassant:
         case BlackCapturesEnPassant:
         case WhitePromotion:
@@ -382,7 +381,7 @@ int GameListBuild(FILE * f) {
                 break;
             }
             if (currentListGame->gameInfo.result == GameUnfinished) {
-                /* correct result tag with actual result */
+                /* Correct result tag with actual result. */
                 currentListGame->gameInfo.result = cm;
             }
             if (currentListGame->gameInfo.resultDetails != NULL) {
@@ -425,7 +424,7 @@ int GameListBuild(FILE * f) {
         printf("GameListBuild %ld msec\n", SubtractTimeMarks(&t2, &t));
     }
     quickFlag = 0;
-    /* for appending end-of-game marker. */
+    /* For appending end-of-game marker. */
     PackGame(boards[scratch]);
     DisplayTitle("WinBoard");
     rewind(f);
@@ -487,7 +486,7 @@ char * GameListLineOld(int number, GameInfo * gameInfo) {
     return ret;
 }
 
-/* To avoid overflowing the buffer */
+/* To avoid overflowing the buffer. */
 #define MAX_FIELD_LEN 80
 
 char * GameListLine(int number, GameInfo * gameInfo) {

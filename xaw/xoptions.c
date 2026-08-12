@@ -834,7 +834,7 @@ static void GraphEventProc(Widget widget, void * client_data, XEvent * event) {
     switch (event->type) {
     case Expose:
         /* make handling of expose events generic, just copying from memory buffer (->choice) to display (->textValue) */
-        /* Get window size */
+        /* Get window size. */
         j = 0;
         XtSetArg(args[j], XtNwidth, &w);
         j++;
@@ -843,7 +843,7 @@ static void GraphEventProc(Widget widget, void * client_data, XEvent * event) {
         XtGetValues(widget, args, j);
 
         if (w < graph->max || w > graph->max + 1 /* use width fudge of 1 pixel */ || h != graph->value) {
-            /* suppress sizing on expose for ordered redraw in response to sizing. */
+            /* Suppress sizing on expose for ordered redraw in response to sizing. */
             if (((XExposeEvent *)event)->count >= 0) {
                 sizing = 1;
                 graph->max = w;
@@ -855,12 +855,12 @@ static void GraphEventProc(Widget widget, void * client_data, XEvent * event) {
         }
 
         if (sizing && ((XExposeEvent *)event)->count > 0) {
-            /* don't bother if further exposure is pending during resize */
+            /* Don't bother if further exposure is pending during resize. */
             graph->max = 0;
             return;
         }
         if (!graph->textValue || sizing) {
-            /* create surfaces of new size for display widget */
+            /* Create surfaces of new size for display widget. */
             if (graph->textValue) {
                 cairo_surface_destroy((cairo_surface_t *)graph->textValue);
             }
@@ -868,8 +868,8 @@ static void GraphEventProc(Widget widget, void * client_data, XEvent * event) {
         }
         if (sizing) {
             /* The memory buffer was already created in GenericPopup() to give drawing routines the opportunity to use it prior to
-               the first expose event (which will not be processed until main reaches the event loop, after all initialization has
-               completed).  So, only trigger a redraw when the size is no longer good. */
+            the first expose event (which will not be processed until main reaches the event loop, after all initialization has
+            completed).  So, only trigger a redraw when the size is no longer good. */
             cairo_t * cr;
             if (graph->choice) {
                 cairo_surface_destroy((cairo_surface_t *)graph->choice);
@@ -900,6 +900,7 @@ static void GraphEventProc(Widget widget, void * client_data, XEvent * event) {
     case ButtonRelease:
         /* release indicated by negative button numbers */
         f = -1;
+        /* Intentionally fall through. */
     case ButtonPress:
         w = ((XButtonEvent *)event)->x;
         h = ((XButtonEvent *)event)->y;
@@ -1264,6 +1265,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
                     option[i].value = *(int *)option[i].target;
                 }
                 snprintf(def, MSG_SIZ, "%d", option[i].value);
+                /* Intentionally fall through. */
             case TextBox:
             case FileName:
             case PathName:
