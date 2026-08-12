@@ -5,8 +5,7 @@
  *
  * Copyright 2005 Alessandro Scotti
  *
- * Enhancements Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015,
- * 2016 Free Software Foundation, Inc.
+ * Enhancements Copyright 2009-2016, 2026 Free Software Foundation, Inc.
  *
  * ------------------------------------------------------------------------
  *
@@ -60,11 +59,14 @@
 #endif
 
 
-/* Module variables */
 int windowMode = 1;
 
-char *mem1, *mem2;  // dummies, as this dialog can never be OK'ed
-int highTextStart[2], highTextEnd[2];
+/* mem1 and mem2 are dummies: this dialog can never be okayed. */
+char * mem1;
+char * mem2;
+
+int highTextStart[2];
+int highTextEnd[2];
 
 int MemoProc(Option * opt, int n, int x, int y, char * text, int index);
 
@@ -87,18 +89,23 @@ Option engoutOptions[] = {
  {0, NO_OK, 0, NULL, NULL, "", NULL, EndMark, ""}
 };
 
-int MemoProc(Option * opt, int n, int x, int y, char * text, int index) {  // user callback for mouse events in memo
-    static int pressed;  // keep track of button 3 state
+/* user callback for mouse events in memo */
+int MemoProc(Option * opt, int n, int x, int y, char * text, int index) {
+    /* keep track of button 3 state */
+    static int pressed;
     int start, end, currentPV = (opt != &engoutOptions[5]);
 
     switch (n) {
-    case 0:  // pointer motion
+    case 0:
+        /* pointer motion */
         if (!pressed) {
-            return FALSE;  // only motion with button 3 down is of interest
+            /* only motion with button 3 down is of interest */
+            return FALSE;
         }
         MovePV(x, y, 500 /*desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap)*/);
         break;
-    case 3:  // press button 3
+    case 3:
+        /* press button 3 */
         pressed = 1;
         if (LoadMultiPV(x, y, text, index, &start, &end, currentPV)) {
             highTextStart[currentPV] = start;
@@ -106,7 +113,8 @@ int MemoProc(Option * opt, int n, int x, int y, char * text, int index) {  // us
             HighlightText(&engoutOptions[currentPV ? 12 : 5], start, end, TRUE);
         }
         break;
-    case -3:  // release button 3
+    case -3:
+        /* release button 3 */
         pressed = 0;
         if (highTextStart[currentPV] != highTextEnd[currentPV]) {
             HighlightText(&engoutOptions[currentPV ? 12 : 5], highTextStart[currentPV], highTextEnd[currentPV], FALSE);
@@ -115,12 +123,14 @@ int MemoProc(Option * opt, int n, int x, int y, char * text, int index) {  // us
         UnLoadPV();
         break;
     default:
-        return FALSE;  // not meant for us; do regular event handler
+        /* not meant for us; do regular event handler */
+        return FALSE;
     }
     return TRUE;
 }
 
-void SetIcon(int which, int field, int nIcon) {  // first call into xengineoutput.c to pick up icon pixmap
+/* first call into xengineoutput.c to pick up icon pixmap */
+void SetIcon(int which, int field, int nIcon) {
     if (nIcon) {
         DrawWidgetIcon(&engoutOptions[STRIDE * which + field - 1], nIcon);
     }
@@ -144,7 +154,8 @@ void EngineOutputPopUp(void) {
         AddHandler(&engoutOptions[MEMO], EngOutDlg, 6);
         AddHandler(&engoutOptions[MEMO + STRIDE], EngOutDlg, 6);
         if (needInit) {
-            InitEngineOutput(&engoutOptions[0], &engoutOptions[MEMO]);  // make icon bitmaps
+            /* make icon bitmaps */
+            InitEngineOutput(&engoutOptions[0], &engoutOptions[MEMO]);
             needInit = FALSE;
         }
         SetEngineColorIcon(0);
@@ -158,7 +169,8 @@ void EngineOutputPopUp(void) {
 
     MarkMenu("View.EngineOutput", EngOutDlg);
 
-    ShowThinkingEvent();  // [HGM] thinking: might need to prompt engine for thinking output
+    /* [HGM] thinking: might need to prompt engine for thinking output */
+    ShowThinkingEvent();
 }
 
 int EngineOutputIsUp(void) { return shellUp[EngOutDlg]; }

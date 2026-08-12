@@ -228,18 +228,19 @@ char * CollectPieceDescriptors(void) {
         }
         m = pieceDesc[p];
         d = (c == '+' ? pieceToChar[DEMOTED(p)] : c);
-        if (p >= BlackPawn && pieceToChar[BLACK_TO_WHITE p] == (c & ~32) &&
-         (c != '+' || pieceToChar[DEMOTED(BLACK_TO_WHITE p)] == d)) {  // black member of normal pair
+        if (p >= BlackPawn && pieceToChar[BLACK_TO_WHITE p] == (c & ~32)
+         && (c != '+' || pieceToChar[DEMOTED(BLACK_TO_WHITE p)] == d)) {
+            /* black member of normal pair */
             char * wm = pieceDesc[BLACK_TO_WHITE p];
             if (!m && !wm || m && wm && !strcmp(wm, m)) {
-                continue;  // moves as a white piece
-            }
-        } else  // white or unpaired black
-            if ((p < BlackPawn || CharToPiece(d & ~32) != EmptySquare) &&  // white or lone black
-             !pieceDesc[p] /*&& pieceName[p] == c*/) {
-                /* orthodox piece known by its usual name */
+                /* moves as a white piece */
                 continue;
             }
+        } else /* white or unpaired black */ if ((p < BlackPawn || CharToPiece(d & ~32) != EmptySquare) /* white or lone black */
+         && !pieceDesc[p] /*&& pieceName[p] == c*/) {
+            /* orthodox piece known by its usual name */
+            continue;
+        }
         /* TODO: listing pieces because of unusual name can only be done if we have accurate Betza of all defaults */
         if (!m) {
             m = defaultDesc[p];
@@ -359,14 +360,15 @@ void OK(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, 
 
 static int viaX = 100, viaY = 100, epFlag;
 
-void MovesFromString(
- Board board, int flags, int f, int r, int tx, int ty, int angle, int range, char * desc, MoveCallback cb, void * cl) {
+void MovesFromString(Board board, int flags, int f, int r, int tx, int ty, int angle, int range, char * desc, MoveCallback cb,
+ void * cl) {
     char buf[80], *p = desc, *atom = NULL;
     int mine, his, dir, bit, occup, i, ep, promoRank = -1;
     ChessMove promo = NormalMove;
     ChessSquare pc = board[r][f];
     if (pc == DarkSquare) {
-        return;  // this is not a piece, but a 'hole' in the board
+        /* This is not a piece, but a 'hole' in the board. */
+        return;
     }
     if (flags & F_WHITE_ON_MOVE) {
         his = 2, mine = 1;
@@ -380,33 +382,44 @@ void MovesFromString(
             promo = BlackPromotion, promoRank = 0;
         }
     }
-    while (*p) {  // more moves to go
+    while (*p) {
+        /* more moves to go */
         int expo = -1, dx, dy, x, y, mode, dirSet, ds2 = 0, retry = 0, initial = 0, jump = 1, skip = 0, all = 0, put = 0, u = 0;
         char *cont = NULL, *q;
         while (*p == 'i') {
             initial++, desc = ++p;
         }
         while (islower(*p)) {
-            p++;  // skip prefixes
+            /* skip prefixes */
+            p++;
         }
         if (!isupper(*p)) {
-            return;  // syntax error: no atom
+            /* syntax error: no atom */
+            return;
         }
-        dx = xStep[*p - 'A'] - '0';  // step vector of atom
+        /* step vector of atom */
+        dx = xStep[*p - 'A'] - '0';
         dy = yStep[*p - 'A'] - '0';
-        dirSet = 0;  // build direction set based on atom symmetry
+        /* build direction set based on atom symmetry */
+        dirSet = 0;
         switch (symmetry[*p - 'A']) {
         case 'B':
-            expo = 0;  // bishop, slide
+            /* bishop, slide */
+            expo = 0;
         case 'F':
-            all = 0xaa;  // diagonal atom (degenerate 4-fold)
+            /* diagonal atom (degenerate 4-fold) */
+            all = 0xaa;
             if (tx >= 0) {
-                goto king;  // continuation legs specified in K/Q system!
+                /* continuation legs specified in K/Q system! */
+                goto king;
             }
             while (islower(*desc) && (i = dirType[*desc - 'a']) != '0') {
-                int b = dirs1[*desc - 'a'];  // use wide version
-                if (islower(desc[1]) && ((i | dirType[desc[1] - 'a']) & 3) == 3) {  // combinable (perpendicular dim)
-                    b = dirs1[*desc - 'a'] & dirs1[desc[1] - 'a'];  // intersect wide & perp wide
+                /* use wide version */
+                int b = dirs1[*desc - 'a'];
+                if (islower(desc[1]) && ((i | dirType[desc[1] - 'a']) & 3) == 3) {
+                    /* combinable (perpendicular dim) */
+                    /* intersect wide & perp wide */
+                    b = dirs1[*desc - 'a'] & dirs1[desc[1] - 'a'];
                     desc += 2;
                 } else {
                     desc++;
@@ -419,11 +432,14 @@ void MovesFromString(
             }
             break;
         case 'R':
-            expo = 0;  // rook, slide
+            /* rook, slide */
+            expo = 0;
         case 'W':
-            all = 0x55;  // orthogonal atom (non-deg 4-fold)
+            /* orthogonal atom (non-deg 4-fold) */
+            all = 0x55;
             if (tx >= 0) {
-                goto king;  // continuation legs specified in K/Q system!
+                /* continuation legs specified in K/Q system! */
+                goto king;
             }
             while (islower(*desc) && (dirType[*desc - 'a'] & ~4) != '0') {
                 dirSet |= dirs2[*desc++ - 'a'];
@@ -432,25 +448,31 @@ void MovesFromString(
             if (!dirSet) {
                 dirSet = 0x55;
             }
-            dirSet = (dirSet << angle | dirSet >> 8 - angle) & 255;  // re-orient direction system
+            /* re-orient direction system */
+            dirSet = (dirSet << angle | dirSet >> 8 - angle) & 255;
             break;
         case 'N':
-            all = 0xff;  // oblique atom (degenerate 8-fold)
+            /* oblique atom (degenerate 8-fold) */
+            all = 0xff;
             if (tx >= 0) {
-                goto king;  // continuation legs specified in K/Q system!
+                /* continuation legs specified in K/Q system! */
+                goto king;
             }
-            if (*desc == 'h') {  // chiral direction sets 'hr' and 'hl'
+            if (*desc == 'h') {
+                /* chiral direction sets 'hr' and 'hl' */
                 dirSet = (desc[1] == 'r' ? 0x55 : 0xaa);
                 desc += 2;
             } else {
                 while (islower(*desc) && (i = dirType[*desc - 'a']) != '0') {
-                    int b = dirs2[*desc - 'a'];  // when alone, use narrow version
+                    /* when alone, use narrow version */
+                    int b = dirs2[*desc - 'a'];
                     if (desc[1] == 'h') {
-                        b = dirs1[*desc - 'a'], desc += 2;  // dirs1 is wide version
-                    } else if (*desc == desc[1] ||
-                     islower(desc[1]) && i < '4' &&
-                      ((i | dirType[desc[1] - 'a']) & 3) == 3) {  // combinable (perpendicular dim or same)
-                        b = dirs1[*desc - 'a'] & dirs2[desc[1] - 'a'];  // intersect wide & perp narrow
+                        /* dirs1 is wide version */
+                        b = dirs1[*desc - 'a'], desc += 2;
+                    } else if (*desc == desc[1] || islower(desc[1]) && i < '4' && ((i | dirType[desc[1] - 'a']) & 3) == 3) {
+                        /* combinable (perpendicular dim or same) */
+                        /* intersect wide & perp narrow */
+                        b = dirs1[*desc - 'a'] & dirs2[desc[1] - 'a'];
                         desc += 2;
                     } else {
                         desc++;
@@ -463,17 +485,22 @@ void MovesFromString(
             }
             break;
         case 'Q':
-            expo = 0;  // queen, slide
+            /* queen, slide */
+            expo = 0;
         case 'K':
-            all = 0xff;  // non-deg (pseudo) 8-fold
+            /* non-deg (pseudo) 8-fold */
+            all = 0xff;
 king:
             while (islower(*desc) && (i = dirType[*desc - 'a']) != '0') {
-                int b = dirs4[*desc - 'a'];  // when alone, use narrow version
+                /* when alone, use narrow version */
+                int b = dirs4[*desc - 'a'];
                 if (desc[1] == *desc) {
-                    desc++;  // doubling forces alone
-                } else if (islower(desc[1]) && i < '4' &&
-                 ((i | dirType[desc[1] - 'a']) & 3) == 3) {  // combinable (perpendicular dim or same)
-                    b = dirs3[*desc - 'a'] & dirs3[desc[1] - 'a'];  // intersect wide & perp wide
+                    /* doubling forces alone */
+                    desc++;
+                } else if (islower(desc[1]) && i < '4' && ((i | dirType[desc[1] - 'a']) & 3) == 3) {
+                    /* combinable (perpendicular dim or same) */
+                    /* intersect wide & perp wide */
+                    b = dirs3[*desc - 'a'] & dirs3[desc[1] - 'a'];
                     desc += 2;
                 } else {
                     desc++;
@@ -481,82 +508,125 @@ king:
                 dirSet |= b;
             }
             if (!dirSet) {
-                dirSet = (tx < 0 ? 0xff  // default is all directions, but in continuation leg
-                  : all == 0xff  ? 0xef
-                                 : 0x45);  // omits backward, and for 4-fold atoms also diags
+                /* default is all directions, but in continuation leg */
+                dirSet = (tx < 0 ? 0xff : all == 0xff ? 0xef : 0x45);
+                /* omits backward, and for 4-fold atoms also diags */
             }
-            dirSet = (dirSet << angle | dirSet >> 8 - angle) & 255;  // re-orient direction system
+            /* re-orient direction system */
+            dirSet = (dirSet << angle | dirSet >> 8 - angle) & 255;
             if (dx && dx != dy) {
-                break;  // oblique continuation
+                /* oblique continuation */
+                break;
             }
-            ds2 = dirSet & 0xaa;  // extract diagonal directions
-            if (dirSet &= 0x55) {  // start with orthogonal moves, if present
-                retry = 1, dx = 0;  // and schedule the diagonal moves for later
+            /* extract diagonal directions */
+            ds2 = dirSet & 0xaa;
+            /* start with orthogonal moves, if present */
+            if (dirSet &= 0x55) {
+                /* and schedule the diagonal moves for later */
+                retry = 1;
+                dx = 0;
             } else {
-                dx = dy, dirSet = ds2;  // if no orthogonal directions, do diagonal immediately
+                /* if no orthogonal directions, do diagonal immediately */
+                dx = dy;
+                dirSet = ds2;
             }
-            break;  // should not have direction indicators
+            /* should not have direction indicators */
+            break;
         default:
-            return;  // syntax error: invalid atom
+            /* syntax error: invalid atom */
+            return;
         }
         if (mine == 2 && tx < 0) {
-            dirSet = dirSet >> 4 | dirSet << 4 & 255;  // invert black moves
+            /* invert black moves */
+            dirSet = dirSet >> 4 | dirSet << 4 & 255;
         }
-        mode = 0;  // build mode mask
+        /* build mode mask */
+        mode = 0;
         if (*desc == 'u') {
-            put++, desc++;  // unload stuff at start of leg
+            /* unload stuff at start of leg */
+            put++;
+            desc++;
         }
         if (*desc == 'm') {
-            mode |= 4, desc++;  // move to empty
+            /* move to empty */
+            mode |= 4;
+            desc++;
         }
         if (*desc == 'c') {
-            mode |= his, desc++;  // capture foe
+            /* capture foe */
+            mode |= his;
+            desc++;
         }
         if (*desc == 'd') {
-            mode |= mine, desc++;  // destroy (capture friend)
+            /* destroy (capture friend) */
+            mode |= mine;
+            desc++;
         }
         if (*desc == 'e') {
-            mode |= 8, desc++;  // e.p. capture last mover
+            /* e.p. capture last mover */
+            mode |= 8;
+            desc++;
         }
         if (*desc == 'x') {
-            mode = mine | 1 << 12, desc++;  // induction step
+            /* induction step */
+            mode = mine | 1 << 12;
+            desc++;
         }
         if (*desc == 't') {
-            mode |= 16, desc++;  // exclude enemies as hop platform ('test')
+            /* exclude enemies as hop platform ('test') */
+            mode |= 16;
+            desc++;
         }
         if (*desc == 'p') {
-            mode |= 32, desc++;  // hop over occupied
+            /* hop over occupied */
+            mode |= 32;
+            desc++;
         }
         if (*desc == 'g') {
-            mode |= 64, desc++;  // hop and toggle range
+            /* hop and toggle range */
+            mode |= 64;
+            desc++;
         }
         if (*desc == 'o') {
-            mode |= 128, desc++;  // wrap around cylinder board
+            /* wrap around cylinder board */
+            mode |= 128;
+            desc++;
         }
         if (*desc == 'y') {
-            mode |= 512, desc++;  // toggle range on empty square
+            /* toggle range on empty square */
+            mode |= 512;
+            desc++;
         }
         if (*desc == 'n') {
-            jump = 0, desc++;  // non-jumping
+            /* non-jumping */
+            jump = 0;
+            desc++;
         }
         while (*desc == 'j') {
-            jump++, desc++;  // must jump (on B,R,Q: skip first square)
+            /* must jump (on B,R,Q: skip first square) */
+            jump++;
+            desc++;
         }
         if (*desc == 'a') {
-            cont = ++desc;  // move again after doing what preceded it
+            /* move again after doing what preceded it */
+            cont = ++desc;
         }
         if (isdigit(*++p)) {
-            expo = atoi(p++);  // read exponent
+            /* read exponent */
+            expo = atoi(p++);
         }
         if (expo > 9) {
-            p++;  // allow double-digit
+            /* allow double-digit */
+            p++;
         }
-        desc = p;  // this is start of next move
+        /* this is start of next move */
+        desc = p;
         if (tx == -2 && mode & 1 << 12) {
-            continue;  // prevent recursive move borrowing (flaky)
+            /* prevent recursive move borrowing (flaky) */
+            continue;
         }
-        epFlag =  // flags initial orthogonal and diagonal pawn non-capture multi-pushes (which have legacy meaning)
-         (initial && promo != NormalMove && !cont && mode == 4 && (!dx || dx == dy) && (dy > 1 ? !jump : expo > 1));
+        /* flags initial orthogonal and diagonal pawn non-capture multi-pushes (which have legacy meaning) */
+        epFlag = (initial && promo != NormalMove && !cont && mode == 4 && (!dx || dx == dy) && (dy > 1 ? !jump : expo > 1));
         if (initial == 2) {
             if (board[r][f] != initialPosition[r - 2 * his + 3][f]) {
                 continue;
@@ -569,71 +639,97 @@ king:
             }
             initial = 0;
         }
-        if (expo > 0 && dx == 0 && dy == 0) {  // castling indicated by O + number
+        if (expo > 0 && dx == 0 && dy == 0) {
+            /* castling indicated by O + number */
             mode |= 1024;
             dy = 1;
         }
         if (expo < 0) {
-            expo = 1;  // use 1 for default
+            /* use 1 for default */
+            expo = 1;
         }
         if (!cont) {
             if (!(mode & 15)) {
-                mode |= his + 4;  // no mode spec, use default = mc
+                /* no mode spec, use default = mc */
+                mode |= his + 4;
             }
         } else {
             strncpy(buf, cont, 80);
-            cont = buf;  // copy next leg(s), so we can modify
+            /* copy next leg(s), so we can modify */
+            cont = buf;
             atom = buf;
             while (islower(*atom)) {
-                atom++;  // skip to atom
+                /* skip to atom */
+                atom++;
             }
-            for (q = buf; q != atom && *q != 'a'; q++) {  // test whether next leg unloads
+            for (q = buf; q != atom && *q != 'a'; q++) {
+                /* test whether next leg unloads */
                 if (*q == 'u') {
                     u = 1;
                 }
             }
             if (mode & 32) {
-                mode ^= 256 + 32;  // in non-final legs 'p' means 'pass through'
+                /* in non-final legs 'p' means 'pass through' */
+                mode ^= 256 + 32;
             }
             if (mode & 64 + 512) {
-                mode |= 256;  // and 'g' too, but converts leaper <-> slider
+                /* and 'g' too, but converts leaper <-> slider */
+                mode |= 256;
                 if (mode & 512) {
-                    mode ^= 0x304;  // and 'y' is m-like 'g'
+                    /* and 'y' is m-like 'g' */
+                    mode ^= 0x304;
                 }
-                *atom = upgrade[*atom - 'A'];  // replace atom, BRQ <-> FWK
-                atom[1] = atom[2] = '\0';  // make sure any old range is stripped off
+                /* replace atom, BRQ <-> FWK */
+                *atom = upgrade[*atom - 'A'];
+                /* make sure any old range is stripped off */
+                atom[2] = '\0';
+                atom[1] = '\0';
                 if (expo == 1) {
-                    atom[1] = '0';  // turn other leapers into riders
+                    /* turn other leapers into riders */
+                    atom[1] = '0';
                 }
             }
             if (!(mode & 0x30f)) {
-                mode |= 4;  // and default of this leg = m
+                /* and default of this leg = m */
+                mode |= 4;
             }
         }
         if (dy == 1) {
-            skip = jump - 1, jump = 1;  // on W & F atoms 'j' = skip first square
+            /* on W & F atoms 'j' = skip first square */
+            skip = jump - 1;
+            jump = 1;
         }
         do {
-            for (dir = 0, bit = 1; dir < 8; dir++, bit += bit) {  // loop over directions
+            /* loop over directions */
+            for (dir = 0, bit = 1; dir < 8; dir++, bit += bit) {
                 int i = expo, j = skip, hop = mode, vx, vy, loop = 0;
                 if (!(bit & dirSet)) {
-                    continue;  // does not move in this direction
+                    /* does not move in this direction */
+                    continue;
                 }
                 if (dy != 1 || mode & 1024) {
-                    j = 0;  //
+                    j = 0;
                 }
-                vx = dx * rot[dir][0] + dy * rot[dir][1];  // rotate step vector
+                /* rotate step vector */
+                vx = dx * rot[dir][0] + dy * rot[dir][1];
                 vy = dx * rot[dir][2] + dy * rot[dir][3];
                 if (tx < 0) {
-                    x = f, y = r;  // start square
+                    /* start square */
+                    x = f;
+                    y = r;
                 } else {
-                    x = tx, y = ty;  // from previous to-square if continuation
+                    /* from previous to-square if continuation */
+                    x = tx;
+                    y = ty;
                 }
-                do {  // traverse ray
+                /* traverse ray */
+                do {
+                    /* step to next square */
                     x += vx;
-                    y += vy;  // step to next square
+                    y += vy;
                     if (y < 0 || y >= BOARD_HEIGHT) {
-                        break;  // vertically off-board: always done
+                        /* vertically off-board: always done */
+                        break;
                     }
                     if (x < BOARD_LEFT) {
                         if (mode & 128) {
@@ -650,28 +746,31 @@ king:
                         }
                     }
                     if (j > 0) {
+                        /* skip irrespective of occupation */
                         j--;
                         continue;
-                    }  // skip irrespective of occupation
+                    }
                     if (board[y][x] == DarkSquare) {
-                        break;  // black squares are supposed to be off board
+                        /* black squares are supposed to be off board */
+                        break;
                     }
                     if (!jump && board[y - vy + vy / 2][x - vx + vx / 2] != EmptySquare) {
-                        break;  // blocked
+                        /* blocked */
+                        break;
                     }
                     if (jump > 1 && board[y - vy + vy / 2][x - vx + vx / 2] == EmptySquare) {
-                        break;  // no hop
+                        /* no hop */
+                        break;
                     }
                     if (x == f && y == r && !loop) {
                         occup = 4;
-                    } else  // start square counts as empty (if not around cylinder!)
-                        if (board[y][x] < BlackPawn) {
-                            occup = 0x101;
-                        } else if (board[y][x] < EmptySquare) {
-                            occup = 0x102;
-                        } else {
-                            occup = 4;
-                        }
+                    } else /* start square counts as empty (if not around cylinder!) */ if (board[y][x] < BlackPawn) {
+                        occup = 0x101;
+                    } else if (board[y][x] < EmptySquare) {
+                        occup = 0x102;
+                    } else {
+                        occup = 4;
+                    }
                     if (initial && expo - i + 1 != range) {
                         if (occup == 4) {
                             continue;
@@ -679,25 +778,36 @@ king:
                             break;
                         }
                     }
-                    if (cont) {  // non-final leg
+                    if (cont) {
+                        /* non-final leg */
                         if (mode & 16 && his & occup) {
-                            occup &= 3;  // suppress hopping foe in t-mode
+                            /* suppress hopping foe in t-mode */
+                            occup &= 3;
                         }
                         if (skip < 0) {
-                            mode |= 4;  // 'n' = 'm' + rights creation in non-final step leg
+                            /* 'n' = 'm' + rights creation in non-final step leg */
+                            mode |= 4;
                         }
-                        if (occup & mode) {  // valid intermediate square, do continuation
+                        if (occup & mode) {
+                            /* valid intermediate square, do continuation */
                             char origAtom = *atom;
-                            int rg = (expo != 1 ? expo - i + 1 : range);  // pass length of last *slider* leg
-                            int transp = (occup | 1 << 12) & mode & 0x1104;  // no side effect on intermediate square
+                            /* pass length of last *slider* leg */
+                            int rg = (expo != 1 ? expo - i + 1 : range);
+                            /* no side effect on intermediate square */
+                            int transp = (occup | 1 << 12) & mode & 0x1104;
                             if (!(bit & all)) {
-                                *atom = rotate[*atom - 'A'];  // orth-diag interconversion to make direction valid
+                                /* orth-diag interconversion to make direction valid */
+                                *atom = rotate[*atom - 'A'];
                             }
-                            if (transp && !u) {  // no side effects, merge legs to one move
-                                if (skip < 0 && occup == 4) {  // create e.p. rights on this square
-                                    if (viaX != 100) {  // second e.p. square!
+                            if (transp && !u) {
+                                /* no side effects, merge legs to one move */
+                                if (skip < 0 && occup == 4) {
+                                    /* create e.p. rights on this square */
+                                    if (viaX != 100) {
+                                        /* second e.p. square! */
                                         if (viaX == x && viaY == y - vy) {
-                                            viaY = y | 128;  // flag it when we can handle it
+                                            /* flag it when we can handle it */
+                                            viaY = y | 128;
                                         }
                                     } else {
                                         viaX = x, viaY = y;
@@ -716,29 +826,35 @@ king:
                             }
                             if ((occup & mode & 3 || transp && u) &&
                              (killX < 0 || kill2X < 0 && (legNr > 1 || killX == x && killY == y) ||
-                              (legNr == 1 ? kill2X == x && kill2Y == y : killX == x && killY == y))) {  // destructive first leg
+                              (legNr == 1 ? kill2X == x && kill2Y == y : killX == x && killY == y))) {
+                                /* destructive first leg */
                                 int cnt = 0;
                                 legNr <<= 1;
-                                MovesFromString(
-                                 board, flags, f, r, x, y, dir, rg, cont, &OK, &cnt);  // count possible continuations
+                                /* count possible continuations */
+                                MovesFromString(board, flags, f, r, x, y, dir, rg, cont, &OK, &cnt);
                                 legNr >>= 1;
-                                if (cnt) {  // and if there are
+                                /* and if there are */
+                                if (cnt) {
                                     if (legNr & 1 ? killX < 0 : kill2X < 0) {
-                                        cb(board, flags, FirstLeg, r, f, y, x, cl);  // then generate their first leg
+                                        /* then generate their first leg */
+                                        cb(board, flags, FirstLeg, r, f, y, x, cl);
                                     }
                                     legNr <<= 1;
                                     MovesFromString(board, flags, f, r, x, y, dir, rg, cont, cb, cl);
                                     legNr >>= 1;
                                 }
                             }
-                            *atom = origAtom;  // undo any interconversion
+                            /* undo any interconversion */
+                            *atom = origAtom;
                         }
                         if (occup != 4) {
-                            break;  // occupied squares always terminate the leg
+                            /* occupied squares always terminate the leg */
+                            break;
                         }
                         continue;
                     }
                     if (hop & 32 + 64) {
+                        /* hopper */
                         if (occup != 4) {
                             if (hop & 64 && i != 1) {
                                 i = 2;
@@ -746,21 +862,25 @@ king:
                             hop &= 31;
                         }
                         continue;
-                    }  // hopper
+                    }
                     ep = board[EP_RANK];
-                    if (mode & 8 && occup == 4 && board[EP_FILE] == x &&
-                     (y == (ep & 127) || y - vy == ep - 128)) {  // to e.p. square (or 2nd e.p. square)
+                    if (mode & 8 && occup == 4 && board[EP_FILE] == x && (y == (ep & 127) || y - vy == ep - 128)) {
+                        /* to e.p. square (or 2nd e.p. square) */
                         cb(board, flags, mine == 1 ? WhiteCapturesEnPassant : BlackCapturesEnPassant, r, f, y, x, cl);
                     }
-                    if (mode & 1024) {  // castling
-                        i = 2;  // kludge to elongate move indefinitely
+                    if (mode & 1024) {
+                        /* castling */
+                        /* kludge to elongate move indefinitely */
+                        i = 2;
                         if (occup == 4) {
-                            continue;  // skip empty squares
+                            /* skip empty squares */
+                            continue;
                         }
                         if ((x == BOARD_LEFT + skip || x > BOARD_LEFT + skip && vx < 0 && board[y][x - 1 - skip] == DarkSquare) &&
-                         board[y][x] == initialPosition[y][x]) {  // reached initial corner piece
-                            if (pc != WhiteKing && pc != BlackKing ||
-                             expo == 1) {  // non-royal castling (to be entered as two-leg move via 'Rook')
+                         board[y][x] == initialPosition[y][x]) {
+                            /* reached initial corner piece */
+                            /* non-royal castling (to be entered as two-leg move via 'Rook') */
+                            if (pc != WhiteKing && pc != BlackKing || expo == 1) {
                                 if (killX < 0) {
                                     cb(board, flags, FirstLeg, r, f, y, x, cl);
                                 }
@@ -771,9 +891,8 @@ king:
                                 cb(board, flags, mine == 1 ? WhiteQueenSideCastle : BlackQueenSideCastle, r, f, y, f - expo, cl);
                             }
                         }
-                        if ((x == BOARD_RGHT - 1 - skip ||
-                             x < BOARD_RGHT - 1 - skip && vx > 0 && board[y][x + 1 + skip] == DarkSquare) &&
-                         board[y][x] == initialPosition[y][x]) {
+                        if ((x == BOARD_RGHT - 1 - skip || x < BOARD_RGHT - 1 - skip && vx > 0
+                         && board[y][x + 1 + skip] == DarkSquare) && board[y][x] == initialPosition[y][x]) {
                             if (pc != WhiteKing && pc != BlackKing || expo == 1) {
                                 if (killX < 0) {
                                     cb(board, flags, FirstLeg, r, f, y, x, cl);
@@ -788,39 +907,46 @@ king:
                         break;
                     }
                     if (mode & 16 && (board[y][x] == WhiteKing || board[y][x] == BlackKing)) {
-                        break;  // tame piece, cannot capture royal
+                        /* tame piece, cannot capture royal */
+                        break;
                     }
                     if (occup & mode) {
                         if (mode & 1 << 12) {
                             ChessSquare neighbor = board[y][x];
-                            char * borrow = (neighbor == pc ? NULL : pieceDesc[neighbor]);  // do not borrow from equal type
+                            /* do not borrow from equal type */
+                            char * borrow = (neighbor == pc ? NULL : pieceDesc[neighbor]);
                             if (borrow) {
-                                MovesFromString(
-                                 board, flags, f, r, -2, -2, dir, range, borrow, cb, cl);  // borrow moves from neighbor
+                                /* borrow moves from neighbor */
+                                MovesFromString(board, flags, f, r, -2, -2, dir, range, borrow, cb, cl);
                             }
                         } else {
                             cb(board, flags,
                              y == promoRank ? promo
                               : put         ? Swap
                                             : NormalMove,
-                             r, f, y, x, cl);  // allowed, generate
+                             r, f, y, x, cl);
+                            /* allowed, generate */
                         }
                     }
                     if (occup != 4) {
-                        break;  // not valid transit square
+                        /* not valid transit square */
+                        break;
                     }
                 } while (--i);
             }
             dx = dy;
-            dirSet = ds2;  // prepare for diagonal moves of K,Q
-        } while (retry-- && ds2);  // and start doing them
+            /* prepare for diagonal moves of K,Q */
+            dirSet = ds2;
+            /* and start doing them */
+        } while (retry-- && ds2);
         if (tx >= 0) {
-            break;  // don't do other atoms in continuation legs
+            /* don't do other atoms in continuation legs */
+            break;
         }
     }
-}  // next atom
+}
 
-// [HGM] move generation now based on hierarchy of subroutines for rays and combinations of rays
+/* [HGM] move generation now based on hierarchy of subroutines for rays and combinations of rays */
 
 void SlideForward(Board board, int flags, int rf, int ff, MoveCallback callback, void * closure) {
     int i, rt, ft = ff;
@@ -930,8 +1056,8 @@ void Bishop(Board board, int flags, int rf, int ff, MoveCallback callback, void 
     SlideDiagBackward(board, flags, rf, ff, callback, closure);
 }
 
-void Sting(Board board, int flags, int rf, int ff, int dy, int dx, MoveCallback callback,
- void * closure) {  // Lion-like move of Horned Falcon and Soaring Eagle
+/* Lion-like move of Horned Falcon and Soaring Eagle */
+void Sting(Board board, int flags, int rf, int ff, int dy, int dx, MoveCallback callback, void * closure) {
     int ft = ff + dx, rt = rf + dy;
     if (rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT) {
         return;
@@ -1071,8 +1197,8 @@ void Zebra(Board board, int flags, int rf, int ff, MoveCallback callback, void *
     }
 }
 
-void PalaceDiags(
- Board board, int flags, int rf, int ff, int isRook, MoveCallback callback, void * closure) {  // Janggi diagonal palace moves
+/* Janggi diagonal palace moves */
+void PalaceDiags(Board board, int flags, int rf, int ff, int isRook, MoveCallback callback, void * closure) {
     int piece = board[rf][ff];
     int middle = BOARD_WIDTH / 2;
     int palace = (rf < 3 ? 1 : BOARD_HEIGHT - 2);
@@ -1080,8 +1206,10 @@ void PalaceDiags(
         if (rf == palace && isRook) {
             Ferz(board, flags, rf, ff, callback, closure);
         }
-    } else if ((ff == middle + 1 || ff == middle - 1) && (rf == palace + 1 || rf == palace - 1)) {  // Palace corner
-        int rt = 2 * palace - rf, ft = 2 * middle - ff;  // reflect
+    } else if ((ff == middle + 1 || ff == middle - 1) && (rf == palace + 1 || rf == palace - 1)) {
+        /* Palace corner */
+        /* reflect */
+        int rt = 2 * palace - rf, ft = 2 * middle - ff;
         ChessSquare center = board[palace][middle];
         if (isRook && !SameColor(piece, center)) {
             callback(board, flags, NormalMove, rf, ff, palace, middle, closure);
@@ -1096,21 +1224,17 @@ void PalaceDiags(
     }
 }
 
-/* Call callback once for each pseudo-legal move in the given
-   position, except castling moves. A move is pseudo-legal if it is
-   legal, or if it would be legal except that it leaves the king in
-   check.  In the arguments, epfile is EP_NONE if the previous move
-   was not a double pawn push, or the file 0..7 if it was, or
-   EP_UNKNOWN if we don't know and want to allow all e.p. captures.
-   Promotion moves generated are to Queen only.
-*/
-void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closure, ChessSquare filter)
-// speed: only do moves with this piece type
-{
+/* Call callback once for each pseudo-legal move in the given position, except castling moves.  A move is pseudo-legal if it is
+   legal, or if it would be legal except that it leaves the king in check.  In the arguments, epfile is EP_NONE if the previous move
+   was not a double pawn push, or the file 0..7 if it was, or EP_UNKNOWN if we don't know and want to allow all e.p. captures.
+   Promotion moves generated are to Queen only. */
+void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closure, ChessSquare filter) {
+    /* speed: only do moves with this piece type (is that about the filter parameter?)*/
     int rf, ff;
     int i, j, d, s, fs, rs, rt, ft, m;
     int vari = gameInfo.variant;
-    int epfile = (signed char)board[EP_STATUS];  // [HGM] gamestate: extract ep status from board
+    /* [HGM] gamestate: extract ep status from board */
+    int epfile = (signed char)board[EP_STATUS];
     int dead = (vari == VariantSChess && !gameInfo.holdingsSize ? 1 : 0);
     int promoRank = vari == VariantMakruk || vari == VariantGrand || vari == VariantChuChess ? 3 : 1;
 
@@ -1125,7 +1249,8 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                 continue;
             }
             if ((flags & F_WHITE_ON_MOVE) != (board[rf][ff] < BlackPawn)) {
-                continue;  // [HGM] speed: wrong color
+                /* [HGM] speed: wrong color */
+                continue;
             }
             m = 0;
             piece = board[rf][ff];
@@ -1135,7 +1260,8 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
             if (filter != EmptySquare && piece != filter) {
                 continue;
             }
-            if (pieceDefs && pieceDesc[piece]) {  // [HGM] gen: use engine-defined moves
+            /* [HGM] gen: use engine-defined moves */
+            if (pieceDefs && pieceDesc[piece]) {
                 MovesFromString(board, flags, ff, rf, -1, -1, 0, 0, pieceDesc[piece], callback, closure);
                 continue;
             }
@@ -1144,9 +1270,9 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
             }
 
             switch ((int)piece) {
-            /* case EmptySquare: [HGM] this is nonsense, and conflicts with Shogi cases */
+            /*case EmptySquare: /* [HGM] this is nonsense, and conflicts with Shogi cases */
             default:
-                /* can't happen ([HGM] except for faries...) */
+                /* can't happen ([HGM] except for fairies...) */
                 break;
 
             case WhitePawn:
@@ -1162,7 +1288,8 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                             callback(board, flags, NormalMove, rf, ff, rf, ff + s, closure);
                         }
                     }
-                    if (vari == VariantJanggi) {  // diagonal moves in palace
+                    if (vari == VariantJanggi) {
+                        /* diagonal moves in palace */
                         int d = BOARD_HEIGHT - rf;
                         if (d == 3 || d == 2) {
                             if (ff == BOARD_WIDTH / 2 - d + 2 && !WhitePiece(board[rf + 1][ff + 1])) {
@@ -1179,11 +1306,9 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     callback(board, flags, rf >= BOARD_HEIGHT - 1 - promoRank && !autoProm[WhitePawn] ? WhitePromotion : NormalMove,
                      rf, ff, rf + 1, ff, closure);
                 }
-                if (rf <= (BOARD_HEIGHT >> 1) - 3 &&
-                 board[rf + 1][ff] == EmptySquare &&  // [HGM] grand: also on 3rd rank on 10-board
-                 vari != VariantShatranj && /* [HGM] */
-                 vari != VariantCourier && /* [HGM] */
-                 board[rf + 2][ff] == EmptySquare) {
+                /* [HGM] grand: also on 3rd rank on 10-board */
+                if (rf <= (BOARD_HEIGHT >> 1) - 3 && board[rf + 1][ff] == EmptySquare && vari != VariantShatranj
+                 && vari != VariantCourier && board[rf + 2][ff] == EmptySquare) {
                     callback(board, flags, NormalMove, rf, ff, rf + 2, ff, closure);
                 }
                 for (s = -1; s <= 1; s += 2) {
@@ -1193,7 +1318,8 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                          rf >= BOARD_HEIGHT - 1 - promoRank && !autoProm[WhitePawn] ? WhitePromotion : NormalMove, rf, ff, rf + 1,
                          ff + s, closure);
                     }
-                    if (rf >= BOARD_HEIGHT + 1 >> 1) {  // [HGM] grand: 4th & 5th rank on 10-board
+                    if (rf >= BOARD_HEIGHT + 1 >> 1) {
+                        /* [HGM] grand: 4th & 5th rank on 10-board */
                         int victimFile = (board[LAST_TO] & 0x40 ? ff + s : board[LAST_TO] & 255);
                         if (ff + s >= BOARD_LEFT && ff + s < BOARD_RGHT && (board[EP_FILE] == ff + s || epfile == EP_UNKNOWN) &&
                          rf < BOARD_HEIGHT - 3 && (board[rf][victimFile] == BlackPawn || board[rf][victimFile] == BlackLance) &&
@@ -1217,7 +1343,8 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                             callback(board, flags, NormalMove, rf, ff, rf, ff + s, closure);
                         }
                     }
-                    if (vari == VariantJanggi) {  // diagonal moves in palace
+                    if (vari == VariantJanggi) {
+                        /* diagonal moves in palace */
                         if (rf == 1 || rf == 2) {
                             if (ff == BOARD_WIDTH / 2 - rf + 1 && !BlackPiece(board[rf - 1][ff + 1])) {
                                 callback(board, flags, NormalMove, rf, ff, rf - 1, ff + 1, closure);
@@ -1233,7 +1360,7 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                     callback(board, flags, rf <= promoRank && !autoProm[BlackPawn] ? BlackPromotion : NormalMove, rf, ff, rf - 1,
                      ff, closure);
                 }
-                if (rf >= (BOARD_HEIGHT + 1 >> 1) + 2 && board[rf - 1][ff] == EmptySquare &&  // [HGM] grand
+                if (rf >= (BOARD_HEIGHT + 1 >> 1) + 2 && board[rf - 1][ff] == EmptySquare && /* [HGM] grand */
                  vari != VariantShatranj && /* [HGM] */
                  vari != VariantCourier && /* [HGM] */
                  board[rf - 2][ff] == EmptySquare) {
@@ -1326,8 +1453,7 @@ void GenPseudoLegal(Board board, int flags, MoveCallback callback, void * closur
                 }
                 break;
 
-            /* Gold General (and all its promoted versions) . First do the */
-            /* diagonal forward steps, then proceed as normal Wazir        */
+            /* Gold General (and all its promoted versions) . First do the diagonal forward steps, then proceed as normal Wazir. */
             case SHOGI(PROMO WhitePawn):
                 if (vari == VariantShogi) {
                     goto WhiteGold;
@@ -1396,7 +1522,8 @@ BlackGold:
             case BlackWazir:
 janggi:
                 if (vari == VariantXiangqi || vari == VariantJanggi) {
-                    int palace = (piece < BlackPawn ? 1 : BOARD_HEIGHT - 2);  // Palace center
+                    /* Palace center */
+                    int palace = (piece < BlackPawn ? 1 : BOARD_HEIGHT - 2);
                     int middle = BOARD_WIDTH / 2;
                     if (ff <= middle && !SameColor(board[rf][ff + 1], piece)) {
                         callback(board, flags, NormalMove, rf, ff, rf, ff + 1, closure);
@@ -1464,9 +1591,11 @@ janggi:
                             callback(board, flags, NormalMove, rf, ff, rt, ft, closure);
                         }
                         if (vari == VariantShatranj || vari == VariantCourier || vari == VariantChu || vari == VariantXiangqi) {
-                            continue;  // classical Alfil
+                            /* classical Alfil */
+                            continue;
                         }
-                        rt = rf + rs;  // in unknown variant we assume Modern Elephant, which can also do one step
+                        /* in unknown variant we assume Modern Elephant, which can also do one step */
+                        rt = rf + rs;
                         ft = ff + fs;
                         if (!(rt < 0 || rt >= BOARD_HEIGHT || ft < BOARD_LEFT || ft >= BOARD_RGHT) &&
                          !SameColor(board[rf][ff], board[rt][ft])) {
@@ -1490,7 +1619,8 @@ janggi:
                 if (vari == VariantChuChess) {
                     goto DragonHorse;
                 }
-                for (d = 0; d <= 1; d++) {  // Dababba moves that Rook cannot do
+                for (d = 0; d <= 1; d++) {
+                    /* Dababba moves that Rook cannot do */
                     for (s = -2; s <= 2; s += 4) {
                         rt = rf + s * d;
                         ft = ff + s * (1 - d);
@@ -1514,7 +1644,7 @@ DragonHorse:
                 Wazir(board, flags, rf, ff, callback, closure);
                 break;
 
-            /* Capablanca Archbishop continues as Knight                  */
+            /* Capablanca Archbishop continues as Knight */
             case WhiteAngel:
             case BlackAngel:
                 Knight(board, flags, rf, ff, callback, closure);
@@ -1576,7 +1706,8 @@ DragonHorse:
                 if (vari == VariantChuChess || vari == VariantSpartan) {
                     goto DragonKing;
                 }
-                for (d = 0; d <= 1; d++) {  // Dababba moves that Rook cannot do
+                for (d = 0; d <= 1; d++) {
+                    /* Dababba moves that Rook cannot do */
                     for (s = -2; s <= 2; s += 4) {
                         rt = rf + s * d;
                         ft = ff + s * (1 - d);
@@ -1606,11 +1737,12 @@ DragonKing:
                 break;
                 m++;
 
-            /* Capablanca Chancellor sets flag to continue as Knight      */
+            /* Capablanca Chancellor sets flag to continue as Knight */
             case WhiteMarshall:
             case BlackMarshall:
                 Rook(board, flags, rf, ff, callback, closure);
-                if (vari == VariantSpartan) {  // in Spartan Chess Chancellor is used for Dragon King.
+                if (vari == VariantSpartan) {
+                    /* in Spartan Chess Chancellor is used for Dragon King. */
                     Ferz(board, flags, rf, ff, callback, closure);
                 } else {
                     Knight(board, flags, rf, ff, callback, closure);
@@ -1619,7 +1751,8 @@ DragonKing:
 
             case WhiteTower:
             case BlackTower:
-                for (d = 0; d <= 1; d++) {  // Dababba moves
+                for (d = 0; d <= 1; d++) {
+                    /* Dababba moves */
                     for (s = -2; s <= 2; s += 4) {
                         rt = rf + s * d;
                         ft = ff + s * (1 - d);
@@ -1700,7 +1833,8 @@ doQueen:
 
             case WhiteSilver:
             case BlackSilver:
-                Knight(board, flags, rf, ff, callback, closure);  // [HGM] superchess: use for Centaur
+                /* [HGM] superchess: use for Centaur */
+                Knight(board, flags, rf, ff, callback, closure);
 
 commoner:
             case SHOGI WhiteMonarch:
@@ -1744,7 +1878,7 @@ Amazon:
                 Knight(board, flags, rf, ff, callback, closure);
                 break;
 
-            // Use Lance as Berolina / Spartan Pawn.
+            /* Use Lance as Berolina / Spartan Pawn. */
             case WhiteLance:
                 if (vari == VariantSuper) {
                     goto Amazon;
@@ -1929,7 +2063,8 @@ Amazon:
                 SlideBackward(board, flags, rf, ff, callback, closure);
                 break;
 
-            case WhiteFalcon:  // [HGM] wild: for wildcards, self-capture symbolizes move to anywhere
+            /* [HGM] wild: for wildcards, self-capture symbolizes move to anywhere */
+            case WhiteFalcon:
             case BlackFalcon:
             case WhiteCobra:
             case BlackCobra:
@@ -1946,8 +2081,12 @@ typedef struct {
     void * cl;
 } GenLegalClosure;
 
-int rFilter, fFilter;  // [HGM] speed: sorry, but I get a bit tired of this closure madness
-Board xqCheckers, nullBoard;
+/* [HGM] speed: sorry, but I get a bit tired of this closure madness */
+int rFilter;
+int fFilter;
+
+Board xqCheckers;
+Board nullBoard;
 
 extern void GenLegalCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure);
 
@@ -1955,11 +2094,13 @@ void GenLegalCallback(Board board, int flags, ChessMove kind, int rf, int ff, in
     register GenLegalClosure * cl = (GenLegalClosure *)closure;
 
     if (rFilter >= 0 && rFilter != rt || fFilter >= 0 && fFilter != ft) {
-        return;  // [HGM] speed: ignore moves with wrong to-square
+        /* [HGM] speed: ignore moves with wrong to-square */
+        return;
     }
 
     if ((int)board[EP_STATUS] == EP_IRON_LION && (board[rt][ft] == WhiteLion || board[rt][ft] == BlackLion)) {
-        return;  //[HGM] lion
+        /* [HGM] lion */
+        return;
     }
 
     if (!(flags & F_IGNORE_CHECK)) {
@@ -1974,7 +2115,8 @@ void GenLegalCallback(Board board, int flags, ChessMove kind, int rf, int ff, in
             if (kings >= 2) {
                 promo = 0;
             } else {
-                board[rf][ff] = BlackKing;  // [HGM] spartan: promote to King before check-test
+                /* [HGM] spartan: promote to King before check-test */
+                board[rf][ff] = BlackKing;
             }
         }
         check = CheckTest(board, flags, rf, ff, rt, ft, kind == WhiteCapturesEnPassant || kind == BlackCapturesEnPassant);
@@ -2006,33 +2148,36 @@ void GenLegalCallback(Board board, int flags, ChessMove kind, int rf, int ff, in
 
 
 typedef struct {
-    int rf, ff, rt, ft;
+    int rf;
+    int ff;
+    int rt;
+    int ft;
     ChessMove kind;
-    int captures;  // [HGM] losers
+    /* [HGM] losers */
+    int captures;
 } LegalityTestClosure;
 
 
-/* Like GenPseudoLegal, but (1) include castling moves, (2) unless
-   F_IGNORE_CHECK is set in the flags, omit moves that would leave the
-   king in check, and (3) if F_ATOMIC_CAPTURE is set in the flags, omit
-   moves that would destroy your own king.  The CASTLE_OK flags are
-   true if castling is not yet ruled out by a move of the king or
-   rook.  Return TRUE if the player on move is currently in check and
-   F_IGNORE_CHECK is not set.  [HGM] add castlingRights parameter */
+/* Like GenPseudoLegal, but (1) include castling moves, (2) unless F_IGNORE_CHECK is set in the flags, omit moves that would leave
+   the king in check, and (3) if F_ATOMIC_CAPTURE is set in the flags, omit moves that would destroy your own king.  The CASTLE_OK
+   flags are true if castling is not yet ruled out by a move of the king or rook.  Return TRUE if the player on move is currently in
+   check and F_IGNORE_CHECK is not set.  [HGM] add castlingRights parameter */
 int GenLegal(Board board, int flags, MoveCallback callback, void * closure, ChessSquare filter) {
     GenLegalClosure cl;
     int ff, ft, k, left, right, swap;
     int ignoreCheck = (flags & F_IGNORE_CHECK) != 0;
     ChessSquare wKing = WhiteKing, bKing = BlackKing, *castlingRights = board[CASTLING];
-    int inCheck = !ignoreCheck &&
-     CheckTest(board, flags, -1, -1, -1, -1, FALSE);  // kludge alert: this would mark pre-existing checkers if status==1
+    /* kludge alert: this would mark pre-existing checkers if status==1 */
+    int inCheck = !ignoreCheck && CheckTest(board, flags, -1, -1, -1, -1, FALSE);
     char * p;
 
     cl.cb = callback;
     cl.cl = closure;
-    xqCheckers[EP_STATUS] *= 2;  // quasi: if previous CheckTest has been marking, we now set flag for suspending same checkers
+    /* quasi: if previous CheckTest has been marking, we now set flag for suspending same checkers */
+    xqCheckers[EP_STATUS] *= 2;
     if (filter == EmptySquare) {
-        rFilter = fFilter = -1;  // [HGM] speed: do not filter on square if we do not filter on piece
+        /* [HGM] speed: do not filter on square if we do not filter on piece */
+        rFilter = fFilter = -1;
     }
     GenPseudoLegal(board, flags, GenLegalCallback, (void *)&cl, filter);
 
@@ -2041,14 +2186,16 @@ int GenLegal(Board board, int flags, MoveCallback callback, void * closure, Ches
     }
 
     /* Generate castling moves */
-    if (gameInfo.variant == VariantKnightmate) { /* [HGM] Knightmate */
+    if (gameInfo.variant == VariantKnightmate) {
+        /* [HGM] Knightmate */
         wKing = WhiteUnicorn;
         bKing = BlackUnicorn;
     }
 
     p = (flags & F_WHITE_ON_MOVE ? pieceDesc[wKing] : pieceDesc[bKing]);
     if (p && strchr(p, 'O')) {
-        return FALSE;  // [HGM] gen: castlings were already generated from string
+        /* [HGM] gen: castlings were already generated from string */
+        return FALSE;
     }
 
     for (ff = BOARD_WIDTH >> 1; ff >= (BOARD_WIDTH - 1) >> 1; ff-- /*ics wild 1*/) {
@@ -2105,8 +2252,6 @@ int GenLegal(Board board, int flags, MoveCallback callback, void * closure, Ches
         /* generate all potential FRC castling moves (KxR), ignoring flags */
         /* [HGM] test if the Rooks we find have castling rights */
         /* In S-Chess we generate RxK for allowed castlings, for gating at Rook square */
-
-
         if ((flags & F_WHITE_ON_MOVE) != 0) {
             ff = castlingRights[2]; /* King file if we have any rights */
             if (ff != NoRights && board[0][ff] == WhiteKing) {
@@ -2250,31 +2395,33 @@ void CheckTestCallback(Board board, int flags, ChessMove kind, int rf, int ff, i
 
     if (rt == cl->rking && ft == cl->fking) {
         if ((int)xqCheckers[EP_STATUS] >= 2 && xqCheckers[rf][ff]) {
-            return;  // checker is piece with suspended checking power
+            /* checker is piece with suspended checking power */
+            return;
         }
         cl->check++;
-        xqCheckers[rf][ff] = xqCheckers[EP_STATUS] & 1;  // remember who is checking (if status == 1)
+        /* remember who is checking (if status == 1) */
+        xqCheckers[rf][ff] = xqCheckers[EP_STATUS] & 1;
     }
     if ((int)board[EP_STATUS] == EP_ROYAL_LION && (board[rt][ft] == WhiteLion || board[rt][ft] == BlackLion) &&
      (gameInfo.variant != VariantLion || board[rf][ff] != WhiteKing && board[rf][ff] != BlackKing)) {
-        cl->check++;  // [HGM] lion: forbidden counterstrike against Lion equated to putting yourself in check
+        /* [HGM] lion: forbidden counterstrike against Lion equated to putting yourself in check */
+        cl->check++;
     }
 }
 
 
-/* If the player on move were to move from (rf, ff) to (rt, ft), would
-   he leave himself in check?  Or if rf == -1, is the player on move
-   in check now?  enPassant must be TRUE if the indicated move is an
-   e.p. capture.  The possibility of castling out of a check along the
-   back rank is not accounted for (i.e., we still return nonzero), as
-   this is illegal anyway.  Return value is the number of times the
-   king is in check. */
+/* If the player on move were to move from (rf, ff) to (rt, ft), would he leave himself in check?  Or if rf == -1, is the player on
+   move in check now?  enPassant must be TRUE if the indicated move is an e.p. capture.  The possibility of castling out of a check
+   along the back rank is not accounted for (i.e., we still return nonzero), as this is illegal anyway.  Return value is the number
+   of times the king is in check. */
 int CheckTest(Board board, int flags, int rf, int ff, int rt, int ft, int enPassant) {
     CheckTestClosure cl;
     ChessSquare king = flags & F_WHITE_ON_MOVE ? WhiteKing : BlackKing;
-    ChessSquare captured = EmptySquare, ep = 0, trampled = 0, trampled2 = 0;
+    ChessSquare captured = EmptySquare;
+    ChessSquare ep = 0;
+    ChessSquare trampled = 0;
+    ChessSquare trampled2 = 0;
     int saveKill = killX;
-    /*  Suppress warnings on uninitialized variables    */
 
     if (gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) {
         king = flags & F_WHITE_ON_MOVE ? WhiteWazir : BlackWazir;
@@ -2282,26 +2429,30 @@ int CheckTest(Board board, int flags, int rf, int ff, int rt, int ft, int enPass
     if (gameInfo.variant == VariantKnightmate) {
         king = flags & F_WHITE_ON_MOVE ? WhiteUnicorn : BlackUnicorn;
     }
-    if (gameInfo.variant == VariantChu ||
-     gameInfo.variant == VariantShogi) {  // strictly speaking this is not needed, as Chu officially has no check
+    if (gameInfo.variant == VariantChu || gameInfo.variant == VariantShogi) {
+        /* strictly speaking this is not needed, as Chu officially has no check */
         int r, f, k = king, royals = 0, prince = flags & F_WHITE_ON_MOVE ? WhiteMonarch : BlackMonarch;
         if (gameInfo.variant == VariantShogi) {
-            prince -= 11;  // White/BlackFalcon
+            /* White/BlackFalcon */
+            prince -= 11;
         }
         for (r = 0; r < BOARD_HEIGHT; r++) {
             for (f = BOARD_LEFT; f < BOARD_RGHT; f++) {
                 if (board[r][f] == k || board[r][f] == prince) {
                     if (++royals > 1) {
-                        return FALSE;  // no check if we have two royals (ignores double captureby Lion!)
+                        /* no check if we have two royals (ignores double captureby Lion!) */
+                        return FALSE;
                     }
-                    king = board[r][f];  // remember hich one we had
+                    /* remember hich one we had */
+                    king = board[r][f];
                 }
             }
         }
     }
 
     if (PieceToChar(king) == '.') {
-        return 0;  // never in check if the royal piece does not participate
+        /* never in check if the royal piece does not participate */
+        return 0;
     }
 
     if (rt >= 0) {
@@ -2324,33 +2475,33 @@ int CheckTest(Board board, int flags, int rf, int ff, int rt, int ft, int enPass
         }
         if (rf == DROP_RANK) {
             board[rt][ft] = ff;
-        } else {  // [HGM] drop
+        } else {
             board[rt][ft] = board[rf][ff];
             if (rf != rt || ff != ft) {
                 board[rf][ff] = EmptySquare;
             }
         }
         ep = board[EP_STATUS];
-        if (captured == WhiteLion || captured == BlackLion) {  // [HGM] lion: Chu Lion-capture rules
+        if (captured == WhiteLion || captured == BlackLion) {
+            /* [HGM] lion: Chu Lion-capture rules */
             ChessSquare victim = saveKill < 0 ? EmptySquare : trampled;
-            if ((board[rt][ft] == WhiteLion || board[rt][ft] == BlackLion) &&  // capturer is Lion
-             (ff - ft > 1 || ft - ff > 1 || rf - rt > 1 || rt - rf > 1) &&  // captures from a distance
-             (victim == EmptySquare || victim == WhitePawn || victim == BlackPawn  // no or worthless 'bridge'
-              || victim == WhiteCobra || victim == BlackCobra)) {  // (Pawn or Go Between)
-                board[EP_STATUS] = EP_ROYAL_LION;  // on distant Lion x Lion victim must not be pseudo-legally protected
+            if ((board[rt][ft] == WhiteLion || board[rt][ft] == BlackLion) &&  /* capturer is Lion */
+             (ff - ft > 1 || ft - ff > 1 || rf - rt > 1 || rt - rf > 1) &&  /* captures from a distance */
+             (victim == EmptySquare || victim == WhitePawn || victim == BlackPawn  /* no or worthless 'bridge' */
+              || victim == WhiteCobra || victim == BlackCobra)) {  /* (Pawn or Go Between) */
+                board[EP_STATUS] = EP_ROYAL_LION;  /* on distant Lion x Lion victim must not be pseudo-legally protected */
             }
         }
     }
 
-    /* For compatibility with ICS wild 9, we scan the board in the
-       order a1, a2, a3, ... b1, b2, ..., h8 to find the first king,
-       and we test only whether that one is in check. */
+    /* For compatibility with ICS wild 9, we scan the board in the order a1, a2, a3, ... b1, b2, ..., h8 to find the first king, and
+       we test only whether that one is in check. */
     cl.check = 0;
     for (cl.fking = BOARD_LEFT + 0; cl.fking < BOARD_RGHT; cl.fking++) {
         for (cl.rking = 0; cl.rking < BOARD_HEIGHT; cl.rking++) {
             if (board[cl.rking][cl.fking] == king) {
                 if (gameInfo.variant == VariantXiangqi) {
-                    /* [HGM] In Xiangqi opposing Kings means check as well */
+                    /* [HGM] In Xiangqi, opposing Kings means check as well. */
                     int i, dir;
                     dir = (king >= BlackPawn) ? -1 : 1;
                     for (i = cl.rking + dir; i >= 0 && i < BOARD_HEIGHT && board[i][cl.fking] == EmptySquare; i += dir)
@@ -2360,9 +2511,9 @@ int CheckTest(Board board, int flags, int rf, int ff, int rt, int ft, int enPass
                     }
                 }
                 GenPseudoLegal(board, flags ^ F_WHITE_ON_MOVE, CheckTestCallback, (void *)&cl, EmptySquare);
-                if (gameInfo.variant != VariantSpartan ||
-                 cl.check == 0) {  // in Spartan Chess go on to test if other King is checked too
-                    goto undo_move; /* 2-level break */
+                /* in Spartan Chess go on to test if other King is checked too */
+                if (gameInfo.variant != VariantSpartan || cl.check == 0) {
+                    goto undo_move;
                 }
             }
         }
@@ -2371,7 +2522,7 @@ int CheckTest(Board board, int flags, int rf, int ff, int rt, int ft, int enPass
 undo_move:
 
     if (rt >= 0) {
-        if (rf != DROP_RANK) {  // [HGM] drop
+        if (rf != DROP_RANK) {
             board[rf][ff] = board[rt][ft];
         }
         if (enPassant) {
@@ -2389,8 +2540,8 @@ undo_move:
         board[EP_STATUS] = ep;
     }
 
-    return cl.fking < BOARD_RGHT ? cl.check
-                                 : (gameInfo.variant == VariantAtomic) * 1000;  // [HGM] atomic: return 1000 if we have no king
+    /* [HGM] atomic: return 1000 if we have no king */
+    return cl.fking < BOARD_RGHT ? cl.check : (gameInfo.variant == VariantAtomic) * 1000;
 }
 
 typedef struct {
@@ -2401,19 +2552,22 @@ void EnPassantCallback(Board board, int flags, ChessMove kind, int rf, int ff, i
     EnPassantClosure * cl = (EnPassantClosure *)closure;
     if (rt == cl->rt && ft == cl->ft) {
         if (kind = WhiteCapturesEnPassant || kind == BlackCapturesEnPassant) {
-            cl->ep = 2;  // is e.p. capture
+            /* is e.p. capture */
+            cl->ep = 2;
         }
         if (epFlag) {
-            cl->ep = 0;  // for backward compatibility lets any imn pawn multi-push handle by old code
+            /* for backward compatibility lets any imn pawn multi-push handle by old code */
+            cl->ep = 0;
         }
         if (viaX != 100) {
-            board[EP_FILE] = viaX, board[EP_RANK] = viaY, cl->ep = 1;  // generates e.p. rights
+            /* generates e.p. rights */
+            board[EP_FILE] = viaX, board[EP_RANK] = viaY, cl->ep = 1;
         }
     }
 }
 
-int EnPassantTest(Board board, int flags, int rf, int ff, int rt, int ft,
- int promoChar) {  // sets e.p. square in board if move generated rights, returns whether move is an e.p. capture
+/* sets e.p. square in board if move generated rights, returns whether move is an e.p. capture */
+int EnPassantTest(Board board, int flags, int rf, int ff, int rt, int ft, int promoChar) {
     EnPassantClosure cl;
     ChessSquare piece = board[rf][ff];
     cl.rt = rt;
@@ -2436,45 +2590,54 @@ int HasLion(Board board, int flags) {
     return 0;
 }
 
-ChessMove LegalDrop(
- Board board, int flags, ChessSquare piece, int rt, int ft) {  // [HGM] put drop legality testing in separate routine for clarity
+/* [HGM] put drop legality testing in separate routine for clarity */
+ChessMove LegalDrop(Board board, int flags, ChessSquare piece, int rt, int ft) {
     int n, p = piece;
     if (appData.debugMode) {
         fprintf(debugFP, "LegalDrop: %d @ %d,%d)\n", piece, ft, rt);
     }
     if (board[rt][ft] != EmptySquare) {
-        return ImpossibleMove;  // must drop to empty square
+        /* must drop to empty square */
+        return ImpossibleMove;
     }
     if (PieceToChar(piece) == '+') {
         p = CHUDEMOTED(p);
     }
     n = PieceToNumber(p);
     if ((gameInfo.holdingsWidth == 0 || (flags & F_WHITE_ON_MOVE ? board[n][BOARD_WIDTH - 1] : board[handSize - 1 - n][0]) != p) &&
-     gameInfo.variant != VariantBughouse) {  // in bughouse we don't check for availability, because ICS doesn't always tell us
-        return ImpossibleMove;  // piece not available
+     gameInfo.variant != VariantBughouse) {  /* in bughouse we don't check for availability, because ICS doesn't always tell us */
+        /* piece not available */
+        return ImpossibleMove;
     }
-    if (gameInfo.variant == VariantShogi && !autoProm[piece]) {  // in Shogi lots of drops are forbidden! (but not in Kyoto/micro-)
+    if (gameInfo.variant == VariantShogi && !autoProm[piece]) {
+        /* in Shogi lots of drops are forbidden! (but not in Kyoto/micro-) */
         if ((piece == WhitePawn || piece == WhiteQueen) && rt == BOARD_HEIGHT - 1 ||
          (piece == BlackPawn || piece == BlackQueen) && rt == 0 || piece == WhiteKnight && rt > BOARD_HEIGHT - 3 ||
          piece == BlackKnight && rt < 2) {
-            return IllegalMove;  // e.g. where dropped piece has no moves
+            /* e.g., where dropped piece has no moves */
+            return IllegalMove;
         }
         if (piece == WhitePawn || piece == BlackPawn) {
-            int r, max = 1 + (BOARD_HEIGHT == 7);  // two Pawns per file in Tori!
+            int r;
+            /* two Pawns per file in Tori! */
+            int max = 1 + (BOARD_HEIGHT == 7);
             for (r = 1; r < BOARD_HEIGHT - 1; r++) {
                 if (!(max -= (board[r][ft] == piece))) {
-                    return IllegalMove;  // or there already is a Pawn in file
+                    /* or there already is a Pawn in file */
+                    return IllegalMove;
                 }
             }
-            // should still test if we mate with this Pawn
+            /* should still test if we mate with this Pawn */
         }
-    } else if (gameInfo.variant == VariantSChess) {  // only back-rank drops
+    } else if (gameInfo.variant == VariantSChess) {
+        /* only back-rank drops */
         if (rt != (piece < BlackPawn ? 0 : BOARD_HEIGHT - 1)) {
             return IllegalMove;
         }
     } else {
         if ((piece == WhitePawn || piece == BlackPawn) && (rt == 0 || rt == BOARD_HEIGHT - 1)) {
-            return IllegalMove; /* no pawn drops on 1st/8th */
+            /* no pawn drops on 1st/8th */
+            return IllegalMove;
         }
     }
     if (appData.debugMode) {
@@ -2492,7 +2655,8 @@ void LegalityTestCallback(Board board, int flags, ChessMove kind, int rf, int ff
     register LegalityTestClosure * cl = (LegalityTestClosure *)closure;
 
     if (board[rt][ft] != EmptySquare || kind == WhiteCapturesEnPassant || kind == BlackCapturesEnPassant) {
-        cl->captures++;  // [HGM] losers: count legal captures
+        /* [HGM] losers: count legal captures */
+        cl->captures++;
     }
     if (rf == cl->rf && ff == cl->ff && rt == cl->rt && ft == cl->ft) {
         cl->kind = kind;
@@ -2504,7 +2668,8 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
     ChessSquare piece, filterPiece;
 
     if (quickFlag) {
-        flags = flags & ~1 | quickFlag & 1;  // [HGM] speed: in quick mode quickFlag specifies side-to-move.
+        /* [HGM] speed: in quick mode quickFlag specifies side-to-move. */
+        flags = flags & ~1 | quickFlag & 1;
     }
     if (rf == DROP_RANK) {
         return LegalDrop(board, flags, ff, rt, ft);
@@ -2515,7 +2680,7 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
     }
 
     /* [HGM] Cobra and Falcon are wildcard pieces; consider all their moves legal */
-    /* (perhaps we should disallow moves that obviously leave us in check?)              */
+    /* (perhaps we should disallow moves that obviously leave us in check?) */
     if ((piece == WhiteFalcon || piece == BlackFalcon || piece == WhiteCobra || piece == BlackCobra) &&
      gameInfo.variant != VariantChu && !pieceDesc[piece]) {
         return CheckTest(board, flags, rf, ff, rt, ft, FALSE) ? IllegalMove : NormalMove;
@@ -2523,32 +2688,43 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
 
     cl.rf = rf;
     cl.ff = ff;
-    cl.rt = rFilter = rt;  // [HGM] speed: filter on to-square
-    cl.ft = fFilter = ft;
+    /* [HGM] speed: filter on to-square */
+    rFilter = rt;
+    cl.rt = rt;
+    fFilter = ft;
+    cl.ft = ft;
     cl.kind = IllegalMove;
-    cl.captures = 0;  // [HGM] losers: prepare to count legal captures.
+    /* [HGM] losers: prepare to count legal captures. */
+    cl.captures = 0;
     if (flags & F_MANDATORY_CAPTURE) {
-        filterPiece = EmptySquare;  // [HGM] speed: do not filter in suicide, to find all captures
+        /* [HGM] speed: do not filter in suicide, to find all captures */
+        filterPiece = EmptySquare;
     }
     GenLegal(board, flags, LegalityTestCallback, (void *)&cl, filterPiece);
     if ((flags & F_MANDATORY_CAPTURE) && cl.captures && board[rt][ft] == EmptySquare && cl.kind != WhiteCapturesEnPassant &&
      cl.kind != BlackCapturesEnPassant) {
-        return (IllegalMove);  // [HGM] losers: if there are legal captures, non-capts are illegal
+        /* [HGM] losers: if there are legal captures, non-capts are illegal */
+        return (IllegalMove);
     }
 
+    /* [HGM] is this ever the case? */
     if (promoChar == 'x') {
-        promoChar = NULLCHAR;  // [HGM] is this ever the case?
+        promoChar = NULLCHAR;
     }
     if (autoProm[piece]) {
-        promoChar = NULLCHAR;  // ignore promotion characters on auto-promoting pieces
+        /* ignore promotion characters on auto-promoting pieces */
+        promoChar = NULLCHAR;
     }
     if (gameInfo.variant == VariantSChess) {
-        if (!gameInfo.holdingsSize) {  // holdingless Seirawan
-            if (promoChar == NULLCHAR) {  // gating indicator could be missing
+        if (!gameInfo.holdingsSize) {
+            /* holdingless Seirawan */
+            if (promoChar == NULLCHAR) {
+                /* gating indicator could be missing */
                 if (flags & F_WHITE_ON_MOVE) {
                     if (rf == 1) {
                         if (board[0][ff] != DarkSquare) {
-                            return WhitePromotion;  // mandatory gating, report it as promotion
+                            /* mandatory gating, report it as promotion */
+                            return WhitePromotion;
                         }
                         if (cl.kind == WhiteQueenSideCastle && board[0][0] != DarkSquare) {
                             return WhitePromotion;
@@ -2572,15 +2748,19 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
                 }
             }
         } else if (promoChar && promoChar != '=' && board[rf][ff] != WhitePawn && board[rf][ff] != BlackPawn) {
-            if (board[rf][ff] < BlackPawn) {  // white
+            if (board[rf][ff] < BlackPawn) {
+                /* white */
                 if (rf != 0) {
-                    return IllegalMove;  // must be on back rank
+                    /* must be on back rank */
+                    return IllegalMove;
                 }
                 if (!(board[VIRGIN][ff] & VIRGIN_W)) {
-                    return IllegalMove;  // non-virgin
+                    /* non-virgin */
+                    return IllegalMove;
                 }
                 if (board[PieceToNumber(CharToPiece(ToUpper(promoChar)))][BOARD_WIDTH - 2] == 0) {
-                    return ImpossibleMove;  // must be in stock
+                    /* must be in stock */
+                    return ImpossibleMove;
                 }
                 if (cl.kind == WhiteHSideCastleFR && (ff == BOARD_RGHT - 2 || ff == BOARD_RGHT - 3)) {
                     return ImpossibleMove;
@@ -2589,13 +2769,17 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
                     return ImpossibleMove;
                 }
             } else {
+                /* black */
                 if (rf != BOARD_HEIGHT - 1) {
+                    /* must be on back rank */
                     return IllegalMove;
                 }
                 if (!(board[VIRGIN][ff] & VIRGIN_B)) {
-                    return IllegalMove;  // non-virgin
+                    /* non-virgin */
+                    return IllegalMove;
                 }
                 if (board[BOARD_HEIGHT - 1 - PieceToNumber(CharToPiece(ToLower(promoChar)))][1] == 0) {
+                    /* must be in stock */
                     return ImpossibleMove;
                 }
                 if (cl.kind == BlackHSideCastleFR && (ff == BOARD_RGHT - 2 || ff == BOARD_RGHT - 3)) {
@@ -2626,12 +2810,14 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
             int zone = BOARD_HEIGHT / 3 + (BOARD_HEIGHT == 8);
 
             if (promoChar == PieceToChar(BlackQueen)) {
-                promoChar = NULLCHAR; /* [HGM] Kludge */
+                /* [HGM] Kludge */
+                promoChar = NULLCHAR;
             }
-            if (promoChar == 'd' && (piece == WhiteRook || piece == BlackRook) ||
-             promoChar == 'h' && (piece == WhiteBishop || piece == BlackBishop) ||
-             promoChar == 'g' && (piece <= WhiteFerz || piece <= BlackFerz && piece >= BlackPawn)) {
-                promoChar = '+';  // allowed ICS notations
+            if (promoChar == 'd' && (piece == WhiteRook || piece == BlackRook)
+             || promoChar == 'h' && (piece == WhiteBishop || piece == BlackBishop)
+             || promoChar == 'g' && (piece <= WhiteFerz || piece <= BlackFerz && piece >= BlackPawn)) {
+                /* allowed ICS notations */
+                promoChar = '+';
             }
             if (appData.debugMode) {
                 fprintf(debugFP, "SHOGI promoChar = %c\n", promoChar ? promoChar : '-');
@@ -2641,9 +2827,11 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
             } else if (flags & F_WHITE_ON_MOVE) {
                 if ((int)piece < (int)WhiteWazir && (rf >= BOARD_HEIGHT - zone || rt >= BOARD_HEIGHT - zone)) {
                     if ((piece == WhitePawn || piece == WhiteQueen) && rt > BOARD_HEIGHT - 2 ||
-                     piece == WhiteKnight && rt > BOARD_HEIGHT - 3) { /* promotion mandatory */
+                     piece == WhiteKnight && rt > BOARD_HEIGHT - 3) {
+                        /* promotion mandatory */
                         cl.kind = promoChar == '=' ? IllegalMove : WhitePromotion;
-                    } else { /* promotion optional, default is defer */
+                    } else {
+                        /* promotion optional, default is defer */
                         cl.kind = promoChar == '+' ? WhitePromotion : WhiteNonPromotion;
                     }
                 } else {
@@ -2652,9 +2840,11 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
             } else {
                 if ((int)piece < (int)BlackWazir && (rf < zone || rt < zone)) {
                     if ((piece == BlackPawn || piece == BlackQueen) && rt < 1 ||
-                     piece == BlackKnight && rt < 2) { /* promotion obligatory */
+                     piece == BlackKnight && rt < 2) {
+                        /* promotion obligatory */
                         cl.kind = promoChar == '=' ? IllegalMove : BlackPromotion;
-                    } else { /* promotion optional, default is defer */
+                    } else {
+                        /* promotion optional, default is defer */
                         cl.kind = promoChar == '+' ? BlackPromotion : BlackNonPromotion;
                     }
                 } else {
@@ -2663,12 +2853,14 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
             }
         }
     } else if (promoChar != NULLCHAR) {
-        if (cl.kind == NormalMove && promoChar == '+') {  // allow shogi-style promotion is pieceToChar specifies them
+        if (cl.kind == NormalMove && promoChar == '+') {
+            /* allow shogi-style promotion if pieceToChar specifies them */
             ChessSquare piece = board[rf][ff];
             if (piece < BlackPawn ? piece > WhiteMan : piece > BlackMan) {
-                return ImpossibleMove;  // already promoted
+                /* already promoted */
+                return ImpossibleMove;
             }
-            // should test if in zone, really
+            /* should test if in zone, really */
             if (gameInfo.variant == VariantChuChess && (piece == WhiteKnight || piece == BlackKnight) && HasLion(board, flags)) {
                 return IllegalMove;
             }
@@ -2677,44 +2869,50 @@ ChessMove LegalityTest(Board board, int flags, int rf, int ff, int rt, int ft, i
             }
         } else if (promoChar == '=') {
             cl.kind = IllegalMove;
-        } else  // [HGM] shogi: no deferred promotion outside Shogi
-            if (cl.kind == WhitePromotion || cl.kind == BlackPromotion) {
-                ChessSquare piece = CharToPiece(flags & F_WHITE_ON_MOVE ? ToUpper(promoChar) : ToLower(promoChar));
-                if (piece == EmptySquare) {
-                    cl.kind = ImpossibleMove;  // non-existing piece
-                }
-                if (gameInfo.variant == VariantChuChess && promoChar == 'l' && HasLion(board, flags)) {
-                    cl.kind = IllegalMove;  // no two Lions
-                } else if (gameInfo.variant == VariantSpartan && cl.kind == BlackPromotion) {
-                    if (promoChar != PieceToChar(BlackKing)) {
-                        if (CheckTest(board, flags, rf, ff, rt, ft, FALSE)) {
-                            cl.kind = IllegalMove;  // [HGM] spartan: only promotion to King was possible
-                        }
-                        if (piece == BlackLance) {
-                            cl.kind = ImpossibleMove;
-                        }
-                    } else {  // promotion to King allowed only if we do not have two yet
-                        int r, f, kings = 0;
-                        for (r = 0; r < BOARD_HEIGHT; r++) {
-                            for (f = BOARD_LEFT; f < BOARD_RGHT; f++) {
-                                kings += (board[r][f] == BlackKing);
-                            }
-                        }
-                        if (kings == 2) {
-                            cl.kind = IllegalMove;
+        } else /* [HGM] shogi: no deferred promotion outside Shogi */ if (cl.kind == WhitePromotion || cl.kind == BlackPromotion) {
+            ChessSquare piece = CharToPiece(flags & F_WHITE_ON_MOVE ? ToUpper(promoChar) : ToLower(promoChar));
+            if (piece == EmptySquare) {
+                /* non-existing piece */
+                cl.kind = ImpossibleMove;
+            }
+            if (gameInfo.variant == VariantChuChess && promoChar == 'l' && HasLion(board, flags)) {
+                /* no two Lions */
+                cl.kind = IllegalMove;
+            } else if (gameInfo.variant == VariantSpartan && cl.kind == BlackPromotion) {
+                if (promoChar != PieceToChar(BlackKing)) {
+                    if (CheckTest(board, flags, rf, ff, rt, ft, FALSE)) {
+                        /* [HGM] spartan: only promotion to King was possible */
+                        cl.kind = IllegalMove;
+                    }
+                    if (piece == BlackLance) {
+                        cl.kind = ImpossibleMove;
+                    }
+                } else {
+                    /* promotion to King allowed only if we do not have two yet */
+                    int r, f, kings = 0;
+                    for (r = 0; r < BOARD_HEIGHT; r++) {
+                        for (f = BOARD_LEFT; f < BOARD_RGHT; f++) {
+                            kings += (board[r][f] == BlackKing);
                         }
                     }
-                } else if (piece == WhitePawn && rt == BOARD_HEIGHT - 1 || piece == BlackPawn && rt == 0) {
-                    cl.kind = IllegalMove;  // cannot stay Pawn on last rank in any variant
-                } else if ((piece == WhiteUnicorn || piece == BlackUnicorn) && gameInfo.variant == VariantKnightmate) {
-                    cl.kind = IllegalMove;  // promotion to Royal Knight not allowed
-                } else if ((piece == WhiteKing || piece == BlackKing) && gameInfo.variant != VariantSuicide &&
-                 gameInfo.variant != VariantGiveaway) {
-                    cl.kind = IllegalMove;  // promotion to King usually not allowed
+                    if (kings == 2) {
+                        cl.kind = IllegalMove;
+                    }
                 }
-            } else {
+            } else if (piece == WhitePawn && rt == BOARD_HEIGHT - 1 || piece == BlackPawn && rt == 0) {
+                /* cannot stay Pawn on last rank in any variant */
+                cl.kind = IllegalMove;
+            } else if ((piece == WhiteUnicorn || piece == BlackUnicorn) && gameInfo.variant == VariantKnightmate) {
+                /* promotion to Royal Knight not allowed */
+                cl.kind = IllegalMove;
+            } else if ((piece == WhiteKing || piece == BlackKing) && gameInfo.variant != VariantSuicide &&
+             gameInfo.variant != VariantGiveaway) {
+                /* promotion to King usually not allowed */
                 cl.kind = IllegalMove;
             }
+        } else {
+            cl.kind = IllegalMove;
+        }
     }
     return cl.kind;
 }
@@ -2739,8 +2937,8 @@ int MateTest(Board board, int flags) {
 
     for (r = 0; r < BOARD_HEIGHT; r++) {
         for (f = BOARD_LEFT; f < BOARD_RGHT; f++) {
-            // [HGM] losers: Count pieces and kings, to detect other unorthodox winning conditions
-            nrKing += (board[r][f] == king);  // stm has king
+            /* [HGM] losers: Count pieces and kings, to detect other unorthodox winning conditions */
+            nrKing += (board[r][f] == king);  /* stm has king */
             if (board[r][f] != EmptySquare) {
                 if ((int)board[r][f] <= (int)king && (int)board[r][f] >= (int)king - (int)WhiteKing + (int)WhitePawn) {
                     myPieces++;
@@ -2750,7 +2948,7 @@ int MateTest(Board board, int flags) {
             }
         }
     }
-    switch (gameInfo.variant) {  // [HGM] losers: extinction wins
+    switch (gameInfo.variant) {  /* [HGM] losers: extinction wins */
     case VariantShatranj:
         if (hisPieces == 1) {
             return myPieces > 1 ? MT_BARE : MT_DRAW;
@@ -2769,21 +2967,22 @@ int MateTest(Board board, int flags) {
     }
     cl.count = 0;
     inCheck = GenLegal(board, flags, MateTestCallback, (void *)&cl, EmptySquare);
-    // [HGM] 3check: yet to do!
+    /* [HGM] 3check: yet to do! */
     if (cl.count > 0) {
         return inCheck ? MT_CHECK : MT_NONE;
     } else {
         if (gameInfo.holdingsWidth && gameInfo.variant != VariantSuper && gameInfo.variant != VariantGreat &&
-         gameInfo.variant != VariantSChess && gameInfo.variant != VariantGrand) {  // drop game
+         gameInfo.variant != VariantSChess && gameInfo.variant != VariantGrand) {
+            /* drop game */
             int r, f, n, holdings = flags & F_WHITE_ON_MOVE ? BOARD_WIDTH - 1 : 0;
             for (r = 0; r < BOARD_HEIGHT; r++) {
                 for (f = BOARD_LEFT; f < BOARD_RGHT; f++) {
-                    if (board[r][f] == EmptySquare) {  // all empty squares
-                        for (n = 0; n < BOARD_HEIGHT; n++) {  // all pieces in hand
+                    if (board[r][f] == EmptySquare) {  /* all empty squares */
+                        for (n = 0; n < BOARD_HEIGHT; n++) {  /* all pieces in hand */
                             if (board[n][holdings] != EmptySquare) {
                                 int moveType = LegalDrop(board, flags, board[n][holdings], r, f);
                                 if (moveType == WhiteDrop || moveType == BlackDrop) {
-                                    return (inCheck ? MT_CHECK : MT_NONE);  // we have legal drop
+                                    return (inCheck ? MT_CHECK : MT_NONE);  /* we have legal drop */
                                 }
                             }
                         }
@@ -2791,14 +2990,17 @@ int MateTest(Board board, int flags) {
                 }
             }
         }
-        if (gameInfo.variant == VariantSuicide) {  // [HGM] losers: always stalemate, since no check, but result varies
+        if (gameInfo.variant == VariantSuicide) {
+            /* [HGM] losers: always stalemate, since no check, but result varies */
             return myPieces == hisPieces ? MT_STALEMATE : myPieces > hisPieces ? MT_STAINMATE : MT_STEALMATE;
         } else if (gameInfo.variant == VariantLosers) {
             return inCheck ? MT_TRICKMATE : MT_STEALMATE;
         } else if (gameInfo.variant == VariantGiveaway || gameInfo.variant == VariantDuck) {
-            return MT_STEALMATE;  // no check exists, stalemated = win
+            /* no check exists, stalemated = win */
+            return MT_STEALMATE;
         } else if (gameInfo.variant == VariantJanggi && !inCheck) {
-            return MT_NONE;  // in Janggi turn passing is always an option
+            /* in Janggi turn passing is always an option */
+            return MT_NONE;
         }
 
         return inCheck                                                                                               ? MT_CHECKMATE
@@ -2814,11 +3016,12 @@ void DisambiguateCallback(Board board, int flags, ChessMove kind, int rf, int ff
     register DisambiguateClosure * cl = (DisambiguateClosure *)closure;
     int wildCard = FALSE;
     ChessSquare piece = board[rf][ff];
-    extern int kifu;  // in parser.c
+    extern int kifu;  /* in parser.c */
 
-    // [HGM] wild: for wild-card pieces rt and rf are dummies
+    /* [HGM] wild: for wild-card pieces rt and rf are dummies */
     if (piece == WhiteFalcon || piece == BlackFalcon || piece == WhiteCobra || piece == BlackCobra) {
-        wildCard = !pieceDefs;  // no wildcards when engine defined pieces
+        /* no wildcards when engine defined pieces */
+        wildCard = !pieceDefs;
     }
 
     if ((cl->pieceIn == EmptySquare || cl->pieceIn == board[rf][ff] ||
@@ -2826,40 +3029,51 @@ void DisambiguateCallback(Board board, int flags, ChessMove kind, int rf, int ff
      (cl->rfIn == -1 || cl->rfIn == rf) && (cl->ffIn == -1 || cl->ffIn == ff) && (cl->rtIn == -1 || cl->rtIn == rt || wildCard) &&
      (cl->ftIn == -1 || cl->ftIn == ft || wildCard)) {
         if (cl->count && rf == cl->rf && ff == cl->ff && rt == cl->rt && ft == cl->ft) {
-            return;  // duplicate move
+            /* duplicate move */
+            return;
         }
 
-        if (cl->count == 1 && kifu & 0x7e && cl->rfIn == -1 && cl->ffIn == -1) {  // traditional Shogi disambiguation required
+        if (cl->count == 1 && kifu & 0x7e && cl->rfIn == -1 && cl->ffIn == -1) {
+            /* traditional Shogi disambiguation required */
             int this = 1, other = 1;
             if (kifu & 2) {
-                this &= (flags & 1 ? rt > rf : rt < rf), other &= (flags & 1 ? cl->rt > cl->rf : cl->rt < cl->rf);
+                this &= (flags & 1 ? rt > rf : rt < rf);
+                other &= (flags & 1 ? cl->rt > cl->rf : cl->rt < cl->rf);
             }
             if (kifu & 4) {
-                this &= (flags & 1 ? rt < rf : rt > rf), other &= (flags & 1 ? cl->rt < cl->rf : cl->rt > cl->rf);
+                this &= (flags & 1 ? rt < rf : rt > rf);
+                other &= (flags & 1 ? cl->rt < cl->rf : cl->rt > cl->rf);
             }
             if (kifu & 8) {
-                this &= (rf == rt), other &= (cl->rt == cl->rf);
+                this &= (rf == rt);
+                other &= (cl->rt == cl->rf);
             }
             if (kifu & 0x10) {
-                this &= (flags & 1 ? ft <= ff : ft >= ff), other &= (flags & 1 ? cl->ft <= cl->ff : cl->ft >= cl->ff);
+                this &= (flags & 1 ? ft <= ff : ft >= ff);
+                other &= (flags & 1 ? cl->ft <= cl->ff : cl->ft >= cl->ff);
             }
             if (kifu & 0x20) {
-                this &= (flags & 1 ? ft >= ff : ft <= ff), other &= (flags & 1 ? cl->ft >= cl->ff : cl->ft <= cl->ff);
+                this &= (flags & 1 ? ft >= ff : ft <= ff);
+                other &= (flags & 1 ? cl->ft >= cl->ff : cl->ft <= cl->ff);
             }
             if (kifu & 0x40) {
-                this &= (ft == ff), other &= (cl->ft == cl->ff);  // should never be used
+                this &= (ft == ff);
+                other &= (cl->ft == cl->ff);
+                /* should never be used */
             }
             if (!other) {
-                cl->count--;  // the old move did not satisfy the requested relative position, erase it
+                /* the old move did not satisfy the requested relative position, erase it */
+                cl->count--;
             }
             if (!this) {
-                return;  // the current move does not satisfy the requested relative position, ignore it
+                /* the current move does not satisfy the requested relative position, ignore it */
+                return;
             }
         }
 
         cl->count++;
         if (cl->count == 1 || board[rt][ft] != EmptySquare) {
-            // [HGM] oneclick: if multiple moves, be sure we remember capture
+            /* [HGM] oneclick: if multiple moves, be sure we remember capture */
             cl->piece = board[rf][ff];
             cl->rf = rf;
             cl->ff = ff;
@@ -2867,7 +3081,8 @@ void DisambiguateCallback(Board board, int flags, ChessMove kind, int rf, int ff
             cl->ft = wildCard ? cl->ftIn : ft;
             cl->kind = kind;
         }
-        cl->captures += (board[rt][ft] != EmptySquare);  // [HGM] oneclick: count captures
+        /* [HGM] oneclick: count captures */
+        cl->captures += (board[rt][ft] != EmptySquare);
     }
 }
 
@@ -2876,25 +3091,29 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
     char c = closure->promoCharIn;
 
     if (quickFlag) {
-        flags = flags & ~1 | quickFlag & 1;  // [HGM] speed: in quick mode quickFlag specifies side-to-move.
+        /* [HGM] speed: in quick mode quickFlag specifies side-to-move. */
+        flags = flags & ~1 | quickFlag & 1;
     }
     closure->count = closure->captures = 0;
     closure->rf = closure->ff = closure->rt = closure->ft = 0;
     closure->kind = ImpossibleMove;
-    rFilter = closure->rtIn;  // [HGM] speed: only consider moves to given to-square
+    /* [HGM] speed: only consider moves to given to-square */
+    rFilter = closure->rtIn;
     fFilter = closure->ftIn;
-    if (quickFlag) {  // [HGM] speed: try without check test first, because if that is not ambiguous, we are happy
+    if (quickFlag) {
+        /* [HGM] speed: try without check test first, because if that is not ambiguous, we are happy */
         GenLegal(board, flags | F_IGNORE_CHECK, DisambiguateCallback, (void *)closure, closure->pieceIn);
-        if (closure->count > 1) {  // gamble did not pay off. retry with check test to resolve ambiguity
+        if (closure->count > 1) {
+            /* gamble did not pay off. retry with check test to resolve ambiguity */
             closure->count = closure->captures = 0;
             closure->rf = closure->ff = closure->rt = closure->ft = 0;
             closure->kind = ImpossibleMove;
-            GenLegal(
-             board, flags, DisambiguateCallback, (void *)closure, closure->pieceIn);  // [HGM] speed: only pieces of requested type
+            /* [HGM] speed: only pieces of requested type */
+            GenLegal(board, flags, DisambiguateCallback, (void *)closure, closure->pieceIn);
         }
     } else {
-        GenLegal(
-         board, flags, DisambiguateCallback, (void *)closure, closure->pieceIn);  // [HGM] speed: only pieces of requested type
+        /* [HGM] speed: only pieces of requested type */
+        GenLegal(board, flags, DisambiguateCallback, (void *)closure, closure->pieceIn);
     }
     if (closure->count == 0) {
         /* See if it's an illegal move due to check */
@@ -2903,17 +3122,23 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
         if (closure->count == 0) {
             /* No, it's not even that */
             if (!appData.testLegality && !pieceDefs && closure->pieceIn != EmptySquare) {
-                int f, r;  // if there is only a single piece of the requested type on the board, use that
-                closure->rt = closure->rtIn, closure->ft = closure->ftIn;
+                int f;
+                int r;
+                /* if there is only a single piece of the requested type on the board, use that */
+                closure->rt = closure->rtIn;
+                closure->ft = closure->ftIn;
                 for (r = 0; r < BOARD_HEIGHT; r++) {
                     for (f = BOARD_LEFT; f < BOARD_RGHT; f++) {
                         if (board[r][f] == closure->pieceIn) {
-                            closure->count++, closure->rf = r, closure->ff = f;
+                            closure->count++;
+                            closure->rf = r;
+                            closure->ff = f;
                         }
                     }
                 }
                 if (closure->count > 1) {
-                    illegal = 0;  // ambiguous
+                    /* ambiguous */
+                    illegal = 0;
                 }
             }
             if (closure->count == 0) {
@@ -2929,41 +3154,48 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
                 return;
             }
         }
-    } else if (closure->count > 1 &&
-     closure->rtIn >= 0) {  // [HGM] gen: move is ambiguous under engine-defined rules (and not one-click)
+    } else if (closure->count > 1 && closure->rtIn >= 0) {
+        /* [HGM] gen: move is ambiguous under engine-defined rules (and not one-click) */
         if ((gameInfo.variant == VariantXiangqi || gameInfo.variant == VariantJanggi) &&
          (closure->pieceIn == WhitePawn || closure->pieceIn == BlackPawn) && closure->ffIn < 0) {
-            closure->ffIn =
-             closure->ftIn;  // closure->pieceIn = (flags & 1 ? BlackPawn : WhitePawn); // forward Pawn push has priority
+            /* closure->pieceIn = (flags & 1 ? BlackPawn : WhitePawn); // forward Pawn push has priority */
+            closure->ffIn = closure->ftIn;
             Disambiguate(board, flags, closure);
             return;
         }
         if (pieceDefs) {
             DisambiguateClosure spare = *closure;
             pieceDefs = FALSE;
-            spare.count = 0;  // See if the (erroneous) built-in rules would resolve that
+            /* See if the (erroneous) built-in rules would resolve that */
+            spare.count = 0;
             GenLegal(board, flags, DisambiguateCallback, (void *)&spare, closure->pieceIn);
             if (spare.count == 1) {
-                *closure = spare;  // It does, so use those in stead (game from file saved before gen patch?)
+                /* It does, so use those in stead (game from file saved before gen patch?) */
+                *closure = spare;
             }
             pieceDefs = TRUE;
         }
     }
 
     if (c == 'x') {
-        c = NULLCHAR;  // get rid of any 'x' (which should never happen?)
+        /* get rid of any 'x' (which should never happen?) */
+        c = NULLCHAR;
     }
     if (gameInfo.variant == VariantSChess && c && c != '=' && closure->piece != WhitePawn && closure->piece != BlackPawn) {
-        if (closure->piece < BlackPawn) {  // white
+        if (closure->piece < BlackPawn) {
+            /* white */
             if (closure->rf != !gameInfo.holdingsSize) {
-                closure->kind = IllegalMove;  // must be on back rank
+                /* must be on back rank */
+                closure->kind = IllegalMove;
             }
             if (!(board[VIRGIN][closure->ff] & VIRGIN_W)) {
-                closure->kind = IllegalMove;  // non-virgin
+                /* non-virgin */
+                closure->kind = IllegalMove;
             }
             if (gameInfo.holdingsSize) {
                 if (board[PieceToNumber(CharToPiece(ToUpper(c)))][BOARD_WIDTH - 2] == 0) {
-                    closure->kind = ImpossibleMove;  // must be in stock
+                    /* must be in stock */
+                    closure->kind = ImpossibleMove;
                 }
                 if (closure->kind == WhiteHSideCastleFR && (closure->ff == BOARD_RGHT - 2 || closure->ff == BOARD_RGHT - 3)) {
                     closure->kind = ImpossibleMove;
@@ -2973,11 +3205,13 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
                 }
             }
         } else {
+            /* black */
             if (closure->rf != BOARD_HEIGHT - 1 - !gameInfo.holdingsSize) {
                 closure->kind = IllegalMove;
             }
             if (!(board[VIRGIN][closure->ff] & VIRGIN_B)) {
-                closure->kind = IllegalMove;  // non-virgin
+                /* non-virgin */
+                closure->kind = IllegalMove;
             }
             if (gameInfo.holdingsSize) {
                 if (board[BOARD_HEIGHT - 1 - PieceToNumber(CharToPiece(ToLower(c)))][1] == 0) {
@@ -2993,7 +3227,8 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
         }
     } else if (gameInfo.variant == VariantChu) {
         if (c == '+') {
-            closure->kind = (flags & F_WHITE_ON_MOVE ? WhitePromotion : BlackPromotion);  // for now, accept any
+            /* for now, accept any */
+            closure->kind = (flags & F_WHITE_ON_MOVE ? WhitePromotion : BlackPromotion);
         }
     } else if (gameInfo.variant == VariantShogi) {
         /* [HGM] Shogi promotions. On input, '=' means defer, '+' promote. Afterwards, c is set to '+' for promotions, NULL other */
@@ -3003,16 +3238,19 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
             if (c == 'd' && (piece == WhiteRook || piece == BlackRook) ||
              c == 'h' && (piece == WhiteBishop || piece == BlackBishop) ||
              c == 'g' && (piece <= WhiteFerz || piece <= BlackFerz && piece >= BlackPawn)) {
-                c = '+';  // allowed ICS notations
+                c = '+';  /* allowed ICS notations */
             }
             if (c != NULLCHAR && c != '+' && c != '=') {
-                closure->kind = IllegalMove;  // otherwise specifying a piece is illegal
+                /* otherwise specifying a piece is illegal */
+                closure->kind = IllegalMove;
             } else if (flags & F_WHITE_ON_MOVE) {
                 if ((int)piece < (int)WhiteWazir && (closure->rf >= BOARD_HEIGHT - zone || closure->rt >= BOARD_HEIGHT - zone)) {
                     if ((piece == WhitePawn || piece == WhiteQueen) && closure->rt > BOARD_HEIGHT - 2 ||
-                     piece == WhiteKnight && closure->rt > BOARD_HEIGHT - 3) { /* promotion mandatory */
+                     piece == WhiteKnight && closure->rt > BOARD_HEIGHT - 3) {
+                        /* promotion mandatory */
                         closure->kind = c == '=' ? IllegalMove : WhitePromotion;
-                    } else { /* promotion optional, default is defer */
+                    } else {
+                        /* promotion optional, default is defer */
                         closure->kind = c == '+' ? WhitePromotion : WhiteNonPromotion;
                     }
                 } else {
@@ -3021,9 +3259,11 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
             } else {
                 if ((int)piece < (int)BlackWazir && (closure->rf < zone || closure->rt < zone)) {
                     if ((piece == BlackPawn || piece == BlackQueen) && closure->rt < 1 ||
-                     piece == BlackKnight && closure->rt < 2) { /* promotion obligatory */
+                     piece == BlackKnight && closure->rt < 2) {
+                        /* promotion obligatory */
                         closure->kind = c == '=' ? IllegalMove : BlackPromotion;
-                    } else { /* promotion optional, default is defer */
+                    } else {
+                        /* promotion optional, default is defer */
                         closure->kind = c == '+' ? BlackPromotion : BlackNonPromotion;
                     }
                 } else {
@@ -3037,7 +3277,8 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
             c = '=';
         }
     } else if (closure->kind == WhitePromotion || closure->kind == BlackPromotion) {
-        if (c == NULLCHAR) {  // missing promoChar on mandatory promotion; use default for variant
+        if (c == NULLCHAR) {
+            /* missing promoChar on mandatory promotion; use default for variant */
             if (gameInfo.variant == VariantShatranj || gameInfo.variant == VariantCourier || gameInfo.variant == VariantMakruk) {
                 c = PieceToChar(BlackFerz);
             } else if (gameInfo.variant == VariantASEAN) {
@@ -3045,20 +3286,23 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
             } else if (gameInfo.variant == VariantGreat) {
                 c = PieceToChar(BlackMan);
             } else if (gameInfo.variant == VariantGrand) {
-                closure->kind =
-                 closure->rt != 0 && closure->rt != BOARD_HEIGHT - 1 ? NormalMove : AmbiguousMove;  // no default in Grand Chess
+                /* no default in Grand Chess */
+                closure->kind = closure->rt != 0 && closure->rt != BOARD_HEIGHT - 1 ? NormalMove : AmbiguousMove;
             } else {
                 c = PieceToChar(BlackQueen);
             }
         } else if (c == '=') {
-            closure->kind = IllegalMove;  // no deferral outside Shogi
+            /* no deferral outside Shogi */
+            closure->kind = IllegalMove;
         } else if (c == 'l' && gameInfo.variant == VariantChuChess && HasLion(board, flags)) {
             closure->kind = IllegalMove;
         }
-    } else if (c == '+') {  // '+' outside shogi, check if pieceToCharTable enabled it
+    } else if (c == '+') {
+        /* '+' outside shogi, check if pieceToCharTable enabled it */
         ChessSquare p = closure->piece;
         if (p > WhiteMan && p < BlackPawn || p > BlackMan || PieceToChar(PROMOTED(p)) != '+') {
-            closure->kind = ImpossibleMove;  // used on non-promotable piece
+            /* used on non-promotable piece */
+            closure->kind = ImpossibleMove;
         } else if (gameInfo.variant == VariantChuChess && HasLion(board, flags)) {
             closure->kind = IllegalMove;
         }
@@ -3066,9 +3310,11 @@ void Disambiguate(Board board, int flags, DisambiguateClosure * closure) {
         closure->kind = IllegalMove;
     }
 
-    closure->promoChar = ToLower(c);  // this can be NULLCHAR! Note we keep original promoChar even if illegal.
+    /* this can be NULLCHAR!  Note we keep original promoChar even if illegal. */
+    closure->promoChar = ToLower(c);
     if (c != '+' && c != '=' && c != NULLCHAR && CharToPiece(flags & F_WHITE_ON_MOVE ? ToUpper(c) : ToLower(c)) == EmptySquare) {
-        closure->kind = ImpossibleMove;  // but we cannot handle non-existing piece types!
+        /* but we cannot handle non-existing piece types! */
+        closure->kind = ImpossibleMove;
     }
     if (closure->count > 1) {
         closure->kind = AmbiguousMove;
@@ -3097,7 +3343,7 @@ extern void CoordsToAlgebraicCallback(Board board, int flags, ChessMove kind, in
 void CoordsToAlgebraicCallback(Board board, int flags, ChessMove kind, int rf, int ff, int rt, int ft, void * closure) {
     register CoordsToAlgebraicClosure * cl = (CoordsToAlgebraicClosure *)closure;
 
-    if ((rt == cl->rt && ft == cl->ft || rt == rf && ft == ff) &&  // [HGM] null move matches any toSquare
+    if ((rt == cl->rt && ft == cl->ft || rt == rf && ft == ff) && /* [HGM] null move matches any toSquare */
      (board[rf][ff] == cl->piece || PieceToChar(board[rf][ff]) == '~' && (ChessSquare)(DEMOTED(board[rf][ff])) == cl->piece)) {
         if (rf == cl->rf) {
             if (ff == cl->ff) {
@@ -3129,9 +3375,10 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
 
     if (rf == DROP_RANK) {
         if (ff == EmptySquare) {
+            /* [HGM] pass */
             strncpy(outp, "--", 3);
             return NormalMove;
-        }  // [HGM] pass
+        }
         /* Bughouse piece drop */
         c = PieceToChar((ChessSquare)ff);
         if (c == '+') {
@@ -3164,8 +3411,7 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
     case BlackPawn:
         kind = LegalityTest(board, flags, rf, ff, rt, ft, promoChar);
         if (kind == IllegalMove && !(flags & F_IGNORE_CHECK)) {
-            /* Keep short notation if move is illegal only because it
-               leaves the player in check, but still return IllegalMove */
+            /* Keep short notation if move is illegal only because it leaves the player in check, but still return IllegalMove */
             kind = LegalityTest(board, flags | F_IGNORE_CHECK, rf, ff, rt, ft, promoChar);
             if (kind == IllegalMove) {
                 break;
@@ -3190,7 +3436,8 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
                 *outp++ = rf + ONE;
             }
             if (capture) {
-                *outp++ = 'x'; /* [HGM] Xiangqi has sideway noncaptures across river! */
+                /* [HGM] Xiangqi has sideway noncaptures across river! */
+                *outp++ = 'x';
             }
             *outp++ = ft + AAA;
             if (rt + ONE <= '9') {
@@ -3232,7 +3479,7 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
         /* Test for castling or ICS wild castling */
         /* Use style "O-O" (oh-oh) for PGN compatibility */
         else if (rf == rt && rf == ((piece == WhiteKing) ? d : BOARD_HEIGHT - 1 - d) &&
-         (ft - ff > 1 || ff - ft > 1) &&  // No castling if legal King move (on narrow boards!)
+         (ft - ff > 1 || ff - ft > 1) &&  /* No castling if legal King move (on narrow boards!) */
          ((ff == BOARD_WIDTH >> 1 && (ft == BOARD_LEFT + 2 || ft == BOARD_RGHT - 2)) ||
           (ff == (BOARD_WIDTH - 1) >> 1 && (ft == BOARD_LEFT + 1 || ft == BOARD_RGHT - 3)))) {
             if (ft == BOARD_LEFT + 1 || ft == BOARD_RGHT - 2) {
@@ -3244,8 +3491,7 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
             /* This notation is always unambiguous, unless there are kings on both the d and e files, with "wild castling" possible
                for the king on the d file and normal castling possible for the other.  ICS rules for wild 9 effectively make
                castling illegal for either king in this situation.  So I am not going to worry about it; I'll just generate an
-               ambiguous O-O in this case.
-            */
+               ambiguous O-O in this case. */
             return LegalityTest(board, flags, rf, ff, rt, ft, promoChar);
         }
 
@@ -3274,8 +3520,7 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
         }
 
         /* Style is "Nf3" or "Nxf7" if this is unambiguous, else "Ngf3" or "Ngxf7", else "N1f3" or "N5xf7", else "Ng1f3" or
-           "Ng5xf7".
-        */
+           "Ng5xf7". */
         if (c == '+') {
             /* prefer any nick over +X notation */
             c = pieceNickName[piece];
@@ -3321,7 +3566,8 @@ ChessMove CoordsToAlgebraic(Board board, int flags, int rf, int ff, int rt, int 
         }
         if (IS_SHOGI(gameInfo.variant)) {
             /* [HGM] in Shogi non-pawns can promote */
-            *outp++ = promoChar;  /* Don't bother to correct move type, return value is never used! */
+            /* Don't bother to correct move type, return value is never used! */
+            *outp++ = promoChar;
         } else if (gameInfo.variant == VariantChuChess && promoChar || gameInfo.variant != VariantSuper && promoChar &&
           (piece == WhiteLance || piece == BlackLance)) {
             /* Lance sometimes represents Pawn */
@@ -3467,7 +3713,7 @@ void ExistingAttacksCallback(Board board, int flags, ChessMove kind, int rf, int
     /* attacks with same piece from new position are not considered new */
     if (rf == cl->rf && ff == cl->ff) {
         rf = cl->rt;
-        ff = cl->ft;  // doctor their fromSquare so they will be recognized in chaseStack
+        ff = cl->ft;  /* doctor their fromSquare so they will be recognized in chaseStack */
     }
     /* search move in chaseStack, and delete it if it occurred there (as we know now it is not a new capture) */
     for (i = 0; i < chaseStackPointer; i++) {
@@ -3520,15 +3766,15 @@ int PerpetualChase(int first, int last) {
             }
             fprintf(debugFP, ": all capts\n");
         }
-        // determine all captures possible before the move, and delete them from chaseStack
-        cl.rf = moveList[i][1] - ONE;  // prepare closure to pass move that led from i to i+1
+        /* determine all captures possible before the move, and delete them from chaseStack */
+        cl.rf = moveList[i][1] - ONE;  /* prepare closure to pass move that led from i to i+1 */
         cl.ff = moveList[i][0] - AAA + BOARD_LEFT;
         cl.rt = moveList[i][3] - ONE;
         cl.ft = moveList[i][2] - AAA + BOARD_LEFT;
         CopyBoard(xqCheckers, nullBoard);
-        xqCheckers[EP_STATUS] = 1;  // giant kludge to make GenLegal ignore pre-existing checks
+        xqCheckers[EP_STATUS] = 1;  /* giant kludge to make GenLegal ignore pre-existing checks */
         GenLegal(boards[i], PosFlags(i), ExistingAttacksCallback, &cl, EmptySquare);
-        xqCheckers[EP_STATUS] = 0;  // disable the generation of quasi-legal moves again
+        xqCheckers[EP_STATUS] = 0;  /* disable the generation of quasi-legal moves again */
         if (appData.debugMode) {
             int n;
             for (n = 0; n < chaseStackPointer; n++) {
@@ -3544,31 +3790,31 @@ int PerpetualChase(int first, int last) {
             int victim = (int)boards[i + 1][chaseStack[j].rt][chaseStack[j].ft];
 
             if (attacker >= (int)BlackPawn) {
-                attacker = BLACK_TO_WHITE attacker;  // convert to white, as piece type
+                attacker = BLACK_TO_WHITE attacker;  /* convert to white, as piece type */
             }
             if (victim >= (int)BlackPawn) {
                 victim = BLACK_TO_WHITE victim;
             }
 
             if ((attacker == WhiteKnight || attacker == WhiteCannon) && victim == WhiteRook) {
-                continue;  // C or H attack on R is always chase; leave on chaseStack
+                continue;  /* C or H attack on R is always chase; leave on chaseStack */
             }
 
             if (attacker == victim) {
                 if (LegalityTest(boards[i + 1], PosFlags(i + 1), chaseStack[j].rt, chaseStack[j].ft, chaseStack[j].rf,
                      chaseStack[j].ff, NULLCHAR) == NormalMove) {
-                    // we can capture back with equal piece, so this is no chase but a sacrifice
-                    chaseStack[j] = chaseStack[--chaseStackPointer];  // delete the capture from the chaseStack
+                    /* we can capture back with equal piece, so this is no chase but a sacrifice */
+                    chaseStack[j] = chaseStack[--chaseStackPointer];  /* delete the capture from the chaseStack */
                     j--; /* ! */
                     continue;
                 }
             }
 
-            // the attack is on a lower piece, or on a pinned or blocked equal one
+            /* the attack is on a lower piece, or on a pinned or blocked equal one */
             CopyBoard(xqCheckers, nullBoard);
             xqCheckers[EP_STATUS] = 1;
-            CheckTest(boards[i + 1], PosFlags(i + 1), -1, -1, -1, -1, FALSE);  // if we deliver check with our move, the checkers get marked
-            // test if the victim is protected by a true protector. First make the capture.
+            CheckTest(boards[i + 1], PosFlags(i + 1), -1, -1, -1, -1, FALSE);  /* if we deliver check with our move, the checkers get marked */
+            /* test if the victim is protected by a true protector. First make the capture. */
             captured = boards[i + 1][chaseStack[j].rt][chaseStack[j].ft];
             boards[i + 1][chaseStack[j].rt][chaseStack[j].ft] = boards[i + 1][chaseStack[j].rf][chaseStack[j].ff];
             boards[i + 1][chaseStack[j].rf][chaseStack[j].ff] = EmptySquare;

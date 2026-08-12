@@ -1,7 +1,7 @@
 /*
  * ngamelist.c -- Game list window, Xt-independent front-end code for XBoard
  *
- * Copyright 1995, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
+ * Copyright 1995, 2009-2016, 2026 Free Software Foundation, Inc.
  * ------------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
@@ -79,8 +79,8 @@ Option gamesOptions[] = {
  {200, LR | TB, 400, NULL, (void *)list, NULL, NULL, ListBox, "", &appData.gameListFont},
  {0, 0, 100, NULL, (void *)&filterPtr, "", NULL, TextBox, ""},
  {4, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("find position")},
- {2, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button,
-  N_("narrow")}, // buttons referred to by ID in value (=first) field!
+ /* buttons referred to by ID in value (=first) field! */
+ {2, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("narrow")},
  {3, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("thresholds")},
  {9, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("tags")},
  {5, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("next")},
@@ -157,7 +157,8 @@ static int GameListCreate(char * name) {
     return new;
 }
 
-static int GameListPrepare(int byPos, int narrow) {  // [HGM] filter: put in separate routine, to make callable from call-back
+/* [HGM] TODO: filter: put in separate routine, to make callable from call-back */
+static int GameListPrepare(int byPos, int narrow) {
     int nstrings;
     ListGame * lg;
     char **st, *line;
@@ -179,11 +180,13 @@ static int GameListPrepare(int byPos, int narrow) {  // [HGM] filter: put in sep
     }
     while (nstrings--) {
         int pos = -1;
-        if (!narrow || lg->position >= 0) {  // only consider already selected positions when narrowing
+        /* only consider already selected positions when narrowing */
+        if (!narrow || lg->position >= 0) {
             line = GameListLine(lg->number, &lg->gameInfo);
             if ((filterString[0] == NULLCHAR || SearchPattern(line, filterString)) &&
              (!byPos || (pos = GameContainsPosition(glc->fp, lg)) >= 0)) {
-                *st++ = line;  // [HGM] filter: make adding line conditional.
+                /* [HGM] TODO: filter: make adding line conditional. */
+                *st++ = line;
                 listLength++;
                 if (lg->gameInfo.result == WhiteWins) {
                     wins++;
@@ -193,7 +196,8 @@ static int GameListPrepare(int byPos, int narrow) {  // [HGM] filter: put in sep
                     draws++;
                 }
                 if (!byPos) {
-                    pos = 0;  // indicate selected
+                    /* indicate selected */
+                    pos = 0;
                 }
             }
         }
@@ -216,7 +220,7 @@ static int GameListPrepare(int byPos, int narrow) {  // [HGM] filter: put in sep
 }
 
 static void GameListReplace(int page) {
-    // filter: put in separate routine, to make callable from call-back
+    /* [HGM] TODO: filter: put in separate routine, to make callable from call-back */
     char buf[MSG_SIZ], **st = list;
     int i;
 
@@ -259,7 +263,6 @@ void GameListPopUp(FILE * fp, char * filename) {
         glc->filename = NULL;
     }
 
-    /* [HGM] filter: code put in separate routine. */
     GameListPrepare(FALSE, FALSE);
 
     glc->fp = fp;
@@ -274,7 +277,7 @@ void GameListPopUp(FILE * fp, char * filename) {
     }
 
     page = 0;
-    GameListReplace(0);  // [HGM] filter: code put in separate routine, and also called to set title
+    GameListReplace(0);
     MarkMenu("View.GameList", GameListDlg);
     EnableNamedMenuItem("File.SaveSelected", TRUE);
 }
@@ -308,7 +311,8 @@ void ShowGameListProc(void) {
         PopDown(GameListDlg);
         return;
     }
-    GenericPopUp(NULL, NULL, GameListDlg, BoardWindow, NONMODAL, appData.topLevel);  // first two args ignored when shell exists!
+    /* first two args ignored when shell exists! */
+    GenericPopUp(NULL, NULL, GameListDlg, BoardWindow, NONMODAL, appData.topLevel);
     MarkMenu("View.GameList", GameListDlg);
     GameListHighlight(lastLoadGameNumber);
 }
