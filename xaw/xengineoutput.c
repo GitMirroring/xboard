@@ -80,7 +80,7 @@
 # define N_(s) s
 #endif
 
-// [HGM] bitmaps of some ICONS used in the engine-outut window
+/* [HGM] bitmaps of some ICONS used in the engine-outut window */
 
 static unsigned char CLEAR_14[28];
 
@@ -103,9 +103,9 @@ static unsigned char UNKNOWN_14[] = {0xe0, 0x01, 0x58, 0x07, 0xac, 0x0a, 0x56, 0
  0xab, 0x2a, 0x56, 0x15, 0xaa, 0x1a, 0x54, 0x0d, 0xb8, 0x06, 0xe0, 0x01};
 
 
-/* Module variables */
 static int currentPV;
-static Pixmap icons[8];  // [HGM] this front-end array translates back-end icon indicator to handle
+/* [HGM] this front-end array translates back-end icon indicator to handle */
+static Pixmap icons[8];
 static Widget memoWidget;
 
 
@@ -113,7 +113,8 @@ static void ReadIcon(unsigned char pixData[], int iconNr, Widget w) {
     icons[iconNr] = XCreateBitmapFromData(xDisplay, XtWindow(w), (char *)pixData, 14, 14);
 }
 
-void InitEngineOutput(Option * opt, Option * memo2) {  // front-end, because it must have access to the pixmaps
+/* front-end, because it must have access to the pixmaps */
+void InitEngineOutput(Option * opt, Option * memo2) {
     Widget w = opt->handle;
     memoWidget = memo2->handle;
 
@@ -127,7 +128,8 @@ void InitEngineOutput(Option * opt, Option * memo2) {  // front-end, because it 
     ReadIcon(ANALYZE_14, nAnalyzing, w);
 }
 
-void DrawWidgetIcon(Option * opt, int nIcon) {  // as we are already in X front-end, so do X-stuff here
+/* as we are already in X front-end, so do X-stuff here */
+void DrawWidgetIcon(Option * opt, int nIcon) {
     Arg arg;
     XtSetArg(arg, XtNleftBitmap, (XtArgVal)icons[nIcon]);
     XtSetValues(opt->handle, &arg, 1);
@@ -137,8 +139,7 @@ void InsertIntoMemo(int which, char * text, int where) {
     XawTextBlock t;
     Widget edit;
 
-    /* the backend adds \r\n, which is needed for winboard,
-     * for xboard we delete them again over here */
+    /* the backend adds \r\n, which is needed for winboard, for xboard we delete them again over here */
     if (t.ptr = strchr(text, '\r')) {
         *t.ptr = ' ';
     }
@@ -149,7 +150,8 @@ void InsertIntoMemo(int which, char * text, int where) {
     t.format = XawFmt8Bit;
     edit = XtNameToWidget(shells[EngOutDlg], which ? "*paneB.text" : "*paneA.text");
     XawTextReplace(edit, where, where, &t);
-    if (where < highTextStart[which]) {  // [HGM] multiPVdisplay: move highlighting
+    if (where < highTextStart[which]) {
+        /* [HGM] multiPVdisplay: move highlighting */
         int len = strlen(text);
         highTextStart[which] += len;
         highTextEnd[which] += len;
@@ -157,16 +159,13 @@ void InsertIntoMemo(int which, char * text, int where) {
     }
 }
 
-//--------------------------------- PV walking ---------------------------------------
+/*--------------------------------- PV walking ---------------------------------------*/
 
-char memoTranslations[] = ":Ctrl<Key>c: CopyMemoProc() \n \
-<Btn3Motion>: HandlePV() \n \
-Shift<Btn3Down>: select-start() extend-end(PRIMARY) SelectPV(1) \n \
-Any<Btn3Down>: select-start() extend-end(PRIMARY) SelectPV(0) \n \
-<Btn3Up>: StopPV() \n";
+char memoTranslations[] = ":Ctrl<Key>c: CopyMemoProc() \n <Btn3Motion>: HandlePV() \n Shift<Btn3Down>: select-start() "
+ "extend-end(PRIMARY) SelectPV(1) \n Any<Btn3Down>: select-start() extend-end(PRIMARY) SelectPV(0) \n <Btn3Up>: StopPV() \n";
 
-void SelectPV(
- Widget w, XEvent * event, String * params, Cardinal * nParams) {  // [HGM] pv: translate click to PV line, and load it for display
+/* [HGM] pv: translate click to PV line, and load it for display */
+void SelectPV(Widget w, XEvent * event, String * params, Cardinal * nParams) {
     String val;
     int start, end;
     XawTextPosition index, dummy;
@@ -187,34 +186,35 @@ void SelectPV(
     }
 }
 
-void StopPV(
- Widget w, XEvent * event, String * params, Cardinal * nParams) {  // [HGM] pv: on right-button release, stop displaying PV
+/* [HGM] pv: on right-button release, stop displaying PV */
+void StopPV(Widget w, XEvent * event, String * params, Cardinal * nParams) {
     XawTextUnsetSelection(w);
     highTextStart[currentPV] = highTextEnd[currentPV] = 0;
     UnLoadPV();
     XtCallActionProc(w, "beginning-of-file", event, NULL, 0);
 }
 
-//------------------------- Ctrl-C copying of memo texts ---------------------------
+/*------------------------- Ctrl-C copying of memo texts ---------------------------*/
 
-// Awfull code: first read our own primary selection into selected_fen_position,
-//              and then transfer ownership of this to the clipboard, so that the
-//              copy-position callback can fetch it there when somebody pastes it
-// Worst of all is that I only added it because I did not know how to copy primary:
-// my laptop has no middle button. Ctrl-C might not be needed at all... [HGM]
+/* Awful code: first read our own primary selection into selected_fen_position, and then transfer ownership of this to the
+clipboard, so that the copy-position callback can fetch it there when somebody pastes it.  Worst of all is that I only added it
+because I did not know how to copy primary: my laptop has no middle button. C trl-C might not be needed at all... [HGM]
 
-// cloned from CopyPositionProc. Abuse selected_fen_position to hold selection
+Cloned from CopyPositionProc.  Abuse selected_fen_position to hold selection. */
 
+/* from xboard.c */
 Boolean SendPositionSelection(Widget w, Atom * selection, Atom * target, Atom * type_return, XtPointer * value_return,
- unsigned long * length_return, int * format_return);  // from xboard.c
+ unsigned long * length_return, int * format_return);
 
-static void MemoCB(
- Widget w, XtPointer client_data, Atom * selection, Atom * type, XtPointer value, unsigned long * len, int * format) {
+static void MemoCB(Widget w, XtPointer client_data, Atom * selection, Atom * type, XtPointer value, unsigned long * len,
+ int * format) {
     if (value == NULL || *len == 0) {
-        return; /* nothing had been selected to copy */
+        /* nothing had been selected to copy */
+        return;
     }
     selected_fen_position = value;
-    selected_fen_position[*len] = '\0'; /* normally this string is terminated, but be safe */
+    /* normally this string is terminated, but be safe */
+    selected_fen_position[*len] = '\0';
     XtOwnSelection(menuBarWidget, XA_CLIPBOARD(xDisplay), CurrentTime, SendPositionSelection, NULL /* lose_ownership_proc */,
      NULL /* transfer_done_proc */);
 }
@@ -229,16 +229,15 @@ void CopyMemoProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
     XtGetSelectionValue(menuBarWidget, XA_PRIMARY, XA_STRING,
      /* (XtSelectionCallbackProc) */ MemoCB, NULL, /* client_data passed to PastePositionCB */
 
-     /* better to use the time field from the event that triggered the
-      * call to this function, but that isn't trivial to get
-      */
-     CurrentTime);
+     /* N.B.: It would actually be better to use the time field from the event that triggered the call to this function, but
+        obtaining that is non-trivial. */ CurrentTime);
 }
 
-//------------------------------- pane switching -----------------------------------
+/*------------------------------- pane switching -----------------------------------*/
 
-void ResizeWindowControls(int mode) {  // another hideous kludge: to have only a single pane, we resize the
-    // second to 5 pixels (which makes it too small to display anything)
+/* Another hideous kludge: to have only a single pane, we resize the second to 5 pixels, which makes it too small to display
+   anything. */
+void ResizeWindowControls(int mode) {
     Widget form1, form2;
     Arg args[16];
     int j;
@@ -256,7 +255,8 @@ void ResizeWindowControls(int mode) {  // another hideous kludge: to have only a
     XtSetArg(args[j], XtNheight, (XtArgVal)&tmp);
     j++;
     XtGetValues(form2, args, j);
-    ew_height += tmp;  // total height
+    /* total height */
+    ew_height += tmp;
 
     if (mode == 0) {
         j = 0;

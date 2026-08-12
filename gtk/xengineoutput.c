@@ -7,7 +7,9 @@
  *
  * Enhancements Copyright 2009-2016, 2026 Free Software Foundation, Inc.
  *
- * ------------------------------------------------------------------------
+ * The following terms apply to the enhanced version of XBoard
+ * distributed by the Free Software Foundation:
+ * -----------------------------------------------------------------------
  *
  * GNU XBoard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
- * ------------------------------------------------------------------------
+ * -----------------------------------------------------------------------
  ** See the file ChangeLog for a revision history.  */
 
 #ifdef HAVE_CONFIG_H
@@ -60,9 +62,9 @@
 # define N_(s) s
 #endif
 
-extern Option engoutOptions[];  // must go in header, but which?
+/* must go in header, but which? */
+extern Option engoutOptions[];
 
-/* Module variables */
 #ifdef TODO_GTK
 static Widget memoWidget;
 #endif
@@ -70,7 +72,8 @@ static GdkPixbuf * iconsGTK[8];
 
 static void ReadIcon(char * svgFilename, int iconNr) { iconsGTK[iconNr] = LoadIconFile(svgFilename); }
 
-void InitEngineOutput(Option * opt, Option * memo2) {  // front-end, because it must have access to the pixmaps
+/* front-end, because it must have access to the pixmaps */
+void InitEngineOutput(Option * opt, Option * memo2) {
 #ifdef TODO_GTK
     Widget w = opt->handle;
     memoWidget = memo2->handle;
@@ -85,7 +88,8 @@ void InitEngineOutput(Option * opt, Option * memo2) {  // front-end, because it 
     ReadIcon("eo_Analyzing", nAnalyzing);
 }
 
-void DrawWidgetIcon(Option * opt, int nIcon) {  // as we are already in GTK front-end, so do GTK-stuff here
+/* as we are already in GTK front-end, so do GTK-stuff here */
+void DrawWidgetIcon(Option * opt, int nIcon) {
     if (nIcon != 0) {
         gtk_image_set_from_pixbuf(GTK_IMAGE(opt->handle), GDK_PIXBUF(iconsGTK[nIcon]));
     }
@@ -95,27 +99,25 @@ void InsertIntoMemo(int which, char * text, int where) {
     char * p;
     GtkTextIter start;
 
-    /* the backend adds \r\n, which is needed for winboard,
-     * for xboard we delete them again over here */
+    /* the backend adds \r\n, which is needed for winboard, for xboard we delete them again over here */
     if (p = strchr(text, '\r')) {
         *p = ' ';
     }
 
     GtkTextBuffer * tb = (GtkTextBuffer *)(engoutOptions[which ? 12 : 5].handle);
-    // gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(tb), &start);
     gtk_text_buffer_get_iter_at_offset(tb, &start, where);
     gtk_text_buffer_insert(tb, &start, text, -1);
-    if (where < highTextStart[which]) {  // [HGM] multiPVdisplay: move highlighting
+    if (where < highTextStart[which]) {
+        /* [HGM] multiPVdisplay: move highlighting */
         int len = strlen(text);
         highTextStart[which] += len;
         highTextEnd[which] += len;
     }
 }
 
-//------------------------------- pane switching -----------------------------------
+/*------------------------------- pane switching -----------------------------------*/
 
-void ResizeWindowControls(int mode) {  // another hideous kludge: to have only a single pane, we resize the
-    // second to 5 pixels (which makes it too small to display anything)
+void ResizeWindowControls(int mode) {
     if (mode) {
         gtk_widget_show(engoutOptions[13].handle);
     } else {

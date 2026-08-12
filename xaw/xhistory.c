@@ -67,18 +67,18 @@
 # define N_(s) s
 #endif
 
-// templates for calls into back-end (= history.c; should be moved to history.h header shared with it!)
+/* templates for calls into back-end (= history.c; should be moved to history.h header shared with it!) */
 void RefreshMemoContent(void);
 void MemoContentUpdated(void);
 void FindMoveByCharIndex(int char_index);
 
-// variables in xoptions.c
+/* variables in xoptions.c */
 extern Option historyOptions[];
 
-// ------------- low-level front-end actions called by MoveHistory back-end -----------------
+/* ------------- low-level front-end actions called by MoveHistory back-end ----------------- */
 
-// the bold argument says 0 = normal, 1 = bold typeface
-// the colorNr argument says 0 = font-default, 1 = gray
+/* the bold argument says 0 = normal, 1 = bold typeface */
+/* the colorNr argument says 0 = font-default, 1 = gray */
 void ScrollToCursor(Option * opt, int caretPos) {
     Arg args[10];
     char * s;
@@ -88,19 +88,21 @@ void ScrollToCursor(Option * opt, int caretPos) {
     if (caretPos < 0 || caretPos > len) {
         caretPos = len;
     }
-    if (caretPos > len - 30) {  // scroll to end, which causes no flicker
+    if (caretPos > len - 30) {
+        /* scroll to end, which causes no flicker */
         static XEvent event;
         XtCallActionProc(opt->handle, "end-of-file", &event, NULL, 0);
         return;
     }
-    // the following leads to a very annoying flicker, even when no scrolling is done at all.
-    XtSetArg(args[0], XtNinsertPosition, caretPos);  // this triggers scrolling in Xaw
+    /* the following leads to a very annoying flicker, even when no scrolling is done at all. */
+    /* this triggers scrolling in Xaw */
+    XtSetArg(args[0], XtNinsertPosition, caretPos);
     XtSetArg(args[1], XtNdisplayCaret, FALSE);
     XtSetValues(opt->handle, args, 2);
 }
 
 
-// ------------------------------ callbacks --------------------------
+/* ------------------------------ callbacks -------------------------- */
 
 char historyTranslations[] = "<Btn3Down>: select-start() \n \
 <Btn3Up>: extend-end(PRIMARY) SelectMove() \n";
@@ -109,5 +111,6 @@ void SelectMoveX(Widget w, XEvent * event, String * params, Cardinal * nParams) 
     XawTextPosition index, dummy;
 
     XawTextGetSelectionPos(w, &index, &dummy);
-    FindMoveByCharIndex(index);  // [HGM] also does the actual moving to it, now
+    /* [HGM] also does the actual moving to it, now */
+    FindMoveByCharIndex(index);
 }

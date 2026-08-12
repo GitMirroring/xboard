@@ -1094,8 +1094,8 @@ int main(int argc, char ** argv) {
     gameInfo.variant = StringToVariant(appData.variant);
     InitPosition(FALSE);
 
-    shellWidget =
-     XtAppInitialize(&appContext, "XBoard", shellOptions, XtNumber(shellOptions), &argc, argv, xboardResources, NULL, 0);
+    shellWidget = XtAppInitialize(&appContext, "XBoard", shellOptions, XtNumber(shellOptions), &argc, argv, xboardResources, NULL,
+     0);
 
     XtGetApplicationResources(shellWidget, (XtPointer)&appData, clientResources, XtNumber(clientResources), NULL, 0);
 
@@ -1103,9 +1103,7 @@ int main(int argc, char ** argv) {
     xScreen = DefaultScreen(xDisplay);
     wm_delete_window = XInternAtom(xDisplay, "WM_DELETE_WINDOW", TRUE);
 
-    /*
-     * determine size, based on supplied or remembered -size, or screen size
-     */
+    /* Determine size, based on supplied or remembered -size, or screen size. */
     if (isdigit(appData.boardSize[0])) {
         i = sscanf(appData.boardSize, "%d,%d,%d,%d,%d,%d,%d", &squareSize, &lineGap, &clockFontPxlSize, &coordFontPxlSize,
          &fontPxlSize, &smallLayout, &tinyLayout);
@@ -1118,7 +1116,7 @@ int main(int argc, char ** argv) {
             squareSize = (squareSize * 8 + BOARD_WIDTH / 2) / BOARD_WIDTH;
         }
         if (i < 7) {
-            /* Find some defaults; use the nearest known size */
+            /* Find some defaults; use the nearest known size. */
             SizeDefaults *szd, *nearest;
             int distance = 99999;
             nearest = szd = sizeDefaults;
@@ -1218,9 +1216,7 @@ int main(int argc, char ** argv) {
 
     XtAppAddActions(appContext, boardActions, XtNumber(boardActions));
 
-    /*
-     * widget hierarchy
-     */
+    /* widget hierarchy */
     if (tinyLayout) {
         layoutName = "tinyLayout";
     } else if (smallLayout) {
@@ -1337,8 +1333,7 @@ int main(int argc, char ** argv) {
 
     if (errorExitStatus == -1) {
         if (appData.icsActive) {
-            /* We now wait until we see "login:" from the ICS before
-               sending the logon script (problems with timestamp otherwise) */
+            /* We now wait until we see "login:" from the ICS before sending the logon script (problems with timestamp otherwise) */
             if (appData.icsInputBox) {
                 ICSInputBoxPopUp();
             }
@@ -1390,7 +1385,6 @@ void CmailSigHandlerCallBack(InputSourceRef isr, void * closure, char * message,
     BoardToTop();
     ReloadCmailMsgEvent(TRUE);
 }
-
 
 #define Abs(n) ((n) < 0 ? -(n) : (n))
 
@@ -1532,8 +1526,7 @@ char * FindFont(char * pattern, int targetPxlSize) {
         }
     }
     if (scalable && Abs(minerr) > appData.fontSizeTolerance) {
-        /* If the error is too big and there is a scalable font,
-           use the scalable font. */
+        /* If the error is too big and there is a scalable font, use the scalable font. */
         int headlen = scalableTail - scalable;
         p = (char *)XtMalloc(strlen(scalable) + 10);
         while (isdigit(*scalableTail)) {
@@ -1611,7 +1604,6 @@ void SetupDropMenu(void) {
         XtSetSensitive(entry,
          p != NULL ||
           !appData.testLegality
-          /*!!temp:*/
           || (gameInfo.variant == VariantCrazyhouse && !appData.icsActive));
         count = 0;
         while (p && *p++ == dmEnables[i].piece) {
@@ -1742,6 +1734,7 @@ static XtIntervalId delayedDragID = 0;
 void DragProc(void) {
     static int busy = 0;
     if (busy) {
+        /* Prevent recursive calling. */
         return;
     }
     busy = 1;
@@ -1857,9 +1850,8 @@ void ModeHighlight(void) {
         MarkMenuItem("Mode.Pause", pausing);
 
         if (appData.showButtonBar) {
-            /* Always toggle, don't set.  Previous code messes up when
-               invoked while the button is pressed, as releasing it
-               toggles the state again. */
+            /* Always toggle, don't set.  Previous code messes up when invoked while the button is pressed, as releasing it toggles
+               the state again. */
             {
                 Pixel oldbg, oldfg;
                 XtSetArg(args[0], XtNbackground, &oldbg);
@@ -1893,9 +1885,7 @@ void ModeHighlight(void) {
 }
 
 
-/*
- * Button/menu procedures
- */
+/* Button/menu procedures */
 
 /* this variable is shared between CopyPositionProc and SendPositionSelection */
 char * selected_fen_position = NULL;

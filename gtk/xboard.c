@@ -136,7 +136,7 @@
 # include <locale.h>
 #endif
 
-// [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are.
+/* [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are. */
 #include "common.h"
 
 #include "frontend.h"
@@ -230,13 +230,15 @@ void * boardWidget = 0;
 void * menuBarWidget = 0;
 void * titleWidget = 0;
 void * dropMenu = 0;
-/* void * formWidget; */
+/*void * formWidget;*/
 GtkWidget * mainwindow;
 #endif
-Option * optList;  // contains all widgets of main window
+/* contains all widgets of main window */
+Option * optList;
 char * layoutName;
 
-char installDir[] = ".";  // [HGM] UCI: needed for UCI; probably needs run-time initializtion
+/* [HGM] UCI: needed for UCI; probably needs run-time initializtion */
+char installDir[] = ".";
 
 /* pixbufs */
 static GdkPixbuf * mainwindowIcon = NULL;
@@ -309,7 +311,7 @@ XtResource clientResources[] = {
 };
 #endif
 
-/* keyboard shortcuts not yet transistioned int menuitem @ menu.c */
+/* keyboard shortcuts not yet transistioned into menuitem @ menu.c */
 char globalTranslations[] = ":Ctrl<Key>Down: LoadSelectedProc(3) \n \
    :Ctrl<Key>Up: LoadSelectedProc(-3) \n \
    :<KeyDown>Return: TempBackwardProc() \n \
@@ -319,8 +321,8 @@ char ICSInputTranslations[] = "<Key>Up: UpKeyProc() \n "
                               "<Key>Down: DownKeyProc() \n "
                               "<Key>Return: EnterKeyProc() \n";
 
-// [HGM] vari: another hideous kludge: call extend-end first so we can be sure select-start works,
-//             as the widget is destroyed before the up-click can call extend-end
+/* [HGM] vari: another hideous kludge: call extend-end first so we can be sure select-start works, as the widget is destroyed before
+   the up-click can call extend-end */
 char commentTranslations[] = "<Btn3Down>: extend-end() select-start() CommentClick() \n";
 
 #ifdef TODO_GTK
@@ -343,9 +345,9 @@ void BoardToTop(void) { gtk_window_present(GTK_WINDOW(shells[BoardWindow])); }
 /* The option definition and parsing code common to XBoard and WinBoard is collected in this file. */
 #include "args.h"
 
-// front-end part of option handling
+/* front-end part of option handling */
 
-// [HGM] This platform-dependent table provides the location for storing the color info
+/* [HGM] This platform-dependent table provides the location for storing the color info */
 extern char *crWhite, *crBlack;
 
 void * colorVariable[] = {&appData.whitePieceColor, &appData.blackPieceColor, &appData.lightSquareColor, &appData.darkSquareColor,
@@ -361,10 +363,8 @@ void ParseFont(char * name, int number) {
     /* In XBoard, only 2 of the fonts are currently implemented, and we just copy their name. */
     int size;
     if (sscanf(name, "size%d:", &size)) {
-        /*
-           [HGM] font: font is meant for specific boardSize (likely from settings file);
-                 defer processing it until we know if it matches our board size
-        */
+        /* [HGM] font: font is meant for specific boardSize (likely from settings file); defer processing it until we know if it
+           matches our board size */
         if (!strstr(name, "-*-") /* ignore X fonts */ && size >= 0 && size < MAX_SIZE /* for now, fixed limit */ ) {
             fontTable[number][size] = strdup(strchr(name, ':') + 1);
             fontValid[number][size] = TRUE;
@@ -372,13 +372,13 @@ void ParseFont(char * name, int number) {
         return;
     }
     switch (number) {
-    case 0:  /* CLOCK_FONT */
+    case CLOCK_FONT:
         appData.clockFont = strdup(name);
         break;
-    case 1:  /* MESSAGE_FONT */
+    case MESSAGE_FONT:
         appData.font = strdup(name);
         break;
-    case 2:  /* COORD_FONT */
+    case COORD_FONT:
         appData.coordFont = strdup(name);
         break;
     case CONSOLE_FONT:
@@ -403,7 +403,8 @@ void ParseFont(char * name, int number) {
     fontIsSet[number] = TRUE;
 }
 
-void SetFontDefaults(void) {  // only 2 fonts currently
+/* only 2 fonts currently */
+void SetFontDefaults(void) {
     appData.clockFont = strdup(CLOCK_FONT_NAME);
     appData.coordFont = strdup(COORD_FONT_NAME);
     appData.font = strdup(DEFAULT_FONT_NAME);
@@ -430,10 +431,11 @@ void ChangeFont(int force, char ** font, int fnr, int size, char * def, int pix)
     *font = InsertPxlSize(fontTable[fnr][size], pix);
 }
 
-void CreateFonts(void) {  // no-op, until we identify the code for this already in XBoard and move it here
-}
+/* no-op, until we identify the code for this already in XBoard and move it here */
+void CreateFonts(void) {}
 
-void ParseColor(int n, char * name) {  // in XBoard, just copy the color-name string
+/* in XBoard, just copy the color-name string */
+void ParseColor(int n, char * name) {
     if (colorVariable[n] && *name == '#') {
         *(char **)colorVariable[n] = strdup(name);
     }
@@ -445,24 +447,24 @@ void ParseTextAttribs(ColorClass cc, char * s) { (&appData.colorShout)[cc] = str
 
 void ParseBoardSize(void * addr, char * name) { appData.boardSize = strdup(name); }
 
-void LoadAllSounds(void) {  // In XBoard the sound-playing program takes care of obtaining the actual sound
-}
+/* In XBoard the sound-playing program takes care of obtaining the actual sound */
+void LoadAllSounds(void) {}
 
-void SetCommPortDefaults(void) {  // for now, this is a no-op, as the corresponding option does not exist in XBoard
-}
+/* for now, this is a no-op, as the corresponding option does not exist in XBoard */
+void SetCommPortDefaults(void) {}
 
 /* [HGM] args: these three cases taken out to stay in front-end */
 void SaveFontArg(FILE * f, ArgDescriptor * ad) {
     char * name;
     int i, n = (int)(intptr_t)ad->argLoc;
     switch (n) {
-    case 0:  /* CLOCK_FONT */
+    case CLOCK_FONT:
         name = appData.clockFont;
         break;
-    case 1:  /* MESSAGE_FONT */
+    case MESSAGE_FONT:
         name = appData.font;
         break;
-    case 2:  /* COORD_FONT */
+    case COORD_FONT:
         name = appData.coordFont;
         break;
     case CONSOLE_FONT:
@@ -540,19 +542,22 @@ void GetActualPlacement(GtkWidget * shell, WindowPlacement * wp) {
     wp->y = a.y;
     wp->width = a.width;
     wp->height = a.height;
-    // printf("placement: (%d,%d) %dx%d\n", a.x, a.y, a.width, a.height);
+    /*printf("placement: (%d,%d) %dx%d\n", a.x, a.y, a.width, a.height);*/
     frameX = 3;
-    frameY = 3;  // remember to decide if windows touch
+    frameY = 3;
+    /* remember to decide if windows touch */
 }
 
-void GetPlacement(DialogClass dlg, WindowPlacement * wp) {  // wrapper to shield back-end from widget type
+/* wrapper to shield back-end from widget type */
+void GetPlacement(DialogClass dlg, WindowPlacement * wp) {
     if (shellUp[dlg]) {
         GetActualPlacement(shells[dlg], wp);
     }
 }
 
-void GetWindowCoords(void) {  // wrapper to shield use of window handles from back-end (make addressible by number?)
-    // In XBoard this will have to wait until awareness of window parameters is implemented
+/* wrapper to shield use of window handles from back-end (make addressible by number?) */
+void GetWindowCoords(void) {
+    /* In XBoard this will have to wait until awareness of window parameters is implemented */
     GetActualPlacement(shellWidget, &wpMain);
     if (shellUp[EngOutDlg]) {
         GetActualPlacement(shells[EngOutDlg], &wpEngineOutput);
@@ -578,16 +583,19 @@ void GetWindowCoords(void) {  // wrapper to shield use of window handles from ba
     }
 }
 
-void PrintCommPortSettings(FILE * f, char * name) {  // This option does not exist in XBoard
+void PrintCommPortSettings(FILE * f, char * name) {
+    /* This option does not exist in XBoard. */
 }
 
 void EnsureOnScreen(int * x, int * y, int minX, int minY) { return; }
 
-int MainWindowUp(void) {  // [HGM] args: allows testing if main window is realized from back-end
+/* [HGM] args: allows testing if main window is realized from back-end */
+int MainWindowUp(void) {
     return DialogExists(BoardWindow);
 }
 
-void PopUpStartupDialog(void) {  // start menu not implemented in XBoard
+void PopUpStartupDialog(void) {
+    /* start menu not implemented in XBoard */
 }
 
 /* TODO: Properly handle individual arguments that exceed 1023 characters.
@@ -630,7 +638,7 @@ void ResizeBoardWindow(int widthInPixels, int heightInPixels) {
     }
 }
 
-int MakeColors(void) {  // dummy, as the GTK code does not make colors in advance
+int MakeColors(void) {  /* dummy, as the GTK code does not make colors in advance */
     return FALSE;
 }
 
@@ -701,7 +709,7 @@ void InitializeFonts(int clockFontPxlSize, int coordFontPxlSize, int fontPxlSize
         coordFontStruct = XQueryFont(xDisplay, coordFontID);
         /* [HGM] figure out how much vertical space font takes. */
         fontSize = XExtentsOfFontSet(fontSet);
-	/* Add border width. (?) */
+        /* Add border width. (?) */
         textHeight = fontSize->max_logical_extent.height + 5;
     }
 # else
@@ -792,9 +800,10 @@ void PrintOptions(void) {
            " Persistent options (saved in the settings file) are marked with *)\n\n");
     while (p->argName) {
         if (p->argType == ArgCommSettings) {
+            /* XBoard has no comm port */
             p++;
             continue;
-        }  // XBoard has no comm port
+        }
 
         if (len < MSG_SIZ)
             snprintf(buf + len, MSG_SIZ - len, "-%s%s", p->argName, PrintArg(p->argType));
@@ -1010,11 +1019,9 @@ int main(int argc, char ** argv) {
     }
 
 #ifdef ENABLE_NLS
-    /*
-    if (appData.debugMode) {
+    /*if (appData.debugMode) {
        fprintf(debugFP, "locale = %s\n", setlocale(LC_ALL, NULL));
-    }
-    */
+    }*/
 
     bindtextdomain(PACKAGE, XBOARD_LOCALE_DIR);
     /* needed when creating markup for the clocks */
@@ -1034,8 +1041,8 @@ int main(int argc, char ** argv) {
     snprintf(gameCopyFilename, i, "%s/.xboard%05uc.pgn", p, getpid());
     snprintf(gamePasteFilename, i, "%s/.xboard%05up.pgn", p, getpid());
 
+    /* [HGM] initstring: kludge to fix bad bug. expand '\n' characters in init string and computer string. */
     {
-        /* [HGM] initstring: kludge to fix bad bug. expand '\n' characters in init string and computer string. */
         static char buf[MSG_SIZ];
         snprintf(buf, MSG_SIZ, appData.sysOpen, dataDir);
         /* Expand %s in -openCommand to DATADIR (usefull for OS X configuring). */
@@ -1071,12 +1078,6 @@ int main(int argc, char ** argv) {
         setbuf(debugFP, NULL);
     }
 
-#if ENABLE_NLS
-    if (appData.debugMode) {
-        fprintf(debugFP, "locale = %s\n", setlocale(LC_ALL, NULL));
-    }
-#endif
-
     /* [HGM,HR] make sure board size is acceptable */
     if (appData.NrFiles > BOARD_FILES || appData.NrRanks > BOARD_RANKS) {
         DisplayFatalError(_("Recompile with larger BOARD_RANKS or BOARD_FILES to support this size"), 0, 2);
@@ -1100,7 +1101,7 @@ int main(int argc, char ** argv) {
             exit(2);
         }
         if (i < 7) {
-            /* Find some defaults; use the nearest known size */
+            /* Find some defaults; use the nearest known size. */
             SizeDefaults *szd, *nearest;
             int distance = 99999;
             nearest = szd = sizeDefaults;
@@ -1137,7 +1138,7 @@ int main(int argc, char ** argv) {
         SizeDefaults * szd = sizeDefaults;
         if (*appData.boardSize == NULLCHAR) {
             /* TODO: This does not work, as there is no main window yet. */
-	    /*GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainwindow));*/
+            /*GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainwindow));*/
             unsigned int screenwidth, screenheight;
             get_default_monitor_size(&screenwidth, &screenheight);
 
@@ -1148,7 +1149,7 @@ int main(int argc, char ** argv) {
             if (szd->name == NULL) {
                 szd--;
             }
-	    /* [HGM] settings: remember name for saving settings */
+            /* [HGM] settings: remember name for saving settings */
             appData.boardSize = strdup(szd->name);
         } else {
             while (szd->name != NULL && StrCaseCmp(szd->name, appData.boardSize) != 0) {
@@ -1208,9 +1209,7 @@ int main(int argc, char ** argv) {
 
     ParseIcsTextColors();
 
-    /*
-     * widget hierarchy
-     */
+    /* widget hierarchy */
     if (tinyLayout) {
         layoutName = "tinyLayout";
     } else if (smallLayout) {
@@ -1294,7 +1293,6 @@ int main(int argc, char ** argv) {
     BlackIcon = LoadIconFile("icon_black");
     /* Sets the white icon. */
     SetClockIcon(0);
-
 
     /* Create a cursor for the board widget. */
 #ifdef TODO_GTK
@@ -1381,9 +1379,7 @@ int main(int argc, char ** argv) {
 
     if (errorExitStatus == -1) {
         if (appData.icsActive) {
-            /* We now wait until we see "login:" from the ICS before
-               sending the logon script (problems with timestamp otherwise) */
-            /*ICSInitScript();*/
+            /* We now wait until we see "login:" from the ICS before sending the logon script (problems with timestamp otherwise) */
             if (appData.icsInputBox) {
                 ICSInputBoxPopUp();
             }
@@ -1400,7 +1396,6 @@ int main(int argc, char ** argv) {
     }
 
     UpdateLogos(TRUE);
-    /* XtSetKeyboardFocus(shellWidget, formWidget); */
 #ifdef TODO_GTK
     XSetInputFocus(xDisplay, XtWindow(formWidget), RevertToPointerRoot, CurrentTime);
 #endif
@@ -1429,26 +1424,25 @@ void CmailSigHandler(int sig) {
     int dummy = 0;
     int error;
 
-    signal(SIGUSR1, SIG_IGN); /* suspend handler     */
-
-    /* Activate call-back function CmailSigHandlerCallBack()             */
+    /* suspend handler */
+    signal(SIGUSR1, SIG_IGN);
+    /* Activate call-back function CmailSigHandlerCallBack() */
     OutputToProcess(cmailPR, (char *)(&dummy), sizeof(int), &error);
-
-    signal(SIGUSR1, CmailSigHandler); /* re-activate handler */
+    /* re-activate handler */
+    signal(SIGUSR1, CmailSigHandler);
 }
 
 void CmailSigHandlerCallBack(InputSourceRef isr, void * closure, char * message, int count, int error) {
     BoardToTop();
     ReloadCmailMsgEvent(TRUE); /* Reload cmail msg  */
 }
-/**** end signal code ****/
-
 
 #define Abs(n) ((n) < 0 ? -(n) : (n))
 
 char * InsertPxlSize(char * pattern, int targetPxlSize) {
     char buf[MSG_SIZ];
-    snprintf(buf, MSG_SIZ, pattern, targetPxlSize);  // pattern is something like "Sans Bold %d"
+    /* pattern is something like "Sans Bold %d" */
+    snprintf(buf, MSG_SIZ, pattern, targetPxlSize);
     return strdup(buf);
 }
 
@@ -1541,7 +1535,7 @@ XFontSet CreateFontSet(char * base_fnt_lst) {
     return fntSet;
 }
 # endif
-#else  // not ENABLE_NLS
+#else  /* not ENABLE_NLS */
 /*
  * Find a font that matches "pattern" that is as close as
  * possible to the targetPxlSize.  Prefer fonts that are k
@@ -1595,8 +1589,7 @@ char * FindFont(char * pattern, int targetPxlSize) {
         }
     }
     if (scalable && Abs(minerr) > appData.fontSizeTolerance) {
-        /* If the error is too big and there is a scalable font,
-           use the scalable font. */
+        /* If the error is too big and there is a scalable font, use the scalable font. */
         int headlen = scalableTail - scalable;
         p = (char *)XtMalloc(strlen(scalable) + 10);
         while (isdigit(*scalableTail)) {
@@ -1656,7 +1649,7 @@ void SetMenuEnables(Enables * enab) {
 }
 
 int KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, void * data) {
-    MoveTypeInProc(eventkey);  // pop up for typed in moves
+    MoveTypeInProc(eventkey);  /* pop up for typed in moves */
 
 #ifdef TODO_GTK
     /* check for other key values */
@@ -1671,8 +1664,8 @@ int KeyPressProc(GtkWindow * window, GdkEventKey * eventkey, void * data) {
     return FALSE;
 }
 #ifdef TODO_GTK
-void KeyBindingProc(Widget w, XEvent * event, String * prms,
- Cardinal * nprms) {  // [HGM] new method of key binding: specify MenuItem(FlipView) in stead of FlipViewProc in translation string
+/* [HGM] new method of key binding: specify MenuItem(FlipView) in stead of FlipViewProc in translation string */
+void KeyBindingProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) {
     MenuItem * item;
     if (*nprms == 0) {
         return;
@@ -1698,7 +1691,6 @@ void SetupDropMenu(void) {
         XtSetSensitive(entry,
          p != NULL ||
           !appData.testLegality
-          /*!!temp:*/
           || (gameInfo.variant == VariantCrazyhouse && !appData.icsActive));
         count = 0;
         while (p && *p++ == dmEnables[i].piece) {
@@ -1736,23 +1728,24 @@ static WindowPlacement wpNew;
 void CoDrag(GtkWidget * sh, WindowPlacement * wp) {
     int touch = 0, fudge = 4, f = 3;
     GetActualPlacement(sh, wp);
-    if (abs(wpMain.x + wpMain.width + 2 * frameX - f - wp->x) < fudge) {
+    if (abs(wpMain.x + wpMain.width + 2 * frameX - f - wp->x) < fudge) {        /* right touch */
         touch = 1;
-    } else  // right touch
-        if (abs(wp->x + wp->width + 2 * frameX - f - wpMain.x) < fudge) {
-            touch = 2;
-        } else  // left touch
-            if (abs(wpMain.y + wpMain.height + frameX - f + frameY - wp->y) < fudge) {
-                touch = 3;
-            } else  // bottom touch
-                if (abs(wp->y + wp->height + frameX + frameY - f - wpMain.y) < fudge) {
-                    touch = 4;  // top touch
-                }
-    // printf("CoDrag: touch = %d x=%d w=%d x2=%d w2=%d fx=%d\n", touch, wpMain.x, wpMain.width, wp->x, wp->width, frameX);
-    if (!touch) {
-        return;  // only windows that touch co-move
+    } else if (abs(wp->x + wp->width + 2 * frameX - f - wpMain.x) < fudge) {
+        /* left touch */
+        touch = 2;
+    } else if (abs(wpMain.y + wpMain.height + frameX - f + frameY - wp->y) < fudge) {
+        /* bottom touch */
+        touch = 3;
+    } else if (abs(wp->y + wp->height + frameX + frameY - f - wpMain.y) < fudge) {
+        /* top touch */
+        touch = 4;
     }
-    if (touch < 3 && wpNew.height != wpMain.height) {  // left or right and height changed
+    if (!touch) {
+        /* only windows that touch co-move */
+        return;
+    }
+    if (touch < 3 && wpNew.height != wpMain.height) {
+        /* left or right, and height changed */
         int heightInc = wpNew.height - wpMain.height;
         double fracTop = Fraction(wp->y, wpMain.y, wpMain.y + wpMain.height + frameX + frameY);
         double fracBot = Fraction(wp->y + wp->height + frameX + frameY + 1, wpMain.y, wpMain.y + wpMain.height + frameX + frameY);
@@ -1764,7 +1757,8 @@ void CoDrag(GtkWidget * sh, WindowPlacement * wp) {
         }
 #endif
         wp->height += heightInc;
-    } else if (touch > 2 && wpNew.width != wpMain.width) {  // top or bottom and width changed
+    } else if (touch > 2 && wpNew.width != wpMain.width) {
+        /* top or bottom, and width changed */
         int widthInc = wpNew.width - wpMain.width;
         double fracLeft = Fraction(wp->x, wpMain.x, wpMain.x + wpMain.width + 2 * frameX);
         double fracRght = Fraction(wp->x + wp->width + 2 * frameX + 1, wpMain.x, wpMain.x + wpMain.width + 2 * frameX);
@@ -1792,7 +1786,6 @@ void CoDrag(GtkWidget * sh, WindowPlacement * wp) {
     XtSetValues(sh, args, j);
 #endif
     gtk_window_move(GTK_WINDOW(sh), wp->x, wp->y);
-    // printf("moved to (%d,%d)\n", wp->x, wp->y);
     gtk_window_resize(GTK_WINDOW(sh), wp->width, wp->height);
 }
 
@@ -1810,7 +1803,8 @@ void do_resize(WindowPlacement const * const wp) {
     if (wp->width == wpMain.width && wp->height == wpMain.height) {
         return;
     }
-    gtk_widget_get_allocation(optList[W_DROP + 1].handle, &a);  // table that should contain everything
+    /* table that should contain everything */
+    gtk_widget_get_allocation(optList[W_DROP + 1].handle, &a);
     width = a.width;
     height = a.height;
     gtk_widget_get_allocation(shellWidget, &a);
@@ -1835,7 +1829,8 @@ void do_resize(WindowPlacement const * const wp) {
     if (sqx < 20) {
         return;
     }
-    if (appData.overrideLineGap < 0) {  // do second iteration with adjusted lineGap
+    if (appData.overrideLineGap < 0) {
+        /* do second iteration with adjusted lineGap */
         int oldSqx = sqx;
         lineGap = default_line_gap(sqx);
         lg = lineGap;
@@ -1846,12 +1841,16 @@ void do_resize(WindowPlacement const * const wp) {
         }
         lg = default_line_gap(sqx);
         if (sqx == oldSqx + 1 && lg == lineGap + 1) {
-            sqx = oldSqx, squareSize = 0;  // prevent oscillations, force resize by kludge
+            /* prevent oscillations, force resize by kludge */
+            sqx = oldSqx;
+            squareSize = 0;
         }
     }
     for (; sizeDefaults[size_bucket + 1].name && sizeDefaults[size_bucket].squareSize * 8 > sqx * BOARD_WIDTH; ++size_bucket) {}
-    if (initialSquareSize != sizeDefaults[size_bucket].squareSize && !appData.fixedSize) {  // boardSize changed
-        initialSquareSize = sizeDefaults[size_bucket].squareSize;  // used for saving font
+    if (initialSquareSize != sizeDefaults[size_bucket].squareSize && !appData.fixedSize) {
+        /* boardSize changed */
+        /* used for saving font */
+        initialSquareSize = sizeDefaults[size_bucket].squareSize;
         ChangeFont(1, &appData.clockFont, CLOCK_FONT, initialSquareSize, CLOCK_FONT_NAME,
          2 * (sizeDefaults[size_bucket].clockFontPxlSize + 1) / 3);
         ChangeFont(1, &appData.font, MESSAGE_FONT, initialSquareSize, DEFAULT_FONT_NAME,
@@ -2074,15 +2073,13 @@ void ModeHighlight(void) {
 }
 
 
-/*
- * Button/menu procedures
- */
+/* Button/menu procedures */
 
 void CopyFileToClipboard(char * filename) {
     char * selection_tmp;
     GtkClipboard * cb;
 
-    // read the file
+    /* read the file */
     FILE * f = fopen(filename, "r");
     long len;
     size_t count;
@@ -2103,9 +2100,9 @@ void CopyFileToClipboard(char * filename) {
         g_free(selection_tmp);
         return;
     }
-    selection_tmp[len] = NULLCHAR;  // file is now in selection_tmp
+    selection_tmp[len] = NULLCHAR;  /* file is now in selection_tmp */
 
-    // copy selection_tmp to clipboard
+    /* copy selection_tmp to clipboard */
     GdkDisplay * gdisp = gdk_display_get_default();
     if (!gdisp) {
         g_free(selection_tmp);
@@ -2141,7 +2138,7 @@ void PastePositionProc(void) {
     cb = gtk_clipboard_get_for_display(gdisp, GDK_SELECTION_CLIPBOARD);
     fenstr = gtk_clipboard_wait_for_text(cb);
     if (fenstr == NULL) {
-        return;  // nothing had been selected to copy
+        return;  /* nothing had been selected to copy */
     }
     EditPositionPasteFEN(fenstr);
     return;
@@ -2197,7 +2194,7 @@ void QuitWrapper(Widget w, XEvent * event, String * prms, Cardinal * nprms) { Qu
 void MoveTypeInProc(GdkEventKey * eventkey) {
     char buf[10];
 
-    // ingnore if ctrl, alt, or meta is pressed
+    /* ingnore if ctrl, alt, or meta is pressed */
     if (eventkey->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_META_MASK)) {
         return;
     }
@@ -2232,7 +2229,8 @@ void TempForwardProc(Widget w, XEvent * event, String * prms, Cardinal * nprms) 
 }
 #endif
 
-void ManProc(void) {  // called from menu
+/* called from menu */
+void ManProc(void) {
 #ifdef OSXAPP
     char buf[MSG_SIZ];
     snprintf(buf, MSG_SIZ,
@@ -2347,7 +2345,7 @@ void DisplayTimerLabel(Option * opt, char * color, long timer, int highlight) {
     char bgcolor[10];
     char fgcolor[10];
 
-    if (highlight > 1) {  // kludge to force message printing
+    if (highlight > 1) {  /* kludge to force message printing */
         highlight &= 1;
         snprintf(buf, MSG_SIZ, " %s", color);
     } else if (appData.clockMode) {
@@ -2368,7 +2366,7 @@ void DisplayTimerLabel(Option * opt, char * color, long timer, int highlight) {
     }
 
     if (!partnerUp && two != twoLines) {
-        LockBoardSize(2);  // lock board size if clock height changes
+        LockBoardSize(2);  /* lock board size if clock height changes */
     }
 
 #if GTK_CHECK_VERSION(3, 0, 0)
@@ -2441,9 +2439,9 @@ int DoInputCallback(GIOChannel * io, GIOCondition cond, void ** data) {
         count = read(is->fd, is->unused, INPUT_SOURCE_BUF_SIZE - (is->unused - is->buf));
         if (count <= 0) {
             if (count == 0 && is->kind == CPReal &&
-             shells[ChatDlg]) {  // [HGM] absence of terminal is no error if ICS Console present
-                RemoveInputSource(is);  // cease reading stdin
-                stdoutClosed = TRUE;  // suppress future output
+             shells[ChatDlg]) {  /* [HGM] absence of terminal is no error if ICS Console present */
+                RemoveInputSource(is);  /* cease reading stdin */
+                stdoutClosed = TRUE;  /* suppress future output */
                 return TRUE;
             }
             (is->func)(is, is->closure, is->buf, count, count ? errno : 0);
@@ -2481,7 +2479,7 @@ int DoInputCallback(GIOChannel * io, GIOCondition cond, void ** data) {
         }
         (is->func)(is, is->closure, is->buf, count, error);
     }
-    return TRUE;  // Must return true or the watch will be removed
+    return TRUE;  /* Must return true or the watch will be removed */
 }
 
 InputSourceRef AddInputSource(ProcRef pr, int lineByLine, InputCallback func, void * closure) {
@@ -2569,7 +2567,8 @@ void FrameDelay(int time) {
 
 #endif
 
-static int FindLogo(char * place, char * name, char * buf) {  // check if file exists in given place
+static int FindLogo(char * place, char * name, char * buf) {
+    /* check if file exists in given place */
     FILE * f;
     if (!place) {
         return 0;
@@ -2587,12 +2586,13 @@ static void LoadLogo(ChessProgramState * cps, int n, Boolean ics) {
     if (appData.logo[n][0]) {
         logoName = appData.logo[n];
     } else if (appData.autoLogo) {
-        if (ics) {  // [HGM] logo: in ICS mode second can be used for ICS
+        if (ics) {
+            /* [HGM] logo: in ICS mode second can be used for ICS */
             sprintf(buf, "%s/%s.png", appData.logoDir, appData.icsHost);
-        } else {  // engine; cascade
-            if (!FindLogo(appData.logoDir, cps->tidy, buf) &&  // first try user log folder
-             !FindLogo(appData.directory[n], "logo", buf) &&  // then engine directory
-             !FindLogo("/usr/local/share/games/plugins/logos", cps->tidy, buf)) {  // then system folders
+        } else {
+            /* First, try the user logo directory, then the engine directory, then a system directory. */
+            if (!FindLogo(appData.logoDir, cps->tidy, buf) && !FindLogo(appData.directory[n], "logo", buf)
+             && !FindLogo("/usr/local/share/games/plugins/logos", cps->tidy, buf)) {
                 FindLogo("/usr/share/games/plugins/logos", cps->tidy, buf);
             }
         }
@@ -2628,7 +2628,8 @@ void FileNamePopUpWrapper(
     char * open_c_str = open_button_c_str();
     char * save_c_str = save_button_c_str();
 
-    StartDir(filter, NULL);  // change to start directory for this file type
+    /* change to start directory for this file type */
+    StartDir(filter, NULL);
 
     if (def && *def && def[strlen(def) - 1] == '/') {
         getcwd(curDir, MSG_SIZ);
@@ -2669,7 +2670,7 @@ void FileNamePopUpWrapper(
             gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), def);
         }
 
-        // gtk_file_chooser_set_create_folders(GTK_FILE_CHOOSER (dialog),TRUE);
+        /*gtk_file_chooser_set_create_folders(GTK_FILE_CHOOSER (dialog),TRUE);*/
     }
 
     /* add filters */
@@ -2684,12 +2685,12 @@ void FileNamePopUpWrapper(
 
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
-        // see loadgamepopup
+        /* see loadgamepopup */
         f = fopen(filename, openMode);
         if (f == NULL) {
             DisplayError(_("Failed to open file"), errno);
         } else {
-            /* TODO add indec */
+            /* TODO: add index */
             *fp = f;
             ASSIGN(*name, filename);
             ScheduleDelayedEvent(DelayedLoad, 50);

@@ -28,8 +28,8 @@
 # include <config.h>
 #endif
 
-// [HGM] this file is the counterpart of woptions.c, containing xboard popup menus
-// similar to those of WinBoard, to set the most common options interactively.
+/* [HGM] this file is the counterpart of woptions.c, containing xboard popup menus similar to those of WinBoard, to set the most
+   common options interactively. */
 
 #include <ctype.h>
 #include <errno.h>
@@ -69,7 +69,7 @@
 # define N_(s) s
 #endif
 
-// [HGM] The following code for making menu popups was cloned from the FileNamePopUp routines.
+/* [HGM] The following code for making menu popups was cloned from the FileNamePopUp routines. */
 
 #ifdef TODO_GTK
 static Widget previous = NULL;
@@ -115,7 +115,7 @@ void BoardFocus(void) {
 #endif
 }
 
-//--------------------------- Engine-specific options menu ----------------------------------
+/*--------------------------- Engine-specific options menu ----------------------------------*/
 
 int dialogError;
 Option * dialogOptions[NrOfDialogs];
@@ -207,7 +207,7 @@ void SetWidgetText(Option * opt, char * buf, int n) {
         printf("unexpected case (%d) in GetWidgetText\n", opt->type);
     }
 #ifdef TODO_GTK
-    // focus is automatic in GTK?
+    /* focus is automatic in GTK? */
     if (n >= 0) {
         SetFocus(opt->handle, shells[n], NULL, FALSE);
     }
@@ -219,7 +219,8 @@ void GetWidgetState(Option * opt, int * state) { *state = gtk_toggle_button_get_
 void SetWidgetState(Option * opt, int state) { gtk_toggle_button_set_active(opt->handle, state); }
 
 void SetWidgetLabel(Option * opt, char * buf) {
-    if (opt->type == Button) {  // Chat window uses this routine for changing button labels
+    if (opt->type == Button) {
+        /* Chat window uses this routine for changing button labels */
         gtk_button_set_label(opt->handle, buf);
     } else {
         gtk_label_set_text(opt->handle, buf);
@@ -235,7 +236,8 @@ void WidgetEcho(Option * opt, int n) { gtk_entry_set_visibility(opt->handle, n);
 void SetWidgetFont(GtkWidget * w, char ** s) {
     PangoFontDescription * pfd;
     if (!s || !*s || !**s) {
-        return;  // uses no font, no font spec or empty font spec
+        /* uses no font, no font spec, or empty font spec */
+        return;
     }
     pfd = pango_font_description_from_string(*s);
 #if API_USED_FOR_DRAWING_GUI == 3
@@ -336,9 +338,9 @@ void LoadListBox(Option * opt, char * emptyText, int n1, int n2) {
         gtk_list_store_clear(store);
     }
 
-    while (*data) {  // add elements to listbox one by one
+    while (*data) {  /* add elements to listbox one by one */
         gtk_list_store_append(store, &iter);
-        gtk_list_store_set(store, &iter, 0, *data++, -1);  // 0 = first column
+        gtk_list_store_set(store, &iter, 0, *data++, -1);  /* 0 = first column */
     }
 }
 
@@ -356,7 +358,7 @@ void HighlightItem(Option * opt, int index, int scroll) {
 void HighlightListBoxItem(Option * opt, int index) { HighlightItem(opt, index, FALSE); }
 
 void HighlightWithScroll(Option * opt, int index, int max) {
-    HighlightItem(opt, index, TRUE);  // ignore max
+    HighlightItem(opt, index, TRUE);  /* ignore max */
 }
 
 void ScrollToCursor(Option * opt, int caretPos) {
@@ -411,32 +413,39 @@ void SetIconName(DialogClass dlg, char * name) {
 
 static int menuBlock;
 
-static int HelpEvent(GtkWidget * widget, GdkEventButton * event, void * gdata) {  // intercept button3 clicks to pop up help
+static int HelpEvent(GtkWidget * widget, GdkEventButton * event, void * gdata) {
+    /* intercept button3 clicks to pop up help */
     char * msg = (char *)gdata;
-    int menu = (event->type == GDK_BUTTON_RELEASE);  // only menu items trigger help on release
+    /* only menu items trigger help on release */
+    int menu = (event->type == GDK_BUTTON_RELEASE);
     if (event->button != 3) {
         return FALSE;
     }
-    menuBlock = 2 * menu;  // prevent menu action is really excuted by default action
+    /* prevent menu action is really excuted by default action */
+    menuBlock = 2 * menu;
     if (menu) {
-        // hideous kludge: activate (blocked) menu item twice to prevent check-marking
+        /* hideous kludge: activate (blocked) menu item twice to prevent check-marking */
         gtk_menu_item_activate(GTK_MENU_ITEM(widget));
     }
     DisplayHelp(msg);
-    return !menu;  // in case of menu we have to execute default action to popdown and unfocus
+    /* in case of menu we have to execute default action to popdown and unfocus */
+    return !menu;
 }
 
 void ComboSelect(GtkWidget * widget, void * addr) {
-    Option * opt = dialogOptions[((intptr_t)addr) >> 8];  // applicable option list
-    int i = ((intptr_t)addr) & 255;  // option number
+    /* applicable option list */
+    Option * opt = dialogOptions[((intptr_t)addr) >> 8];
+    /* option number */
+    int i = ((intptr_t)addr) & 255;
     int g;
 
     g = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
-    values[i] = g;  // store in temporary, for transfer at OK
+    /* store in temporary, for transfer at OK */
+    values[i] = g;
 
 #if TODO_GTK
-// Note: setting text on button is probably automatic
-// Is this still needed? Could be all comboboxes that needed a callbak are now listboxes!
+/* Note: setting text on button is probably automatic */
+/* Is this still needed? Could be all comboboxes that needed a callbak are now listboxes! */
 #endif
     if (opt[i].type == Graph || opt[i].min & COMBO_CALLBACK && (!currentCps || shellUp[BrowserDlg])) {
         ((ButtonCallback *)opt[i].target)(i);
@@ -464,17 +473,22 @@ Widget CreateMenuItem(Widget menu, char * msg, XtCallbackProc CB, int n) {
 }
 #endif
 
-static void MenuSelect(void * addr)  // callback for all combo items
+/* callback for all combo items */
+static void MenuSelect(void * addr)
 {
-    Option * opt = dialogOptions[((intptr_t)addr) >> 24];  // applicable option list
-    int i = ((intptr_t)addr) >> 16 & 255;  // option number
+    /* applicable option list */
+    Option * opt = dialogOptions[((intptr_t)addr) >> 24];
+    /* option number */
+    int i = ((intptr_t)addr) >> 16 & 255;
     int j = 0xffff & (intptr_t)addr;
 
     if (menuBlock) {
+        /* was help click only */
         menuBlock--;
         return;
-    }  // was help click only
-    values[i] = j;  // store selected value in Option struct, for retrieval at OK
+    }
+    /* store selected value in Option struct, for retrieval at OK */
+    values[i] = j;
     ((ButtonCallback *)opt[i].target)(i);
 }
 
@@ -532,8 +546,8 @@ static GtkWidget * CreateMenuPopup(Option * opt, int n, int def) {
                  && accelerator_key != 'v' && accelerator_key != 'c' && accelerator_key != 'x' && accelerator_key != 'a') {
                     /* In general, for macOS, we use Meta (Cmd) where Linux
                        would use Ctrl instead. */
-                    accelerator_mods &= ~GDK_CONTROL_MASK;  // clear Ctrl flag
-                    accelerator_mods |= GDK_META_MASK;  // set Meta flag
+                    accelerator_mods &= ~GDK_CONTROL_MASK;  /* clear Ctrl flag */
+                    accelerator_mods |= GDK_META_MASK;  /* set Meta flag */
                 } else if (accelerator_mods & GDK_CONTROL_MASK
                   /* For macOS, we use Alt-Cmd-[VCXA] for the commands that would
                      have conflicted with the aforementioned macOS text editing
@@ -559,7 +573,7 @@ static GtkWidget * CreateMenuPopup(Option * opt, int n, int def) {
     return menu;
 }
 
-Option * icsBox;  // kludge to distinguish type-in callback from input-box callback
+Option * icsBox;  /* kludge to distinguish type-in callback from input-box callback */
 
 void CursorAtEnd(Option * opt) { gtk_editable_set_position(opt->handle, -1); }
 
@@ -645,7 +659,7 @@ void HighlightText(Option * opt, int from, int to, Boolean highlight) {
     static GtkTextIter start, end;
 
     if (!(opt->min & INIT)) {
-        opt->min |= INIT;  // each memo its own init flag!
+        opt->min |= INIT;  /* each memo its own init flag! */
         gtk_text_buffer_create_tag(opt->handle, "highlight", "background", "yellow", NULL);
     }
     gtk_text_buffer_get_iter_at_offset(opt->handle, &start, from);
@@ -675,7 +689,8 @@ void SetTextColor(char ** cnames, int fg, int bg, int attr) {
     names = cnames;
     curFG = fg;
     curBG = bg, curAttr = attr;
-    if (attr == -2) {  // background color of ICS console.
+    if (attr == -2) {
+        /* background color of ICS console. */
 #if GTK_CHECK_VERSION(3, 0, 0)
         gdk_rgba_parse(&backgroundColor, cnames[bg & 7]);
 #else
@@ -738,8 +753,8 @@ void Show(Option * opt, int hide) {
     }
 }
 
-int ShiftKeys(void) {  // basic primitive for determining if modifier keys are pressed
-    return 3 * (shiftState != 0) + 0xc * (controlState != 0);  // rely on what last mouse button press left us
+int ShiftKeys(void) {  /* basic primitive for determining if modifier keys are pressed */
+    return 3 * (shiftState != 0) + 0xc * (controlState != 0);  /* rely on what last mouse button press left us */
 }
 
 static int GameListEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
@@ -833,19 +848,23 @@ static int MemoEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
         button = bevent->button;
         shiftState = bevent->state & GDK_SHIFT_MASK;
         controlState = bevent->state & GDK_CONTROL_MASK;
-        if (memo->type == Label) {  // only clock widgets use this
+        if (memo->type == Label) {
+            /* only clock widgets use this */
             ((ButtonCallback *)memo->target)(button == 1 ? memo->value : -memo->value);
             return TRUE;
         }
-        if (memo->value == 250  // kludge to recognize ICS Console and Chat panes
+        if (memo->value == 250 /* kludge to recognize ICS Console and Chat panes */
          && gtk_text_buffer_get_selection_bounds(memo->handle, NULL, NULL)) {
-            gtk_text_buffer_get_selection_bounds(memo->handle, &start, &end);  // only return selected text
-            index = -1;  // kludge to indicate something was selected
+            /* only return selected text */
+            gtk_text_buffer_get_selection_bounds(memo->handle, &start, &end);
+            /* kludge to indicate something was selected */
+            index = -1;
         } else {
             if (abs(button) == 3 && gtk_text_buffer_get_selection_bounds(memo->handle, NULL, NULL)) {
-                return FALSE;  // normal context menu
+                /* normal context menu */
+                return FALSE;
             }
-            // GTK_TODO: is this really the most efficient way to get the character at the mouse cursor???
+            /* GTK_TODO: is this really the most efficient way to get the character at the mouse cursor??? */
             gtk_text_view_window_to_buffer_coords(GTK_TEXT_VIEW(widget), GTK_TEXT_WINDOW_WIDGET, w, h, &x, &y);
             gtk_text_view_get_iter_at_location(GTK_TEXT_VIEW(widget), &start, x, y);
             gtk_text_buffer_place_cursor(memo->handle, &start);
@@ -858,13 +877,15 @@ static int MemoEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
         /* get text from textbuffer */
         val = gtk_text_buffer_get_text(memo->handle, &start, &end, FALSE);
         if (strlen(val) != index) {
-            break;  // if we clicked behind all text, fall through to do default action
+            /* if we clicked behind all text, fall through to do default action */
+            break;
         }
     default:
-        return FALSE;  // should not happen
+        /* should not happen */
+        return FALSE;
     }
     button *= f;
-    // hand click parameters as well as text & location to user
+    /* hand click parameters as well as text & location to user */
     res = (userHandler)(memo, button, w, h, val, index);
     if (val) {
         g_free(val);
@@ -874,37 +895,44 @@ static int MemoEvent(GtkWidget * widget, GdkEvent * event, void * gdata) {
 
 void AddHandler(Option * opt, DialogClass dlg, int nr) {
     switch (nr) {
-    case 0:  // history (now uses generic textview callback)
-    case 1:  // comment (likewise)
+    /* history (now uses generic textview callback) */
+    case 0:
+    /* comment (likewise) */
+    case 1:
         break;
-    case 3:  // input box
+    /* input box */
+    case 3:
         icsBox = opt;
         /* Intentionally fall through. */
-    case 2:  // move type-in
+    /* move type-in */
+    case 2:
         g_signal_connect(opt->handle, "key-press-event", G_CALLBACK(TypeInProc), (void *)(dlg << 16 | (opt - dialogOptions[dlg])));
         break;
-    case 5:  // game list
+    /* game list */
+    case 5:
         g_signal_connect(opt->handle, "button-press-event", G_CALLBACK(GameListEvent), (void *)0);
         /* Intentionally fall through. */
-    case 4:  // game-list filter
+    /* game-list filter */
+    case 4:
         g_signal_connect(opt->handle, "key-press-event", G_CALLBACK(GameListEvent), (void *)(intptr_t)nr);
         break;
-    case 6:  // engine output (uses generic textview callback)
+    /* engine output (uses generic textview callback) */
+    case 6:
         break;
     }
 }
 
-//----------------------------Generic dialog --------------------------------------------
+/*----------------------------Generic dialog --------------------------------------------*/
 
-// cloned from Engine Settings dialog (and later merged with it)
+/* cloned from Engine Settings dialog (and later merged with it) */
 
 GtkWidget * shells[NrOfDialogs];
 DialogClass parents[NrOfDialogs];
-WindowPlacement * wp[NrOfDialogs] = {  // Beware! Order must correspond to DialogClass enum
+WindowPlacement * wp[NrOfDialogs] = {  /* Beware! Order must correspond to DialogClass enum */
  NULL, &wpComment, &wpTags, &wpTextMenu, NULL, &wpConsole, &wpDualBoard, &wpMoveHistory, &wpGameList, &wpEngineOutput, &wpEvalGraph,
  NULL, NULL, NULL, NULL, &wpMain};
 
-int DialogExists(DialogClass n) {  // accessor for use in back-end
+int DialogExists(DialogClass n) {  /* accessor for use in back-end */
     return shells[n] != NULL;
 }
 
@@ -939,17 +967,17 @@ void RaiseWindow(DialogClass dlg) {
 int messedUp;
 
 int PopDown(DialogClass n) {
-    // Arg args[10];
-
     if (!shellUp[n] || !shells[n]) {
         return 0;
     }
-    if (n && wp[n]) {  // remember position
+    if (n && wp[n]) {
+        /* remember position */
         GetActualPlacement(shells[n], wp[n]);
     }
 
     gtk_widget_hide(shells[n]);
-    shellUp[n]--;  // count rather than clear
+    /* count rather than clear */
+    shellUp[n]--;
 
     if (n == 0 || n >= PromoDlg) {
         gtk_widget_destroy(shells[n]);
@@ -962,41 +990,49 @@ int PopDown(DialogClass n) {
     }
 
     if (!n) {
-        currentCps = NULL;  // if an Engine Settings dialog was up, we must be popping it down now
+        /* if an Engine Settings dialog was up, we must be popping it down now */
+        currentCps = NULL;
     }
-    currentOption =
-     dialogOptions[TransientDlg];  // just in case a transient dialog was up (to allow its check and combo callbacks to work)
+    /* just in case a transient dialog was up (to allow its check and combo callbacks to work) */
+    currentOption = dialogOptions[TransientDlg];
 #ifdef TODO_GTK
-    RaiseWindow(parents[n]);  // automatic in GTK?
+    /* automatic in GTK? */
+    RaiseWindow(parents[n]);
     if (parents[n] == BoardWindow) {
-        XtSetKeyboardFocus(shellWidget, formWidget);  // also automatic???
+        /* also automatic??? */
+        XtSetKeyboardFocus(shellWidget, formWidget);
     }
 #endif
     if (messedUp) {
         Preview(0, NULL);
     }
-    messedUp = FALSE;  // Board Options dialog can need this to cancel preview
+    /* Board Options dialog can need this to cancel preview */
+    messedUp = FALSE;
     return 1;
 }
 
-/* GTK callback used when OK/cancel clicked in genericpopup for non-modal dialog */
+/* GTK callback used when OK/cancel clicked in generic popup for non-modal dialog */
 int GenericPopDown(GtkWidget * w, GtkResponseType resptype, void * gdata) {
-    DialogClass dlg = (intptr_t)gdata; /* dialog number dlgnr */
+    /* dialog number dlgnr */
+    DialogClass dlg = (intptr_t)gdata;
     GtkWidget * sh = shells[dlg];
 
     currentOption = dialogOptions[dlg];
 
 #ifdef TODO_GTK
-    // I guess BrowserDlg will be abandoned, as GTK has a better browser of its own
+    /* I guess BrowserDlg will be abandoned, as GTK has a better browser of its own */
     if (shellUp[BrowserDlg] && dlg != BrowserDlg || dialogError) {
-        return TRUE;  // prevent closing dialog when it has an open file-browse daughter
+        /* prevent closing dialog when it has an open file-browse daughter */
+        return TRUE;
     }
 #else
     if (browserUp || dialogError && dlg != FatalDlg || dlg == MasterDlg && shellUp[TransientDlg]) {
-        return TRUE;  // prevent closing dialog when it has an open file-browse, transient or error-popup daughter
+        /* prevent closing dialog when it has an open file-browse, transient or error-popup daughter */
+        return TRUE;
     }
 #endif
-    shells[dlg] = w;  // make sure we pop down the right one in case of multiple instances
+    /* make sure we pop down the right one in case of multiple instances */
+    shells[dlg] = w;
 
     /* OK pressed */
     if (resptype == GTK_RESPONSE_ACCEPT) {
@@ -1016,7 +1052,7 @@ int GenericPopDown(GtkWidget * w, GtkResponseType resptype, void * gdata) {
             PopDown(dlg);
         }
     }
-    shells[dlg] = sh;  // restore
+    shells[dlg] = sh;  /* restore */
     return TRUE;
 }
 
@@ -1043,7 +1079,8 @@ int AppendText(Option * opt, char * s) {
     return len;
 }
 
-void SetColor(char * colorName, Option * box) {  // sets the color of a widget
+/* Sets the color of a widget. */
+void SetColor(char * colorName, Option * box) {
 #if GTK_CHECK_VERSION(3, 0, 0)
     GdkRGBA color;
 
@@ -1053,14 +1090,15 @@ void SetColor(char * colorName, Option * box) {  // sets the color of a widget
 #else
     GdkColor color;
 
-    /* set the colour of the colour button to the colour that will be used */
+    /* Set the colour of the colour button to the colour that will be used. */
     gdk_color_parse(colorName, &color);
     gtk_widget_modify_bg(GTK_WIDGET(box->handle), GTK_STATE_NORMAL, &color);
 #endif
 }
 
 #ifdef TODO_GTK
-void ColorChanged(Widget w, XtPointer data, XEvent * event, Boolean * b) {  // for detecting a typed change in color
+/* Detects a typed change in colour. */
+void ColorChanged(Widget w, XtPointer data, XEvent * event, Boolean * b) {
     char buf[10];
     if ((XLookupString(&(event->xkey), buf, 2, NULL, NULL) == 1) && *buf == '\r') {
         RefreshColor((int)(intptr_t)data, 0);
@@ -1099,10 +1137,11 @@ static gboolean GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdat
     GdkEventScroll * sevent = (GdkEventScroll *)event;
     GtkAllocation a;
 
-    // if (!XtIsRealized(widget)) return;
+    /* if (!XtIsRealized(widget)) return; */
 
     switch (event->type) {
-    case GDK_EXPOSE:  // make handling of expose events generic, just copying from memory buffer (->choice) to display (->textValue)
+    case GDK_EXPOSE:
+        /* make handling of expose events generic, just copying from memory buffer (->choice) to display (->textValue) */
         /* Get window size */
         gtk_widget_get_allocation(widget, &a);
         w = a.width;
@@ -1116,24 +1155,27 @@ static gboolean GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdat
         j++;
         XtGetValues(widget, args, j);
 #endif
-        if (w < graph->max || w > graph->max + 1 || h != graph->value) {  // use width fudge of 1 pixel
-            if (eevent->count >= 0) {  // suppress sizing on expose for ordered redraw in response to sizing.
+        if (w < graph->max || w > graph->max + 1 /* use width fudge of 1 pixel */ || h != graph->value) {
+            if (eevent->count >= 0) {
+                /* suppress sizing on expose for ordered redraw in response to sizing. */
                 sizing = 1;
                 graph->max = w;
-                graph->value = h;  // note: old values are kept if we we don't exceed width fudge
+                graph->value = h;
+                /* note: old values are kept if we we don't exceed width fudge */
             }
         } else {
             w = graph->max;
         }
         if (sizing && eevent->count > 0) {
+            /* don't bother if further exposure is pending during resize */
 #if !GTK_CHECK_VERSION(3, 0, 0)
             /* TODO: We likely don't want this for GTK 2 either, so test removing it entirely. */
             graph->max = 0;
 #endif
             return FALSE;
-        }  // don't bother if further exposure is pending during resize
+        }
 #ifdef TODO_GTK
-        if (!graph->textValue || sizing) {  // create surfaces of new size for display widget
+        if (!graph->textValue || sizing) {  /* create surfaces of new size for display widget */
             if (graph->textValue) {
                 cairo_surface_destroy((cairo_surface_t *)graph->textValue);
             }
@@ -1141,9 +1183,9 @@ static gboolean GraphEventProc(GtkWidget * widget, GdkEvent * event, void * gdat
         }
 #endif
         if (sizing) {
-            /* The memory buffer was already created in GenericPopUp() in order to give drawing routines the opportunity to use it
-               prior to the first expose event (which will not be processed until main reaches the event loop, after all
-               initialization has completed).  So, only trigger a redraw when the size is no longer good. */
+            /* The memory buffer was already created in GenericPopUp() to give drawing routines the opportunity to use it prior to
+               the first expose event (which will not be processed until main reaches the event loop, after all initialization has
+               completed).  So, only trigger a redraw when the size is no longer good. */
             graph->min |= REPLACE;
             break;
         }
@@ -1229,17 +1271,20 @@ void GenericCallback(GtkWidget * widget, void * gdata) {
     currentOption = dialogOptions[dlg = data >> 16];
     data &= 0xffff;
 #ifndef TODO_GTK
-    sh = shells[dlg];  // make following line a no-op, as we haven't found out what the real shell is yet (breaks multiple popups of
-                       // same type!)
+    /* make following line a no-op, as we haven't found out what the real shell is yet (breaks multiple popups of  same type!) */
+    sh = shells[dlg];
 #endif
     oldSh = shells[dlg];
-    shells[dlg] = sh;  // bow to reality
-
-    if (data == 30000) {  // cancel
+    /* bow to reality */
+    shells[dlg] = sh;
+    if (data == 30000) {
+        /* cancel */
         PopDown(dlg);
-    } else if (data == 30001) {  // save buttons imply OK
+    } else if (data == 30001) {
+        /* save buttons imply OK */
         if (GenericReadout(currentOption, -1)) {
-            PopDown(dlg);  // calls OK-proc after full readout, but no popdown if it returns false
+            /* calls OK-proc after full readout, but no popdown if it returns false */
+            PopDown(dlg);
         }
     } else
 
@@ -1248,7 +1293,8 @@ void GenericCallback(GtkWidget * widget, void * gdata) {
         if (currentOption[data].type == SaveButton) {
             GenericReadout(currentOption, -1);
         }
-        if (data == 0) {  // XBoard save button
+        if (data == 0) {
+            /* XBoard save button */
             SaveEngineSettings(currentCps == &second);
             PopDown(dlg);
         } else {
@@ -1259,7 +1305,8 @@ void GenericCallback(GtkWidget * widget, void * gdata) {
         ((ButtonCallback *)currentOption[data].target)(data);
     }
 
-    shells[dlg] = oldSh;  // in case of multiple instances, restore previous (as this one could be popped down now)
+    /* in case of multiple instances, restore previous (as this one could be popped down now) */
+    shells[dlg] = oldSh;
 }
 
 int BrowseCallback(GtkFileChooser * chooser, void * data) {
@@ -1293,8 +1340,10 @@ void BrowseGTK(GtkWidget * widget, void * gdata) {
     } else if (currentOption[opt_i].type == PathName && filter) {
         filter = "dir";
     }
-    GetWidgetText(&currentOption[opt_i], &old);  // start in same directory as current widget contents
-    StartDir(filter, old);  // change to start directory for this file type
+    /* start in same directory as current widget contents */
+    GetWidgetText(&currentOption[opt_i], &old);
+    /* change to start directory for this file type */
+    StartDir(filter, old);
 
     /* select file or folder depending on option_type */
     if (currentOption[opt_i].type == PathName) {
@@ -1325,8 +1374,8 @@ void BrowseGTK(GtkWidget * widget, void * gdata) {
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), gtkfilter_all);
 
     /* filter for specific filetypes e.g. pgn or fen */
-    if (currentOption[opt_i].textValue != NULL && !currentCps)  // no filters for engine options!
-    {
+    if (currentOption[opt_i].textValue != NULL && !currentCps) {
+        /* no filters for engine options! */
         char *q, *p = currentOption[opt_i].textValue;
         gtk_file_filter_set_name(gtkfilter, p);
         while (*p) {
@@ -1363,12 +1412,15 @@ void BrowseGTK(GtkWidget * widget, void * gdata) {
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         entry = currentOption[opt_i].handle;
         gtk_entry_set_text(GTK_ENTRY(entry), filename);
-        StartDir(filter, filename);  // back to original, and remember this one
+        /* back to original, and remember this one */
+        StartDir(filter, filename);
         g_free(filename);
     } else {
-        StartDir(filter, "");  // change back to original directory
+        /* change back to original directory */
+        StartDir(filter, "");
         if (n && messedUp) {
-            Preview(n, old);  // undo any board preview of the parameter browsed for
+            /* undo any board preview of the parameter browsed for */
+            Preview(n, old);
         }
     }
     gtk_widget_destroy(dialog);
@@ -1388,13 +1440,14 @@ int ListCallback(GtkWidget * widget, GdkEventButton * event, void * gdata) {
 }
 
 #ifdef TODO_GTK
-// This is needed for color pickers?
+/* This is needed for color pickers? */
 static char * oneLiner = "<Key>Return: redraw-display() \n \
     <Key>Tab: TabProc() \n ";
 #endif
 
 #ifdef TODO_GTK
-static void SqueezeIntoBox(Option * opt, int nr, int width) {  // size buttons in bar to fit, clipping button names where necessary
+/* size buttons in bar to fit, clipping button names where necessary */
+static void SqueezeIntoBox(Option * opt, int nr, int width) {
     int i, wtot = 0;
     Dimension widths[20], oldWidths[20];
     Arg arg;
@@ -1428,19 +1481,21 @@ static void SqueezeIntoBox(Option * opt, int nr, int width) {  // size buttons i
 #endif
 
 #ifdef TODO_GTK
-int SetPositionAndSize(Arg * args, Widget leftNeigbor, Widget topNeigbor, int b, int w, int h,
- int chaining) {  // sizing and positioning most widgets have in common
+/* sizing and positioning most widgets have in common */
+int SetPositionAndSize(Arg * args, Widget leftNeigbor, Widget topNeigbor, int b, int w, int h, int chaining) {
     int j = 0;
-    // first position the widget w.r.t. earlier ones
-    if (chaining & 1) {  // same row: position w.r.t. last (on current row) and lastrow
+    /* first position the widget w.r.t. earlier ones */
+    if (chaining & 1) {
+        /* same row: position w.r.t. last (on current row) and lastrow */
         XtSetArg(args[j], XtNfromVert, topNeigbor);
         j++;
         XtSetArg(args[j], XtNfromHoriz, leftNeigbor);
         j++;
-    } else {  // otherwise it goes at left margin (which is default), below the previous element
+    } else {
+        /* otherwise it goes at left margin (which is default), below the previous element */
         XtSetArg(args[j], XtNfromVert, leftNeigbor), j++;
     }
-    // arrange chaining ('2'-bit indicates top and bottom chain the same)
+    /* arrange chaining ('2'-bit indicates top and bottom chain the same) */
     if ((chaining & 14) == 6) {
         XtSetArg(args[j], XtNtop, XtChainBottom), j++;
     }
@@ -1465,14 +1520,14 @@ int SetPositionAndSize(Arg * args, Widget leftNeigbor, Widget topNeigbor, int b,
     if (chaining & 0x80) {
         XtSetArg(args[j], XtNleft, XtChainLeft), j++;
     }
-    // set size (if given)
+    /* set size (if given) */
     if (w) {
         XtSetArg(args[j], XtNwidth, w), j++;
     }
     if (h) {
         XtSetArg(args[j], XtNheight, h), j++;
     }
-    // color
+    /* color */
     if (!appData.monoMode) {
         if (!b && appData.dialogColor[0]) {
             XtSetArg(args[j], XtNbackground, dialogColor), j++;
@@ -1484,21 +1539,24 @@ int SetPositionAndSize(Arg * args, Widget leftNeigbor, Widget topNeigbor, int b,
     if (b == 3) {
         b = 1;
     }
-    // border
+    /* border */
     XtSetArg(args[j], XtNborderWidth, b);
     j++;
     return j;
 }
 #endif
 
-static int TableWidth(Option * opt) {  // Hideous work-around! If the table is 3 columns, but 2 & 3 are always occupied together,
-                                       // the fixing of the width of column 1 does not work
+static int TableWidth(Option * opt) {
+    /* Hideous work-around! If the table is 3 columns, but 2 & 3 are always occupied together, the fixing of the width of column 1
+       does not work */
     while (opt->type != EndMark && opt->type != Break) {
         if (opt->type == FileName || opt->type == PathName || opt++->type == BarBegin) {
-            return 3;  // This table needs browse button
+            /* This table needs browse button */
+            return 3;
         }
     }
-    return 2;  // no browse button;
+    /* no browse button; */
+    return 2;
 }
 
 static int SameRow(Option * opt) {
@@ -1557,10 +1615,12 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
     int expandable = FALSE;
 
     if (dlgNr < PromoDlg && shellUp[dlgNr]) {
-        return 0;  // already up
+        /* already up */
+        return 0;
     }
 
-    if (dlgNr && dlgNr < PromoDlg && shells[dlgNr]) {  // reusable, and used before (but popped down)
+    if (dlgNr && dlgNr < PromoDlg && shells[dlgNr]) {
+        /* reusable, and used before (but popped down) */
         gtk_widget_show(shells[dlgNr]);
         shellUp[dlgNr] = TRUE;
         if (wp[dlgNr]) {
@@ -1569,15 +1629,17 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
         return 0;
     }
     if (dlgNr == TransientDlg && parent == BoardWindow && shellUp[MasterDlg]) {
-        parent = MasterDlg;  // MasterDlg can always take role of main window
+        /* MasterDlg can always take role of main window */
+        parent = MasterDlg;
     }
 
-    dialogOptions[dlgNr] = option;  // make available to callback
-    // post currentOption globally, so Spin and Combo callbacks can already use it
-    // WARNING: this kludge does not work for persistent dialogs, so that these cannot have spin or combo controls!
+    /* make available to callback */
+    dialogOptions[dlgNr] = option;
+    /* post currentOption globally, so Spin and Combo callbacks can already use it */
+    /* WARNING: this kludge does not work for persistent dialogs, so that these cannot have spin or combo controls! */
     currentOption = option;
 
-    if (engineDlg) {  // Settings popup for engine: format through heuristic
+    if (engineDlg) {  /* Settings popup for engine: format through heuristic */
         int n = currentCps->nrOptions;
         /*
         if (n > 50) {
@@ -1598,8 +1660,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
             currentOption[n].min = SAME_ROW;
         }
         */
-
-        /* Indicate the end of the list. */
+        /* Delimit list by callback-less end mark. */
         currentOption[n].type = EndMark;
         currentOption[n].target = NULL;
     }
@@ -1637,7 +1698,7 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
     }
 
     shells[dlgNr] = dialog;
-    // gtk_box_set_spacing(GTK_BOX(box), 5);
+    /*gtk_box_set_spacing(GTK_BOX(box), 5);*/
 
     arraysize = 0;
     for (i = 0; option[i].type != EndMark; i++) {
@@ -1653,10 +1714,11 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
             continue;
         }
         top++;
-        // printf("option =%2d, top =%2d\n", i, top);
+        /*printf("option =%2d, top =%2d\n", i, top);*/
         if (top >= height || breakType) {
             gtk_table_resize(GTK_TABLE(table), top - (breakType != 0), r);
-            if (!pane) {  // multi-column: put tables in intermediate hbox
+            if (!pane) {
+                /* multi-column: put tables in intermediate hbox */
                 if (breakType & SAME_ROW || engineDlg) {
 #if GTK_CHECK_VERSION(3, 0, 0)
                     pane = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -1685,22 +1747,24 @@ int GenericPopUp(Option * option, char * title, DialogClass dlgNr, DialogClass p
 #if GTK_CHECK_VERSION(3, 0, 0)
                 hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
-                // make sure hbox is always available when we have more options on same row
+                /* make sure hbox is always available when we have more options on same row */
                 hbox = gtk_hbox_new(
                     option[i].type == Button && option[i].textValue || option[i].type == Graph, 0);
 #endif
 
                 if (!currentCps && option[i].value > 80 && option[i].type == TextBox) {
-                    x |= GTK_EXPAND;  // only vertically extended widgets should size vertically
+                    /* only vertically extended widgets should size vertically */
+                    x |= GTK_EXPAND;
                 }
                 if (strcmp(option[i].name, "") == 0 || option[i].type == Label || option[i].type == Button) {
-                    // for Label and Button name is contained inside option
+                    /* for Label and Button name is contained inside option */
                     gtk_table_attach(GTK_TABLE(table), hbox, left, left + r, top, top + 1, GTK_FILL | GTK_EXPAND, x, 2, 1);
                 } else {
                     gtk_table_attach(GTK_TABLE(table), hbox, left + 1, left + r, top, top + 1, GTK_FILL | GTK_EXPAND, x, 2, 1);
                 }
             } else {
-                hbox = NULL;  // and also make sure no hbox exists if only singl option on row
+                /* and also make sure no hbox exists if only singl option on row */
+                hbox = NULL;
             }
         } else {
             top--;
@@ -1771,8 +1835,10 @@ tBox:
                     option[i].handle = (void *)textbuffer;
                     option[i].textValue = (char *)textview;
                     gtk_text_buffer_get_iter_at_offset(textbuffer, &iter, -1);
-                    gtk_text_buffer_create_mark(textbuffer, "scrollmark", &iter, FALSE);  // permanent mark
-                    if (option[i].choice) {  // textviews can request a handler for mouse events in the choice field
+                    /* permanent mark */
+                    gtk_text_buffer_create_mark(textbuffer, "scrollmark", &iter, FALSE);
+                    if (option[i].choice) {
+                        /* textviews can request a handler for mouse events in the choice field */
                         g_signal_connect(textview, "button-press-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
                         g_signal_connect(textview, "button-release-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
                         g_signal_connect(textview, "motion-notify-event", G_CALLBACK(MemoEvent), (void *)&option[i]);
@@ -1790,10 +1856,10 @@ tBox:
                     gtk_entry_set_text(GTK_ENTRY(entry), *(char **)option[i].target);
                 }
 
-                // gtk_entry_set_width_chars (GTK_ENTRY (entry), 18);
+                /*gtk_entry_set_width_chars (GTK_ENTRY (entry), 18);*/
                 gtk_entry_set_max_length(GTK_ENTRY(entry), w);
 
-                // left, right, top, bottom
+                /* left, right, top, bottom */
                 if (strcmp(option[i].name, "") != 0) {
                     button = gtk_event_box_new();
                     gtk_container_add(GTK_CONTAINER(button), label);
@@ -1801,8 +1867,8 @@ tBox:
                     gtk_widget_add_events(GTK_WIDGET(label), GDK_BUTTON_PRESS_MASK);
                     g_signal_connect(label, "button-press-event", G_CALLBACK(HelpEvent), (void *)option[i].name);
                     gtk_widget_set_sensitive(label, TRUE);
-                    gtk_table_attach(GTK_TABLE(table), label, left, left + 1, top, top + 1, GTK_FILL, GTK_FILL, 2,
-                     1);  // leading names do not expand
+                    /* leading names do not expand */
+                    gtk_table_attach(GTK_TABLE(table), label, left, left + 1, top, top + 1, GTK_FILL, GTK_FILL, 2, 1);
                 }
 
                 if (option[i].type == Spin) {
@@ -1815,8 +1881,8 @@ tBox:
                     gtk_table_attach(
                      GTK_TABLE(table), entry, left + 1, left + 2, top, top + 1, GTK_FILL | GTK_EXPAND, GTK_FILL, 2, 1);
                     button = gtk_button_new_with_label(_("Browse"));
-                    gtk_table_attach(GTK_TABLE(table), button, left + 2, left + r, top, top + 1, GTK_FILL, GTK_FILL, 2,
-                     1);  // Browse button does not expand
+                    /* Browse button does not expand */
+                    gtk_table_attach(GTK_TABLE(table), button, left + 2, left + r, top, top + 1, GTK_FILL, GTK_FILL, 2, 1);
                     g_signal_connect(button, "clicked", G_CALLBACK(BrowseGTK), (void *)(intptr_t)i);
                     option[i].handle = (void *)entry;
                 } else {
@@ -1851,8 +1917,8 @@ tBox:
                     gtk_container_add(GTK_CONTAINER(frame), label);
                     label = frame;
                 }
-                if (option[i].target ||
-                 dlgNr != ErrorDlg && option[i].name) {  // allow user to specify event handler for button presses
+                if (option[i].target || dlgNr != ErrorDlg && option[i].name) {
+                    /* allow user to specify event handler for button presses */
                     button = gtk_event_box_new();
                     gtk_container_add(GTK_CONTAINER(button), label);
                     label = button;
@@ -1934,9 +2000,11 @@ tBox:
                 }
 
                 Pack(hbox, table, button, left, left + 1, top, 0);
-                if (!strcmp(option[i].name, "D")) {  // color button
+                if (!strcmp(option[i].name, "D")) {
+                    /* color button */
                     g_signal_connect(button, "color-set", G_CALLBACK(ColorCallback), (void *)&option[i - 5]);
-                } else if (option[i].value == 666 && !strcmp(option[i].name, "*")) {  // font-assignment buttons
+                } else if (option[i].value == 666 && !strcmp(option[i].name, "*")) {
+                    /* font-assignment buttons */
                     g_signal_connect(button, "clicked", G_CALLBACK(FontCallback), (void *)&option[i - 5]);
                 } else {
                     g_signal_connect(button, "clicked", G_CALLBACK(GenericCallback), (void *)(intptr_t)i + (dlgNr << 16));
@@ -1982,7 +2050,7 @@ tBox:
                     }
                 }
 
-                // option[i].value = j + (option[i].choice[j] == NULL);
+                /*option[i].value = j + (option[i].choice[j] == NULL);*/
                 gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), option[i].value);
 
                 Pack(hbox, table, combobox, left + 1, left + r, top, 0);
@@ -2002,7 +2070,8 @@ tBox:
                 renderer = gtk_cell_renderer_text_new();
                 column = gtk_tree_view_column_new_with_attributes("List Items", renderer, "text", 0, NULL);
                 gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
-                store = gtk_list_store_new(1, G_TYPE_STRING);  // 1 column of text
+                /* 1 column of text */
+                store = gtk_list_store_new(1, G_TYPE_STRING);
                 gtk_tree_view_set_model(GTK_TREE_VIEW(list), GTK_TREE_MODEL(store));
                 g_object_unref(store);
                 LoadListBox(&option[i], "?", -1, -1);
@@ -2016,7 +2085,8 @@ tBox:
                  GTK_WIDGET(sw), option[i].max ? option[i].max : -1, option[i].value ? option[i].value : -1);
                 gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_OUT);
 
-                if (option[i].textValue) {  // generic callback for double-clicking listbox item
+                if (option[i].textValue) {
+                    /* generic callback for double-clicking listbox item */
                     g_signal_connect(list, "button-press-event", G_CALLBACK(ListCallback), (void *)(intptr_t)(dlgNr << 16 | i));
                 }
 
@@ -2049,7 +2119,7 @@ tBox:
                 g_signal_connect(graph, "button-release-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
                 g_signal_connect(graph, "motion-notify-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
                 g_signal_connect(graph, "scroll-event", G_CALLBACK(GraphEventProc), (void *)&option[i]);
-                if (option[i].min & FIX_H) {  // logo
+                if (option[i].min & FIX_H) {  /* logo */
                     GtkWidget * frame = gtk_aspect_frame_new(NULL, 0.5, 0.5, option[i].max / (float)option[i].value, FALSE);
                     gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
                     gtk_container_add(GTK_CONTAINER(frame), graph);
@@ -2063,17 +2133,19 @@ tBox:
                     last = forelast, forelast = lastrow;
                 }
 #endif
-                option[i].choice =
-                 (char **)cairo_image_surface_create(CAIRO_FORMAT_ARGB32, option[i].max, option[i].value);  // image buffer
+                /* image buffer */
+                option[i].choice = (char **)cairo_image_surface_create(CAIRO_FORMAT_ARGB32, option[i].max, option[i].value);
                 break;
 #ifdef TODO_GTK
-            case PopUp:  // note: used only after Graph, so 'last' refers to the Graph widget
+            case PopUp:
+                /* note: used only after Graph, so 'last' refers to the Graph widget */
                 option[i].handle = (void *)CreateComboPopup(last, option + i, i + 256 * dlgNr, TRUE, option[i].value);
                 break;
 #endif
             case DropDown:
                 top--;
-                msg = _(option[i].name);  // write name on the menu button
+                /* write name on the menu button */
+                msg = _(option[i].name);
                 /*
                 XtSetArg(args[j], XtNmenuName, XtNewString(option[i].name));
                 j++;
@@ -2122,10 +2194,10 @@ tBox:
             {
                 /* instead, offer it to macOS, and move About item to top of App menu */
                 GtkosxApplication * theApp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
-                extern MenuItem helpMenu[];  // oh, well... Adding items in help menu breaks this anyway
+                extern MenuItem helpMenu[];  /* oh, well... Adding items in help menu breaks this anyway */
                 gtk_widget_hide(menuBar);
                 gtkosx_application_set_menu_bar(theApp, GTK_MENU_SHELL(menuBar));
-                gtkosx_application_insert_app_menu_item(theApp, GTK_MENU_ITEM(helpMenu[8].handle), 0);  // hack
+                gtkosx_application_insert_app_menu_item(theApp, GTK_MENU_ITEM(helpMenu[8].handle), 0);  /* hack */
                 gtkosx_application_sync_menubar(theApp);
             }
 #endif
@@ -2251,7 +2323,8 @@ tBox:
      Widget w, XtPointer client_data, Atom * selection, Atom * type, XtPointer value, unsigned long * len, int * format) {
         char buf[MSG_SIZ], *p = (char *)textOptions[(int)(intptr_t)client_data].choice, *name = (char *)value, *q;
         if (value == NULL || *len == 0) {
-            return; /* nothing selected, abort */
+            /* nothing selected */
+            return;
         }
         name[*len] = '\0';
         strncpy(buf, p, MSG_SIZ);
