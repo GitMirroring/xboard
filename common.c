@@ -50,10 +50,11 @@
 # include <config.h>
 #endif
 
+#include <stdlib.h>
+
 #include "common.h"
 
 #if !defined(HAVE_STRDUP)
-#include <stdlib.h>
 char * strdup(char const * const c_str) {
     size_t length;
     char * result;
@@ -69,6 +70,13 @@ char * strdup(char const * const c_str) {
     return result;
 }
 #endif
+
+char * free_then_strdup(char * c_str, char const * const c_str_to_dup) {
+    if (c_str) {
+        free(c_str);
+    }
+    return strdup(c_str_to_dup);
+}
 
 int default_line_gap(int const square_size) {
     if (square_size < 37) return 1;

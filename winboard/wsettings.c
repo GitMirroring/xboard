@@ -864,7 +864,7 @@ char * protocols[] = {"autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL};
 
 int InstallOK() {
     if (selected >= 0) {
-        ASSIGN(engineLine, engineList[selected]);
+        free_then_strdup(engineLine, engineList[selected]);
     }
     if (engineLine[0] == '#') {
         DisplayError(_("Select single engine from the group"), 0);
@@ -934,11 +934,13 @@ int EnterGroup(HWND hDlg) {
     HANDLE hwndCombo = GetDlgItem(hDlg, 2001 + 2 * 1);
     int i = SendDlgItemMessage(hDlg, 2001 + 2 * 1, LB_GETCURSEL, 0, 0);
     if (i == 0) {
-        buf[0] = NULLCHAR;  // back to top level
+        /* back to top level */
+        buf[0] = NULLCHAR;
     } else if (engineList[i][0] == '#') {
-        safeStrCpy(buf, engineList[i], MSG_SIZ);  // group header, open group
+        /* group header, open group */
+        safeStrCpy(buf, engineList[i], MSG_SIZ);
     } else {
-        ASSIGN(engineLine, engineList[i]);
+        free_then_strdup(engineLine, engineList[i]);
         if (isUCCI) {
             isUCI = 2;
         }
@@ -948,22 +950,28 @@ int EnterGroup(HWND hDlg) {
             Load(&second, 1);
         }
         EndDialog(hDlg, 0);
-        return 0;  // normal line, select engine
+        /* normal line, select engine */
+        return 0;
     }
-    installOptions[0].max =
-     NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);  // replace list by only the group contents
+    /* replace list by only the group contents */
+    installOptions[0].max = NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);
     SendMessage(hwndCombo, LB_RESETCONTENT, 0, 0);
     SendMessage(hwndCombo, LB_ADDSTRING, 0, (LPARAM)buf);
     for (i = 1; i < installOptions[0].max; i++) {
         SendMessage(hwndCombo, LB_ADDSTRING, 0, (LPARAM)engineMnemonic[i]);
     }
-    // SendMessage(hwndCombo, CB_SELECTSTRING, (WPARAM) 0, (LPARAM) buf);
+    /*SendMessage(hwndCombo, CB_SELECTSTRING, (WPARAM) 0, (LPARAM) buf);*/
     return 0;
 }
 
 void LoadEnginePopUp(HWND hwnd, int nr) {
-    isUCI = isUCCI = storeVariant = v1 = useNick = FALSE;
-    addToList = hasBook = TRUE;  // defaults
+    useNick = FALSE;
+    v1 = FALSE;
+    storeVariant = FALSE;
+    isUCCI = FALSE;
+    isUCI = FALSE;
+    hasBook = TRUE;
+    addToList = TRUE;
     engineNr = nr;
     if (engineDir) {
         free(engineDir);
@@ -985,8 +993,9 @@ void LoadEnginePopUp(HWND hwnd, int nr) {
         free(engineName);
     }
     engineName = strdup("");
-    ASSIGN(wbOptions, "");
-    installOptions[0].max = NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");  // only top level
+    free_then_strdup(wbOptions, "");
+    /* only top level */
+    installOptions[0].max = NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");
     snprintf(title, MSG_SIZ, _("Load %s Engine"), nr ? _("second") : _("first"));
 
     GenericPopup(hwnd, installOptions);
@@ -997,7 +1006,7 @@ void DeleteTheme(HWND hDlg);
 
 int ThemeOK() {
     if (selected >= 0) {
-        ASSIGN(engineLine, engineList[selected]);
+        free_then_strdup(engineLine, engineList[selected]);
     }
     if (engineLine[0] == '#') {
         DisplayError(_("Select single theme from the group"), 0);
@@ -1056,17 +1065,20 @@ int PickTheme(HWND hDlg) {
     HANDLE hwndCombo = GetDlgItem(hDlg, 2001 + 2 * 1);
     int i = SendDlgItemMessage(hDlg, 2001 + 2 * 1, LB_GETCURSEL, 0, 0);
     if (i == 0) {
-        buf[0] = NULLCHAR;  // back to top level
+        /* back to top level */
+        buf[0] = NULLCHAR;
     } else if (engineList[i][0] == '#') {
-        safeStrCpy(buf, engineList[i], MSG_SIZ);  // group header, open group
+        /* group header, open group */
+        safeStrCpy(buf, engineList[i], MSG_SIZ);
     } else {
-        ASSIGN(engineLine, engineList[i]);
+        free_then_strdup(engineLine, engineList[i]);
         LoadTheme();
         EndDialog(hDlg, 0);
-        return 0;  // normal line, select engine
+        /* normal line, select engine */
+        return 0;
     }
-    themeOptions[0].max =
-     NamesToList(appData.themeNames, engineList, engineMnemonic, buf);  // replace list by only the group contents
+    /* replace list by only the group contents */
+    themeOptions[0].max = NamesToList(appData.themeNames, engineList, engineMnemonic, buf);
     SendMessage(hwndCombo, LB_RESETCONTENT, 0, 0);
     SendMessage(hwndCombo, LB_ADDSTRING, 0, (LPARAM)buf);
     for (i = 1; i < themeOptions[0].max; i++) {
@@ -1125,9 +1137,11 @@ void PseudoOK(HWND hDlg) {
     if (autoinc) {
         appData.loadGameIndex = appData.loadPositionIndex = -(twice + 1);
     } else if (!appData.loadGameFile[0]) {
-        appData.loadGameIndex = -2 * twice;  // kludge to pass value of "twice" for use in GUI book
+        /* kludge to pass value of "twice" for use in GUI book */
+        appData.loadGameIndex = -2 * twice;
     }
-    if (!autoinc && !twice) {  // prevent auto-inc being remembered in index value if checkboxes not ticked
+    if (!autoinc && !twice) {
+        /* prevent auto-inc being remembered in index value if checkboxes not ticked */
         if (appData.loadGameIndex < 0) {
             appData.loadGameIndex = 0;
         }
@@ -1139,7 +1153,7 @@ void PseudoOK(HWND hDlg) {
         appData.defaultMatchGames = 1;
         appData.tourneyType = -1;
     }
-    ASSIGN(appData.tourneyFile, tfName);
+    free_then_strdup(appData.tourneyFile, tfName);
 }
 
 char * GetParticipants(HWND hDlg) {
@@ -1260,7 +1274,7 @@ void TourneyPopup(HWND hwnd) {
     swiss = appData.tourneyType < 0;
     tourneyOptions[0].max = n;
     snprintf(title, MSG_SIZ, _("Tournament and Match Options"));
-    ASSIGN(tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
+    free_then_strdup(tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
 
     GenericPopup(hwnd, tourneyOptions);
 }

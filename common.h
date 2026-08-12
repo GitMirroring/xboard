@@ -52,15 +52,17 @@
 #ifndef GNU_XBOARD_COMMON_H
 #define GNU_XBOARD_COMMON_H
 
-
-#ifdef HAVE_CONFIG_H
-/* <> is used to support out-of-source autoconf builds. */
-# include <config.h>
-#endif
-
-#ifndef HAVE_STRDUP
+#ifdef HAVE_STRDUP
+# ifdef HAVE_STRING_H
+#  include <string.h>
+# else
+#  error "The header file declaring strdup() is unknown."
+# endif
+#else
 char * strdup(char const * c_str);
 #endif
+
+char * free_then_strdup(char * c_str, char const * c_str_to_dup);
 
 #ifdef _WIN32
 typedef char Boolean;
@@ -1074,12 +1076,6 @@ extern char chatPartner[MAX_CHAT][MSG_SIZ];
 /* If status == 0, we are exiting with a benign message, not an error */
 void DisplayFatalError(String message, int error, int status);
 void DisplayError(String message, int error);
-
-/* [HGM] generally useful macro; there are way too many memory leaks... */
-#define ASSIGN(x, y) \
-    if (x) \
-        free(x); \
-    x = strdup(y)
 
 /* [HGM] For now, we use the kludge to redefine all the unstructured options by their array counterpart.  In due time, we would have
    to make the actual substitutions all through the source. */

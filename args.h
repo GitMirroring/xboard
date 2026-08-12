@@ -58,6 +58,8 @@
    TODO: Untangle things so that we only have normal headers and source files.
 */
 
+#include "common.h"
+
 typedef enum {
     ArgString,
     ArgInt,
@@ -988,7 +990,7 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
                     name);
             }
 
-	    /* first look in user's own files */
+            /* first look in user's own files */
             ok = MySearchPath(installDir, buf, fullname);
             if (ok)
                 f = fopen(fullname, "r");
@@ -1002,7 +1004,7 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
                         dataDir);
                 }
 
-		/* also look in standard place */
+                /* also look in standard place */
                 ok = MySearchPath(buf, name, fullname);
                 if (ok)
                     f = fopen(fullname, "r");
@@ -1011,7 +1013,7 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
 #endif
         if (f != NULL) {
             if (addr != NULL) {
-                ASSIGN(*addr, fullname);
+                free_then_strdup(*addr, fullname);
             }
             ParseArgs(FileGet, f);
             fclose(f);
@@ -1284,7 +1286,7 @@ not_special:
                 /* It is present, so we need to expand it. */
                 char buf[4 * MSG_SIZ];
                 snprintf(buf, 4 * MSG_SIZ, "%s%s", dataDir, argValue + 2);
-                ASSIGN(*(char **)ad->argLoc, buf);
+                free_then_strdup(*(char **)ad->argLoc, buf);
                 break;
             }
             if (replace) {
@@ -1298,7 +1300,7 @@ not_special:
                     break;
                 }
             }
-            ASSIGN(*(char **)ad->argLoc, argValue);
+            free_then_strdup(*(char **)ad->argLoc, argValue);
             break;
 
         case ArgBackupSettingsFile:
@@ -1567,7 +1569,7 @@ void InitAppData(char * lpCmdLine) {
         char buf[MSG_SIZ];
         MySearchPath(installDir, engineListFile, buf);
         if (*buf) {
-            ASSIGN(engineListFile, buf);
+            free_then_strdup(engineListFile, buf);
         }
         ParseSettingsFile(engineListFile, &engineListFile);
     }
@@ -1588,8 +1590,8 @@ void InitAppData(char * lpCmdLine) {
 
     if (!*appData.secondChessProgram) {
         /* [HGM] scp defaults to fcp */
-        ASSIGN(appData.secondChessProgram, appData.firstChessProgram);
-        ASSIGN(appData.secondDirectory, appData.firstDirectory);
+        free_then_strdup(appData.secondChessProgram, appData.firstChessProgram);
+        free_then_strdup(appData.secondDirectory, appData.firstDirectory);
         appData.secondIsUCI = appData.firstIsUCI;
     }
 
@@ -1662,8 +1664,8 @@ void InitAppData(char * lpCmdLine) {
     if (*appData.defaultPathEGTB) {
         /* append value of deprecated -defaultPathEGTB to -egtFormats */
         snprintf(buf, MAX_ARG_LEN, "%s%snalimov:%s", appData.egtFormats, (*appData.egtFormats ? "," : ""), appData.defaultPathEGTB);
-        ASSIGN(appData.egtFormats, buf);
-        ASSIGN(appData.defaultPathEGTB, "");
+        free_then_strdup(appData.egtFormats, buf);
+        free_then_strdup(appData.defaultPathEGTB, "");
     }
 
     /* Open startup dialog if needed */
@@ -1918,4 +1920,5 @@ Boolean GetArgValue(char * name) {
     }
 
     return FALSE;
+
 }

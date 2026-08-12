@@ -913,7 +913,7 @@ LRESULT CALLBACK NewVariantDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             }
 
             gameInfo.variant = v;
-            ASSIGN(appData.variant, VariantName(v));
+            free_then_strdup(appData.variant, VariantName(v));
 
             appData.NrFiles = (int)GetDlgItemInt(hDlg, IDC_Files, NULL, FALSE);
             appData.NrRanks = (int)GetDlgItemInt(hDlg, IDC_Ranks, NULL, FALSE);
@@ -932,9 +932,9 @@ LRESULT CALLBACK NewVariantDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             shuffleOpenings = FALSE; /* [HGM] shuffle: possible shuffle reset when we switch */
             startedFromPositionFile = FALSE; /* [HGM] loadPos: no longer valid in new variant */
             appData.pieceToCharTable = NULL;
-            ASSIGN(appData.pieceNickNames, "");
-            ASSIGN(appData.colorNickNames, "");
-            ASSIGN(appData.men, "");
+            free_then_strdup(appData.pieceNickNames, "");
+            free_then_strdup(appData.colorNickNames, "");
+            free_then_strdup(appData.men, "");
             Reset(TRUE, TRUE);
 
             return TRUE;
@@ -1569,21 +1569,19 @@ LRESULT CALLBACK FontOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 CopyFont(font[boardSize][i], &workFont[i]);
             }
 
-            {  // Make new piece-to-char table
+            {
+                /* Make new piece-to-char table */
                 char buf[MSG_SIZ];
                 GetDlgItemText(hDlg, OPT_SamplePieceFont, buf, MSG_SIZ);
-                ASSIGN(appData.fontToPieceTable, buf);
+                free_then_strdup(appData.fontToPieceTable, buf);
             }
-            ASSIGN(appData.renderPiecesWithFont, workFont[NUM_FONTS].mfp.faceName);  // piece font
+            /* piece font */
+            free_then_strdup(appData.renderPiecesWithFont, workFont[NUM_FONTS].mfp.faceName);
 
-            /* a sad necessity due to the original design of having a separate
-             * console font, tags font, and comment font for each board size.  IMHO
-             * these fonts should not be dependent on the current board size.  I'm
-             * running out of time, so I am doing this hack rather than redesign the
-             * data structure. Besides, I think if I redesigned the data structure, I
-             * might break backwards compatibility with old winboard.ini files.
-             * --msw
-             */
+            /* A sad necessity due to the original design of having a separate console font, tags font, and comment font for each
+               board size.  IMHO these fonts should not be dependent on the current board size.  I'm running out of time, so I am
+               doing this hack rather than redesign the data structure. Besides, I think if I redesigned the data structure, I might
+               break backwards compatibility with old winboard.ini files.  --msw */
             for (i = 0; i < NUM_SIZES; i++) {
                 CopyFont(font[i][EDITTAGS_FONT], &workFont[EDITTAGS_FONT]);
                 CopyFont(font[i][CONSOLE_FONT], &workFont[CONSOLE_FONT]);
@@ -1614,7 +1612,7 @@ LRESULT CALLBACK FontOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 SendDlgItemMessage(moveHistoryDialog, IDC_MoveHistory, WM_SETFONT, (WPARAM)font[boardSize][MOVEHISTORY_FONT]->hf,
                  MAKELPARAM(TRUE, 0));
                 SendMessage(moveHistoryDialog, WM_INITDIALOG, 0, 0);
-                //	InvalidateRect(editTagsDialog, NULL, TRUE); // [HGM] this ws improperly cloned?
+                /*InvalidateRect(editTagsDialog, NULL, TRUE); /* [HGM] this ws improperly cloned? */
             }
 
             if (engineOutputDialog != NULL) {
@@ -2602,7 +2600,7 @@ LRESULT CALLBACK SaveOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 appData.autoSaveGames = TRUE;
                 if (IsDlgButtonChecked(hDlg, OPT_AVPrompt)) {
                     /* [HGM] make sure value is ALWAYS in allocated memory */
-                    ASSIGN(appData.saveGameFile, "");
+                    free_then_strdup(appData.saveGameFile, "");
                 } else /*if (IsDlgButtonChecked(hDlg, OPT_AVToFile))*/ {
                     GetDlgItemText(hDlg, OPT_AVFilename, buf, MSG_SIZ);
                     if (*buf == NULLCHAR) {
@@ -2614,7 +2612,7 @@ LRESULT CALLBACK SaveOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 }
             } else {
                 appData.autoSaveGames = FALSE;
-                ASSIGN(appData.saveGameFile, "");
+                free_then_strdup(appData.saveGameFile, "");
             }
             appData.oldSaveStyle = IsDlgButtonChecked(hDlg, OPT_Old);
             appData.saveOutOfBookInfo = IsDlgButtonChecked(hDlg, OPT_OutOfBookInfo);
@@ -2973,9 +2971,9 @@ LRESULT CALLBACK UciOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
         SetDlgItemInt(hDlg, IDC_SizeOfEGTB, appData.defaultCacheSizeEGTB, TRUE);
         CheckDlgButton(hDlg, IDC_UseBook, (BOOL)appData.usePolyglotBook);
         SetDlgItemText(hDlg, IDC_BookFile, appData.polyglotBook);
-        // [HGM] smp: input field for nr of cores:
+        /* [HGM] smp: input field for nr of cores: */
         SetDlgItemInt(hDlg, IDC_Cores, appData.smpCores, TRUE);
-        // [HGM] book: tick boxes for own book use
+        /* [HGM] book: tick boxes for own book use */
         CheckDlgButton(hDlg, IDC_OwnBook1, (BOOL)appData.firstHasOwnBookUCI);
         CheckDlgButton(hDlg, IDC_OwnBook2, (BOOL)appData.secondHasOwnBookUCI);
         SetDlgItemInt(hDlg, IDC_BookDep, appData.bookDepth, TRUE);
@@ -2983,7 +2981,7 @@ LRESULT CALLBACK UciOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
         SetDlgItemInt(hDlg, IDC_Games, appData.defaultMatchGames, TRUE);
 
         SendDlgItemMessage(hDlg, IDC_PolyglotDir, EM_SETSEL, 0, -1);
-        // [HGM] Yet another ponder duplicate
+        /* [HGM] Yet another ponder duplicate */
         CheckDlgButton(hDlg, OPT_PonderNextMove, (BOOL)appData.ponderNextMove);
 
         return TRUE;
@@ -2997,21 +2995,21 @@ LRESULT CALLBACK UciOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             appData.defaultCacheSizeEGTB = GetDlgItemInt(hDlg, IDC_SizeOfEGTB, NULL, FALSE);
             GetDlgItemText(hDlg, IDC_PathToEGTB, buf, sizeof(buf));
             if (IsMultiFormat(buf)) {
-                ASSIGN(appData.egtFormats, buf);
+                free_then_strdup(appData.egtFormats, buf);
             } else {
-                ASSIGN(appData.defaultPathEGTB, buf);
+                free_then_strdup(appData.defaultPathEGTB, buf);
             }
             GetDlgItemText(hDlg, IDC_BookFile, buf, sizeof(buf));
             appData.polyglotBook = strdup(buf);
             appData.usePolyglotBook = (Boolean)IsDlgButtonChecked(hDlg, IDC_UseBook);
-            // [HGM] smp: get nr of cores and ponder:
+            /* [HGM] smp: get nr of cores and ponder: */
             oldCores = appData.smpCores;
             appData.smpCores = GetDlgItemInt(hDlg, IDC_Cores, NULL, FALSE);
             if (appData.smpCores != oldCores) {
                 NewSettingEvent(FALSE, &(first.maxCores), "cores", appData.smpCores);
             }
             PonderNextMoveEvent((Boolean)IsDlgButtonChecked(hDlg, OPT_PonderNextMove));
-            // [HGM] book: read tick boxes for own book use
+            /* [HGM] book: read tick boxes for own book use */
             appData.firstHasOwnBookUCI = (Boolean)IsDlgButtonChecked(hDlg, IDC_OwnBook1);
             appData.secondHasOwnBookUCI = (Boolean)IsDlgButtonChecked(hDlg, IDC_OwnBook2);
             appData.bookDepth = GetDlgItemInt(hDlg, IDC_BookDep, NULL, FALSE);

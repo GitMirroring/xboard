@@ -422,7 +422,7 @@ void ChangeFont(int force, char ** font, int fnr, int size, char * def, int pix)
             return;
         }
         /* Use default. */
-        ASSIGN(fontTable[fnr][size], def);
+        free_then_strdup(fontTable[fnr][size], def);
         fontIsSet[fnr] = FALSE;
     } else {
         fontIsSet[fnr] = TRUE;
@@ -490,7 +490,7 @@ void SaveFontArg(FILE * f, ArgDescriptor * ad) {
         for (i = 0; i < NUM_SIZES; i++) {
             /* [HGM] font: current font becomes standard for current size.  This applies only for standard sizes! */
             if (sizeDefaults[i].squareSize == initialSquareSize) {
-                ASSIGN(fontTable[n][initialSquareSize], name);
+                free_then_strdup(fontTable[n][initialSquareSize], name);
                 fontValid[n][initialSquareSize] = TRUE;
                 break;
             }
@@ -917,8 +917,14 @@ static void get_default_monitor_size(unsigned int * width, unsigned int * height
 }
 
 int main(int argc, char ** argv) {
-    int i, clockFontPxlSize, coordFontPxlSize, fontPxlSize;
-    int boardWidth, w, h /*, boardHeight */;
+    int i;
+    int clockFontPxlSize;
+    int coordFontPxlSize;
+    int fontPxlSize;
+    int w;
+    int h;
+    int boardWidth;
+    /*int boardHeight;*/
     char * p;
     int forceMono = FALSE;
 
@@ -1046,7 +1052,7 @@ int main(int argc, char ** argv) {
         static char buf[MSG_SIZ];
         snprintf(buf, MSG_SIZ, appData.sysOpen, dataDir);
         /* Expand %s in -openCommand to DATADIR (usefull for OS X configuring). */
-        ASSIGN(appData.sysOpen, buf);
+        free_then_strdup(appData.sysOpen, buf);
         EscapeExpand(buf, appData.firstInitString);
         appData.firstInitString = strdup(buf);
         EscapeExpand(buf, appData.secondInitString);
@@ -1343,7 +1349,7 @@ int main(int argc, char ** argv) {
         if (!FindLogo(name, ".logo", buf)) {
             FindLogo(appData.logoDir, name + 6, buf);
         }
-        ASSIGN(userLogo, buf);
+        free_then_strdup(userLogo, buf);
     }
 
     if (appData.animate || appData.animateDragging) {
@@ -1848,8 +1854,7 @@ void do_resize(WindowPlacement const * const wp) {
     }
     for (; sizeDefaults[size_bucket + 1].name && sizeDefaults[size_bucket].squareSize * 8 > sqx * BOARD_WIDTH; ++size_bucket) {}
     if (initialSquareSize != sizeDefaults[size_bucket].squareSize && !appData.fixedSize) {
-        /* boardSize changed */
-        /* used for saving font */
+        /* The boardSize has changed. */
         initialSquareSize = sizeDefaults[size_bucket].squareSize;
         ChangeFont(1, &appData.clockFont, CLOCK_FONT, initialSquareSize, CLOCK_FONT_NAME,
          2 * (sizeDefaults[size_bucket].clockFontPxlSize + 1) / 3);
@@ -1880,7 +1885,7 @@ void do_resize(WindowPlacement const * const wp) {
         AppendColorized(&chatOptions[6], NULL, 0);
     }
     if (!strchr(appData.boardSize, ',')) {
-        ASSIGN(appData.boardSize, sizeDefaults[size_bucket].name);
+        free_then_strdup(appData.boardSize, sizeDefaults[size_bucket].name);
     }
 #ifndef OSXAPP
     if (sizeDefaults[size_bucket].tinyLayout != tinyLayout) {
@@ -2326,8 +2331,8 @@ void LockBoardSize(int after) {
     w = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
     h = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
     if (after & 1) {
-        ASSIGN(oldClockFont, appData.clockFont);
-        ASSIGN(oldMessgFont, appData.font);
+        free_then_strdup(oldClockFont, appData.clockFont);
+        free_then_strdup(oldMessgFont, appData.font);
         gtk_window_resize(GTK_WINDOW(shellWidget), w, h);
         DoEvents();
         /* Liberate the board. */
@@ -2598,7 +2603,7 @@ static void LoadLogo(ChessProgramState * cps, int n, Boolean ics) {
         }
     }
     if (logoName[0]) {
-        ASSIGN(cps->programLogo, logoName);
+        free_then_strdup(cps->programLogo, logoName);
     }
 }
 
@@ -2692,7 +2697,7 @@ void FileNamePopUpWrapper(
         } else {
             /* TODO: add index */
             *fp = f;
-            ASSIGN(*name, filename);
+            free_then_strdup(*name, filename);
             ScheduleDelayedEvent(DelayedLoad, 50);
         }
         StartDir(filter, filename);

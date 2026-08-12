@@ -1291,12 +1291,13 @@ int main(int argc, char ** argv) {
 
     /* Locate and read user logo. */
     if (appData.logoSize) {
-        char buf[MSG_SIZ], name[MSG_SIZ];
+        char buf[MSG_SIZ];
+        char name[MSG_SIZ];
         snprintf(name, MSG_SIZ, "/home/%s", UserName());
         if (!FindLogo(name, ".logo", buf)) {
             FindLogo(appData.logoDir, name + 6, buf);
         }
-        ASSIGN(userLogo, buf);
+        free_then_strdup(userLogo, buf);
     }
 
     if (appData.animate || appData.animateDragging) {
@@ -2462,7 +2463,7 @@ static void LoadLogo(ChessProgramState * cps, int n, Boolean ics) {
         }
     }
     if (logoName[0]) {
-        ASSIGN(cps->programLogo, logoName);
+        free_then_strdup(cps->programLogo, logoName);
     }
 }
 

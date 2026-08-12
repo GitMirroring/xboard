@@ -823,8 +823,9 @@ void InitEngine(ChessProgramState * cps, int n) {
     }
     TidyProgramName(cps->program, cps->host, cps->tidy);
     cps->matchWins = 0;
-    ASSIGN(cps->variants, appData.noChessProgram ? "" : appData.variant);
-    cps->analysisSupport = 2; /* detect */
+    free_then_strdup(cps->variants, appData.noChessProgram ? "" : appData.variant);
+    /* detect */
+    cps->analysisSupport = 2;
     cps->analyzing = FALSE;
     cps->initDone = FALSE;
     cps->reload = FALSE;
@@ -848,7 +849,7 @@ void InitEngine(ChessProgramState * cps, int n) {
     cps->supportsNPS = UNKNOWN;
     cps->memSize = FALSE;
     cps->maxCores = FALSE;
-    ASSIGN(cps->egtFormats, "");
+    free_then_strdup(cps->egtFormats, "");
 
     /* [HGM] options */
     cps->optionSettings = appData.engOptions[n];
@@ -920,7 +921,7 @@ void FloatToFront(char ** list, char * engineLine) {
         /* if maximum rached, strip off last */
         *r = NULLCHAR;
     }
-    ASSIGN(*list, tidy + 1);
+    free_then_strdup(*list, tidy + 1);
 }
 
 void SaveEngineList(void) {
@@ -941,7 +942,7 @@ void AddToEngineList(int i) {
         } else {
             buf[0] = NULLCHAR;
         }
-	/* use single quotes around engine command if it contains double quotes */
+        /* use single quotes around engine command iff it contains double quotes */
         quote = strchr(p, '"') ? '\'' : '"';
         snprintf(buf + strlen(buf), MSG_SIZ - strlen(buf), "%c%s%c -fd \"%s\"%s%s%s%s%s%s%s%s", quote, p, quote,
          appData.directory[i], useNick ? " -fn \"" : "", useNick ? nickName : "", useNick ? "\"" : "",
@@ -964,7 +965,7 @@ void AddToEngineList(int i) {
         }
         SaveEngineList();
         FloatToFront(&appData.recentEngineList, buf);
-        ASSIGN(currentEngine[i], buf);
+        free_then_strdup(currentEngine[i], buf);
     }
 }
 
@@ -1043,7 +1044,7 @@ void Load(ChessProgramState * cps, int i) {
     char *p, *q, buf[MSG_SIZ], command[MSG_SIZ], buf2[MSG_SIZ], buf3[MSG_SIZ], jar;
     /* Has an engine been selected from the combo box? */
     if (engineLine && engineLine[0]) {
-        ASSIGN(currentEngine[i], engineLine);
+        free_then_strdup(currentEngine[i], engineLine);
         snprintf(buf, MSG_SIZ, "-fcp %s", engineLine);
         /* kludge to parse -f* / -first* like it is -s* / -second* */
         SwapEngines(i);
@@ -1070,19 +1071,19 @@ void Load(ChessProgramState * cps, int i) {
         return;
     }
     if (engineDir[0] != NULLCHAR) {
-        ASSIGN(appData.directory[i], engineDir);
+        free_then_strdup(appData.directory[i], engineDir);
         p = engineName;
     } else if (p != engineName) {
         /* derive directory from engine path, when not given */
         p[-1] = 0;
-        ASSIGN(appData.directory[i], engineName);
+        free_then_strdup(appData.directory[i], engineName);
         p[-1] = SLASH;
         if (SLASH == '/' && p - engineName > 1) {
             /* for XBoard use ./exeName as command after split! */
             *(p -= 2) = '.';
         }
     } else {
-        ASSIGN(appData.directory[i], ".");
+        free_then_strdup(appData.directory[i], ".");
     }
     jar = (strstr(p, ".jar") == p + strlen(p) - 4);
     if (params[0]) {
@@ -1098,7 +1099,7 @@ void Load(ChessProgramState * cps, int i) {
         snprintf(buf3, MSG_SIZ, "java -jar %s", p);
         p = buf3;
     }
-    ASSIGN(appData.chessProgram[i], p);
+    free_then_strdup(appData.chessProgram[i], p);
     /* requests adding to list without auto-detect */
     tryNr = 3;
     if (isUCI == 3) {
@@ -1113,7 +1114,7 @@ void Load(ChessProgramState * cps, int i) {
         useNick = FALSE;
     }
     if (useNick) {
-        ASSIGN(appData.pgnName[i], nickName);
+        free_then_strdup(appData.pgnName[i], nickName);
     }
     safeStrCpy(newEngineCommand, p, MSG_SIZ);
     ReplaceEngine(cps, i);
@@ -1481,7 +1482,8 @@ int ParseTimeControl(char * tc, float ti, int mps) {
         mps = 0;
     }
     if (!strchr(tc, '+') && !strchr(tc, '/') && sscanf(tc, "%d:%d", &min, &sec) >= 1) {
-        sprintf(mytc = buf2, "%d", 60 * min + sec);  // convert 'classical' min:sec tc string to seconds
+        /* convert 'classical' min:sec tc string to seconds */
+        sprintf(mytc = buf2, "%d", 60 * min + sec);
     }
     if (ti > 0) {
         if (mps) {
@@ -1496,7 +1498,8 @@ int ParseTimeControl(char * tc, float ti, int mps) {
             snprintf(buf, MSG_SIZ, ":%s", mytc);
         }
     }
-    fullTimeControlString = StrSave(buf);  // this should now be in PGN format
+    /* this should now be in PGN format */
+    fullTimeControlString = StrSave(buf);
 
     if (NextTimeControlFromString(&tc, &tc1) != 0) {
         return FALSE;
@@ -1526,7 +1529,8 @@ int ParseTimeControl(char * tc, float ti, int mps) {
     timeControl = tc1 * 1000;
 
     if (ti >= 0) {
-        timeIncrement = ti * 1000; /* convert to ms */
+        /* convert to ms */
+        timeIncrement = ti * 1000;
         movesPerSession = 0;
     } else {
         timeIncrement = 0;
@@ -1543,7 +1547,8 @@ void InitBackEnd2(void) {
         fprintf(debugFP, "Version: %s\n", programVersion);
 #endif
     }
-    ASSIGN(currentDebugFile, appData.nameOfDebugFile);  // [HGM] debug split: remember initial name in use
+    /* [HGM] debug split: remember initial name in use */
+    free_then_strdup(currentDebugFile, appData.nameOfDebugFile);
 
     set_cont_sequence(appData.wrapContSeq);
     if (appData.matchGames > 0) {
@@ -1551,10 +1556,12 @@ void InitBackEnd2(void) {
     } else if (appData.matchMode) {
         appData.matchGames = 1;
     }
-    if (appData.matchMode && appData.sameColorGames > 0) { /* [HGM] alternate: overrule matchGames */
+    if (appData.matchMode && appData.sameColorGames > 0) {
+        /* [HGM] alternate: overrule matchGames */
         appData.matchGames = appData.sameColorGames;
     }
-    if (appData.rewindIndex > 1) { /* [HGM] autoinc: rewind implies auto-increment and overrules given index */
+    if (appData.rewindIndex > 1) {
+        /* [HGM] autoinc: rewind implies auto-increment and overrules given index */
         if (appData.loadPositionIndex >= 0) {
             appData.loadPositionIndex = -1;
         }
@@ -1747,13 +1754,19 @@ void InitBackEnd3(void) {
         if (p) {
             *p = NULLCHAR;
         }
-        if (StringToVariant(q) != VariantUnknown) {  // the engine can play a recognized variant, however
+        if (StringToVariant(q) != VariantUnknown) {
+            /* the engine can play a recognized variant */
             int w, h, s;
-            if (sscanf(q, "%dx%d+%d_%c", &w, &h, &s, &c) == 4) {  // get size overrides the engine needs with it (if any)
-                appData.NrFiles = w, appData.NrRanks = h, appData.holdingsSize = s, q = strchr(q, '_') + 1;
+            if (sscanf(q, "%dx%d+%d_%c", &w, &h, &s, &c) == 4) {
+                /* get size overrides the engine needs with it (if any) */
+                appData.NrFiles = w;
+                appData.NrRanks = h;
+                appData.holdingsSize = s;
+                q = strchr(q, '_') + 1;
             }
-            ASSIGN(appData.variant, q);  // fake user requested the first variant played by the engine
-            Reset(TRUE, FALSE);  // and re-initialize
+            /* Fake that the user requested the first variant played by the engine, then re-initialize. */
+            free_then_strdup(appData.variant, q);
+            Reset(TRUE, FALSE);
         }
         if (p) {
             *p = ',';
@@ -10131,45 +10144,39 @@ void HandleMachineMove(char * message, ChessProgramState * cps) {
     char * bookHit;
 
     if (cps == &pairing && sscanf(message, "%d-%d", &savedWhitePlayer, &savedBlackPlayer) == 2) {
-        // [HGM] pairing: Mega-hack! Pairing engine also uses this routine (so it could give other WB commands).
+        /* [HGM] pairing: Mega-hack!  Pairing engine also uses this routine (so it could give other WB commands). */
         if (savedWhitePlayer == 0 || savedBlackPlayer == 0) {
             DisplayError(_("Invalid pairing from pairing engine"), 0);
             return;
         }
         pairingReceived = 1;
         NextMatchGame();
-        return;  // Skim the pairing messages here.
+        return;  /* Skim the pairing messages here. */
     }
 
     oldError = cps->userError;
     cps->userError = 0;
 
-FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book hit
-    /*
-     * Kludge to ignore BEL characters
-     */
+FakeBookMove:  /* [HGM] book: we jump here to simulate machine moves after book hit */
+    /* Kludge to ignore BEL characters */
     while (*message == '\007') {
         message++;
     }
 
-    /*
-     * [HGM] engine debug message: ignore lines starting with '#' character
-     */
+    /* [HGM] engine debug message: ignore lines starting with '#' character */
     if (cps->debug && *message == '#') {
         return;
     }
 
-    /*
-     * Look for book output
-     */
+    /* Look for book output. */
     if (cps == &first && bookRequested) {
         if (message[0] == '\t' || message[0] == ' ') {
-            /* Part of the book output is here; append it */
+            /* Part of the book output is here: append it. */
             strcat(bookOutput, message);
             strcat(bookOutput, "  \n");
             return;
         } else if (bookOutput[0] != NULLCHAR) {
-            /* All of book output has arrived; display it */
+            /* All of book output has arrived: display it. */
             char * p = bookOutput;
             while (*p != NULLCHAR) {
                 if (*p == '\t') {
@@ -10179,24 +10186,23 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             }
             DisplayInformation(bookOutput);
             bookRequested = FALSE;
-            /* Fall through to parse the current output */
+            /* Fall through to parse the current output. */
         }
     }
 
-    /*
-     * Look for machine move.
-     */
+    /* Look for machine move. */
     if ((sscanf(message, "%s %s %s", buf1, buf2, machineMove) == 3 && strcmp(buf2, "...") == 0) ||
      (sscanf(message, "%s %s", buf1, machineMove) == 2 && strcmp(buf1, "move") == 0)) {
         int fromX, fromY, toX, toY;
-        if (pausing &&
-         !cps->pause) {  // for pausing engine that does not support 'pause', we stash its move for processing when we resume.
+        if (pausing && !cps->pause) {
+            /* For pausing engine that does not support 'pause', we stash its move for processing when we resume. */
             if (appData.debugMode) {
                 fprintf(debugFP, "pause %s engine after move\n", cps->which);
             }
             safeStrCpy(stashedInputMove, message, MSG_SIZ);
             stalledEngine = cps;
-            if (appData.ponderNextMove) {  // bring opponent out of ponder
+            if (appData.ponderNextMove) {
+                /* bring opponent out of ponder */
                 if (gameMode == TwoMachinesPlay) {
                     if (cps->other->pause) {
                         PauseEngine(cps->other);
@@ -10280,43 +10286,59 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             AlphaRank(machineMove, 4);
         }
 
-        // [HGM] lion: (some very limited) support for Alien protocol
-        killX = killY = kill2X = kill2Y = -1;
-        if (machineMove[strlen(machineMove) - 1] == ',') {  // move ends in comma: non-final leg of composite move
+        /* [HGM] lion: (some very limited) support for Alien protocol */
+        kill2Y = -1;
+        kill2X = -1;
+        killY = -1;
+        killX = -1;
+        if (machineMove[strlen(machineMove) - 1] == ',') {
+            /* move ends in comma: non-final leg of composite move */
             if (legs++) {
-                return;  // middle leg contains only redundant info, ignore (but count it)
+                /* middle leg contains only redundant info, ignore (but count it) */
+                return;
             }
-            safeStrCpy(firstLeg, machineMove, 20);  // just remember it for processing when second leg arrives
+            /* just remember it for processing when second leg arrives */
+            safeStrCpy(firstLeg, machineMove, 20);
             return;
         }
-        if (p = strchr(machineMove, ',')) {  // we got both legs in one (happens on book move)
-            char * q = strchr(p + 1, ',');  // second comma?
-            safeStrCpy(firstLeg, machineMove, 20);  // kludge: fake we received the first leg earlier, and clip it off
+        if (p = strchr(machineMove, ',')) {
+            /* we got both legs in one (happens on book move) */
+            /* second comma? */
+            char * q = strchr(p + 1, ',');
+            /* kludge: fake we received the first leg earlier, and clip it off */
+            safeStrCpy(firstLeg, machineMove, 20);
             if (q) {
-                legs = 2, p = q;
+                legs = 2;
+                p = q;
             } else {
-                legs = 1;  // with 3-leg move we clipof first two legs!
+                /* with 3-leg move we clip off the first two legs! */
+                legs = 1;
             }
             safeStrCpy(machineMove, firstLeg + (p - machineMove) + 1, 20);
         }
-        if (firstLeg[0]) {  // there was a previous leg
+        if (firstLeg[0]) {
+            /* there was a previous leg */
             char buf[20], *p = machineMove + 1, *q = buf + 1, f;
-            if (gameInfo.variant == VariantDuck) {  // Duck Chess: 1st leg is FIDE move, 2nd is Duck
-                int l = strlen(firstLeg), promo = machineMove[4];
+            if (gameInfo.variant == VariantDuck) {
+                /* Duck Chess: 1st leg is FIDE move, 2nd is Duck */
+                int l = strlen(firstLeg);
+                int promo = machineMove[4];
                 sscanf(machineMove, "%c%d%c%d", &f, &killY, &f, &killY);
                 killX = f - AAA;
                 killY -= ONE - '0';
                 safeStrCpy(machineMove, firstLeg, 20);
                 snprintf(machineMove + l - 1, 20 - l, ";%c%d%c", killX + AAA, killY + ONE - '0', promo);
             } else {
-                // only support case where same piece makes two step
+                /* only support case where same piece makes two step */
                 safeStrCpy(buf, machineMove, 20);
+                /* find start of to-square */
                 while (isdigit(*q)) {
-                    q++;  // find start of to-square
+                    q++;
                 }
                 safeStrCpy(machineMove, firstLeg, 20);
+                /* to-square of first leg (which is now copied to machineMove) */
                 while (isdigit(*p)) {
-                    p++;  // to-square of first leg (which is now copied to machineMove)
+                    p++;
                 }
                 if (legs == 2) {
                     sscanf(p, "%c%d", &f, &kill2Y), kill2X = f - AAA,
@@ -10327,7 +10349,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
                 }
                 sscanf(buf, "%c%d", &f, &killY);
                 killX = f - AAA;
-                killY -= ONE - '0';  // pass intermediate square to MakeMove in global
+                /* pass intermediate square to MakeMove in global */
+                killY -= ONE - '0';
             }
             firstLeg[0] = NULLCHAR;
             legs = 0;
@@ -10345,11 +10368,9 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             return;
         }
 
-        /* [HGM] Apparently legal, but so far only tested with EP_UNKOWN */
-        /* So we have to redo legality test with true e.p. status here,  */
-        /* to make sure an illegal e.p. capture does not slip through,   */
-        /* to cause a forfeit on a justified illegal-move complaint      */
-        /* of the opponent.                                              */
+        /* [HGM] Apparently legal, but so far only tested with EP_UNKNOWN.  So, we have to redo legality test with true e.p. status
+           here, to make sure an illegal e.p. capture does not slip through, to cause a forfeit on a justified illegal-move
+           complaint of the opponent. */
         if (gameMode == TwoMachinesPlay && appData.testLegality) {
             ChessMove moveType;
             moveType = LegalityTest(boards[forwardMostMove], PosFlags(forwardMostMove), fromY, fromX, toY, toX, promoChar);
@@ -10364,8 +10385,7 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
                 GameEnds(cps->twoMachinesColor[0] == 'w' ? BlackWins : WhiteWins, buf1, GE_XBOARD);
                 return;
             } else if (!appData.fischerCastling && toX != BOARD_WIDTH >> 1) {
-                /* [HGM] Kludge to handle engines that send FRC-style castling
-                   when they shouldn't (like TSCP-Gothic) */
+                /* [HGM] Kludge to handle engines that send FRC-style castling when they shouldn't (like TSCP-Gothic) */
                 switch (moveType) {
                 case WhiteASideCastleFR:
                 case BlackASideCastleFR:
@@ -10377,7 +10397,9 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
                     toX--;
                     currentMoveString[2]--;
                     break;
-                default:;  // nothing to do, but suppresses warning of pedantic compilers
+                default:
+                    /* Intentionally do nothing. */
+                    ;
                 }
             }
         }
@@ -10394,17 +10416,20 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             cps->offeredDraw--;
         }
 
-        /* [AS] Save move info*/
+        /* [AS] Save move info */
         pvInfoList[forwardMostMove].score = programStats.score;
         pvInfoList[forwardMostMove].depth = programStats.depth;
-        pvInfoList[forwardMostMove].time = programStats.time;  // [HGM] PGNtime: take time from engine stats
+        /* [HGM] PGNtime: take time from engine stats */
+        pvInfoList[forwardMostMove].time = programStats.time;
 
-        MakeMove(fromX, fromY, toX, toY, promoChar); /*updates forwardMostMove*/
+        /* Updates forwardMostMove. */
+        MakeMove(fromX, fromY, toX, toY, promoChar);
 
         /* Test suites abort the 'game' after one move */
         if (*appData.finger) {
             static FILE * f;
-            char * fen = PositionToFEN(backwardMostMove, NULL, 0);  // no counts in EPD
+            /* no counts in EPD */
+            char * fen = PositionToFEN(backwardMostMove, NULL, 0);
             if (!f) {
                 f = fopen(appData.finger, "w");
             }
@@ -10441,7 +10466,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
                 int score = pvInfoList[forwardMostMove - count - 1].score;
 
                 if (count & 1) {
-                    score = -score; /* Flip score for winning side */
+                    /* Flip score for winning side */
+                    score = -score;
                 }
 
                 if (score > appData.adjudicateLossThreshold) {
@@ -10452,7 +10478,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             }
 
             if (count >= adjudicateLossPlies) {
-                ShowMove(fromX, fromY, toX, toY); /*updates currentMove*/
+                /* Updates currentMove. */
+                ShowMove(fromX, fromY, toX, toY);
 
                 GameEnds(WhiteOnMove(forwardMostMove) ? WhiteWins : BlackWins, "Xboard adjudication", GE_XBOARD);
 
@@ -10461,22 +10488,25 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         }
 
         if (Adjudicate(cps)) {
-            ShowMove(fromX, fromY, toX, toY); /*updates currentMove*/
-            return;  // [HGM] adjudicate: for all automatic game ends
+            /* Updates currentMove. */
+            ShowMove(fromX, fromY, toX, toY);
+            /* [HGM] adjudicate: for all automatic game ends */
+            return;
         }
 
 #if ZIPPY
         if ((gameMode == IcsPlayingWhite || gameMode == IcsPlayingBlack) && first.initDone) {
             if (cps->offeredDraw && (signed char)boards[forwardMostMove][EP_STATUS] <= EP_DRAWS) {
-                SendToICS(ics_prefix);  // [HGM] drawclaim: send caim and move on one line for FICS
+                /* [HGM] drawclaim: send claim and move on one line for FICS */
+                SendToICS(ics_prefix);
                 SendToICS("draw ");
                 SendMoveToICS(moveType, fromX, fromY, toX, toY, promoChar);
             }
             SendMoveToICS(moveType, fromX, fromY, toX, toY, promoChar);
             ics_user_moved = 1;
-            if (appData.autoKibitz && !appData.icsEngineAnalyze) { /* [HGM] kibitz: send most-recent PV info to ICS */
+            if (appData.autoKibitz && !appData.icsEngineAnalyze) {
+                /* [HGM] kibitz: send most-recent PV info to ICS */
                 char buf[3 * MSG_SIZ];
-
                 snprintf(buf, 3 * MSG_SIZ, "kibitz !!! %+.2f/%d (%.2f sec, %u nodes, %.0f knps) PV=%s\n", programStats.score / 100.,
                  programStats.depth, programStats.time / 100., (unsigned int)programStats.nodes,
                  (unsigned int)programStats.nodes / (10 * abs(programStats.time) + 1.), programStats.movelist);
@@ -10492,8 +10522,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
 
         bookHit = NULL;
         if (gameMode == TwoMachinesPlay) {
-            /* [HGM] relaying draw offers moved to after reception of move */
-            /* and interpreting offer as claim if it brings draw condition */
+            /* [HGM] relaying draw offers moved to after reception of move and interpreting offer as claim if it brings draw
+               condition */
             if (cps->offeredDraw == 1 && cps->other->sendDrawOffers) {
                 SendToProgram("draw\n", cps->other);
             }
@@ -10513,7 +10543,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
 
         roar = (killX >= 0 && IS_LION(boards[forwardMostMove][toY][toX]));
 
-        ShowMove(fromX, fromY, toX, toY); /*updates currentMove*/
+        /* Updates currentMove. */
+        ShowMove(fromX, fromY, toX, toY);
 
         if (!pausing && appData.ringBellAfterMoves) {
             if (!roar) {
@@ -10521,19 +10552,16 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             }
         }
 
-        /*
-         * Reenable menu items that were disabled while
-         * machine was thinking
-         */
+        /* Reenable menu items that were disabled while machine was thinking. */
         if (gameMode != TwoMachinesPlay) {
             SetUserThinkingEnables();
         }
 
-        // [HGM] book: after book hit opponent has received move and is now in force mode
-        // force the book reply into it, and then fake that it outputted this move by jumping
-        // back to the beginning of HandleMachineMove, with cps toggled and message set to this move
+        /* [HGM] book: After book hit, opponent has received move and is now in force mode.  Force the book reply into it, and then
+           fake that it outputted this move by jumping back to the beginning of HandleMachineMove, with cps toggled and message set
+           to this move. */
         if (bookHit) {
-            static char bookMove[MSG_SIZ];  // a bit generous?
+            static char bookMove[MSG_SIZ];
 
             safeStrCpy(bookMove, "move ", sizeof(bookMove) / sizeof(bookMove[0]));
             strcat(bookMove, bookHit);
@@ -10543,7 +10571,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             sprintf(programStats.movelist, "%s (xbook)", bookHit);
 
             if (cps->lastPing != cps->lastPong) {
-                savedMessage = message;  // args for deferred call
+                /* args for deferred call */
+                savedMessage = message;
                 savedState = cps;
                 ScheduleDelayedEvent(DeferredBookMove, 10);
                 return;
@@ -10554,27 +10583,25 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         return;
     }
 
-    /* Set special modes for chess engines.  Later something general
-     *  could be added here; for now there is just one kludge feature,
-     *  needed because Crafty 15.10 and earlier don't ignore SIGINT
-     *  when "xboard" is given as an interactive command.
-     */
+    /* Set special modes for chess engines.  Later something general could be added here; for now there is just one kludge feature,
+       needed because Crafty 15.10 and earlier don't ignore SIGINT when "xboard" is given as an interactive command. */
     if (strncmp(message, "kibitz Hello from Crafty", 24) == 0) {
         cps->useSigint = FALSE;
         cps->useSigterm = FALSE;
     }
-    if (strncmp(message, "feature ", 8) == 0) {  // [HGM] moved forward to pre-empt non-compliant commands
+    /* [HGM] moved forward to pre-empt non-compliant commands */
+    if (strncmp(message, "feature ", 8) == 0) {
         ParseFeatures(message + 8, cps);
         if (tryNr && tryNr < 3) {
             tryNr = 3;
         }
-        return;  // [HGM] This return was missing, causing option features to be recognized as non-compliant commands!
+        return;
     }
 
     if (!strncmp(message, "setup ", 6) &&
      (!appData.testLegality || gameInfo.variant == VariantFairy || gameInfo.variant == VariantUnknown || prelude ||
       NonStandardBoardSize(gameInfo.variant, gameInfo.boardWidth, gameInfo.boardHeight,
-       gameInfo.holdingsSize))) {  // [HGM] allow first engine to define opening position
+       gameInfo.holdingsSize))) {  /* [HGM] allow first engine to define opening position */
         int dummy, w, h, hand, s = 6;
         char buf[MSG_SIZ], varName[MSG_SIZ], *p = varName;
         Board tmp;
@@ -10585,7 +10612,7 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         if (sscanf(message, "setup (%s", buf) == 1) {
             char * ptc = strlen(buf) < 3 ? "PNBRQKpnbrqk" : buf;
             s = 8 + strlen(buf), buf[s - 9] = NULLCHAR, SetCharTableEsc(pieceToChar, ptc, SUFFIXES);
-            ASSIGN(appData.pieceToCharTable, ptc);
+            free_then_strdup(appData.pieceToCharTable, ptc);
             if (gameInfo.variant == VariantUnknown) {
                 safeStrCpy(startPieceToChar, ptc, MSG_SIZ);
             }
@@ -10596,8 +10623,15 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             while (message[s] && message[s++] != ' ')
                 ;
             if (BOARD_HEIGHT != h || BOARD_WIDTH != w + 4 * (hand != 0) || gameInfo.holdingsSize != hand || dummy == 4) {
-                // engine wants to change board format or variant
-                //	    if(hand <= h) deadRanks = 0; else deadRanks = hand - h, h = hand; // adapt board to over-sized holdings
+                /* engine wants to change board format or variant */
+#if 0
+                if (hand <= h) {
+                    deadRanks = 0;
+                } else {
+                    /* adapt board to over-sized holdings */
+                    deadRanks = hand - h, h = hand;
+                }
+#endif
                 if (hand > h) {
                     handSize = hand;
                 } else {
@@ -10607,17 +10641,22 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
                 appData.NrRanks = h;
                 appData.holdingsSize = hand;
                 if (dummy == 4) {
-                    p += prelude = (*p == '!');  // strip leading '!', and enable acceptance of further setups
-                    gameInfo.variant = StringToVariant(p);  // parent variant
+                    /* strip leading '!', and enable acceptance of further setups */
+                    p += prelude = (*p == '!');
+                    /* parent variant */
+                    gameInfo.variant = StringToVariant(p);
                 }
-                InitPosition(1);  // calls InitDrawingSizes to let new parameters take effect
+                /* calls InitDrawingSizes to let new parameters take effect */
+                InitPosition(1);
                 if (*buf) {
-                    SetCharTableEsc(pieceToChar, buf, SUFFIXES);  // do again, for it was spoiled by InitPosition
+                    /* do again, for it was spoiled by InitPosition */
+                    SetCharTableEsc(pieceToChar, buf, SUFFIXES);
                 }
-                // startedFromSetupPosition = FALSE;
+                /*startedFromSetupPosition = FALSE;*/
             }
         }
-        fromX = fromY = -1;
+        fromY = -1;
+        fromX = -1;
         ParseFEN(boards[0], &dummy, message + s, FALSE);
         if (dummy) {
             prelude *= 2;
@@ -10668,9 +10707,9 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         }
         if (piece < EmptySquare) {
             pieceDefs = TRUE;
-            ASSIGN(pieceDesc[piece], buf1);
+            free_then_strdup(pieceDesc[piece], buf1);
             if ((ID & 32) == 0 && p[1] == '&') {
-                ASSIGN(pieceDesc[WHITE_TO_BLACK piece], buf1);
+                free_then_strdup(pieceDesc[WHITE_TO_BLACK piece], buf1);
             }
         }
         return;
@@ -10678,14 +10717,16 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
     if (sscanf(message, "choice %s", promoRestrict) == 1) {
         if (gameMode == BeginningOfGame && cps == &first &&
          (!appData.testLegality || *engineVariant != NULLCHAR || gameInfo.variant == VariantFairy)) {
-            safeStrCpy(defaultChoice, promoRestrict, MSG_SIZ);  // redefine promotion choice for entire game
+            /* redefine promotion choice for entire game */
+            safeStrCpy(defaultChoice, promoRestrict, MSG_SIZ);
             return;
         }
         if (appData.testLegality) {
             return;
         }
         if (deferChoice) {
-            LeftClick(Press, 0, 0);  // finish the click that was interrupted
+            /* finish the click that was interrupted */
+            LeftClick(Press, 0, 0);
         } else if (promoSweep != EmptySquare) {
             promoSweep = CharToPiece(currentMove & 1 ? ToLower(*promoRestrict) : ToUpper(*promoRestrict));
             if (strlen(promoRestrict) > 1) {
@@ -10694,7 +10735,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         }
         return;
     }
-    if (!strncmp(message, "dice ", 5)) {  // [HGM] dice: provide dice rolls
+    if (!strncmp(message, "dice ", 5)) {
+        /* [HGM] dice: provide dice rolls */
         if (gameMode != TwoMachinesPlay || (cps->twoMachinesColor[0] == 'w') == WhiteOnMove(forwardMostMove)) {
             static char previousRoll[MSG_SIZ];
             char buf[MSG_SIZ], *p = message + 5;
@@ -10709,9 +10751,11 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             }
             l = strlen(diceRoll);
             if (l == 0) {
-                safeStrCpy(previousRoll, diceRoll + 1, MSG_SIZ);  // remember series from previous turn
+                /* remember series from previous turn */
+                safeStrCpy(previousRoll, diceRoll + 1, MSG_SIZ);
             }
-            snprintf(diceRoll + l, MSG_SIZ - l, "%s", buf + 4);  // accumulate rolls for display
+            /* accumulate rolls for display */
+            snprintf(diceRoll + l, MSG_SIZ - l, "%s", buf + 4);
             strcat(buf, "\n");
             SendToProgram(buf, cps);
             if (gameMode != TwoMachinesPlay) {
@@ -10728,9 +10772,7 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         }
         return;
     }
-    /* [HGM] Allow engine to set up a position. Don't ask me why one would
-     * want this, I was asked to put it in, and obliged.
-     */
+    /* [HGM] Allow engine to set up a position.  Don't ask me why one would want this, I was asked to put it in, and obliged. */
     if (!strncmp(message, "setboard ", 9)) {
         Board initial_position;
 
@@ -10758,7 +10800,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
      */
     if (!strncmp(message, "telluser ", 9)) {
         if (message[9] == '\\' && message[10] == '\\') {
-            EscapeExpand(message + 9, message + 11);  // [HGM] esc: allow escape sequences in popup box
+            /* [HGM] esc: allow escape sequences in popup box */
+            EscapeExpand(message + 9, message + 11);
         }
         PlayTellSound();
         DisplayNote(message + 9);
@@ -10767,7 +10810,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
     if (!strncmp(message, "tellusererror ", 14)) {
         cps->userError = 1;
         if (message[14] == '\\' && message[15] == '\\') {
-            EscapeExpand(message + 14, message + 16);  // [HGM] esc: allow escape sequences in popup box
+            /* [HGM] esc: allow escape sequences in popup box */
+            EscapeExpand(message + 14, message + 16);
         }
         PlayTellSound();
         DisplayError(message + 14, 0);
@@ -10791,10 +10835,12 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
                 SendToICS(buf1);
             }
         } else {
-            if (forwardMostMove == 0 && !strncmp(message + 11, "prelude ", 8)) {  // allow engine to add Prelude tag
+            /* allow engine to add Prelude tag */
+            if (forwardMostMove == 0 && !strncmp(message + 11, "prelude ", 8)) {
                 strncpy(preludeText, message + 19, MSG_SIZ);
             } else if (appData.autoComment) {
-                AppendComment(forwardMostMove, message + 11, 1);  // in local mode, add as move comment
+                /* in local mode, add as move comment */
+                AppendComment(forwardMostMove, message + 11, 1);
             }
         }
         return;
@@ -10821,10 +10867,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         AskQuestion(realname, buf2, buf1, cps->pr);
         return;
     }
-    /* Commands from the engine directly to ICS.  We don't allow these to be
-     *  sent until we are logged on. Crafty kibitzes have been known to
-     *  interfere with the login process.
-     */
+    /* Commands from the engine directly to ICS.  We don't allow these to be sent until we are logged on.  Crafty kibitzes have been
+       known to interfere with the login process. */
     if (loggedOn) {
         if (!strncmp(message, "tellics ", 8)) {
             SendToICS(message + 8);
@@ -10851,7 +10895,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             if (gameInfo.variant == VariantUnknown) {
                 DisplayError(_("Engine did not send setup for non-standard variant"), 0);
                 *engineVariant = NULLCHAR;
-                ASSIGN(appData.variant, "normal");  // back to normal as error recovery?
+                /* back to normal as error recovery? */
+                free_then_strdup(appData.variant, "normal");
                 GameEnds(GameUnfinished, NULL, GE_XBOARD);
             }
             initPing = -1;
@@ -10867,12 +10912,16 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         if (appData.testLegality && !*engineVariant && appData.markers) {
             return;
         }
-        MarkByFEN(message + 10);  // [HGM] alien: allow engine to mark board squares
+        /* [HGM] alien: allow engine to mark board squares */
+        MarkByFEN(message + 10);
         return;
     }
     if (!strncmp(message, "click ", 6)) {
-        char f, c = 0;
-        int x, y;  // [HGM] alien: allow engine to finish user moves (i.e. engine-driven one-click moving)
+        char f;
+        char c = 0;
+        /* [HGM] alien: allow engine to finish user moves (i.e. engine-driven one-click moving) */
+        int x;
+        int y;
         if (appData.testLegality || !appData.oneClick) {
             return;
         }
@@ -10886,8 +10935,10 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         x = x * squareSize + (x + 1) * lineGap + squareSize / 2;
         y = y * squareSize + (y + 1) * lineGap + squareSize / 2;
         f = first.highlight;
-        first.highlight = 0;  // kludge to suppress lift/put in response to own clicks
-        if (lastClickType == Press) {  // if button still down, fake release on same square, to be ready for next click
+        /* kludge to suppress lift/put in response to own clicks */
+        first.highlight = 0;
+        if (lastClickType == Press) {
+            /* The button is still down, so fake a release on the same square, in order to be ready for the next click. */
             LeftClick(Release, lastLeftX, lastLeftY);
         }
         controlKey = (c == ',');
@@ -10896,17 +10947,17 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         first.highlight = f;
         return;
     }
-    if (strncmp(message, "uciok", 5) == 0) {  // response to "uci" probe
+    /* response to "uci" probe */
+    if (strncmp(message, "uciok", 5) == 0) {
         int nr = (cps == &second);
-        appData.isUCI[nr] = isUCI = 1;
-        ReplaceEngine(cps, nr);  // retry install as UCI
+        isUCI = 1;
+        appData.isUCI[nr] = 1;
+        /* retry install as UCI */
+        ReplaceEngine(cps, nr);
         return;
     }
-    /*
-     * If the move is illegal, cancel it and redraw the board.
-     * Also deal with other error cases.  Matching is rather loose
-     * here to accommodate engines written before the spec.
-     */
+    /* If the move is illegal, cancel it and redraw the board.  Also deal with other error cases.  Matching is rather loose here to
+       accommodate engines written before the specification was developed. */
     if (strncmp(message + 1, "llegal move", 11) == 0 || strncmp(message, "Error", 5) == 0) {
         if (StrStr(message, "name") || StrStr(message, "rating") || StrStr(message, "?") || StrStr(message, "result") ||
          StrStr(message, "board") || StrStr(message, "bk") || StrStr(message, "computer") || StrStr(message, "variant") ||
@@ -10914,10 +10965,8 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
             return;
         }
         if (StrStr(message, "protover")) {
-            /* Program is responding to input, so it's apparently done
-               initializing, and this error message indicates it is
-               protocol version 1.  So we don't need to wait any longer
-               for it to initialize and send feature commands. */
+            /* Program is responding to input, so it's apparently done initializing, and this error message indicates it is protocol
+               version 1.  So we don't need to wait any longer for it to initialize and send feature commands. */
             FeatureDone(cps, 1);
             cps->protocolVersion = 1;
             return;
@@ -10937,8 +10986,9 @@ FakeBookMove:  // [HGM] book: we jump here to simulate machine moves after book 
         if (StrStr(message, "analyze")) {
             cps->analysisSupport = FALSE;
             cps->analyzing = FALSE;
-            //	    Reset(FALSE, TRUE); // [HGM] this caused discrepancy between display and internal state!
-            EditGameEvent();  // [HGM] try to preserve loaded game
+            /*Reset(FALSE, TRUE); /* [HGM] this caused discrepancy between display and internal state! */
+            /* [HGM] try to preserve loaded game */
+            EditGameEvent();
             snprintf(buf2, MSG_SIZ, _("%s does not support analysis"), cps->tidy);
             DisplayError(buf2, 0);
             return;
@@ -12586,9 +12636,8 @@ char * SupportedVariant(char * list, VariantClass v, int boardWidth, int boardHe
     return b;
 }
 
-void InitChessProgram(ChessProgramState * cps, int setup)
 /* setup needed to setup FRC opening position */
-{
+void InitChessProgram(ChessProgramState * cps, int setup) {
     char buf[MSG_SIZ], *b;
     if (appData.noChessProgram) {
         return;
@@ -12596,15 +12645,17 @@ void InitChessProgram(ChessProgramState * cps, int setup)
     hintRequested = FALSE;
     bookRequested = FALSE;
 
-    ParseFeatures(appData.features[cps == &second], cps);  // [HGM] allow user to overrule features
+    /* [HGM] allow user to overrule features */
+    ParseFeatures(appData.features[cps == &second], cps);
     /* [HGM] some new WB protocol commands to configure engine are sent now, if engine supports them */
     /*       moved to before sending initstring in 4.3.15, so Polyglot can delay UCI 'isready' to recepton of 'new' */
     if (cps->memSize) { /* [HGM] memory */
         snprintf(buf, MSG_SIZ, "memory %d\n", appData.defaultHashSize + appData.defaultCacheSizeEGTB);
         SendToProgram(buf, cps);
     }
-    SendEgtPath(cps); /* [HGM] EGT */
-    if (cps->maxCores) { /* [HGM] SMP: (protocol specified must be last settings command before new!) */
+    SendEgtPath(cps);
+    /* [HGM] SMP: (protocol specified must be last settings command before new!) */
+    if (cps->maxCores) {
         snprintf(buf, MSG_SIZ, "cores %d\n", appData.smpCores);
         SendToProgram(buf, cps);
     }
@@ -12627,10 +12678,11 @@ void InitChessProgram(ChessProgramState * cps, int setup)
             DisplayError(variantError, 0);
             if (v != VariantUnknown && cps == &first) {
                 int w, h, s;
-                if (sscanf(q, "%dx%d+%d_%c", &w, &h, &s, &c) == 4) {  // get size overrides the engine needs with it (if any)
+                if (sscanf(q, "%dx%d+%d_%c", &w, &h, &s, &c) == 4) {
+                    /* get size overrides the engine needs with it (if any) */
                     appData.NrFiles = w, appData.NrRanks = h, appData.holdingsSize = s, q = strchr(q, '_') + 1;
                 }
-                ASSIGN(appData.variant, q);
+                free_then_strdup(appData.variant, q);
                 Reset(TRUE, FALSE);
             }
             if (p) {
@@ -12661,17 +12713,14 @@ void InitChessProgram(ChessProgramState * cps, int setup)
     if (!appData.icsActive) {
         SendTimeControl(cps, movesPerSession, timeControl, timeIncrement, appData.searchDepth, searchTime);
     }
-    if (appData.showThinking
-     // [HGM] thinking: four options require thinking output to be sent
-     || !appData.hideThinkingFromHuman || appData.adjudicateLossThreshold != 0 || EngineOutputIsUp()) {
+    /* [HGM] thinking: four options require thinking output to be sent */
+    if (appData.showThinking || !appData.hideThinkingFromHuman || appData.adjudicateLossThreshold != 0 || EngineOutputIsUp()) {
         SendToProgram("post\n", cps);
     }
     SendToProgram("hard\n", cps);
     if (!appData.ponderNextMove) {
-        /* Warning: "easy" is a toggle in GNU Chess, so don't send
-           it without being sure what state we are in first.  "hard"
-           is not a toggle, so that one is OK.
-         */
+        /* Warning: "easy" is a toggle in GNU Chess, so don't send it without being sure what state we are in first.  "hard" is not
+           a toggle, so that one is OK. */
         SendToProgram("easy\n", cps);
     }
     if (cps->usePing) {
@@ -13035,7 +13084,8 @@ int CheckPlayers(char * participants) {
 int CreateTourney(char * name) {
     FILE * f;
     if (matchMode && strcmp(name, appData.tourneyFile)) {
-        ASSIGN(name, appData.tourneyFile);  // do not allow change of tourneyfile while playing
+        /* do not allow change of tourneyfile while playing */
+        free_then_strdup(name, appData.tourneyFile);
     }
     if (name[0] == NULLCHAR) {
         if (appData.participants[0]) {
@@ -13044,12 +13094,13 @@ int CreateTourney(char * name) {
         return 0;
     }
     f = fopen(name, "r");
-    if (f) {  // file exists
-        ASSIGN(appData.tourneyFile, name);
-        ParseArgsFromFile(f);  // parse it
+    if (f) {
+        free_then_strdup(appData.tourneyFile, name);
+        ParseArgsFromFile(f);
     } else {
         if (!appData.participants[0]) {
-            return 0;  // ignore tourney file if non-existing & no participants
+            /* ignore tourney file if non-existing & no participants */
+            return 0;
         }
         if (CountPlayers(appData.participants) < (appData.tourneyType > 0 ? appData.tourneyType + 1 : 2)) {
             DisplayError(_("Not enough participants"), 0);
@@ -13058,9 +13109,10 @@ int CreateTourney(char * name) {
         if (CheckPlayers(appData.participants)) {
             return 0;
         }
-        ASSIGN(appData.tourneyFile, name);
+        free_then_strdup(appData.tourneyFile, name);
         if (appData.tourneyType < 0) {
-            appData.defaultMatchGames = 1;  // Swiss forces games/pairing = 1
+            /* Swiss forces games/pairing = 1 */
+            appData.defaultMatchGames = 1;
         }
         if ((f = WriteTourneyFile("", NULL)) == NULL) {
             return 0;
@@ -13141,18 +13193,20 @@ void SaveEngineSettings(int n) {
     char * optionSettings;
 
     if (!currentEngine[n] || !currentEngine[n][0]) {
+        /* no engine from list is loaded */
         DisplayMessage("saving failed: engine not from list", "");
         return;
-    }  /* no engine from list is loaded */
+    }
     if (*engineListFile) {
         /* update engine list */
         ParseSettingsFile(engineListFile, &engineListFile);
     }
     p = strstr(firstChessProgramNames, currentEngine[n]);
     if (!p) {
+        /* The engine could have been deleted from the list after it was loaded. */
         DisplayMessage("saving failed: engine not found in list", "");
         return;
-    }  /* sanity check; engine could be deleted from list after loading */
+    }
     optionSettings = ResendOptions(n ? &second : &first, FALSE);
     len = strlen(currentEngine[n]);
     q = p + len;
@@ -13172,7 +13226,7 @@ void SaveEngineSettings(int n) {
         snprintf(buf, MSG_SIZ, "%s -firstOptions \"%s\"", currentEngine[n], optionSettings);
     }
     /* updated engine line */
-    ASSIGN(currentEngine[n], buf);
+    free_then_strdup(currentEngine[n], buf);
     len = p - firstChessProgramNames + strlen(q) + strlen(currentEngine[n]) + 1;
     s = malloc(len);
     snprintf(s, len, "%s%s%s", firstChessProgramNames, currentEngine[n], q);
@@ -13234,7 +13288,8 @@ int GetEngineLine(char * s, int n) {
         return 0;
     }
     if (n == 11) {
-        return 1;  // just testing if there was a match
+        /* just testing if there was a match */
+        return 1;
     }
     snprintf(buf, MSG_SIZ, "-%s %s", n == 10 ? "icshost" : "fcp", command[i]);
     if (n == 1) {
@@ -13245,10 +13300,11 @@ int GetEngineLine(char * s, int n) {
         SwapEngines(n);
     }
     if (n < 2) {
-        ASSIGN(currentEngine[n], command[i]);
+        free_then_strdup(currentEngine[n], command[i]);
     }
     if (n == 0 && *appData.secondChessProgram == NULLCHAR) {
-        SwapEngines(1);  // set second same as first if not yet set (to suppress WB startup dialog)
+        /* set second same as first if not yet set (to suppress WB startup dialog) */
+        SwapEngines(1);
         ParseArgsFromString(buf);
     }
     return 1;
@@ -13294,14 +13350,17 @@ char * recentEngines;
 
 void RecentEngineEvent(int nr) {
     int n;
-    // SwapEngines(1); // bump first to second
-    // ReplaceEngine(&second, 1); // and load it there
-    NamesToList(firstChessProgramNames, command, mnemonic, "all");  // get mnemonics of installed engines
-    n = SetPlayer(nr, recentEngines);  // select new (using original menu order!)
-    if (mnemonic[n]) {  // if somehow the engine with the selected nickname is no longer found in the list, we skip
+    /*SwapEngines(1); /* bump first to second */
+    /*ReplaceEngine(&second, 1); /* and load it there */
+    /* get mnemonics of installed engines */
+    NamesToList(firstChessProgramNames, command, mnemonic, "all");
+    /* select new (using original menu order!) */
+    n = SetPlayer(nr, recentEngines);
+    /* if somehow the engine with the selected nickname is no longer found in the list, we skip */
+    if (mnemonic[n]) {
         ReplaceEngine(&first, 0);
         FloatToFront(&appData.recentEngineList, command[n]);
-        ASSIGN(currentEngine[0], command[n]);
+        free_then_strdup(currentEngine[0], command[n]);
     }
 }
 
@@ -13456,21 +13515,26 @@ int NextTourneyGame(
     return OK;
 }
 
-void NextMatchGame(void) {  // performs game initialization that does not invoke engines, and then tries to start the game
+/* performs game initialization that does not invoke engines, and then tries to start the game */
+void NextMatchGame(void) {
     int res, firstWhite, swapColors = 0;
     if (!NextTourneyGame(nextGame, &swapColors)) {
-        return;  // this sets matchGame, -fcp / -scp and other options for next game, if needed
+        return;  /* this sets matchGame, -fcp / -scp and other options for next game, if needed */
     }
-    if (matchMode &&
-     appData.debugMode) {  // [HGM] debug split: game is part of a match; we might have to create a debug file just for this game
+    if (matchMode && appData.debugMode) {
+        /* [HGM] debug split: game is part of a match; we might have to create a debug file just for this game */
         char buf[MSG_SIZ];
-        snprintf(buf, MSG_SIZ, appData.nameOfDebugFile, nextGame + 1);  // expand name of debug file with %d in it
-        if (strcmp(buf, currentDebugFile)) {  // name has changed
+        /* expand name of debug file with %d in it */
+        snprintf(buf, MSG_SIZ, appData.nameOfDebugFile, nextGame + 1);
+        if (strcmp(buf, currentDebugFile)) {
+            /* name has changed */
             FILE * f = fopen(buf, "w");
-            if (f) {  // if opening the new file failed, just keep using the old one
-                ASSIGN(currentDebugFile, buf);
+            if (f) {
+                free_then_strdup(currentDebugFile, buf);
                 fclose(debugFP);
                 debugFP = f;
+            } else {
+                /* if opening the new file failed, just keep using the old one */
             }
             if (appData.serverFileName) {
                 if (serverFP) {
@@ -13486,29 +13550,39 @@ void NextMatchGame(void) {  // performs game initialization that does not invoke
             }
         }
     }
-    firstWhite = appData.firstPlaysBlack ^ (matchGame & 1 | appData.sameColorGames > 1);  // non-incremental default
-    firstWhite ^= swapColors;  // reverses if NextTourneyGame says we are in an odd round
-    first.twoMachinesColor = firstWhite ? "white\n" : "black\n";  // perform actual color assignement
+    /* non-incremental default */
+    firstWhite = appData.firstPlaysBlack ^ (matchGame & 1 | appData.sameColorGames > 1);
+    /* reverses if NextTourneyGame says we are in an odd round */
+    firstWhite ^= swapColors;
+    /* perform actual color assignment */
+    first.twoMachinesColor = firstWhite ? "white\n" : "black\n";
     second.twoMachinesColor = firstWhite ? "black\n" : "white\n";
-    appData.noChessProgram = (first.pr == NoProc);  // kludge to prevent Reset from starting up chess program
+    /* kludge to prevent Reset from starting up chess program */
+    appData.noChessProgram = (first.pr == NoProc);
     if (appData.loadGameIndex == -2) {
-        srandom(appData.seedBase + 68163 * (nextGame & ~1));  // deterministic seed to force same opening
+        /* deterministic seed to force same opening */
+        srandom(appData.seedBase + 68163 * (nextGame & ~1));
     }
     Reset(FALSE, first.pr != NoProc);
     if (startPieceToChar[0]) {
         SetCharTableEsc(pieceToChar, startPieceToChar, SUFFIXES);
     }
-    res = LoadGameOrPosition(matchGame);  // setup game
-    appData.noChessProgram = FALSE;  // LoadGameOrPosition might call Reset too!
+    /* setup game */
+    res = LoadGameOrPosition(matchGame);
+    /* LoadGameOrPosition might call Reset too! */
+    appData.noChessProgram = FALSE;
     if (startPieceToChar[0]) {
         SetCharTableEsc(pieceToChar, startPieceToChar, SUFFIXES);
     }
     if (!res) {
-        return;  // abort when bad game/pos file
+        /* abort when bad game/pos file */
+        return;
     }
-    if (appData.epd) {  // in EPD mode we make sure first engine is to move
+    if (appData.epd) {
+        /* in EPD mode we make sure first engine is to move */
         firstWhite = !(forwardMostMove & 1);
-        first.twoMachinesColor = firstWhite ? "white\n" : "black\n";  // perform actual color assignement
+        /* perform actual colour assignement */
+        first.twoMachinesColor = firstWhite ? "white\n" : "black\n";
         second.twoMachinesColor = firstWhite ? "black\n" : "white\n";
     }
     TwoMachinesEvent();

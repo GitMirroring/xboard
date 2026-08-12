@@ -35,10 +35,13 @@ dnl| PATCHLEVEL is used for bugfixes only
 dnl| pre-release version could have a -YYYYMMDD attached, e.g., 4.9.0-20160313
 AC_INIT([GNU XBoard], [4.9.1], [bug-xboard@gnu.org])
 
+dnl| Do not disturb the ordering of the below options.
 AC_CONFIG_SRCDIR([zippy.h])
-AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4])
+AC_USE_SYSTEM_EXTENSIONS
+AC_CONFIG_HEADERS([config.h])
+dnl| Do not disturb the ordering of the above options.
 
 AM_INIT_AUTOMAKE([
     gnu

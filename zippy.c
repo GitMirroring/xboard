@@ -187,7 +187,7 @@ void ZippyInit(void) {
     if (p != NULL) {
         appData.zippyVariants = p;
     }
-    ASSIGN(first.variants, appData.zippyVariants);
+    free_then_strdup(first.variants, appData.zippyVariants);
 
     srandom(time(NULL));
 }
@@ -300,7 +300,7 @@ char * swifties[] = {
  "i drivels:",
  "i drones:",
  "i effuses:",
- /*"i ejaculates:",*/ "i elucidates:",
+ "i elucidates:",
  "i emotes:",
  "i endorses:",
  "i enthuses:",

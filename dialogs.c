@@ -285,7 +285,7 @@ static void UpgradeParticipant(void);
 static void PseudoOK(void);
 
 static int MatchOK(int n) {
-    ASSIGN(appData.participants, engineName);
+    free_then_strdup(appData.participants, engineName);
     if (!CreateTourney(tfName) || matchMode) {
         return matchMode || !appData.participants[0];
     }
@@ -354,8 +354,8 @@ static void PseudoOK(void) {
     }
     /* read all, but suppress calling of MatchOK */
     GenericReadout(matchOptions, -2);
-    ASSIGN(appData.participants, engineName);
-    ASSIGN(appData.tourneyFile, tfName);
+    free_then_strdup(appData.participants, engineName);
+    free_then_strdup(appData.tourneyFile, tfName);
     /* early popdown to prevent FreezeUI called through MatchEvent from causing XtGrab warning */
     PopDown(MasterDlg);
 }
@@ -395,7 +395,7 @@ static void AddToTourney(int n, int sel) {
     }
     /* replace list by only the group contents */
     nr = NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);
-    ASSIGN(engineMnemonic[0], buf);
+    free_then_strdup(engineMnemonic[0], buf);
     LoadListBox(&matchOptions[PARTICIPANTS + 1], _("# no engines are installed"), -1, -1);
     HighlightWithScroll(&matchOptions[PARTICIPANTS + 1], 0, nr);
 }
@@ -408,9 +408,9 @@ void MatchOptionsProc(void) {
     NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");
     /* with pairing engine, allow Swiss */
     matchOptions[9].min = -(appData.pairingEngine[0] != NULLCHAR);
-    ASSIGN(tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
-    ASSIGN(engineName, appData.participants);
-    ASSIGN(engineMnemonic[0], "");
+    free_then_strdup(tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
+    free_then_strdup(engineName, appData.participants);
+    free_then_strdup(engineMnemonic[0], "");
     GenericPopUp(matchOptions, _("Tournament Options"), MasterDlg, BoardWindow, MODAL, 0);
 }
 
@@ -580,7 +580,7 @@ static void Pick(int n) {
     }
 
     gameInfo.variant = v;
-    ASSIGN(appData.variant, VariantName(v));
+    free_then_strdup(appData.variant, VariantName(v));
 
     /* [HGM] shuffle: possible shuffle reset when we switch. */
     shuffleOpenings = FALSE;
@@ -592,9 +592,9 @@ static void Pick(int n) {
     appData.NrFiles = filesTmp;
     appData.holdingsSize = sizeTmp;
     appData.pieceToCharTable = NULL;
-    ASSIGN(appData.pieceNickNames, "");
-    ASSIGN(appData.colorNickNames, "");
-    ASSIGN(appData.men, "");
+    free_then_strdup(appData.pieceNickNames, "");
+    free_then_strdup(appData.colorNickNames, "");
+    free_then_strdup(appData.men, "");
     PopDown(TransientDlg);
     Reset(TRUE, TRUE);
     return;
@@ -626,7 +626,7 @@ void NewVariantProc(void) {
         char * v = EngineDefinedVariant(&first, i);
         if (v) {
             last = i;
-            ASSIGN(variantDescriptors[start + i].name, v);
+            free_then_strdup(variantDescriptors[start + i].name, v);
             variantDescriptors[start + i].type = Button;
         } else {
             variantDescriptors[start + i].type = Skip;
@@ -634,7 +634,7 @@ void NewVariantProc(void) {
     }
     /* odd number, add filler */
     if (!(last & 1)) {
-        ASSIGN(variantDescriptors[start + last + 1].name, " ");
+        free_then_strdup(variantDescriptors[start + last + 1].name, " ");
         variantDescriptors[start + last + 1].type = Button;
         variantDescriptors[start + last + 1].value = Skip;
     }
@@ -655,9 +655,9 @@ static char * egtPath;
 static int CommonOptionsOK(int n) {
     int newPonder = appData.ponderNextMove;
     if (*egtPath != '/' && strchr(egtPath, ':')) {
-        ASSIGN(appData.egtFormats, egtPath);
+        free_then_strdup(appData.egtFormats, egtPath);
     } else {
-        ASSIGN(appData.defaultPathEGTB, egtPath);
+        free_then_strdup(appData.defaultPathEGTB, egtPath);
     }
     /* Ensure that changes are sent to the first engine by re-initializing it if it was already started pre-emptively at the end of
        the previous game. */
@@ -694,9 +694,9 @@ void UciMenuProc(void) {
     oldCores = appData.smpCores;
     oldPonder = appData.ponderNextMove;
     if (appData.egtFormats && *appData.egtFormats) {
-        ASSIGN(egtPath, appData.egtFormats);
+        free_then_strdup(egtPath, appData.egtFormats);
     } else {
-        ASSIGN(egtPath, appData.defaultPathEGTB);
+        free_then_strdup(egtPath, appData.defaultPathEGTB);
     }
     GenericPopUp(commonEngineOptions, _("Common Engine Settings"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -803,8 +803,8 @@ static Option loadOptions[] = {
 };
 
 void LoadOptionsPopUp(DialogClass parent) {
-    ASSIGN(countRange, "");
-    ASSIGN(searchMode, modeValues[appData.searchMode - 1]);
+    free_then_strdup(countRange, "");
+    free_then_strdup(searchMode, modeValues[appData.searchMode - 1]);
     GenericPopUp(loadOptions, _("Load Game Options"), TransientDlg, parent, MODAL, 0);
 }
 
@@ -975,7 +975,7 @@ static Option boardOptions[] = {
 static int BoardOptionsOK(int n) {
     /* called by pressing OK, and theme selected */
     if (n && (n = SelectedListBoxItem(&boardOptions[THEMELIST])) > 0 && *engineList[n] != '#') {
-        ASSIGN(engineLine, engineList[n]);
+        free_then_strdup(engineLine, engineList[n]);
     }
     LoadTheme();
     return 1;
@@ -1052,26 +1052,31 @@ void ThemeSel(int n, int sel) {
     int nr;
     char buf[MSG_SIZ];
     if (sel < 1) {
-        buf[0] = NULLCHAR;  // back to top level
+        /* back to top level */
+        buf[0] = NULLCHAR;
     } else if (engineList[sel][0] == '#') {
-        safeStrCpy(buf, engineList[sel], MSG_SIZ);  // group header, open group
-    } else {  // normal line, select engine
-        ASSIGN(engineLine, engineList[sel]);
+        /* group header, open group */
+        safeStrCpy(buf, engineList[sel], MSG_SIZ);
+    } else {
+        /* normal line, select engine */
+        free_then_strdup(engineLine, engineList[sel]);
         LoadTheme();
         PopDown(TransientDlg);
         return;
     }
-    nr = NamesToList(appData.themeNames, engineList, engineMnemonic, buf);  // replace list by only the group contents
-    ASSIGN(engineMnemonic[0], buf);
+    /* replace list by only the group contents */
+    nr = NamesToList(appData.themeNames, engineList, engineMnemonic, buf);
+    free_then_strdup(engineMnemonic[0], buf);
     LoadListBox(&boardOptions[THEMELIST], _("# no themes are defined"), -1, -1);
     HighlightWithScroll(&boardOptions[THEMELIST], 0, nr);
 }
 
 void BoardOptionsProc(void) {
-    strncpy(oldPieceDir, appData.pieceDirectory, MSG_SIZ - 1);  // to see if it changed
-    ASSIGN(engineLine, "");
-    ASSIGN(nickName, "");
-    ASSIGN(engineMnemonic[0], "");
+    /* to see if it changed */
+    strncpy(oldPieceDir, appData.pieceDirectory, MSG_SIZ - 1);
+    free_then_strdup(engineLine, "");
+    free_then_strdup(nickName, "");
+    free_then_strdup(engineMnemonic[0], "");
     NamesToList(appData.themeNames, engineList, engineMnemonic, "");
     GenericPopUp(boardOptions, _("Board Options"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -1277,7 +1282,7 @@ static int NewTagsCallback(int n) {
     if (bookUp) {
         SaveToBook(tagsText), DisplayBook(currentMove);
     } else if (resPtr) {
-        ASSIGN(*resPtr, tagsText);
+        free_then_strdup(*resPtr, tagsText);
         if (resPtr == &firstChessProgramNames) {
             SaveEngineList();
         }
@@ -1483,7 +1488,7 @@ static int TypeInOK(int n) {
 void PopUpMoveDialog(char firstchar) {
     static char buf[2];
     buf[0] = firstchar;
-    ASSIGN(icsText, buf);
+    free_then_strdup(icsText, buf);
     if (GenericPopUp(typeOptions, _("Type a move"), TransientDlg, BoardWindow, MODAL, 0)) {
         AddHandler(&typeOptions[0], TransientDlg, 2);
     }
@@ -1592,8 +1597,9 @@ static Option installOptions[] = {
 };
 
 static int InstallOK(int n) {
-    if (n && (n = SelectedListBoxItem(&installOptions[1])) > 0) {  // called by pressing OK, and engine selected
-        ASSIGN(engineLine, engineList[n]);
+    if (n && (n = SelectedListBoxItem(&installOptions[1])) > 0) {
+        /* called by pressing OK, and engine selected */
+        free_then_strdup(engineLine, engineList[n]);
     } else {
         switch (values[12]) {
         case 0:
@@ -1618,7 +1624,7 @@ static int InstallOK(int n) {
         isUCI = 2;
         /* TODO: Consider whether we should ensure that -uxiAdapter is defined. */
         if (!*appData.ucciAdapter) {
-            ASSIGN(appData.ucciAdapter, "usi2wb -%variant \"%fcp\"\"%fd\"");
+            free_then_strdup(appData.ucciAdapter, "usi2wb -%variant \"%fcp\"\"%fd\"");
         }
     }
     if (!secondEng) {
@@ -1634,16 +1640,20 @@ static void EngSel(int n, int sel) {
     int nr;
     char buf[MSG_SIZ];
     if (sel < 1) {
-        buf[0] = NULLCHAR;  // back to top level
+        /* back to top level */
+        buf[0] = NULLCHAR;
     } else if (engineList[sel][0] == '#') {
-        safeStrCpy(buf, engineList[sel], MSG_SIZ);  // group header, open group
-    } else {  // normal line, select engine
-        ASSIGN(engineLine, engineList[sel]);
+        /* group header, open group */
+        safeStrCpy(buf, engineList[sel], MSG_SIZ);
+    } else {
+        /* normal line, select engine */
+        free_then_strdup(engineLine, engineList[sel]);
         InstallOK(0);
         return;
     }
-    nr = NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);  // replace list by only the group contents
-    ASSIGN(engineMnemonic[0], buf);
+    /* replace list by only the group contents */
+    nr = NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);
+    free_then_strdup(engineMnemonic[0], buf);
     LoadListBox(&installOptions[1], _("# no engines are installed"), -1, -1);
     HighlightWithScroll(&installOptions[1], 0, nr);
 }
@@ -1683,7 +1693,7 @@ static void LoadEngineProc(int engineNr, char * title) {
         free(params);
     }
     params = strdup("");
-    ASSIGN(engineMnemonic[0], "");
+    free_then_strdup(engineMnemonic[0], "");
     NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");
     GenericPopUp(installOptions, title, TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -1692,11 +1702,11 @@ void LoadEngine1Proc(void) { LoadEngineProc(0, _("Load first engine")); }
 
 void LoadEngine2Proc(void) { LoadEngineProc(1, _("Load second engine")); }
 
-//----------------------------------------------------- Edit Book -----------------------------------------
+/* ----------------------------------------------------- Edit Book ----------------------------------------- */
 
 void EditBookProc(void) { EditBookEvent(); }
 
-//--------------------------------------------------- New Shuffle Game ------------------------------
+/* --------------------------------------------------- New Shuffle Game ------------------------------ */
 
 static void SetRandom(int n);
 
@@ -1724,7 +1734,7 @@ static void SetRandom(int n) {
 
 void ShuffleMenuProc(void) { GenericPopUp(shuffleOptions, _("New Shuffle Game"), TransientDlg, BoardWindow, MODAL, 0); }
 
-//--------------------------------------------------- Fonts ------------------------------
+/*--------------------------------------------------- Fonts ------------------------------ */
 
 static void AdjustFont(int n);
 
@@ -1734,7 +1744,7 @@ static char * oldFont[7];
 static int NewFont(int n, int fnr, char * font) {
     int fontChanged = strcmp(oldFont[n], font) ? 1 : 0;
     if (fontChanged) {
-        ASSIGN(fontTable[fnr][initialSquareSize], font);
+        free_then_strdup(fontTable[fnr][initialSquareSize], font);
         fontIsSet[fnr] = fontValid[fnr][initialSquareSize] = TRUE;
     }
     return fontChanged;
@@ -1876,7 +1886,8 @@ static void AdjustFont(int n) {
     int button = fontOptions[n].value, base = n - button;
     char * oldFont;
     GetWidgetText(&fontOptions[base], &oldFont);
-    BreakUp(oldFont);  // take apart old font name
+    /* take apart old font name */
+    BreakUp(oldFont);
     switch (button) {
     case 1:
         points++;
@@ -1913,7 +1924,7 @@ void FontsProc(void) {
     GenericPopUp(fontOptions, _("Fonts"), TransientDlg, BoardWindow, MODAL, 0);
     for (i = 0; i < 7; i++) {
         ApplyFont(&fontOptions[6 * i], *(char **)fontOptions[6 * i].target);
-        ASSIGN(oldFont[i], *(char **)fontOptions[6 * i].target);
+        free_then_strdup(oldFont[i], *(char **)fontOptions[6 * i].target);
     }
 }
 
@@ -1952,7 +1963,8 @@ static int TcOK(int n) {
     if (tcType == 2 && tmpInc <= 0) {
         return 0;
     }
-    GetWidgetText(&tcOptions[5], &tc);  // get original text, in case it is min:sec
+    /* get original text, in case it is min:sec */
+    GetWidgetText(&tcOptions[5], &tc);
     if (by60) {
         snprintf(buf, MSG_SIZ, "%d:%02d", tmpTc / 60, tmpTc % 60), tc = buf;
     }
@@ -1963,14 +1975,14 @@ static int TcOK(int n) {
             return 0;
         }
         appData.movesPerSession = tmpMoves;
-        ASSIGN(appData.timeControl, tc);
+        free_then_strdup(appData.timeControl, tc);
         appData.timeIncrement = -1;
         break;
     case 1:
         if (!ParseTimeControl(tc, tmpInc, 0)) {
             return 0;
         }
-        ASSIGN(appData.timeControl, tc);
+        free_then_strdup(appData.timeControl, tc);
         appData.timeIncrement = (by60 ? tmpInc / 60. : tmpInc);
         break;
     case 2:
@@ -2053,7 +2065,7 @@ int SendReply(int n) {
 void AskQuestion(char * title, char * question, char * replyPrefix, ProcRef pr) {
     safeStrCpy(pendingReplyPrefix, replyPrefix, sizeof(pendingReplyPrefix) / sizeof(pendingReplyPrefix[0]));
     pendingReplyPR = pr;
-    ASSIGN(answer, "");
+    free_then_strdup(answer, "");
     askOptions[0].name = question;
     if (GenericPopUp(askOptions, title, AskDlg, BoardWindow, MODAL, 0)) {
         AddHandler(&askOptions[1], AskDlg, 2);
@@ -2110,7 +2122,7 @@ static void PromoPick(int n) {
 }
 
 static void SetPromo(char * name, int nr, char promoChar) {
-    ASSIGN(promoOptions[nr].name, name);
+    free_then_strdup(promoOptions[nr].name, name);
     promoOptions[nr].value = promoChar;
     promoOptions[nr].min = SAME_ROW;
 }
@@ -2421,30 +2433,33 @@ void DelayedSetText(void) {
     SetInsertPos(&chatOptions[CHAT_IN], strlen(tmpLine));
 }
 
-void DelayedScroll(
- void) {  // If we do this immediately it does it before shrinking the memo, so the lower half remains hidden (Ughh!)
+/* If we do this immediately it does it before shrinking the memo, so the lower half remains hidden (Ughh!) */
+void DelayedScroll(void) {
     SetInsertPos(&chatOptions[CHAT_ICS], 999999);
     SetWidgetText(&chatOptions[CHAT_IN], tmpLine, ChatDlg);
     SetInsertPos(&chatOptions[CHAT_IN], strlen(tmpLine));
 }
 
 void ChatSwitch(int n) {
-    int i, j;
+    int i;
+    int j;
     char * v;
     if (chatOptions[CHAT_ICS].type == Skip) {
-        hidden = 0;  // In Xaw there is no ICS pane we can hide behind
+        /* In Xaw there is no ICS pane we can hide behind */
+        hidden = 0;
     }
-    Show(&chatOptions[CHAT_PANE], 0);  // show
+    Show(&chatOptions[CHAT_PANE], 0);
     if (hidden) {
-        ScheduleDelayedEvent(DelayedScroll, 50);  // Awful!
+        /* Awful! */
+        ScheduleDelayedEvent(DelayedScroll, 50);
     } else {
         ScheduleDelayedEvent(DelayedSetText, 50);
     }
     GetWidgetText(&chatOptions[CHAT_IN], &v);
     if (hidden) {
-        ASSIGN(icsLine, v);
+        free_then_strdup(icsLine, v);
     } else {
-        ASSIGN(inputs[activePartner], v);
+        free_then_strdup(inputs[activePartner], v);
     }
     hidden = 0;
     activePartner = --n;
@@ -2460,32 +2475,34 @@ void ChatSwitch(int n) {
         SetColor(dirty[i] ? "#FFC000" : "#FFFFFF", &chatOptions[j]);
     }
     if (!inputs[n]) {
-        ASSIGN(inputs[n], "");
+        free_then_strdup(inputs[n], "");
     }
-    // SetWidgetText(&chatOptions[CHAT_IN], inputs[n], ChatDlg); // does not work (in this widget only)
-    // SetInsertPos(&chatOptions[CHAT_IN], strlen(inputs[n]));
-    tmpLine = inputs[n];  // for the delayed event
+    /*SetWidgetText(&chatOptions[CHAT_IN], inputs[n], ChatDlg); /* does not work (in this widget only) */
+    /*SetInsertPos(&chatOptions[CHAT_IN], strlen(inputs[n]));*/
+    /* for the delayed event */
+    tmpLine = inputs[n];
     HardSetFocus(&chatOptions[strcmp(chatPartner[n], "") ? CHAT_IN : CHAT_PARTNER], 0);
 }
 
 void PaneSwitch(void) {
     char * v;
-    Show(&chatOptions[CHAT_PANE], hidden = 1);  // hide
+    Show(&chatOptions[CHAT_PANE], hidden = 1);  /* hide */
     GetWidgetText(&chatOptions[CHAT_IN], &v);
-    ASSIGN(inputs[activePartner], v);
+    free_then_strdup(inputs[activePartner], v);
     if (!icsLine) {
-        ASSIGN(icsLine, "");
+        free_then_strdup(icsLine, "");
     }
     tmpLine = icsLine;
     ScheduleDelayedEvent(DelayedSetText, 50);
-    // SetWidgetText(&chatOptions[CHAT_IN], icsLine, ChatDlg); // does not work (in this widget only)
-    // SetInsertPos(&chatOptions[CHAT_IN], strlen(icsLine));
+    /*SetWidgetText(&chatOptions[CHAT_IN], icsLine, ChatDlg); /* does not work (in this widget only) */
+    /*SetInsertPos(&chatOptions[CHAT_IN], strlen(icsLine));*/
 }
 
-void ClearChat(void) {  // clear the chat to make it free for other use
+/* clear the chat to make it free for other use */
+void ClearChat(void) {
     chatPartner[activePartner][0] = NULLCHAR;
-    ASSIGN(texts[activePartner], "");
-    ASSIGN(inputs[activePartner], "");
+    free_then_strdup(texts[activePartner], "");
+    free_then_strdup(inputs[activePartner], "");
     SetWidgetText(&chatOptions[CHAT_PARTNER], "", ChatDlg);
     SetWidgetText(&chatOptions[CHAT_OUT], "", ChatDlg);
     SetWidgetText(&chatOptions[CHAT_IN], "", ChatDlg);
@@ -2545,18 +2562,23 @@ void ConsoleAutoPopUp(char * buf) {
     if (!appData.autoBox) {
         return;
     }
-    if (appData.icsActive) {  // text typed to board in ICS mode: divert to ICS input box
-        if (DialogExists(ChatDlg)) {  // box already exists: append to current contents
-            char *p, newText[MSG_SIZ];
+    if (appData.icsActive) {
+        /* text typed to board in ICS mode: divert to ICS input box */
+        if (DialogExists(ChatDlg)) {
+            /* box already exists: append to current contents */
+            char * p;
+            char newText[MSG_SIZ];
             GetWidgetText(&chatOptions[CHAT_IN], &p);
             snprintf(newText, MSG_SIZ, "%s%c", p, *buf);
             SetWidgetText(&chatOptions[CHAT_IN], newText, ChatDlg);
             if (shellUp[ChatDlg]) {
-                HardSetFocus(&chatOptions[CHAT_IN], ChatDlg);  // why???
+                /* TODO: why is this done here? */
+                HardSetFocus(&chatOptions[CHAT_IN], ChatDlg);
             }
         } else {
-            ASSIGN(line, buf);
-        }  // box did not exist: make sure it pops up with char in it
+            /* box did not exist: make sure it pops up with char in it */
+            free_then_strdup(line, buf);
+        }
         ChatPopUp();
     } else {
         PopUpMoveDialog(*buf);
@@ -2942,48 +2964,64 @@ void DisplayHelp(char * name) {
     int n = 0;
     FILE * f;
     if (!xboardMan) {
-        xboardMan = BufferCommandOutput("man -w xboard", MSG_SIZ);  // obtain path to XBoard's man file
+        /* obtain path to XBoard's man file */
+        xboardMan = BufferCommandOutput("man -w xboard", MSG_SIZ);
         if (xboardMan) {
-            xboardMan[strlen(xboardMan) - 1] = NULLCHAR;  // strip off traling linefeed
+            /* strip off traling linefeed */
+            xboardMan[strlen(xboardMan) - 1] = NULLCHAR;
         }
     }
-    if (currentCps) {  // for engine options we have to look in engine manual
-        snprintf(buf, MSG_SIZ, "man -w ");  // get (tidied) engine name in buf
-        TidyProgramName(currentCps->program, "localhost", adapter);  // name of binary we are actually running
+    if (currentCps) {
+        /* for engine options we have to look in engine manual */
+        /* get (tidied) engine name in buf */
+        snprintf(buf, MSG_SIZ, "man -w ");
+        /* name of binary we are actually running */
+        TidyProgramName(currentCps->program, "localhost", adapter);
         TidyProgramName(currentCps == &first ? appData.firstChessProgram : appData.secondChessProgram, "localhost", buf + 7);
-        if (strcmp(buf + 7, adapter) &&
-         StrCaseStr(name, adapter) == name) {  // option starts with name of apparent proxy for engine
-            safeStrCpy(buf + 7, adapter, MSG_SIZ - 7);  // use adapter manual
-            name += strlen(adapter);  // strip adapter name of option
+        if (strcmp(buf + 7, adapter) && StrCaseStr(name, adapter) == name) {
+            /* option starts with name of apparent proxy for engine */
+            /* use adapter manual */
+            safeStrCpy(buf + 7, adapter, MSG_SIZ - 7);
+            /* strip adapter name of option */
+            name += strlen(adapter);
             while (*name == ' ') {
                 name++;
             }
         }
-        if (strcmp(buf, tidy)) {  // is different engine from last time
+        if (strcmp(buf, tidy)) {
+            /* It is a different engine than the one from last time, so any currently-held text is worthless. */
             free(manText[1]);
-            manText[1] = NULL;  // so any currently held text is worthless
-            safeStrCpy(tidy, buf, MSG_SIZ);  // remember current engine
-            eng = BufferCommandOutput(tidy, MSG_SIZ);  // obtain path to  its man file
+            manText[1] = NULL;
+            /* remember current engine */
+            safeStrCpy(tidy, buf, MSG_SIZ);
+            /* obtain path to its man file */
+            eng = BufferCommandOutput(tidy, MSG_SIZ);
             if (*eng) {
-                safeStrCpy(engMan, eng, strlen(eng));  // and remember that too
+                /* and remember that too */
+                safeStrCpy(engMan, eng, strlen(eng));
             } else {
                 *engMan = NULLCHAR;
             }
             free(eng);
         }
         safeStrCpy(buf, engMan, MSG_SIZ);
-        n = 1;  // use engine man
+        /* use engine man */
+        n = 1;
     } else {
-        snprintf(buf, MSG_SIZ, "%s", xboardMan);  // use xboard man
+        /* use xboard man */
+        snprintf(buf, MSG_SIZ, "%s", xboardMan);
     }
     f = fopen(buf, "r");
     if (f) {
         char * msg = "Right-clicking menu item or dialog text pops up help on it";
-        ASSIGN(appData.suppress, msg);
-        if (strstr(buf, ".gz")) {  // man file is gzipped
-            if (!manText[n]) {  // unzipped text not buffered yet
+        free_then_strdup(appData.suppress, msg);
+        if (strstr(buf, ".gz")) {
+            /* man file is gzipped */
+            if (!manText[n]) {
+                /* unzipped text not buffered yet */
                 snprintf(tidy, MSG_SIZ, "gunzip -c %s", buf);
-                manText[n] = BufferCommandOutput(tidy, 250000);  // store unzipped in buffer
+                /* store unzipped in buffer */
+                manText[n] = BufferCommandOutput(tidy, 250000);
             }
             /* use buffered unzipped text */
             textPtr = manText[n];
@@ -3470,9 +3508,9 @@ int BrowseOK(int n) {
             if (sel < 0 || sel >= filePtr) {
                 return FALSE;
             }
-            ASSIGN(fileName, fileList[sel]);
+            free_then_strdup(fileName, fileList[sel]);
         } else {
-            ASSIGN(fileName, curDir);
+            free_then_strdup(fileName, curDir);
         }
     }
     if (!fileName[0]) {
@@ -3497,7 +3535,7 @@ int BrowseOK(int n) {
         /* Refuse OK if file not openable. */
         return FALSE;
     }
-    ASSIGN(*namePtr, fileName);
+    free_then_strdup(*namePtr, fileName);
     ScheduleDelayedEvent(DelayedLoad, 50);
     /* Not sure this is ever non-null. */
     currentCps = savCps;
@@ -3571,7 +3609,7 @@ void ListDir(int pathFlag) {
                 /* suppress hidden directories, except ".." */
                 continue;
             }
-            ASSIGN(folderList[folderPtr], s);
+            free_then_strdup(folderList[folderPtr], s);
             if (folderPtr < MAXFILES - 2) {
                 folderPtr++;
             }
@@ -3605,12 +3643,12 @@ void ListDir(int pathFlag) {
             if (cnt++ < pageStart) {
                 continue;
             }
-            ASSIGN(fileList[filePtr], s);
+            free_then_strdup(fileList[filePtr], s);
             filePtr++;
         }
     }
     if (filePtr == MAXFILES - 2) {
-        ASSIGN(fileList[filePtr], _("  next page"));
+        free_then_strdup(fileList[filePtr], _("  next page"));
         filePtr++;
     }
     free(folderList[folderPtr]);
@@ -3668,7 +3706,7 @@ void SetTypeFilter(int n) {
     }
     browseOptions[n].value = j;
     SetWidgetLabel(&browseOptions[n], FileTypes[j]);
-    ASSIGN(extFilter, Extensions[j]);
+    free_then_strdup(extFilter, Extensions[j]);
     pageStart = 0;
     /* uses pathflag remembered by ListDir */
     Refresh(-1);
@@ -3685,7 +3723,7 @@ void FileSelProc(int n, int sel) {
         Refresh(-1);
         return;
     }
-    ASSIGN(fileName, fileList[sel]);
+    free_then_strdup(fileName, fileList[sel]);
     if (BrowseOK(0)) {
         PopDown(BrowserDlg);
     }
@@ -3725,7 +3763,7 @@ void StartDir(char * filter, char * newName) {
         if (newName) {
             char *p, *q;
             if (*newName) {
-                ASSIGN(*res, newName);
+                free_then_strdup(*res, newName);
                 for (p = *res; q = strchr(p, '/');) {
                     p = q + 1;
                 }
@@ -3753,8 +3791,8 @@ void Browse(DialogClass dlg, char * label, char * proposed, char * ext, Boolean 
     savCps = currentCps;
     oldVal = values[9];
     savDlg = dlg;
-    ASSIGN(extFilter, ext);
-    ASSIGN(fileName, proposed ? proposed : "");
+    free_then_strdup(extFilter, ext);
+    free_then_strdup(fileName, proposed ? proposed : "");
     /* look up actual value in list of possible values, to get selection nr */
     for (j = 0; Extensions[j]; j++) {
         if (extFilter && !strcmp(extFilter, Extensions[j])) {
@@ -3763,7 +3801,7 @@ void Browse(DialogClass dlg, char * label, char * proposed, char * ext, Boolean 
     }
     if (Extensions[j] == NULL) {
         j++;
-        ASSIGN(FileTypes[j], extFilter);
+        free_then_strdup(FileTypes[j], extFilter);
     }
     browseOptions[9].value = j;
     /* disable file listbox during path browsing */

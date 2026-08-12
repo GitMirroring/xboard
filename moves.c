@@ -273,34 +273,39 @@ int LoadPieceDesc(char * s) {
         }
         c = *p++;
         if (!c) {
+            /* bad syntax */
             ok = FALSE;
             continue;
-        }  // bad syntax
+        }
         if (*p && (r = strchr(suf, *p))) {
             c += 64 * (r - suf + 1), p++;
         }
         if (*p++ != ':') {
+            /* bad syntax */
             ok = FALSE;
             continue;
-        }  // bad syntax
+        }
         if (!strcmp(p, "(null)")) {
-            continue;  // handle bug in writing of XBoard 4.8.0
+            /* handle bug in writing of XBoard 4.8.0 */
+            continue;
         }
         piece = CharToPiece(c);
         if (piece >= EmptySquare) {
+            /* non-existent piece */
             ok = FALSE;
             continue;
-        }  // non-existent piece
+        }
         if (promoted) {
             piece = promoPartner[piece];
             if (pieceToChar[piece] != '+') {
+                /* promoted form does not exist */
                 ok = FALSE;
                 continue;
-            }  // promoted form does not exist
+            }
         }
-        ASSIGN(pieceDesc[piece], p);
+        free_then_strdup(pieceDesc[piece], p);
         if (piece < BlackPawn && (pieceToChar[WHITE_TO_BLACK piece] == pieceToChar[piece] + 32 || promoted)) {
-            ASSIGN(pieceDesc[WHITE_TO_BLACK piece], p);
+            free_then_strdup(pieceDesc[WHITE_TO_BLACK piece], p);
         }
         pieceDefs = TRUE;
         if (q) {
