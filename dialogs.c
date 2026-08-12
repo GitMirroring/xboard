@@ -3209,7 +3209,7 @@ static Option * Exp(int n, int x, int y) {
     TimeMark now;
     extern Boolean right;
 
-    /* Kludgy way to let button 1 double as button 3 when back-end requests this. */
+    /* Kludgy way to let button 1 double as button 3 when the back-end requests this. */
     if (right) {
         if (but1 && n == 0) {
             but1 = 0;
@@ -3265,11 +3265,13 @@ static Option * Exp(int n, int x, int y) {
         break;
     case 2:
         shiftKey = !shiftKey;
+        /* Intentionally fall through. */
     case 3:
         menuNr = RightClick(Press, x, y, &pmFromX, &pmFromY), but3 = 1;
         break;
     case -2:
         shiftKey = !shiftKey;
+        /* Intentionally fall through. */
     case -3:
         menuNr = RightClick(Release, x, y, &pmFromX, &pmFromY), but3 = 0;
         break;
@@ -3289,6 +3291,7 @@ static Option * Exp(int n, int x, int y) {
             return NULL;
         }
         DrawPosition(TRUE, NULL);
+        /* Intentionally fall through. */
     default:
         return NULL;
     }
