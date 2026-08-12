@@ -372,7 +372,7 @@ static void CloneTourney(void) {
         ParseArgsFromFile(f);
         engineName = appData.participants;
         GenericUpdate(matchOptions, -1);
-        FREE(appData.saveGameFile);
+        free(appData.saveGameFile);
         appData.saveGameFile = saveSaveFile;
     } else {
         DisplayError(_("First you must specify an existing tourney file to clone"), 0);
@@ -2349,7 +2349,7 @@ void OutputChatMessage(int partner, char * mess) {
     }
     texts[partner] = (char *)malloc(len);
     snprintf(texts[partner], len, "%s%s", p ? p : "", mess);
-    FREE(p);
+    free(p);
     if (partner == activePartner && !hidden) {
         AppendText(&chatOptions[CHAT_OUT], mess);
         SetInsertPos(&chatOptions[CHAT_OUT], len - 2);
@@ -2960,7 +2960,7 @@ void DisplayHelp(char * name) {
             }
         }
         if (strcmp(buf, tidy)) {  // is different engine from last time
-            FREE(manText[1]);
+            free(manText[1]);
             manText[1] = NULL;  // so any currently held text is worthless
             safeStrCpy(tidy, buf, MSG_SIZ);  // remember current engine
             eng = BufferCommandOutput(tidy, MSG_SIZ);  // obtain path to  its man file
@@ -2969,7 +2969,7 @@ void DisplayHelp(char * name) {
             } else {
                 *engMan = NULLCHAR;
             }
-            FREE(eng);
+            free(eng);
         }
         safeStrCpy(buf, engMan, MSG_SIZ);
         n = 1;  // use engine man
@@ -2985,9 +2985,11 @@ void DisplayHelp(char * name) {
                 snprintf(tidy, MSG_SIZ, "gunzip -c %s", buf);
                 manText[n] = BufferCommandOutput(tidy, 250000);  // store unzipped in buffer
             }
-            textPtr = manText[n];  // use buffered unzipped text
+            /* use buffered unzipped text */
+            textPtr = manText[n];
         } else {
-            textPtr = NULL;  // use plaintext man file directly
+            /* use plaintext man file directly */
+            textPtr = NULL;
         }
         GetHelpText(f, name);
         fclose(f);
@@ -3611,9 +3613,9 @@ void ListDir(int pathFlag) {
         ASSIGN(fileList[filePtr], _("  next page"));
         filePtr++;
     }
-    FREE(folderList[folderPtr]);
+    free(folderList[folderPtr]);
     folderList[folderPtr] = NULL;
-    FREE(fileList[filePtr]);
+    free(fileList[filePtr]);
     fileList[filePtr] = NULL;
     closedir(dir);
     extFlag = 0;

@@ -1041,13 +1041,15 @@ static char resetOptions[] = "-reuse -firstIsUCI false -firstHasOwnBookUCI true 
 
 void Load(ChessProgramState * cps, int i) {
     char *p, *q, buf[MSG_SIZ], command[MSG_SIZ], buf2[MSG_SIZ], buf3[MSG_SIZ], jar;
-    if (engineLine && engineLine[0]) {  // an engine was selected from the combo box
+    /* Has an engine been selected from the combo box? */
+    if (engineLine && engineLine[0]) {
         ASSIGN(currentEngine[i], engineLine);
         snprintf(buf, MSG_SIZ, "-fcp %s", engineLine);
-        SwapEngines(i);  // kludge to parse -f* / -first* like it is -s* / -second*
+        /* kludge to parse -f* / -first* like it is -s* / -second* */
+        SwapEngines(i);
         ParseArgsFromString(resetOptions);
         appData.pvSAN[0] = FALSE;
-        FREE(appData.fenOverride[0]);
+        free(appData.fenOverride[0]);
         appData.fenOverride[0] = NULL;
         appData.firstProtocolVersion = PROTOVER;
         ParseArgsFromString(buf);
@@ -1070,12 +1072,14 @@ void Load(ChessProgramState * cps, int i) {
     if (engineDir[0] != NULLCHAR) {
         ASSIGN(appData.directory[i], engineDir);
         p = engineName;
-    } else if (p != engineName) {  // derive directory from engine path, when not given
+    } else if (p != engineName) {
+        /* derive directory from engine path, when not given */
         p[-1] = 0;
         ASSIGN(appData.directory[i], engineName);
         p[-1] = SLASH;
         if (SLASH == '/' && p - engineName > 1) {
-            *(p -= 2) = '.';  // for XBoard use ./exeName as command after split!
+            /* for XBoard use ./exeName as command after split! */
+            *(p -= 2) = '.';
         }
     } else {
         ASSIGN(appData.directory[i], ".");
@@ -1083,7 +1087,9 @@ void Load(ChessProgramState * cps, int i) {
     jar = (strstr(p, ".jar") == p + strlen(p) - 4);
     if (params[0]) {
         if (strchr(p, ' ') && !strchr(p, '"')) {
-            snprintf(buf2, MSG_SIZ, "\"%s\"", p), p = buf2;  // quote if it contains spaces
+            /* quote if it contains spaces */
+            snprintf(buf2, MSG_SIZ, "\"%s\"", p);
+            p = buf2;
         }
         snprintf(command, MSG_SIZ, "%s %s", p, params);
         p = command;
@@ -1093,9 +1099,12 @@ void Load(ChessProgramState * cps, int i) {
         p = buf3;
     }
     ASSIGN(appData.chessProgram[i], p);
-    tryNr = 3;  // requests adding to list without auto-detect
+    /* requests adding to list without auto-detect */
+    tryNr = 3;
     if (isUCI == 3) {
-        tryNr = 1, isUCI = 0;  // auto-detect
+        /* auto-detect */
+        tryNr = 1;
+        isUCI = 0;
     }
     appData.isUCI[i] = isUCI;
     appData.protocolVersion[i] = v1 ? 1 : PROTOVER;
@@ -12904,8 +12913,15 @@ FILE * WriteTourneyFile(
 char *command[MAXENGINES], *mnemonic[MAXENGINES];
 
 void Substitute(char * participants, int expunge) {
-    int i, changed, changes = 0, nPlayers = 0;
-    char *p, *q, *r, buf[MSG_SIZ];
+    int i;
+    int changed;
+    int changes = 0;
+    int nPlayers = 0;
+    char * p;
+    char * q;
+    char * r;
+    char buf[MSG_SIZ];
+
     if (participants == NULL) {
         return;
     }
@@ -12922,7 +12938,7 @@ void Substitute(char * participants, int expunge) {
         p++;
         q++;
     }
-    if (*p) {  // difference
+    if (*p) {  /* difference */
         while (*p && *p++ != '\n')
             ;
         while (*q && *q++ != '\n')
@@ -12930,7 +12946,8 @@ void Substitute(char * participants, int expunge) {
         changed = nPlayers;
         changes = 1 + (strcmp(p, q) != 0);
     }
-    if (changes == 1) {  // a single engine mnemonic was changed
+    if (changes == 1) {
+        /* A single engine mnemonic was changed. */
         q = r;
         while (*q) {
             nPlayers += (*q++ == '\n');
@@ -12946,15 +12963,17 @@ void Substitute(char * participants, int expunge) {
                 break;
             }
         }
-        if (mnemonic[i]) {  // The substitute is valid
+        if (mnemonic[i]) {
+            /* The substitute is valid. */
             FILE * f;
             if (appData.tourneyFile[0] && (f = fopen(appData.tourneyFile, "r+"))) {
                 flock(fileno(f), LOCK_EX);
                 ParseArgsFromFile(f);
                 fseek(f, 0, SEEK_SET);
-                FREE(appData.participants);
+                free(appData.participants);
                 appData.participants = participants;
-                if (expunge) {  // erase results of replaced engine
+                if (expunge) {
+                    /* Erase the results of the replaced engine. */
                     int len = strlen(appData.results), w, b, dummy;
                     for (i = 0; i < len; i++) {
                         Pairing(i, nPlayers, &w, &b, &dummy);
@@ -12967,12 +12986,13 @@ void Substitute(char * participants, int expunge) {
                     for (i = 0; i < len; i++) {
                         Pairing(i, nPlayers, &w, &b, &dummy);
                         if (w == changed || b == changed) {
-                            appData.results[i] = ' ';  // mark as not played
+                            /* Mark as not played. */
+                            appData.results[i] = ' ';
                         }
                     }
                 }
                 WriteTourneyFile(appData.results, f);
-                fclose(f);  // release lock
+                fclose(f);
                 return;
             }
         } else {
@@ -13114,40 +13134,51 @@ int NamesToList(char * names, char ** engineList, char ** engineMnemonic, char *
 
 void SaveEngineSettings(int n) {
     int len;
-    char *p, *q, *s, buf[MSG_SIZ], *optionSettings;
+    char * p;
+    char * q;
+    char * s;
+    char buf[MSG_SIZ];
+    char * optionSettings;
+
     if (!currentEngine[n] || !currentEngine[n][0]) {
         DisplayMessage("saving failed: engine not from list", "");
         return;
-    }  // no engine from list is loaded
+    }  /* no engine from list is loaded */
     if (*engineListFile) {
-        ParseSettingsFile(engineListFile, &engineListFile);  // update engine list
+        /* update engine list */
+        ParseSettingsFile(engineListFile, &engineListFile);
     }
     p = strstr(firstChessProgramNames, currentEngine[n]);
     if (!p) {
         DisplayMessage("saving failed: engine not found in list", "");
         return;
-    }  // sanity check; engine could be deleted from list after loading
+    }  /* sanity check; engine could be deleted from list after loading */
     optionSettings = ResendOptions(n ? &second : &first, FALSE);
     len = strlen(currentEngine[n]);
     q = p + len;
-    *p = 0;  // cut list into head and tail piece
+    /* cut list into head and tail piece */
+    *p = 0;
     s = strstr(currentEngine[n], "firstOptions");
     if (s && (s[-1] == '-' || s[-1] == '/') && (s[12] == ' ' || s[12] == '=') && (s[13] == '"' || s[13] == '\'')) {
         char * r = s + 14;
         while (*r && *r != s[13]) {
             r++;
         }
-        s[14] = 0;  // cut currentEngine into head and tail part, removing old settings
-        snprintf(buf, MSG_SIZ, "%s%s%s", currentEngine[n], optionSettings, *r ? r : "\"");  // synthesize new engine line
+        /* cut currentEngine into head and tail part, removing old settings */
+        s[14] = 0;
+        /* synthesize new engine line */
+        snprintf(buf, MSG_SIZ, "%s%s%s", currentEngine[n], optionSettings, *r ? r : "\"");
     } else if (*optionSettings) {
         snprintf(buf, MSG_SIZ, "%s -firstOptions \"%s\"", currentEngine[n], optionSettings);
     }
-    ASSIGN(currentEngine[n], buf);  // updated engine line
+    /* updated engine line */
+    ASSIGN(currentEngine[n], buf);
     len = p - firstChessProgramNames + strlen(q) + strlen(currentEngine[n]) + 1;
     s = malloc(len);
     snprintf(s, len, "%s%s%s", firstChessProgramNames, currentEngine[n], q);
-    FREE(firstChessProgramNames);
-    firstChessProgramNames = s;  // new list
+    free(firstChessProgramNames);
+    /* new list */
+    firstChessProgramNames = s;
     SaveEngineList();
 }
 
@@ -14001,25 +14032,25 @@ void FeedMovesToProgram(ChessProgramState * cps, int upto) {
 
 
 int ResurrectChessProgram(void) {
-    /* The chess program may have exited.
-       If so, restart it and feed it all the moves made so far. */
+    /* The chess program may have exited.  If so, restart it, and feed it all the moves made so far. */
     static int doInit = 0;
 
     if (appData.noChessProgram) {
         return 1;
     }
 
-    if (matchMode /*&& appData.tourneyFile[0]*/) {  // [HGM] tourney: make sure we get features after engine replacement. (Should we
-                                                    // always do this?)
+    /* [HGM] tourney: make sure we get features after engine replacement. (Should we always do this?) */
+    if (matchMode /*&& appData.tourneyFile[0]*/) {
         if (WaitForEngine(&first, TwoMachinesEventIfReady)) {
             doInit = 1;
             return 0;
-        }  // request to do init on next visit, because we started engine
+        }  /* request to do init on next visit, because we started engine */
         if (!doInit) {
-            return 1;  // this replaces testing first.pr != NoProc, which is true when we get here, but first time no reason to
-                       // abort
+            /* this replaces testing first.pr != NoProc, which is true when we get here, but first time no reason to abort */
+            return 1;
         }
-        doInit = 0;  // we fell through (first time after starting the engine); make sure it doesn't happen again
+        /* we fell through (first time after starting the engine); make sure it doesn't happen again */
+        doInit = 0;
     } else {
         if (first.pr != NoProc) {
             return 1;
@@ -14030,8 +14061,7 @@ int ResurrectChessProgram(void) {
     FeedMovesToProgram(&first, currentMove);
 
     if (!first.sendTime) {
-        /* can't tell gnuchess what its clock should read,
-           so we bow to its notion. */
+        /* can't tell gnuchess what its clock should read, so we bow to its notion. */
         ResetClocks();
         timeRemaining[0][currentMove] = whiteTimeRemaining;
         timeRemaining[1][currentMove] = blackTimeRemaining;
@@ -14044,26 +14074,28 @@ int ResurrectChessProgram(void) {
     return 1;
 }
 
-/*
- * Button procedures
- */
+/* Button procedures */
 void Reset(int redraw, int init) {
     int i;
 
     if (appData.debugMode) {
         fprintf(debugFP, "Reset(%d, %d) from gameMode %d\n", redraw, init, gameMode);
     }
-    pieceDefs = FALSE;  // [HGM] gen: reset engine-defined piece moves
-    deadRanks = 0;  // assume entire board is used
+    /* [HGM] gen: reset engine-defined piece moves */
+    pieceDefs = FALSE;
+    /* assume entire board is used */
+    deadRanks = 0;
     handSize = 0;
     prelude = FALSE;
     preludeText[0] = NULLCHAR;
     for (i = 0; i < EmptySquare; i++) {
-        FREE(pieceDesc[i]);
+        free(pieceDesc[i]);
         pieceDesc[i] = NULL;
     }
-    CleanupTail();  // [HGM] vari: delete any stored variations
-    CommentPopDown();  // [HGM] make sure no comments to the previous game keep hanging on
+    /* [HGM] vari: delete any stored variations */
+    CleanupTail();
+    /* [HGM] make sure no comments to the previous game keep hanging on */
+    CommentPopDown();
     pausing = pauseExamInvalid = FALSE;
     startedFromSetupPosition = blackPlaysFirst = FALSE;
     firstMove = TRUE;
@@ -14072,7 +14104,8 @@ void Reset(int redraw, int init) {
     hintRequested = bookRequested = FALSE;
     first.maybeThinking = FALSE;
     second.maybeThinking = FALSE;
-    first.bookSuspend = FALSE;  // [HGM] book
+    /* [HGM] book */
+    first.bookSuspend = FALSE;
     second.bookSuspend = FALSE;
     diceRoll[0] = NULLCHAR;
     thinkOutput[0] = NULLCHAR;
@@ -14080,7 +14113,8 @@ void Reset(int redraw, int init) {
     hintSrc = 0;
     ClearGameInfo(&gameInfo);
     gameInfo.variant = StringToVariant(appData.variant);
-    *defaultChoice = NULLCHAR;  // [HGM] promo
+    /* [HGM] promo */
+    *defaultChoice = NULLCHAR;
     if (gameInfo.variant == VariantNormal && strcmp(appData.variant, "normal")) {
         gameInfo.variant = VariantUnknown;
         strncpy(engineVariant, appData.variant, MSG_SIZ);
@@ -14090,7 +14124,8 @@ void Reset(int redraw, int init) {
     ics_gamenum = -1;
     white_holding[0] = black_holding[0] = NULLCHAR;
     ClearProgramStats();
-    opponentKibitzes = FALSE;  // [HGM] kibitz: do not reserve space in engine-output window in zippy mode
+    /* [HGM] kibitz: do not reserve space in engine-output window in zippy mode */
+    opponentKibitzes = FALSE;
 
     ResetFrontEnd();
     ClearHighlights();
@@ -14098,7 +14133,11 @@ void Reset(int redraw, int init) {
     ClearPremoveHighlights();
     gotPremove = FALSE;
     alarmSounded = FALSE;
-    killX = killY = kill2X = kill2Y = -1;  // [HGM] lion
+    /* [HGM] lion */
+    kill2Y = -1;
+    kill2X = -1;
+    killY = -1;
+    killX = -1;
 
     GameEnds(EndOfFile, NULL, GE_PLAYER);
     if (appData.serverMovesName != NULL) {
@@ -14145,8 +14184,10 @@ void Reset(int redraw, int init) {
     DisplayTitle("");
     DisplayMessage("", "");
     HistorySet(parseList, backwardMostMove, forwardMostMove, currentMove - 1);
-    lastSavedGame = 0;  // [HGM] save: make sure next game counts as unsaved
-    ClearMap();  // [HGM] exclude: invalidate map
+    /* [HGM] save: make sure next game counts as unsaved */
+    lastSavedGame = 0;
+    /* [HGM] exclude: invalidate map */
+    ClearMap();
 }
 
 void AutoPlayGameLoop(void) {
@@ -14231,7 +14272,8 @@ int AutoPlayOneMove(void) {
             killY = moveList[currentMove][6] - ONE;
         }
         AnimateMove(boards[currentMove], fromX, fromY, toX, toY);
-        killX = killY = -1;
+        killY = -1;
+        killX = -1;
 
         if (appData.highlightLastMove) {
             SetHighlights(fromX, fromY, toX, toY);
@@ -14515,7 +14557,11 @@ int LoadGameOneMove(ChessMove readAhead) {
 
         thinkOutput[0] = NULLCHAR;
         MakeMove(fromX, fromY, toX, toY, promoChar);
-        killX = killY = kill2X = kill2Y = -1;  // [HGM] lion: used up
+        /* [HGM] lion: used up */
+        kill2Y = -1;
+        kill2X = -1;
+        killY = -1;
+        killX = -1;
         currentMove = forwardMostMove;
         return TRUE;
     }
@@ -15201,7 +15247,9 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
     int numPGNTags = 0, i;
     int err, pos = -1;
     GameMode oldGameMode;
-    VariantClass v, oldVariant = gameInfo.variant; /* [HGM] PGNvariant */
+    VariantClass v;
+    /* [HGM] PGNvariant */
+    VariantClass oldVariant = gameInfo.variant;
     char oldName[MSG_SIZ], vs = 0;
 
     safeStrCpy(oldName, engineVariant, MSG_SIZ);
@@ -15219,7 +15267,11 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
     if (gameMode != BeginningOfGame) {
         Reset(FALSE, TRUE);
     }
-    killX = killY = kill2X = kill2Y = -1;  // [HGM] lion: in case we did not Reset
+    /* [HGM] lion: in case we did not reset */
+    kill2Y = -1;
+    kill2X = -1;
+    killY = -1;
+    killX = -1;
 
     gameFileFP = f;
     if (lastLoadGameFP != NULL && lastLoadGameFP != f) {
@@ -15236,7 +15288,8 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
             gn = 1;
         } else {
             if (oldGameMode == AnalyzeFile && appData.loadGameIndex == -1) {
-                appData.loadGameIndex = 0;  // [HGM] suppress error message if we reach file end after auto-stepping analysis
+                /* [HGM] suppress error message if we reach file end after auto-stepping analysis */
+                appData.loadGameIndex = 0;
             } else {
                 DisplayError(_("Game number out of range"), 0);
             }
@@ -15387,9 +15440,9 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
     }
 
     for (i = 0; i < EmptySquare; i++) {
-        FREE(pieceDesc[i]);
+        free(pieceDesc[i]);
         pieceDesc[i] = NULL;
-    }  // reset VariantMen
+    }  /* reset VariantMen */
 
     if (cm == XBoardGame) {
         /* Skip any header junk before position diagram and/or move 1 */
@@ -15414,7 +15467,7 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
         gameInfo.event = StrSave(yy_text);
     }
 
-    startedFromSetupPosition = startedFromPositionFile;  // [HGM]
+    startedFromSetupPosition = startedFromPositionFile;
     while (cm == PGNTag) {
         if (appData.debugMode) {
             fprintf(debugFP, "Parsed PGNTag: %s\n", yy_text);
@@ -15425,14 +15478,16 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
         }
 
         /* [HGM] PGNvariant: automatically switch to variant given in PGN tag */
-        if (gameInfo.variant != oldVariant && gameInfo.variant != VariantUnknown &&
-          (gameInfo.variant != VariantNormal || gameInfo.variantName == NULL || *gameInfo.variantName == NULLCHAR) ||
-         vs) {
-            startedFromPositionFile = FALSE; /* [HGM] loadPos: variant switch likely makes position invalid */
-            ResetFrontEnd();  // [HGM] might need other bitmaps. Cannot use Reset() because it clears gameInfo :-(
+        if (gameInfo.variant != oldVariant && gameInfo.variant != VariantUnknown
+         && (gameInfo.variant != VariantNormal || gameInfo.variantName == NULL || *gameInfo.variantName == NULLCHAR) || vs) {
+            /* [HGM] loadPos: variant switch likely makes position invalid */
+            startedFromPositionFile = FALSE;
+            /* [HGM] might need other bitmaps. Cannot use Reset() because it clears gameInfo :-( */
+            ResetFrontEnd();
             InitPosition(TRUE);
             oldVariant = gameInfo.variant;
-            vs++;  // force obeying second variant switch
+            /* force obeying second variant switch */
+            vs++;
             if (appData.debugMode) {
                 fprintf(debugFP, "New variant %d\n", (int)oldVariant);
             }
@@ -15448,9 +15503,8 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
                 return FALSE;
             }
             CopyBoard(boards[0], initial_position);
-            if (*engineVariant ||
-             gameInfo.variant ==
-              VariantFairy) {  // [HGM] for now, assume FEN in engine-defined variant game is default initial position
+            if (*engineVariant || gameInfo.variant == VariantFairy) {
+                /* [HGM] for now, assume FEN in engine-defined variant game is default initial position */
                 CopyBoard(initialPosition, initial_position);
             }
             if (blackPlaysFirst) {
@@ -15496,14 +15550,12 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
         }
     }
 
-    /* don't rely on existence of Event tag since if game was
-     * pasted from clipboard the Event tag may not exist
-     */
+    /* don't rely on existence of Event tag since if game was pasted from clipboard the Event tag may not exist */
     if (numPGNTags > 0) {
         char * tags;
         if (gameInfo.variant == VariantNormal) {
             VariantClass v = StringToVariant(gameInfo.event);
-            // [HGM] do not recognize variants from event tag that were introduced after supporting variant tag
+            /* [HGM] do not recognize variants from event tag that were introduced after supporting variant tag */
             if (v < VariantShogi) {
                 gameInfo.variant = v;
             }
@@ -15632,7 +15684,7 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
         return TRUE;
     }
 
-    // [HGM] PV info: routine tests if comment empty
+    /* [HGM] PV info: routine tests if comment empty */
     if (!matchMode && (pausing || appData.timeDelay != 0)) {
         DisplayComment(currentMove - 1, commentList[currentMove]);
     }
@@ -15663,14 +15715,17 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
     HistorySet(parseList, backwardMostMove, forwardMostMove, currentMove - 1);
 
     if (oldGameMode == AnalyzeFile) {
-        appData.loadGameIndex = -1;  // [HGM] order auto-stepping through games
+        /* [HGM] order auto-stepping through games */
+        appData.loadGameIndex = -1;
         AnalyzeFileEvent();
     } else if (oldGameMode == AnalyzeMode) {
         AnalyzeFileEvent();
     }
 
     if (gameInfo.result == GameUnfinished && gameInfo.resultDetails && appData.clockMode) {
-        long int w, b;  // [HGM] adjourn: restore saved clock times
+        /* [HGM] adjourn: restore saved clock times */
+        long w;
+        long b;
         char * p = strstr(gameInfo.resultDetails, "(Clocks:");
         if (p && sscanf(p + 8, "%ld,%ld", &w, &b) == 2) {
             timeRemaining[0][forwardMostMove] = whiteTimeRemaining = 1000 * w + 500;
@@ -15682,7 +15737,8 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
         return TRUE;
     }
     if (!matchMode && pos > 0) {
-        ToNrEvent(pos);  // [HGM] no autoplay if selected on position
+        /* [HGM] no autoplay if selected on position */
+        ToNrEvent(pos);
     } else if (matchMode || appData.timeDelay == 0) {
         ToEndEvent();
     } else if (appData.timeDelay > 0) {
@@ -15693,7 +15749,8 @@ int LoadGame(FILE * f, int gameNumber, char * title, int useList) {
         fprintf(debugFP, "LoadGame(): on exit, gameMode %d\n", gameMode);
     }
 
-    loadFlag = 0; /* [HGM] true game starts */
+    /* [HGM] true game starts */
+    loadFlag = 0;
     return TRUE;
 }
 
@@ -15779,7 +15836,7 @@ int LoadPosition(FILE * f, int positionNumber, char * title) {
         DisplayError(_("Position not found in file"), 0);
         return FALSE;
     }
-    // [HGM] FEN can begin with digit, any piece letter valid in this variant, or a + for Shogi promoted pieces (or * for blackout)
+    /* [HGM] FEN can begin with digit, any piece letter valid in this variant, or a + for Shogi promoted pieces (or * for blackout) */
     fenMode = line[0] >= '0' && line[0] <= '9' || line[0] == '+' || line[0] == '*' || CharToPiece(line[0]) != EmptySquare;
 
     if (pn >= 2) {
@@ -15805,12 +15862,14 @@ int LoadPosition(FILE * f, int positionNumber, char * title) {
             DisplayError(_("Bad FEN position in file"), 0);
             return FALSE;
         }
-        if ((strchr(line, ';')) && (p = strstr(line, " bm "))) {  // EPD with best move
+        if ((strchr(line, ';')) && (p = strstr(line, " bm "))) {
+            /* EPD specifies best move */
             sscanf(p + 4, "%[^;]", bestMove);
         } else {
             *bestMove = NULLCHAR;
         }
-        if ((strchr(line, ';')) && (p = strstr(line, " am "))) {  // EPD with avoid move
+        if ((strchr(line, ';')) && (p = strstr(line, " am "))) {
+            /* EPD specifies avoid move */
             sscanf(p + 4, "%[^;]", avoidMove);
         } else {
             *avoidMove = NULLCHAR;
@@ -15850,8 +15909,10 @@ int LoadPosition(FILE * f, int positionNumber, char * title) {
         currentMove = forwardMostMove = backwardMostMove = 0;
         DisplayMessage("", _("White to play"));
     }
-    initialRulePlies = FENrulePlies; /* [HGM] copy FEN attributes as well */
-    if (first.pr != NoProc) {  // [HGM] in tourney-mode a position can be loaded before the chess engine is installed
+    /* [HGM] copy FEN attributes as well */
+    initialRulePlies = FENrulePlies;
+    if (first.pr != NoProc) {
+        /* [HGM] in tourney-mode a position can be loaded before the chess engine is installed */
         SendToProgram("force\n", &first);
         SendBoard(&first, forwardMostMove);
     }
@@ -15924,7 +15985,7 @@ int SaveGameToFile(char * filename, int append) {
     if (strcmp(filename, "-") == 0) {
         return SaveGame(stdout, 0, NULL);
     } else {
-        for (i = 0; i < 10; i++) {  // upto 10 tries
+        for (i = 0; i < 10; i++) {
             f = fopen(filename, append ? "a" : "w");
             if (f && i) {
                 fprintf(f, "[Delay \"%d retries, %d msec\"]\n", i, tot);
@@ -15932,7 +15993,8 @@ int SaveGameToFile(char * filename, int append) {
             if (f || errno != 13) {
                 break;
             }
-            DoSleep(t = 5 + random() % 11);  // wait 5-15 msec
+            /* wait 5-15 msec */
+            DoSleep(t = 5 + random() % 11);
             tot += t;
         }
         if (f == NULL) {
@@ -15942,10 +16004,12 @@ int SaveGameToFile(char * filename, int append) {
         } else {
             safeStrCpy(buf, lastMsg, MSG_SIZ);
             DisplayMessage(_("Waiting for access to save file"), "");
-            flock(fileno(f), LOCK_EX);  // [HGM] lock: lock file while we are writing
+            /* [HGM] lock: lock file while we are writing */
+            flock(fileno(f), LOCK_EX);
             DisplayMessage(_("Saving game"), "");
             if (lseek(fileno(f), 0, SEEK_END) == -1) {
-                DisplayError(_("Bad Seek"), errno);  // better safe than sorry...
+                /* better safe than sorry... */
+                DisplayError(_("Bad Seek"), errno);
             }
             result = SaveGame(f, 0, NULL);
             DisplayMessage(buf, "");
@@ -16041,7 +16105,6 @@ void GetOutOfBookInfo(char * buf) {
 /* Save game in PGN style */
 static void SaveGamePGN2(FILE * f) {
     int i, offset, linelen, newblock;
-    // char *movetext;
     char numtext[32];
     int movelen, numlen, blank;
     char move_buffer[100]; /* [AS] Buffer for move+PV info */
@@ -16121,9 +16184,10 @@ static void SaveGamePGN2(FILE * f) {
         linelen += numlen;
 
         /* Get move */
-        safeStrCpy(move_buffer, SavePart(parseList[i]),
-         sizeof(move_buffer) / sizeof(move_buffer[0]));  // [HGM] pgn: print move via buffer, so it can be edited
-        movelen = strlen(move_buffer); /* [HGM] pgn: line-break point before move */
+        /* [HGM] pgn: print move via buffer, so it can be edited */
+        safeStrCpy(move_buffer, SavePart(parseList[i]), sizeof(move_buffer) / sizeof(move_buffer[0]));
+        /* [HGM] pgn: line-break point before move */
+        movelen = strlen(move_buffer);
 
         /* Print move */
         blank = linelen > 0 && movelen > 0;
@@ -16145,14 +16209,16 @@ static void SaveGamePGN2(FILE * f) {
             char buf[MSG_SIZ];
             int seconds;
 
-            seconds = (pvInfoList[i].time + 5) / 10;  // deci-seconds, rounded to nearest
+            /* deci-seconds, rounded to nearest */
+            seconds = (pvInfoList[i].time + 5) / 10;
 
             if (seconds <= 0) {
                 buf[0] = 0;
             } else if (seconds < 30) {
                 snprintf(buf, MSG_SIZ, " %3.1f%c", seconds / 10., 0);
             } else {
-                seconds = (seconds + 4) / 10;  // round to full seconds
+                /* round to full seconds */
+                seconds = (seconds + 4) / 10;
                 if (seconds < 60) {
                     snprintf(buf, MSG_SIZ, " %d%c", seconds, 0);
                 } else {
@@ -16167,7 +16233,8 @@ static void SaveGamePGN2(FILE * f) {
             snprintf(move_buffer, sizeof(move_buffer) / sizeof(move_buffer[0]), "{%s%.2f/%d%s}",
              pvInfoList[i].score >= 0 ? "+" : "", pvInfoList[i].score / 100.0, pvInfoList[i].depth, buf);
 
-            movelen = strlen(move_buffer); /* [HGM] pgn: line-break point after move */
+            /* [HGM] pgn: line-break point after move */
+            movelen = strlen(move_buffer);
 
             /* Print score/depth */
             blank = linelen > 0 && movelen > 0;
@@ -16200,9 +16267,9 @@ static void SaveGamePGN2(FILE * f) {
     /* Print result */
     if (gameInfo.resultDetails != NULL && gameInfo.resultDetails[0] != NULLCHAR) {
         char buf[MSG_SIZ], *p = gameInfo.resultDetails;
-        if (gameInfo.result == GameUnfinished && appData.clockMode &&
-         (gameMode == MachinePlaysWhite || gameMode == MachinePlaysBlack ||
-          gameMode == TwoMachinesPlay)) {  // [HGM] adjourn: save clock settings
+        if (gameInfo.result == GameUnfinished && appData.clockMode
+         && (gameMode == MachinePlaysWhite || gameMode == MachinePlaysBlack || gameMode == TwoMachinesPlay)) {
+            /* [HGM] adjourn: save clock settings */
             snprintf(buf, MSG_SIZ, "%s (Clocks: %ld, %ld)", p, whiteTimeRemaining / 1000, blackTimeRemaining / 1000), p = buf;
         }
         fprintf(f, "{%s} %s\n\n", p, PGNResult(gameInfo.result));
@@ -16215,7 +16282,8 @@ static void SaveGamePGN2(FILE * f) {
 int SaveGamePGN(FILE * f) {
     SaveGamePGN2(f);
     fclose(f);
-    lastSavedGame = GameCheckSum();  // [HGM] save: remember ID of last saved game to prevent double saving
+    /* [HGM] save: remember ID of last saved game to prevent double saving */
+    lastSavedGame = GameCheckSum();
     return TRUE;
 }
 
@@ -16284,7 +16352,8 @@ int SaveGame(FILE * f, int dummy, char * dummy2) {
     if (gameMode == EditPosition) {
         EditPositionDone(TRUE);
     }
-    lastSavedGame = GameCheckSum();  // [HGM] save: remember ID of last saved game to prevent double saving
+    /* [HGM] save: remember ID of last saved game to prevent double saving */
+    lastSavedGame = GameCheckSum();
     if (appData.oldSaveStyle) {
         return SaveGameOldStyle(f);
     } else {
@@ -16308,9 +16377,11 @@ int SavePositionToFile(char * filename) {
         } else {
             safeStrCpy(buf, lastMsg, MSG_SIZ);
             DisplayMessage(_("Waiting for access to save file"), "");
-            flock(fileno(f), LOCK_EX);  // [HGM] lock
+            /* [HGM] lock */
+            flock(fileno(f), LOCK_EX);
             DisplayMessage(_("Saving position"), "");
-            lseek(fileno(f), 0, SEEK_END);  // better safe than sorry...
+            /* better safe than sorry... */
+            lseek(fileno(f), 0, SEEK_END);
             SavePosition(f, 0, NULL);
             DisplayMessage(buf, "");
             return TRUE;
@@ -16417,9 +16488,8 @@ int RegisterMove(void) {
         return TRUE; /* Allow free viewing  */
     }
 
-    /* Unregister move to ensure that we don't leave RegisterMove        */
-    /* with the move registered when the conditions for registering no   */
-    /* longer hold                                                       */
+    /* Unregister move to ensure that we don't leave RegisterMove with the move registered when the conditions for registering no
+       longer hold. */
     if (cmailMoveRegistered[lastLoadGameNumber - 1]) {
         cmailMoveRegistered[lastLoadGameNumber - 1] = FALSE;
         nCmailMovesRegistered--;
@@ -16672,7 +16742,8 @@ void ExitEvent(int status) {
     }
 
     if (appData.icsActive) {
-        printf("\n");  // [HGM] end on new line after closing XBoard
+        /* [HGM] end on new line after closing XBoard */
+        printf("\n");
     }
     if (appData.icsActive && appData.colorize) {
         Colorize(ColorNone, FALSE);
@@ -16751,9 +16822,11 @@ void PauseEvent(void) {
     if (pausing) {
         pausing = FALSE;
         ModeHighlight();
-        if (stalledEngine) {  // [HGM] pause: resume game by releasing withheld move
+        if (stalledEngine) {
+            /* [HGM] pause: resume game by releasing withheld move */
             StartClocks();
-            if (gameMode == TwoMachinesPlay) {  // we might have to make the opponent resume pondering
+            if (gameMode == TwoMachinesPlay) {
+                /* we might have to make the opponent resume pondering */
                 if (stalledEngine->other->pause == 2) {
                     UnPauseEngine(stalledEngine->other);
                 } else if (appData.ponderNextMove) {
@@ -16767,8 +16840,8 @@ void PauseEvent(void) {
             stalledEngine = NULL;
             return;
         }
-        if (gameMode == MachinePlaysWhite || gameMode == TwoMachinesPlay ||
-         gameMode == MachinePlaysBlack) {  // the thinking engine must have used pause mode, or it would have been stalledEngine
+        if (gameMode == MachinePlaysWhite || gameMode == TwoMachinesPlay || gameMode == MachinePlaysBlack) {
+            /* the thinking engine must have used pause mode, or it would have been stalledEngine */
             if (first.pause) {
                 UnPauseEngine(&first);
             } else if (appData.ponderNextMove) {
@@ -16826,30 +16899,38 @@ void PauseEvent(void) {
         case MachinePlaysBlack:
         case TwoMachinesPlay:
             if (forwardMostMove == 0) {
-                return; /* don't pause if no one has moved */
+                /* don't pause if no one has moved */
+                return;
             }
-            if (gameMode == TwoMachinesPlay) {  // [HGM] pause: stop clocks if engine can be paused immediately
-                ChessProgramState * onMove =
-                 (WhiteOnMove(forwardMostMove) == (first.twoMachinesColor[0] == 'w') ? &first : &second);
-                if (onMove->pause) {  // thinking engine can be paused
-                    PauseEngine(onMove);  // do it
-                    if (onMove->other->pause) {  // pondering opponent can always be paused immediately
+            if (gameMode == TwoMachinesPlay) {
+                /* [HGM] pause: stop clocks if engine can be paused immediately */
+                ChessProgramState * onMove = (WhiteOnMove(forwardMostMove) == (first.twoMachinesColor[0] == 'w') ? &first
+                 : &second);
+                /* Can the thinking engine be paused? */
+                if (onMove->pause) {
+                    PauseEngine(onMove);
+                    /* The pondering opponent can always be paused immediately. */
+                    if (onMove->other->pause) {
                         PauseEngine(onMove->other);
                     } else {
                         SendToProgram("easy\n", onMove->other);
                     }
                     StopClocks();
                 } else if (appData.ponderNextMove) {
-                    SendToProgram("easy\n", onMove);  // pre-emptively bring out of ponder
+                    /* pre-emptively bring out of ponder */
+                    SendToProgram("easy\n", onMove);
                 }
-            } else if (gameMode == (WhiteOnMove(forwardMostMove) ? MachinePlaysWhite : MachinePlaysBlack)) {  // engine on move
+            } else if (gameMode == (WhiteOnMove(forwardMostMove) ? MachinePlaysWhite : MachinePlaysBlack)) {
+                /* engine on move */
                 if (first.pause) {
                     PauseEngine(&first);
                     StopClocks();
                 } else if (appData.ponderNextMove) {
-                    SendToProgram("easy\n", &first);  // pre-emptively bring out of ponder
+                    /* pre-emptively bring out of ponder */
+                    SendToProgram("easy\n", &first);
                 }
-            } else {  // human on move, pause pondering by either method
+            } else {
+                /* human on move, pause pondering by either method */
                 if (first.pause) {
                     PauseEngine(&first);
                 } else if (appData.ponderNextMove) {
@@ -16857,7 +16938,7 @@ void PauseEvent(void) {
                 }
                 StopClocks();
             }
-            // if no immediate pausing is possible, wait for engine to move, and stop clocks then
+        /* if no immediate pausing is possible, wait for engine to move, and stop clocks then */
         case AnalyzeMode:
             pausing = TRUE;
             ModeHighlight();
@@ -16978,13 +17059,15 @@ int AnalyzeModeEvent(void) {
         ResurrectChessProgram();
         SendToProgram("analyze\n", &first);
         first.analyzing = TRUE;
+        /* avoid killing GNU Chess */
         /*first.maybeThinking = TRUE;*/
-        first.maybeThinking = FALSE; /* avoid killing GNU Chess */
+        first.maybeThinking = FALSE;
         EngineOutputPopUp();
     }
     if (!appData.icsEngineAnalyze) {
         gameMode = AnalyzeMode;
-        ClearEngineOutputPane(0);  // [TK] exclude: to print exclusion/multipv header
+        /* [TK] exclude: to print exclusion/multipv header */
+        ClearEngineOutputPane(0);
     }
     pausing = FALSE;
     ModeHighlight();
@@ -17009,7 +17092,8 @@ void AnalyzeFileEvent(void) {
     }
 
     if (gameMode != AnalyzeMode) {
-        keepInfo = 1;  // mere annotating should not alter PGN tags
+        /* mere annotating should not alter PGN tags */
+        keepInfo = 1;
         EditGameEvent();
         keepInfo = 0;
         if (gameMode != EditGame) {
@@ -17021,8 +17105,9 @@ void AnalyzeFileEvent(void) {
         ResurrectChessProgram();
         SendToProgram("analyze\n", &first);
         first.analyzing = TRUE;
+        /* avoid killing GNU Chess */
         /*first.maybeThinking = TRUE;*/
-        first.maybeThinking = FALSE; /* avoid killing GNU Chess */
+        first.maybeThinking = FALSE;
         EngineOutputPopUp();
     }
     gameMode = AnalyzeFile;
@@ -17069,8 +17154,10 @@ void MachineWhiteEvent(void) {
         TruncateGame();
     }
 
-    ResurrectChessProgram(); /* in case it isn't running */
-    if (gameMode == BeginningOfGame) { /* [HGM] time odds: to get right odds in human mode */
+    /* in case it isn't running */
+    ResurrectChessProgram();
+    if (gameMode == BeginningOfGame) {
+        /* [HGM] time odds: to get right odds in human mode */
         gameMode = MachinePlaysWhite;
         ResetClocks();
     } else {
@@ -17095,14 +17182,17 @@ void MachineWhiteEvent(void) {
     }
     if (first.sendTime) {
         if (first.useColors) {
-            SendToProgram("black\n", &first); /*gnu kludge*/
+            /*gnu kludge*/
+            SendToProgram("black\n", &first);
         }
         SendTimeRemaining(&first, TRUE);
     }
     if (first.useColors) {
-        SendToProgram("white\n", &first);  // [HGM] book: send 'go' separately
+        /* [HGM] book: send 'go' separately */
+        SendToProgram("white\n", &first);
     }
-    bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);  // [HGM] book: send go or retrieve book move
+    /* [HGM] book: send go or retrieve book move */
+    bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);
     SetMachineThinkingEnables();
     first.maybeThinking = TRUE;
     StartClocks();
@@ -17111,18 +17201,21 @@ void MachineWhiteEvent(void) {
     if (appData.autoFlipView && !flipView) {
         flipView = !flipView;
         DrawPosition(FALSE, NULL);
-        DisplayBothClocks();  // [HGM] logo: clocks might have to be exchanged;
+        /* [HGM] logo: clocks might have to be exchanged; */
+        DisplayBothClocks();
     }
 
-    if (bookHit) {  // [HGM] book: simulate book reply
-        static char bookMove[MSG_SIZ];  // a bit generous?
+    if (bookHit) {
+        /* [HGM] book: simulate book reply */
+        static char bookMove[MSG_SIZ];
 
         programStats.nodes = programStats.depth = programStats.time = programStats.score = programStats.got_only_move = 0;
         sprintf(programStats.movelist, "%s (xbook)", bookHit);
 
         safeStrCpy(bookMove, "move ", sizeof(bookMove) / sizeof(bookMove[0]));
         strcat(bookMove, bookHit);
-        savedMessage = bookMove;  // args for deferred call
+        /* args for deferred call */
+        savedMessage = bookMove;
         savedState = &first;
         ScheduleDelayedEvent(DeferredBookMove, 1);
     }
@@ -17159,7 +17252,8 @@ void MachineBlackEvent(void) {
         TruncateGame();
     }
 
-    ResurrectChessProgram(); /* in case it isn't running */
+    /* in case it isn't running */
+    ResurrectChessProgram();
     gameMode = MachinePlaysBlack;
     pausing = FALSE;
     ModeHighlight();
@@ -17180,14 +17274,17 @@ void MachineBlackEvent(void) {
     }
     if (first.sendTime) {
         if (first.useColors) {
-            SendToProgram("white\n", &first); /*gnu kludge*/
+            /*gnu kludge*/
+            SendToProgram("white\n", &first);
         }
         SendTimeRemaining(&first, FALSE);
     }
     if (first.useColors) {
-        SendToProgram("black\n", &first);  // [HGM] book: 'go' sent separately
+        /* [HGM] book: 'go' sent separately */
+        SendToProgram("black\n", &first);
     }
-    bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);  // [HGM] book: send go or retrieve book move
+    /* [HGM] book: send go or retrieve book move */
+    bookHit = SendMoveToBookUser(forwardMostMove - 1, &first, TRUE);
     SetMachineThinkingEnables();
     first.maybeThinking = TRUE;
     StartClocks();
@@ -17196,17 +17293,20 @@ void MachineBlackEvent(void) {
     if (appData.autoFlipView && flipView) {
         flipView = !flipView;
         DrawPosition(FALSE, NULL);
-        DisplayBothClocks();  // [HGM] logo: clocks might have to be exchanged;
+        /* [HGM] logo: clocks might have to be exchanged; */
+        DisplayBothClocks();
     }
-    if (bookHit) {  // [HGM] book: simulate book reply
-        static char bookMove[MSG_SIZ];  // a bit generous?
+    if (bookHit) {
+        /* [HGM] book: simulate book reply */
+        static char bookMove[MSG_SIZ];
 
         programStats.nodes = programStats.depth = programStats.time = programStats.score = programStats.got_only_move = 0;
         sprintf(programStats.movelist, "%s (xbook)", bookHit);
 
         safeStrCpy(bookMove, "move ", sizeof(bookMove) / sizeof(bookMove[0]));
         strcat(bookMove, bookHit);
-        savedMessage = bookMove;  // args for deferred call
+        /* args for deferred call */
+        savedMessage = bookMove;
         savedState = &first;
         ScheduleDelayedEvent(DeferredBookMove, 1);
     }
@@ -17238,7 +17338,8 @@ void DisplayTwoMachinesTitle(void) {
 void SettingsMenuIfReady(void) {
     if (second.lastPing != second.lastPong) {
         DisplayMessage("", _("Waiting for second chess program"));
-        ScheduleDelayedEvent(SettingsMenuIfReady, 10);  // [HGM] fast: lowered from 1000
+        /* [HGM] fast: lowered from 1000 */
+        ScheduleDelayedEvent(SettingsMenuIfReady, 10);
         return;
     }
     ThawUI();
@@ -17252,7 +17353,8 @@ int WaitForEngine(ChessProgramState * cps, DelayedEventCallback retry) {
         StartChessProgram(cps);
         if (cps->protocolVersion == 1) {
             retry();
-            ScheduleDelayedEvent(retry, 1);  // Do this also through timeout to avoid recursive calling of 'retry'
+            /* Do this also through timeout to avoid recursive calling of 'retry' */
+            ScheduleDelayedEvent(retry, 1);
         } else {
             /* kludge: allow timeout for initial "feature" command */
             if (retry != TwoMachinesEventIfReady) {
@@ -19596,12 +19698,14 @@ int StringFeature(char ** p, char * name, char ** loc, ChessProgramState * cps) 
         (*p) += len + 2;
         len = strlen(*p) + 1;
         if (len < MSG_SIZ && !strcmp(name, "option")) {
-            len = MSG_SIZ;  // make sure string options have enough space to change their value
+            /* make sure string options have enough space to change their value */
+            len = MSG_SIZ;
         }
-        FREE(*loc);
+        free(*loc);
         *loc = malloc(len);
         strncpy(*loc, *p, len);
-        sscanf(*p, "%[^\"]", *loc);  // should always fit, because we allocated at least strlen(*p)
+        /* should always fit, because we allocated at least strlen(*p) */
+        sscanf(*p, "%[^\"]", *loc);
         while (**p && **p != '\"') {
             (*p)++;
         }
@@ -19888,17 +19992,17 @@ void ParseFeatures(char * args, ChessProgramState * cps) {
             /* First, read to a freshly-allocated temporary buffer. */
             if (cps->reload) {
                 /* We are reloading because of xreuse. */
-                FREE(q);
+                free(q);
                 q = NULL;
                 continue;
             }
             if (cps->nrOptions == 0) {
-                FREE(cps->option[0].name);
+                free(cps->option[0].name);
                 cps->option[0].name = calloc(1, MSG_SIZ);
                 snprintf(cps->option[0].name, MSG_SIZ - 1, "%s", _("Make Persistent (save)"));
                 ParseOption(&(cps->option[cps->nrOptions++]), cps);
             }
-            FREE(cps->option[cps->nrOptions].name);
+            free(cps->option[cps->nrOptions].name);
             cps->option[cps->nrOptions].name = q;
             q = NULL;
             if (!ParseOption(&(cps->option[cps->nrOptions++]), cps)) {

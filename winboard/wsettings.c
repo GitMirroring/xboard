@@ -446,8 +446,8 @@ void SetOptionValues(HWND hDlg, ChessProgramState * cps, Option * optionList)
 }
 
 
+/* read out all controls, and if value is altered, remember it and send it to the engine */
 int GetOptionValues(HWND hDlg, ChessProgramState * cps, Option * optionList)
-// read out all controls, and if value is altered, remember it and send it to the engine
 {
     int i, k, new = 0, changed = 0, len;
     char **choices, newText[MSG_SIZ], buf[MSG_SIZ], *text;
@@ -487,19 +487,21 @@ int GetOptionValues(HWND hDlg, ChessProgramState * cps, Option * optionList)
             }
             success = GetDlgItemText(hDlg, 2001 + 2 * i, text, len);
             if (!success) {
-                text[0] = NULLCHAR;  // empty string can be valid input
+                /* empty string can be valid input */
+                text[0] = NULLCHAR;
             }
             if (!cps) {
                 char * p;
-                p = (optionList[j].type != FileName ? strdup(text)
-                                                    : InterpretFileName(text, homeDir));  // all files relative to homeDir!
-                FREE(*(char **)optionList[j].target);
+                /* All files are relative to homeDir. */
+                p = (optionList[j].type != FileName ? strdup(text) : InterpretFileName(text, homeDir));
+                free(*(char **)optionList[j].target);
                 *(char **)optionList[j].target = p;
                 free(text);
                 text = p;
                 while (*p++ = *text++) {
                     if (p[-1] == '\r') {
-                        p--;  // crush CR
+                        /* crush CR */
+                        p--;
                     }
                 }
                 break;
@@ -546,7 +548,8 @@ int GetOptionValues(HWND hDlg, ChessProgramState * cps, Option * optionList)
             }
         case Button:
         default:
-            break;  // are treated instantly, so they have been sent already
+            /* are treated instantly, so they have been sent already */
+            break;
         }
         if (changed == 2) {
             snprintf(buf, MSG_SIZ, "option %s=%d\n", optionList[j].name, new);
@@ -1173,13 +1176,14 @@ void Inspect(HWND hDlg) {
     if (name[0] && (f = fopen(name, "r"))) {
         char * saveSaveFile;
         saveSaveFile = appData.saveGameFile;
-        appData.saveGameFile = NULL;  // this is a persistent option, protect from change
+        /* this is a persistent option, protect from change */
+        appData.saveGameFile = NULL;
         ParseArgsFromFile(f);
         autoinc = ((appData.loadPositionFile[0] ? appData.loadGameIndex : appData.loadPositionIndex) < 0);
         twice = ((appData.loadPositionFile[0] ? appData.loadGameIndex : appData.loadPositionIndex) == -2);
         swiss = appData.tourneyType < 0;
         SetOptionValues(hDlg, NULL, activeList);
-        FREE(appData.saveGameFile);
+        free(appData.saveGameFile);
         appData.saveGameFile = saveSaveFile;
     } else {
         DisplayError(_("First you must specify an existing tourney file to clone"), 0);

@@ -1031,19 +1031,21 @@ char * ModeToWidgetName(GameMode mode) {
     }
 }
 
-static void InstallNewEngine(
- char * command, char * dir, char * variants, char * protocol) {  // install the given engine in XBoard's -firstChessProgramNames
+/* install the given engine in XBoard's -firstChessProgramNames */
+static void InstallNewEngine(char * command, char * dir, char * variants, char * protocol) {
     char buf[MSG_SIZ], *quote = "";
-    if (strchr(command, ' ')) {  // quoting needed
+    if (strchr(command, ' ')) {
+        /* Quoting is needed. */
         if (!strchr(command, '"')) {
             quote = "\"";
         } else if (!strchr(command, '\'')) {
             quote = "'";
         } else {
-            printf("Could not auto-install %s\n", command);  // too complex
+            /* too complex */
+            printf("Could not auto-install %s\n", command);
         }
     }
-    // construct engine line, with optional -fd and -fUCI arguments
+    /* construct engine line, with optional -fd and -fUCI arguments */
     snprintf(buf, MSG_SIZ, "%s%s%s", quote, command, quote);
     if (strcmp(dir, "") && strcmp(dir, ".")) {
         snprintf(buf + strlen(buf), MSG_SIZ - strlen(buf), " -fd %s", dir);
@@ -1052,12 +1054,13 @@ static void InstallNewEngine(
         snprintf(buf + strlen(buf), MSG_SIZ - strlen(buf), " -fUCI");
     }
     if (strstr(firstChessProgramNames, buf)) {
-        return;  // avoid duplicats
+        /* avoid duplicates */
+        return;
     }
-    // append line
+    /* append line */
     quote = malloc(strlen(firstChessProgramNames) + strlen(buf) + 2);
     sprintf(quote, "%s%s\n", firstChessProgramNames, buf);
-    FREE(firstChessProgramNames);
+    free(firstChessProgramNames);
     firstChessProgramNames = quote;
 }
 

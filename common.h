@@ -1075,10 +1075,7 @@ extern char chatPartner[MAX_CHAT][MSG_SIZ];
 void DisplayFatalError(String message, int error, int status);
 void DisplayError(String message, int error);
 
-/* [HGM] generally useful macros; there are way too many memory leaks... */
-#define FREE(x) \
-    if (x) \
-    free(x)
+/* [HGM] generally useful macro; there are way too many memory leaks... */
 #define ASSIGN(x, y) \
     if (x) \
         free(x); \

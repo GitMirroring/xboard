@@ -427,7 +427,7 @@ void ChangeFont(int force, char ** font, int fnr, int size, char * def, int pix)
     } else {
         fontIsSet[fnr] = TRUE;
     }
-    FREE(*font);
+    free(*font);
     *font = InsertPxlSize(fontTable[fnr][size], pix);
 }
 

@@ -2601,14 +2601,15 @@ LRESULT CALLBACK SaveOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
             if (IsDlgButtonChecked(hDlg, OPT_Autosave)) {
                 appData.autoSaveGames = TRUE;
                 if (IsDlgButtonChecked(hDlg, OPT_AVPrompt)) {
-                    ASSIGN(appData.saveGameFile, "");  // [HGM] make sure value is ALWAYS in allocated memory
+                    /* [HGM] make sure value is ALWAYS in allocated memory */
+                    ASSIGN(appData.saveGameFile, "");
                 } else /*if (IsDlgButtonChecked(hDlg, OPT_AVToFile))*/ {
                     GetDlgItemText(hDlg, OPT_AVFilename, buf, MSG_SIZ);
                     if (*buf == NULLCHAR) {
                         MessageBox(hDlg, _("Invalid save game file name"), _("Option Error"), MB_OK | MB_ICONEXCLAMATION);
                         return FALSE;
                     }
-                    FREE(appData.saveGameFile);
+                    free(appData.saveGameFile);
                     appData.saveGameFile = InterpretFileName(buf, homeDir);
                 }
             } else {
