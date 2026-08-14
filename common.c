@@ -50,6 +50,7 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
 #include <stdlib.h>
 
 #include "common.h"
@@ -71,11 +72,11 @@ char * strdup(char const * const c_str) {
 }
 #endif
 
-char * free_then_strdup(char * c_str, char const * const c_str_to_dup) {
-    if (c_str) {
-        free(c_str);
-    }
-    return strdup(c_str_to_dup);
+void free_then_strdup(char * * const c_str, char const * const c_str_to_dup) {
+    assert(c_str);
+    assert(c_str_to_dup);
+    free(*c_str);
+    *c_str = strdup(c_str_to_dup);
 }
 
 int default_line_gap(int const square_size) {

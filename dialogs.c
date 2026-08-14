@@ -285,7 +285,7 @@ static void UpgradeParticipant(void);
 static void PseudoOK(void);
 
 static int MatchOK(int n) {
-    free_then_strdup(appData.participants, engineName);
+    free_then_strdup(&appData.participants, engineName);
     if (!CreateTourney(tfName) || matchMode) {
         return matchMode || !appData.participants[0];
     }
@@ -354,8 +354,8 @@ static void PseudoOK(void) {
     }
     /* read all, but suppress calling of MatchOK */
     GenericReadout(matchOptions, -2);
-    free_then_strdup(appData.participants, engineName);
-    free_then_strdup(appData.tourneyFile, tfName);
+    free_then_strdup(&appData.participants, engineName);
+    free_then_strdup(&appData.tourneyFile, tfName);
     /* early popdown to prevent FreezeUI called through MatchEvent from causing XtGrab warning */
     PopDown(MasterDlg);
 }
@@ -395,7 +395,7 @@ static void AddToTourney(int n, int sel) {
     }
     /* replace list by only the group contents */
     nr = NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);
-    free_then_strdup(engineMnemonic[0], buf);
+    free_then_strdup(&engineMnemonic[0], buf);
     LoadListBox(&matchOptions[PARTICIPANTS + 1], _("# no engines are installed"), -1, -1);
     HighlightWithScroll(&matchOptions[PARTICIPANTS + 1], 0, nr);
 }
@@ -408,9 +408,9 @@ void MatchOptionsProc(void) {
     NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");
     /* with pairing engine, allow Swiss */
     matchOptions[9].min = -(appData.pairingEngine[0] != NULLCHAR);
-    free_then_strdup(tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
-    free_then_strdup(engineName, appData.participants);
-    free_then_strdup(engineMnemonic[0], "");
+    free_then_strdup(&tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
+    free_then_strdup(&engineName, appData.participants);
+    free_then_strdup(&engineMnemonic[0], "");
     GenericPopUp(matchOptions, _("Tournament Options"), MasterDlg, BoardWindow, MODAL, 0);
 }
 
@@ -580,7 +580,7 @@ static void Pick(int n) {
     }
 
     gameInfo.variant = v;
-    free_then_strdup(appData.variant, VariantName(v));
+    free_then_strdup(&appData.variant, VariantName(v));
 
     /* [HGM] shuffle: possible shuffle reset when we switch. */
     shuffleOpenings = FALSE;
@@ -592,9 +592,9 @@ static void Pick(int n) {
     appData.NrFiles = filesTmp;
     appData.holdingsSize = sizeTmp;
     appData.pieceToCharTable = NULL;
-    free_then_strdup(appData.pieceNickNames, "");
-    free_then_strdup(appData.colorNickNames, "");
-    free_then_strdup(appData.men, "");
+    free_then_strdup(&appData.pieceNickNames, "");
+    free_then_strdup(&appData.colorNickNames, "");
+    free_then_strdup(&appData.men, "");
     PopDown(TransientDlg);
     Reset(TRUE, TRUE);
     return;
@@ -626,7 +626,7 @@ void NewVariantProc(void) {
         char * v = EngineDefinedVariant(&first, i);
         if (v) {
             last = i;
-            free_then_strdup(variantDescriptors[start + i].name, v);
+            free_then_strdup(&variantDescriptors[start + i].name, v);
             variantDescriptors[start + i].type = Button;
         } else {
             variantDescriptors[start + i].type = Skip;
@@ -634,7 +634,7 @@ void NewVariantProc(void) {
     }
     /* odd number, add filler */
     if (!(last & 1)) {
-        free_then_strdup(variantDescriptors[start + last + 1].name, " ");
+        free_then_strdup(&variantDescriptors[start + last + 1].name, " ");
         variantDescriptors[start + last + 1].type = Button;
         variantDescriptors[start + last + 1].value = Skip;
     }
@@ -655,9 +655,9 @@ static char * egtPath;
 static int CommonOptionsOK(int n) {
     int newPonder = appData.ponderNextMove;
     if (*egtPath != '/' && strchr(egtPath, ':')) {
-        free_then_strdup(appData.egtFormats, egtPath);
+        free_then_strdup(&appData.egtFormats, egtPath);
     } else {
-        free_then_strdup(appData.defaultPathEGTB, egtPath);
+        free_then_strdup(&appData.defaultPathEGTB, egtPath);
     }
     /* Ensure that changes are sent to the first engine by re-initializing it if it was already started pre-emptively at the end of
        the previous game. */
@@ -694,9 +694,9 @@ void UciMenuProc(void) {
     oldCores = appData.smpCores;
     oldPonder = appData.ponderNextMove;
     if (appData.egtFormats && *appData.egtFormats) {
-        free_then_strdup(egtPath, appData.egtFormats);
+        free_then_strdup(&egtPath, appData.egtFormats);
     } else {
-        free_then_strdup(egtPath, appData.defaultPathEGTB);
+        free_then_strdup(&egtPath, appData.defaultPathEGTB);
     }
     GenericPopUp(commonEngineOptions, _("Common Engine Settings"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -803,8 +803,8 @@ static Option loadOptions[] = {
 };
 
 void LoadOptionsPopUp(DialogClass parent) {
-    free_then_strdup(countRange, "");
-    free_then_strdup(searchMode, modeValues[appData.searchMode - 1]);
+    free_then_strdup(&countRange, "");
+    free_then_strdup(&searchMode, modeValues[appData.searchMode - 1]);
     GenericPopUp(loadOptions, _("Load Game Options"), TransientDlg, parent, MODAL, 0);
 }
 
@@ -975,7 +975,7 @@ static Option boardOptions[] = {
 static int BoardOptionsOK(int n) {
     /* called by pressing OK, and theme selected */
     if (n && (n = SelectedListBoxItem(&boardOptions[THEMELIST])) > 0 && *engineList[n] != '#') {
-        free_then_strdup(engineLine, engineList[n]);
+        free_then_strdup(&engineLine, engineList[n]);
     }
     LoadTheme();
     return 1;
@@ -1059,14 +1059,14 @@ void ThemeSel(int n, int sel) {
         safeStrCpy(buf, engineList[sel], MSG_SIZ);
     } else {
         /* normal line, select engine */
-        free_then_strdup(engineLine, engineList[sel]);
+        free_then_strdup(&engineLine, engineList[sel]);
         LoadTheme();
         PopDown(TransientDlg);
         return;
     }
     /* replace list by only the group contents */
     nr = NamesToList(appData.themeNames, engineList, engineMnemonic, buf);
-    free_then_strdup(engineMnemonic[0], buf);
+    free_then_strdup(&engineMnemonic[0], buf);
     LoadListBox(&boardOptions[THEMELIST], _("# no themes are defined"), -1, -1);
     HighlightWithScroll(&boardOptions[THEMELIST], 0, nr);
 }
@@ -1074,9 +1074,9 @@ void ThemeSel(int n, int sel) {
 void BoardOptionsProc(void) {
     /* to see if it changed */
     strncpy(oldPieceDir, appData.pieceDirectory, MSG_SIZ - 1);
-    free_then_strdup(engineLine, "");
-    free_then_strdup(nickName, "");
-    free_then_strdup(engineMnemonic[0], "");
+    free_then_strdup(&engineLine, "");
+    free_then_strdup(&nickName, "");
+    free_then_strdup(&engineMnemonic[0], "");
     NamesToList(appData.themeNames, engineList, engineMnemonic, "");
     GenericPopUp(boardOptions, _("Board Options"), TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -1282,7 +1282,7 @@ static int NewTagsCallback(int n) {
     if (bookUp) {
         SaveToBook(tagsText), DisplayBook(currentMove);
     } else if (resPtr) {
-        free_then_strdup(*resPtr, tagsText);
+        free_then_strdup(resPtr, tagsText);
         if (resPtr == &firstChessProgramNames) {
             SaveEngineList();
         }
@@ -1488,7 +1488,7 @@ static int TypeInOK(int n) {
 void PopUpMoveDialog(char firstchar) {
     static char buf[2];
     buf[0] = firstchar;
-    free_then_strdup(icsText, buf);
+    free_then_strdup(&icsText, buf);
     if (GenericPopUp(typeOptions, _("Type a move"), TransientDlg, BoardWindow, MODAL, 0)) {
         AddHandler(&typeOptions[0], TransientDlg, 2);
     }
@@ -1599,7 +1599,7 @@ static Option installOptions[] = {
 static int InstallOK(int n) {
     if (n && (n = SelectedListBoxItem(&installOptions[1])) > 0) {
         /* called by pressing OK, and engine selected */
-        free_then_strdup(engineLine, engineList[n]);
+        free_then_strdup(&engineLine, engineList[n]);
     } else {
         switch (values[12]) {
         case 0:
@@ -1624,7 +1624,7 @@ static int InstallOK(int n) {
         isUCI = 2;
         /* TODO: Consider whether we should ensure that -uxiAdapter is defined. */
         if (!*appData.ucciAdapter) {
-            free_then_strdup(appData.ucciAdapter, "usi2wb -%variant \"%fcp\"\"%fd\"");
+            free_then_strdup(&appData.ucciAdapter, "usi2wb -%variant \"%fcp\"\"%fd\"");
         }
     }
     if (!secondEng) {
@@ -1647,13 +1647,13 @@ static void EngSel(int n, int sel) {
         safeStrCpy(buf, engineList[sel], MSG_SIZ);
     } else {
         /* normal line, select engine */
-        free_then_strdup(engineLine, engineList[sel]);
+        free_then_strdup(&engineLine, engineList[sel]);
         InstallOK(0);
         return;
     }
     /* replace list by only the group contents */
     nr = NamesToList(firstChessProgramNames, engineList, engineMnemonic, buf);
-    free_then_strdup(engineMnemonic[0], buf);
+    free_then_strdup(&engineMnemonic[0], buf);
     LoadListBox(&installOptions[1], _("# no engines are installed"), -1, -1);
     HighlightWithScroll(&installOptions[1], 0, nr);
 }
@@ -1693,7 +1693,7 @@ static void LoadEngineProc(int engineNr, char * title) {
         free(params);
     }
     params = strdup("");
-    free_then_strdup(engineMnemonic[0], "");
+    free_then_strdup(&engineMnemonic[0], "");
     NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");
     GenericPopUp(installOptions, title, TransientDlg, BoardWindow, MODAL, 0);
 }
@@ -1744,7 +1744,7 @@ static char * oldFont[7];
 static int NewFont(int n, int fnr, char * font) {
     int fontChanged = strcmp(oldFont[n], font) ? 1 : 0;
     if (fontChanged) {
-        free_then_strdup(fontTable[fnr][initialSquareSize], font);
+        free_then_strdup(&fontTable[fnr][initialSquareSize], font);
         fontIsSet[fnr] = fontValid[fnr][initialSquareSize] = TRUE;
     }
     return fontChanged;
@@ -1924,7 +1924,7 @@ void FontsProc(void) {
     GenericPopUp(fontOptions, _("Fonts"), TransientDlg, BoardWindow, MODAL, 0);
     for (i = 0; i < 7; i++) {
         ApplyFont(&fontOptions[6 * i], *(char **)fontOptions[6 * i].target);
-        free_then_strdup(oldFont[i], *(char **)fontOptions[6 * i].target);
+        free_then_strdup(&oldFont[i], *(char **)fontOptions[6 * i].target);
     }
 }
 
@@ -1975,14 +1975,14 @@ static int TcOK(int n) {
             return 0;
         }
         appData.movesPerSession = tmpMoves;
-        free_then_strdup(appData.timeControl, tc);
+        free_then_strdup(&appData.timeControl, tc);
         appData.timeIncrement = -1;
         break;
     case 1:
         if (!ParseTimeControl(tc, tmpInc, 0)) {
             return 0;
         }
-        free_then_strdup(appData.timeControl, tc);
+        free_then_strdup(&appData.timeControl, tc);
         appData.timeIncrement = (by60 ? tmpInc / 60. : tmpInc);
         break;
     case 2:
@@ -2065,7 +2065,7 @@ int SendReply(int n) {
 void AskQuestion(char * title, char * question, char * replyPrefix, ProcRef pr) {
     safeStrCpy(pendingReplyPrefix, replyPrefix, sizeof(pendingReplyPrefix) / sizeof(pendingReplyPrefix[0]));
     pendingReplyPR = pr;
-    free_then_strdup(answer, "");
+    free_then_strdup(&answer, "");
     askOptions[0].name = question;
     if (GenericPopUp(askOptions, title, AskDlg, BoardWindow, MODAL, 0)) {
         AddHandler(&askOptions[1], AskDlg, 2);
@@ -2122,7 +2122,7 @@ static void PromoPick(int n) {
 }
 
 static void SetPromo(char * name, int nr, char promoChar) {
-    free_then_strdup(promoOptions[nr].name, name);
+    free_then_strdup(&promoOptions[nr].name, name);
     promoOptions[nr].value = promoChar;
     promoOptions[nr].min = SAME_ROW;
 }
@@ -2457,9 +2457,9 @@ void ChatSwitch(int n) {
     }
     GetWidgetText(&chatOptions[CHAT_IN], &v);
     if (hidden) {
-        free_then_strdup(icsLine, v);
+        free_then_strdup(&icsLine, v);
     } else {
-        free_then_strdup(inputs[activePartner], v);
+        free_then_strdup(&inputs[activePartner], v);
     }
     hidden = 0;
     activePartner = --n;
@@ -2475,7 +2475,7 @@ void ChatSwitch(int n) {
         SetColor(dirty[i] ? "#FFC000" : "#FFFFFF", &chatOptions[j]);
     }
     if (!inputs[n]) {
-        free_then_strdup(inputs[n], "");
+        free_then_strdup(&inputs[n], "");
     }
     /*SetWidgetText(&chatOptions[CHAT_IN], inputs[n], ChatDlg); /* does not work (in this widget only) */
     /*SetInsertPos(&chatOptions[CHAT_IN], strlen(inputs[n]));*/
@@ -2488,9 +2488,9 @@ void PaneSwitch(void) {
     char * v;
     Show(&chatOptions[CHAT_PANE], hidden = 1);  /* hide */
     GetWidgetText(&chatOptions[CHAT_IN], &v);
-    free_then_strdup(inputs[activePartner], v);
+    free_then_strdup(&inputs[activePartner], v);
     if (!icsLine) {
-        free_then_strdup(icsLine, "");
+        free_then_strdup(&icsLine, "");
     }
     tmpLine = icsLine;
     ScheduleDelayedEvent(DelayedSetText, 50);
@@ -2501,8 +2501,8 @@ void PaneSwitch(void) {
 /* clear the chat to make it free for other use */
 void ClearChat(void) {
     chatPartner[activePartner][0] = NULLCHAR;
-    free_then_strdup(texts[activePartner], "");
-    free_then_strdup(inputs[activePartner], "");
+    free_then_strdup(&texts[activePartner], "");
+    free_then_strdup(&inputs[activePartner], "");
     SetWidgetText(&chatOptions[CHAT_PARTNER], "", ChatDlg);
     SetWidgetText(&chatOptions[CHAT_OUT], "", ChatDlg);
     SetWidgetText(&chatOptions[CHAT_IN], "", ChatDlg);
@@ -2577,7 +2577,7 @@ void ConsoleAutoPopUp(char * buf) {
             }
         } else {
             /* box did not exist: make sure it pops up with char in it */
-            free_then_strdup(line, buf);
+            free_then_strdup(&line, buf);
         }
         ChatPopUp();
     } else {
@@ -3014,7 +3014,7 @@ void DisplayHelp(char * name) {
     f = fopen(buf, "r");
     if (f) {
         char * msg = "Right-clicking menu item or dialog text pops up help on it";
-        free_then_strdup(appData.suppress, msg);
+        free_then_strdup(&appData.suppress, msg);
         if (strstr(buf, ".gz")) {
             /* man file is gzipped */
             if (!manText[n]) {
@@ -3511,9 +3511,9 @@ int BrowseOK(int n) {
             if (sel < 0 || sel >= filePtr) {
                 return FALSE;
             }
-            free_then_strdup(fileName, fileList[sel]);
+            free_then_strdup(&fileName, fileList[sel]);
         } else {
-            free_then_strdup(fileName, curDir);
+            free_then_strdup(&fileName, curDir);
         }
     }
     if (!fileName[0]) {
@@ -3538,7 +3538,7 @@ int BrowseOK(int n) {
         /* Refuse OK if file not openable. */
         return FALSE;
     }
-    free_then_strdup(*namePtr, fileName);
+    free_then_strdup(namePtr, fileName);
     ScheduleDelayedEvent(DelayedLoad, 50);
     /* Not sure this is ever non-null. */
     currentCps = savCps;
@@ -3612,7 +3612,7 @@ void ListDir(int pathFlag) {
                 /* suppress hidden directories, except ".." */
                 continue;
             }
-            free_then_strdup(folderList[folderPtr], s);
+            free_then_strdup(&folderList[folderPtr], s);
             if (folderPtr < MAXFILES - 2) {
                 folderPtr++;
             }
@@ -3646,12 +3646,12 @@ void ListDir(int pathFlag) {
             if (cnt++ < pageStart) {
                 continue;
             }
-            free_then_strdup(fileList[filePtr], s);
+            free_then_strdup(&fileList[filePtr], s);
             filePtr++;
         }
     }
     if (filePtr == MAXFILES - 2) {
-        free_then_strdup(fileList[filePtr], _("  next page"));
+        free_then_strdup(&fileList[filePtr], _("  next page"));
         filePtr++;
     }
     free(folderList[folderPtr]);
@@ -3709,7 +3709,7 @@ void SetTypeFilter(int n) {
     }
     browseOptions[n].value = j;
     SetWidgetLabel(&browseOptions[n], FileTypes[j]);
-    free_then_strdup(extFilter, Extensions[j]);
+    free_then_strdup(&extFilter, Extensions[j]);
     pageStart = 0;
     /* uses pathflag remembered by ListDir */
     Refresh(-1);
@@ -3726,7 +3726,7 @@ void FileSelProc(int n, int sel) {
         Refresh(-1);
         return;
     }
-    free_then_strdup(fileName, fileList[sel]);
+    free_then_strdup(&fileName, fileList[sel]);
     if (BrowseOK(0)) {
         PopDown(BrowserDlg);
     }
@@ -3766,7 +3766,7 @@ void StartDir(char * filter, char * newName) {
         if (newName) {
             char *p, *q;
             if (*newName) {
-                free_then_strdup(*res, newName);
+                free_then_strdup(res, newName);
                 for (p = *res; q = strchr(p, '/');) {
                     p = q + 1;
                 }
@@ -3794,8 +3794,8 @@ void Browse(DialogClass dlg, char * label, char * proposed, char * ext, Boolean 
     savCps = currentCps;
     oldVal = values[9];
     savDlg = dlg;
-    free_then_strdup(extFilter, ext);
-    free_then_strdup(fileName, proposed ? proposed : "");
+    free_then_strdup(&extFilter, ext);
+    free_then_strdup(&fileName, proposed ? proposed : "");
     /* look up actual value in list of possible values, to get selection nr */
     for (j = 0; Extensions[j]; j++) {
         if (extFilter && !strcmp(extFilter, Extensions[j])) {
@@ -3804,7 +3804,7 @@ void Browse(DialogClass dlg, char * label, char * proposed, char * ext, Boolean 
     }
     if (Extensions[j] == NULL) {
         j++;
-        free_then_strdup(FileTypes[j], extFilter);
+        free_then_strdup(&FileTypes[j], extFilter);
     }
     browseOptions[9].value = j;
     /* disable file listbox during path browsing */

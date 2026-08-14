@@ -1297,7 +1297,7 @@ int main(int argc, char ** argv) {
         if (!FindLogo(name, ".logo", buf)) {
             FindLogo(appData.logoDir, name + 6, buf);
         }
-        free_then_strdup(userLogo, buf);
+        free_then_strdup((char * *)&userLogo, buf);
     }
 
     if (appData.animate || appData.animateDragging) {
@@ -2463,7 +2463,7 @@ static void LoadLogo(ChessProgramState * cps, int n, Boolean ics) {
         }
     }
     if (logoName[0]) {
-        free_then_strdup(cps->programLogo, logoName);
+        free_then_strdup((char * *)&cps->programLogo, logoName);
     }
 }
 

@@ -98,7 +98,7 @@ void HistoryPopUp(void) {
 
 void HistoryShowProc(void) {
     if (!shellUp[HistoryDlg]) {
-        free_then_strdup(historyText, "");
+        free_then_strdup(&historyText, "");
         HistoryPopUp();
         RefreshMemoContent();
         MemoContentUpdated();

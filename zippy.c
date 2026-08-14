@@ -187,7 +187,7 @@ void ZippyInit(void) {
     if (p != NULL) {
         appData.zippyVariants = p;
     }
-    free_then_strdup(first.variants, appData.zippyVariants);
+    free_then_strdup(&first.variants, appData.zippyVariants);
 
     srandom(time(NULL));
 }

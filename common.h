@@ -62,7 +62,7 @@
 char * strdup(char const * c_str);
 #endif
 
-char * free_then_strdup(char * c_str, char const * c_str_to_dup);
+void free_then_strdup(char * * c_str, char const * c_str_to_dup);
 
 #ifdef _WIN32
 typedef char Boolean;

@@ -823,7 +823,7 @@ void InitEngine(ChessProgramState * cps, int n) {
     }
     TidyProgramName(cps->program, cps->host, cps->tidy);
     cps->matchWins = 0;
-    free_then_strdup(cps->variants, appData.noChessProgram ? "" : appData.variant);
+    free_then_strdup(&cps->variants, appData.noChessProgram ? "" : appData.variant);
     /* detect */
     cps->analysisSupport = 2;
     cps->analyzing = FALSE;
@@ -849,7 +849,7 @@ void InitEngine(ChessProgramState * cps, int n) {
     cps->supportsNPS = UNKNOWN;
     cps->memSize = FALSE;
     cps->maxCores = FALSE;
-    free_then_strdup(cps->egtFormats, "");
+    free_then_strdup(&cps->egtFormats, "");
 
     /* [HGM] options */
     cps->optionSettings = appData.engOptions[n];
@@ -921,7 +921,7 @@ void FloatToFront(char ** list, char * engineLine) {
         /* if maximum rached, strip off last */
         *r = NULLCHAR;
     }
-    free_then_strdup(*list, tidy + 1);
+    free_then_strdup(list, tidy + 1);
 }
 
 void SaveEngineList(void) {
@@ -965,7 +965,7 @@ void AddToEngineList(int i) {
         }
         SaveEngineList();
         FloatToFront(&appData.recentEngineList, buf);
-        free_then_strdup(currentEngine[i], buf);
+        free_then_strdup(&currentEngine[i], buf);
     }
 }
 
@@ -1044,7 +1044,7 @@ void Load(ChessProgramState * cps, int i) {
     char *p, *q, buf[MSG_SIZ], command[MSG_SIZ], buf2[MSG_SIZ], buf3[MSG_SIZ], jar;
     /* Has an engine been selected from the combo box? */
     if (engineLine && engineLine[0]) {
-        free_then_strdup(currentEngine[i], engineLine);
+        free_then_strdup(&currentEngine[i], engineLine);
         snprintf(buf, MSG_SIZ, "-fcp %s", engineLine);
         /* kludge to parse -f* / -first* like it is -s* / -second* */
         SwapEngines(i);
@@ -1071,19 +1071,19 @@ void Load(ChessProgramState * cps, int i) {
         return;
     }
     if (engineDir[0] != NULLCHAR) {
-        free_then_strdup(appData.directory[i], engineDir);
+        free_then_strdup(&appData.directory[i], engineDir);
         p = engineName;
     } else if (p != engineName) {
         /* derive directory from engine path, when not given */
         p[-1] = 0;
-        free_then_strdup(appData.directory[i], engineName);
+        free_then_strdup(&appData.directory[i], engineName);
         p[-1] = SLASH;
         if (SLASH == '/' && p - engineName > 1) {
             /* for XBoard use ./exeName as command after split! */
             *(p -= 2) = '.';
         }
     } else {
-        free_then_strdup(appData.directory[i], ".");
+        free_then_strdup(&appData.directory[i], ".");
     }
     jar = (strstr(p, ".jar") == p + strlen(p) - 4);
     if (params[0]) {
@@ -1099,7 +1099,7 @@ void Load(ChessProgramState * cps, int i) {
         snprintf(buf3, MSG_SIZ, "java -jar %s", p);
         p = buf3;
     }
-    free_then_strdup(appData.chessProgram[i], p);
+    free_then_strdup(&appData.chessProgram[i], p);
     /* requests adding to list without auto-detect */
     tryNr = 3;
     if (isUCI == 3) {
@@ -1114,7 +1114,7 @@ void Load(ChessProgramState * cps, int i) {
         useNick = FALSE;
     }
     if (useNick) {
-        free_then_strdup(appData.pgnName[i], nickName);
+        free_then_strdup(&appData.pgnName[i], nickName);
     }
     safeStrCpy(newEngineCommand, p, MSG_SIZ);
     ReplaceEngine(cps, i);
@@ -1548,7 +1548,7 @@ void InitBackEnd2(void) {
 #endif
     }
     /* [HGM] debug split: remember initial name in use */
-    free_then_strdup(currentDebugFile, appData.nameOfDebugFile);
+    free_then_strdup(&currentDebugFile, appData.nameOfDebugFile);
 
     set_cont_sequence(appData.wrapContSeq);
     if (appData.matchGames > 0) {
@@ -1765,7 +1765,7 @@ void InitBackEnd3(void) {
                 q = strchr(q, '_') + 1;
             }
             /* Fake that the user requested the first variant played by the engine, then re-initialize. */
-            free_then_strdup(appData.variant, q);
+            free_then_strdup(&appData.variant, q);
             Reset(TRUE, FALSE);
         }
         if (p) {
@@ -10660,7 +10660,7 @@ FakeBookMove:  /* [HGM] book: we jump here to simulate machine moves after book 
         if (sscanf(message, "setup (%s", buf) == 1) {
             char * ptc = strlen(buf) < 3 ? "PNBRQKpnbrqk" : buf;
             s = 8 + strlen(buf), buf[s - 9] = NULLCHAR, SetCharTableEsc(pieceToChar, ptc, SUFFIXES);
-            free_then_strdup(appData.pieceToCharTable, ptc);
+            free_then_strdup(&appData.pieceToCharTable, ptc);
             if (gameInfo.variant == VariantUnknown) {
                 safeStrCpy(startPieceToChar, ptc, MSG_SIZ);
             }
@@ -10755,9 +10755,9 @@ FakeBookMove:  /* [HGM] book: we jump here to simulate machine moves after book 
         }
         if (piece < EmptySquare) {
             pieceDefs = TRUE;
-            free_then_strdup(pieceDesc[piece], buf1);
+            free_then_strdup(&pieceDesc[piece], buf1);
             if ((ID & 32) == 0 && p[1] == '&') {
-                free_then_strdup(pieceDesc[WHITE_TO_BLACK piece], buf1);
+                free_then_strdup(&pieceDesc[WHITE_TO_BLACK piece], buf1);
             }
         }
         return;
@@ -10944,7 +10944,7 @@ FakeBookMove:  /* [HGM] book: we jump here to simulate machine moves after book 
                 DisplayError(_("Engine did not send setup for non-standard variant"), 0);
                 *engineVariant = NULLCHAR;
                 /* back to normal as error recovery? */
-                free_then_strdup(appData.variant, "normal");
+                free_then_strdup(&appData.variant, "normal");
                 GameEnds(GameUnfinished, NULL, GE_XBOARD);
             }
             initPing = -1;
@@ -12742,7 +12742,7 @@ void InitChessProgram(ChessProgramState * cps, int setup) {
                     /* get size overrides the engine needs with it (if any) */
                     appData.NrFiles = w, appData.NrRanks = h, appData.holdingsSize = s, q = strchr(q, '_') + 1;
                 }
-                free_then_strdup(appData.variant, q);
+                free_then_strdup(&appData.variant, q);
                 Reset(TRUE, FALSE);
             }
             if (p) {
@@ -13145,7 +13145,7 @@ int CreateTourney(char * name) {
     FILE * f;
     if (matchMode && strcmp(name, appData.tourneyFile)) {
         /* do not allow change of tourneyfile while playing */
-        free_then_strdup(name, appData.tourneyFile);
+        free_then_strdup(&name, appData.tourneyFile);
     }
     if (name[0] == NULLCHAR) {
         if (appData.participants[0]) {
@@ -13155,7 +13155,7 @@ int CreateTourney(char * name) {
     }
     f = fopen(name, "r");
     if (f) {
-        free_then_strdup(appData.tourneyFile, name);
+        free_then_strdup(&appData.tourneyFile, name);
         ParseArgsFromFile(f);
     } else {
         if (!appData.participants[0]) {
@@ -13169,7 +13169,7 @@ int CreateTourney(char * name) {
         if (CheckPlayers(appData.participants)) {
             return 0;
         }
-        free_then_strdup(appData.tourneyFile, name);
+        free_then_strdup(&appData.tourneyFile, name);
         if (appData.tourneyType < 0) {
             /* Swiss forces games/pairing = 1 */
             appData.defaultMatchGames = 1;
@@ -13286,7 +13286,7 @@ void SaveEngineSettings(int n) {
         snprintf(buf, MSG_SIZ, "%s -firstOptions \"%s\"", currentEngine[n], optionSettings);
     }
     /* updated engine line */
-    free_then_strdup(currentEngine[n], buf);
+    free_then_strdup(&currentEngine[n], buf);
     len = p - firstChessProgramNames + strlen(q) + strlen(currentEngine[n]) + 1;
     s = malloc(len);
     snprintf(s, len, "%s%s%s", firstChessProgramNames, currentEngine[n], q);
@@ -13360,7 +13360,7 @@ int GetEngineLine(char * s, int n) {
         SwapEngines(n);
     }
     if (n < 2) {
-        free_then_strdup(currentEngine[n], command[i]);
+        free_then_strdup(&currentEngine[n], command[i]);
     }
     if (n == 0 && *appData.secondChessProgram == NULLCHAR) {
         /* set second same as first if not yet set (to suppress WB startup dialog) */
@@ -13420,7 +13420,7 @@ void RecentEngineEvent(int nr) {
     if (mnemonic[n]) {
         ReplaceEngine(&first, 0);
         FloatToFront(&appData.recentEngineList, command[n]);
-        free_then_strdup(currentEngine[0], command[n]);
+        free_then_strdup(&currentEngine[0], command[n]);
     }
 }
 
@@ -13590,7 +13590,7 @@ void NextMatchGame(void) {
             /* name has changed */
             FILE * f = fopen(buf, "w");
             if (f) {
-                free_then_strdup(currentDebugFile, buf);
+                free_then_strdup(&currentDebugFile, buf);
                 fclose(debugFP);
                 debugFP = f;
             } else {

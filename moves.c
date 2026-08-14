@@ -304,9 +304,9 @@ int LoadPieceDesc(char * s) {
                 continue;
             }
         }
-        free_then_strdup(pieceDesc[piece], p);
+        free_then_strdup(&pieceDesc[piece], p);
         if (piece < BlackPawn && (pieceToChar[WHITE_TO_BLACK piece] == pieceToChar[piece] + 32 || promoted)) {
-            free_then_strdup(pieceDesc[WHITE_TO_BLACK piece], p);
+            free_then_strdup(&pieceDesc[WHITE_TO_BLACK piece], p);
         }
         pieceDefs = TRUE;
         if (q) {

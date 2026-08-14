@@ -864,7 +864,7 @@ char * protocols[] = {"autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL};
 
 int InstallOK() {
     if (selected >= 0) {
-        free_then_strdup(engineLine, engineList[selected]);
+        free_then_strdup(&engineLine, engineList[selected]);
     }
     if (engineLine[0] == '#') {
         DisplayError(_("Select single engine from the group"), 0);
@@ -940,7 +940,7 @@ int EnterGroup(HWND hDlg) {
         /* group header, open group */
         safeStrCpy(buf, engineList[i], MSG_SIZ);
     } else {
-        free_then_strdup(engineLine, engineList[i]);
+        free_then_strdup(&engineLine, engineList[i]);
         if (isUCCI) {
             isUCI = 2;
         }
@@ -993,7 +993,7 @@ void LoadEnginePopUp(HWND hwnd, int nr) {
         free(engineName);
     }
     engineName = strdup("");
-    free_then_strdup(wbOptions, "");
+    free_then_strdup(&wbOptions, "");
     /* only top level */
     installOptions[0].max = NamesToList(firstChessProgramNames, engineList, engineMnemonic, "");
     snprintf(title, MSG_SIZ, _("Load %s Engine"), nr ? _("second") : _("first"));
@@ -1006,7 +1006,7 @@ void DeleteTheme(HWND hDlg);
 
 int ThemeOK() {
     if (selected >= 0) {
-        free_then_strdup(engineLine, engineList[selected]);
+        free_then_strdup(&engineLine, engineList[selected]);
     }
     if (engineLine[0] == '#') {
         DisplayError(_("Select single theme from the group"), 0);
@@ -1071,7 +1071,7 @@ int PickTheme(HWND hDlg) {
         /* group header, open group */
         safeStrCpy(buf, engineList[i], MSG_SIZ);
     } else {
-        free_then_strdup(engineLine, engineList[i]);
+        free_then_strdup(&engineLine, engineList[i]);
         LoadTheme();
         EndDialog(hDlg, 0);
         /* normal line, select engine */
@@ -1153,7 +1153,7 @@ void PseudoOK(HWND hDlg) {
         appData.defaultMatchGames = 1;
         appData.tourneyType = -1;
     }
-    free_then_strdup(appData.tourneyFile, tfName);
+    free_then_strdup(&appData.tourneyFile, tfName);
 }
 
 char * GetParticipants(HWND hDlg) {
@@ -1274,7 +1274,7 @@ void TourneyPopup(HWND hwnd) {
     swiss = appData.tourneyType < 0;
     tourneyOptions[0].max = n;
     snprintf(title, MSG_SIZ, _("Tournament and Match Options"));
-    free_then_strdup(tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
+    free_then_strdup(&tfName, appData.tourneyFile[0] ? appData.tourneyFile : MakeName(appData.defName));
 
     GenericPopup(hwnd, tourneyOptions);
 }

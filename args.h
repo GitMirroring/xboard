@@ -1013,7 +1013,7 @@ Boolean ParseSettingsFile(char * name, char ** addr) {
 #endif
         if (f != NULL) {
             if (addr != NULL) {
-                free_then_strdup(*addr, fullname);
+                free_then_strdup(addr, fullname);
             }
             ParseArgs(FileGet, f);
             fclose(f);
@@ -1286,7 +1286,7 @@ not_special:
                 /* It is present, so we need to expand it. */
                 char buf[4 * MSG_SIZ];
                 snprintf(buf, 4 * MSG_SIZ, "%s%s", dataDir, argValue + 2);
-                free_then_strdup(*(char **)ad->argLoc, buf);
+                free_then_strdup((char **)ad->argLoc, buf);
                 break;
             }
             if (replace) {
@@ -1300,7 +1300,7 @@ not_special:
                     break;
                 }
             }
-            free_then_strdup(*(char **)ad->argLoc, argValue);
+            free_then_strdup((char **)ad->argLoc, argValue);
             break;
 
         case ArgBackupSettingsFile:
@@ -1570,7 +1570,7 @@ void InitAppData(char * lpCmdLine) {
         char buf[MSG_SIZ];
         MySearchPath(installDir, engineListFile, buf);
         if (*buf) {
-            free_then_strdup(engineListFile, buf);
+            free_then_strdup(&engineListFile, buf);
         }
         ParseSettingsFile(engineListFile, &engineListFile);
     }
@@ -1591,8 +1591,8 @@ void InitAppData(char * lpCmdLine) {
 
     if (!*appData.secondChessProgram) {
         /* [HGM] scp defaults to fcp */
-        free_then_strdup(appData.secondChessProgram, appData.firstChessProgram);
-        free_then_strdup(appData.secondDirectory, appData.firstDirectory);
+        free_then_strdup(&appData.secondChessProgram, appData.firstChessProgram);
+        free_then_strdup(&appData.secondDirectory, appData.firstDirectory);
         appData.secondIsUCI = appData.firstIsUCI;
     }
 
@@ -1665,8 +1665,8 @@ void InitAppData(char * lpCmdLine) {
     if (*appData.defaultPathEGTB) {
         /* append value of deprecated -defaultPathEGTB to -egtFormats */
         snprintf(buf, MAX_ARG_LEN, "%s%snalimov:%s", appData.egtFormats, (*appData.egtFormats ? "," : ""), appData.defaultPathEGTB);
-        free_then_strdup(appData.egtFormats, buf);
-        free_then_strdup(appData.defaultPathEGTB, "");
+        free_then_strdup(&appData.egtFormats, buf);
+        free_then_strdup(&appData.defaultPathEGTB, "");
     }
 
     /* Open startup dialog if needed */

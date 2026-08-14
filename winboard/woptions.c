@@ -913,7 +913,7 @@ LRESULT CALLBACK NewVariantDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             }
 
             gameInfo.variant = v;
-            free_then_strdup(appData.variant, VariantName(v));
+            free_then_strdup(&appData.variant, VariantName(v));
 
             appData.NrFiles = (int)GetDlgItemInt(hDlg, IDC_Files, NULL, FALSE);
             appData.NrRanks = (int)GetDlgItemInt(hDlg, IDC_Ranks, NULL, FALSE);
@@ -932,9 +932,9 @@ LRESULT CALLBACK NewVariantDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             shuffleOpenings = FALSE; /* [HGM] shuffle: possible shuffle reset when we switch */
             startedFromPositionFile = FALSE; /* [HGM] loadPos: no longer valid in new variant */
             appData.pieceToCharTable = NULL;
-            free_then_strdup(appData.pieceNickNames, "");
-            free_then_strdup(appData.colorNickNames, "");
-            free_then_strdup(appData.men, "");
+            free_then_strdup(&appData.pieceNickNames, "");
+            free_then_strdup(&appData.colorNickNames, "");
+            free_then_strdup(&appData.men, "");
             Reset(TRUE, TRUE);
 
             return TRUE;
@@ -1573,10 +1573,10 @@ LRESULT CALLBACK FontOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 /* Make new piece-to-char table */
                 char buf[MSG_SIZ];
                 GetDlgItemText(hDlg, OPT_SamplePieceFont, buf, MSG_SIZ);
-                free_then_strdup(appData.fontToPieceTable, buf);
+                free_then_strdup(&appData.fontToPieceTable, buf);
             }
             /* piece font */
-            free_then_strdup(appData.renderPiecesWithFont, workFont[NUM_FONTS].mfp.faceName);
+            free_then_strdup(&appData.renderPiecesWithFont, workFont[NUM_FONTS].mfp.faceName);
 
             /* A sad necessity due to the original design of having a separate console font, tags font, and comment font for each
                board size.  IMHO these fonts should not be dependent on the current board size.  I'm running out of time, so I am
@@ -2600,7 +2600,7 @@ LRESULT CALLBACK SaveOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 appData.autoSaveGames = TRUE;
                 if (IsDlgButtonChecked(hDlg, OPT_AVPrompt)) {
                     /* [HGM] make sure value is ALWAYS in allocated memory */
-                    free_then_strdup(appData.saveGameFile, "");
+                    free_then_strdup(&appData.saveGameFile, "");
                 } else /*if (IsDlgButtonChecked(hDlg, OPT_AVToFile))*/ {
                     GetDlgItemText(hDlg, OPT_AVFilename, buf, MSG_SIZ);
                     if (*buf == NULLCHAR) {
@@ -2612,7 +2612,7 @@ LRESULT CALLBACK SaveOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 }
             } else {
                 appData.autoSaveGames = FALSE;
-                free_then_strdup(appData.saveGameFile, "");
+                free_then_strdup(&appData.saveGameFile, "");
             }
             appData.oldSaveStyle = IsDlgButtonChecked(hDlg, OPT_Old);
             appData.saveOutOfBookInfo = IsDlgButtonChecked(hDlg, OPT_OutOfBookInfo);
@@ -2995,9 +2995,9 @@ LRESULT CALLBACK UciOptionsDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             appData.defaultCacheSizeEGTB = GetDlgItemInt(hDlg, IDC_SizeOfEGTB, NULL, FALSE);
             GetDlgItemText(hDlg, IDC_PathToEGTB, buf, sizeof(buf));
             if (IsMultiFormat(buf)) {
-                free_then_strdup(appData.egtFormats, buf);
+                free_then_strdup(&appData.egtFormats, buf);
             } else {
-                free_then_strdup(appData.defaultPathEGTB, buf);
+                free_then_strdup(&appData.defaultPathEGTB, buf);
             }
             GetDlgItemText(hDlg, IDC_BookFile, buf, sizeof(buf));
             appData.polyglotBook = strdup(buf);
