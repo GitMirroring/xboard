@@ -810,35 +810,44 @@ char * PrintArg(ArgType t) {
 char * GenerateGlobalTranslationTable(void) {
     /* Go through all menu items and extract the keyboard shortcuts, so that X11 can load them. */
     char * output[2];
-
-    int i, j, n = 0;
+    int i;
+    int j;
+    int n = 0;
     MenuItem * mi;
+
+    static int const ctrl_bit = 0x01;
+    static int const alt_bit  = 0x02;
+    static int const shift_bit = 0x04;
+    static char const * const space_ctrl = " Ctrl";
+    static char const * const space_meta = " Meta";
+    static char const * const space_shift = " Shift";
+    /* There's no need to add 1 for null termination purposes because we will never use a space as the first character. */
+    static int const maximum_modifiers_length = strlen(space_ctrl) + strlen(space_meta) + strlen(space_shift);
 
     /* Build keystrokes with and without modifier keys separately, so that the more specific can preceed the other. */
     output[0] = strdup("");
     output[1] = strdup("");
 
-    /* loop over all menu entries */
+    /* Loop over all menu entries. */
     for (i = 0; menuBar[i - n].mi || !n++; i++) {
         /* kludge to access 'noMenu' behind sentinel */
         mi = menuBar[i + n].mi;
         for (j = 0; mi[j].proc; j++) {
             if (mi[j].accel) {
-                int ctrl = 0;
-                int shift = 0;
-                int alt = 0;
+                char * test;
+                char * key;
+                char * modifiers;
+                int modifier_bits = 0;
 
-                char *key, *test, *mods;
-
-                /* check for Ctrl/Alt */
+                /* Check for <Ctrl>, <Alt>, <Shift>. */
                 if (strstr(mi[j].accel, "<Ctrl>")) {
-                    ctrl = 1;
-                }
-                if (strstr(mi[j].accel, "<Shift>")) {
-                    shift = 1;
+                    modifier_bits |= ctrl_bit;
                 }
                 if (strstr(mi[j].accel, "<Alt>")) {
-                    alt = 1;
+                    modifier_bits |= alt_bit;
+                }
+                if (strstr(mi[j].accel, "<Shift>")) {
+                    modifier_bits |= shift_bit;
                 }
 
                 /* remove all <...> */
@@ -850,44 +859,38 @@ char * GenerateGlobalTranslationTable(void) {
                     key = strdup(++test);
                 }
 
-                /* instead of shift X11 uses the uppercase letter directly*/
-                if (shift && strlen(key) == 1) {
+                /* Instead of shift, X11 uses the uppercase letter directly. */
+                if ((1 == strlen(key) && (modifier_bits & shift_bit))) {
                     *key = toupper(*key);
-                    shift = 0;
+                    modifier_bits &= ~(shift_bit);
                 }
 
-                /* handle some special cases which have different names in X11 */
+                /* Handle some special cases that have different names in X11. */
                 if (strncmp(key, "Page_Down", 9) == 0) {
-                    free(key);
-                    key = strdup("Next");
+                    free_then_strdup(&key, "Next");
                 } else if (strncmp(key, "Page_Up", 7) == 0) {
-                    free(key);
-                    key = strdup("Prior");
+                    free_then_strdup(&key, "Prior");
                 };
 
-                /* create string of mods */
-                if (ctrl) {
-                    mods = strdup("Ctrl ");
-                } else {
-                    mods = strdup("");
+                /* Create a string containing the used modifiers. */
+                modifiers = malloc(maximum_modifiers_length);
+                {
+                    Boolean modifier_added = 0;
+                    modifiers[0] = '\0';
+                    if (modifier_bits & ctrl_bit) {
+                        strcat(modifiers, space_ctrl + (1 - modifier_added));
+                        modifier_added = 1;
+                    }
+                    if (modifier_bits & alt_bit) {
+                        strcat(modifiers, space_meta + (1 - modifier_added));
+                        modifier_added = 1;
+                    }
+                    if (modifier_bits & shift_bit) {
+                        strcat(modifiers, space_shift + (1 - modifier_added));
+                    }
                 }
 
-                if (alt) {
-                    mods = realloc(mods, strlen(mods) + strlen("Meta ") + 1);
-                    strncat(mods, "Meta ", 5);
-                };
-
-                if (shift) {
-                    mods = realloc(mods, strlen(mods) + strlen("Shift ") + 1);
-                    strncat(mods, "Shift ", 6);
-                };
-
-                /* remove trailing space */
-                if (isspace(mods[strlen(mods) - 1])) {
-                    mods[strlen(mods) - 1] = '\0';
-                }
-
-                /* get the name for the callback, we can use MenuItem() here that will call KeyBindingProc */
+                /* Get the name for the callback.  We can use MenuItem() here (that will call KeyBindingProc). */
                 char * name = malloc(MSG_SIZ);
                 if (n) {
                     snprintf(name, MSG_SIZ, "%s", mi[j].ref);
@@ -896,18 +899,18 @@ char * GenerateGlobalTranslationTable(void) {
                 }
 
                 char * buffer = malloc(MSG_SIZ);
-                snprintf(buffer, MSG_SIZ, ":%s<Key>%s: MenuItem(%s) \n ", mods, key, name);
+                snprintf(buffer, MSG_SIZ, ":%s<Key>%s: MenuItem(%s) \n ", modifiers, key, name);
 
-                /* add string to the output */
-                output[shift | alt | ctrl] =
-                 realloc(output[shift | alt | ctrl], strlen(output[shift | alt | ctrl]) + strlen(buffer) + 1);
-                strncat(output[shift | alt | ctrl], buffer, strlen(buffer));
+                /* Add string to the output. */
+                int const modified = !!modifier_bits;
+                output[modified] = realloc(output[modified], strlen(output[modified]) + strlen(buffer) + 1);
+                strncat(output[modified], buffer, strlen(buffer));
 
-                /* clean up */
-                free(key);
+                /* Clean up. */
                 free(buffer);
                 free(name);
-                free(mods);
+                free(modifiers);
+                free(key);
             }
         }
     }
