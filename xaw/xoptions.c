@@ -31,6 +31,7 @@
 /* [HGM] this file is the counterpart of woptions.c, containing xboard popup menus similar to those of WinBoard, to set the most
    common options interactively. */
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -143,6 +144,11 @@ void GetWidgetText(Option * opt, char ** buf) {
 
 void SetWidgetText(Option * opt, char * buf, int n) {
     Arg arg;
+    assert(opt);
+    if (!opt->handle) {
+        /* The widget hasn't been initialized yet. */
+        return;
+    }
     XtSetArg(arg, XtNstring, buf);
     XtSetValues(opt->handle, &arg, 1);
     if (n >= 0) {
