@@ -76,7 +76,7 @@
 # include <locale.h>
 #endif
 
-// [HGM] bitmaps: put before incuding the bitmaps / pixmaps, to know how many piece types there are.
+/* [HGM] bitmaps: put before including the bitmaps / pixmaps, to know how many piece types there are. */
 #include "common.h"
 
 #include "frontend.h"
@@ -92,9 +92,7 @@
 # define N_(s) s
 #endif
 
-/*
- * Button/menu procedures
- */
+/* Button/menu procedures */
 
 char *gameCopyFilename, *gamePasteFilename;
 Boolean saveSettingsOnExit;
@@ -157,7 +155,8 @@ void SavePositionProc(void) {
 
 void ReloadCmailMsgProc(void) { ReloadCmailMsgEvent(FALSE); }
 
-void CopyFENToClipboard(void) {  // wrapper to make call from back-end possible
+/* wrapper to make call from back-end possible */
+void CopyFENToClipboard(void) {
     CopyPositionProc();
 }
 
@@ -286,7 +285,8 @@ void AboutProc(void) {
 void DebugProc(void) {
     appData.debugMode = !appData.debugMode;
     if (!strcmp(appData.nameOfDebugFile, "stderr")) {
-        return;  // stderr is already open, and should never be closed
+        /* stderr is already open, and should never be closed. */
+        return;
     }
     if (!appData.debugMode) {
         fclose(debugFP);
@@ -431,12 +431,14 @@ void ShowCoordsProc(void) {
 }
 
 void ShowThinkingProc(void) {
-    appData.showThinking = !appData.showThinking;  // [HGM] thinking: taken out of ShowThinkingEvent
+    /* [HGM] thinking: taken out of ShowThinkingEvent */
+    appData.showThinking = !appData.showThinking;
     ShowThinkingEvent();
 }
 
 void HideThinkingProc(void) {
-    appData.hideThinkingFromHuman = !appData.hideThinkingFromHuman;  // [HGM] thinking: taken out of ShowThinkingEvent
+    /* [HGM] thinking: taken out of ShowThinkingEvent */
+    appData.hideThinkingFromHuman = !appData.hideThinkingFromHuman;
     ShowThinkingEvent();
 
     MARK_MENU_ITEM("Options.HideThinking", appData.hideThinkingFromHuman);
@@ -446,14 +448,12 @@ void CreateBookDelayed(void) { ScheduleDelayedEvent(CreateBookEvent, 50); }
 
 void SaveSelectedProc(void) { FileNamePopUp(_("Save game file name?"), "", ".pgn", SaveSelected, "a"); }
 
-/*
- *  Menu definition tables
- */
+/* Menu definition tables. */
 
 MenuItem fileMenu[] = {
  {N_("New Game"), "<Ctrl>n", "NewGame", ResetGameEvent},
  {N_("New Shuffle Game..."), NULL, "NewShuffleGame", ShuffleMenuProc},
- {N_("New Variant..."), "<Alt><Shift>v", "NewVariant", NewVariantProc}, // [HGM] variant: not functional yet
+ {N_("New Variant..."), "<Alt><Shift>v", "NewVariant", NewVariantProc}, /* [HGM] variant: not functional yet */
  {"----", NULL, NULL, NothingProc},
  {N_("Load Game"), "<Ctrl>o", "LoadGame", LoadGameProc, CHECK},
  {N_("Load Position"), "<Ctrl><Shift>o", "LoadPosition", LoadPositionProc},
@@ -501,7 +501,7 @@ MenuItem viewMenu[] = {
  {N_("Flip View"), "F2", "FlipView", FlipViewProc, CHECK},
  {"----", NULL, NULL, NothingProc},
  {N_("Engine Output"), "<Alt><Shift>o", "EngineOutput", EngineOutputProc, CHECK},
- {N_("Move History"), "<Alt><Shift>h", "MoveHistory", HistoryShowProc, CHECK}, // [HGM] hist: activate 4.2.7 code
+ {N_("Move History"), "<Alt><Shift>h", "MoveHistory", HistoryShowProc, CHECK}, /* [HGM] hist: activate 4.2.7 code */
  {N_("Evaluation Graph"), "<Alt><Shift>e", "EvaluationGraph", EvalGraphProc, CHECK},
  {N_("Game List"), "<Alt><Shift>g", "GameList", ShowGameListProc, CHECK},
  {"----", NULL, NULL, NothingProc},
@@ -694,20 +694,23 @@ MenuItem * MenuNameToItem(char * menuName) {
             }
         }
         if (!menuBar[i].name) {
-            return NULL;  // main menu not found
+            /* main menu not found */
+            return NULL;
         }
         menuTab = menuBar[i].mi;
     }
     if (*p == NULLCHAR) {
+        /* main menu bar */
         a.handle = mainOptions[i + 1].handle;
         return &a;
-    }  // main menu bar
+    }
     for (i = 0; menuTab[i].string; i++) {
         if (menuTab[i].ref && !strcmp(p, menuTab[i].ref)) {
             return menuTab + i;
         }
     }
-    return NULL;  // item not found
+    /* item not found */
+    return NULL;
 }
 
 int firstEngineItem;
@@ -727,11 +730,13 @@ void AppendEnginesToMenu(char * list) {
             break;
         }
         if (i == 0) {
-            engineMenu[firstEngineItem++].string = "----";  // at least one valid item to add
+            /* at least one valid item to add */
+            engineMenu[firstEngineItem++].string = "----";
         }
         *p = 0;
         if (firstEngineItem + i < 99) {
-            engineMenu[firstEngineItem + i].string = strdup(list);  // just set name; MenuProc stays NULL
+            /* just set name; MenuProc stays NULL */
+            engineMenu[firstEngineItem + i].string = strdup(list);
         }
         i++;
         *p = '\n';
@@ -1071,8 +1076,8 @@ static void InstallNewEngine(char * command, char * dir, char * variants, char *
 # define dirent direct
 #endif
 
-static void InstallFromDir(
- char * dirName, char * protocol, char * settingsFile) {  // scan system for new plugin specs in given directory
+/* scan system for new plugin specs in given directory */
+static void InstallFromDir(char * dirName, char * protocol, char * settingsFile) {
     DIR * dir;
     struct dirent * dp;
     struct stat statBuf;
@@ -1090,15 +1095,18 @@ static void InstallFromDir(
     while ((dp = readdir(dir))) {
         time_t installed = 0;
         if (!strstr(dp->d_name, ".eng")) {
-            continue;  // to suppress . and ..
+            /* to suppress . and .. */
+            continue;
         }
         snprintf(buf, 1024, "%s/%s/%s", dirName, protocol, dp->d_name);
         if (!stat(buf, &statBuf)) {
             installed = statBuf.st_mtime;
         }
-        if (lastSaved == 0 || (int)(installed - lastSaved) > 0) {  // first time we see it
+        if (lastSaved == 0 || (int)(installed - lastSaved) > 0) {
+            /* first time we see it */
             FILE * f = fopen(buf, "r");
-            if (f) {  // read the plugin-specs
+            if (f) {
+                /* read the plugin-specs */
                 char engineCommand[1024], engineDir[1024], variants[1024];
                 char bad = 0, dummy, *engineCom = engineCommand;
                 int major, minor;
@@ -1110,10 +1118,9 @@ static void InstallFromDir(
                 if (bad) {
                     continue;
                 }
-                // uncomment following two lines for chess-only installs
-                //		if(!(p = strstr(variants, "chess")) ||
-                //		     p != variants && p[-1] != ',' || p[5] && p[5] != ',') continue;
-                // split off engine working directory (if any)
+                /* uncomment following line for chess-only installs:
+                if(!(p = strstr(variants, "chess")) || p != variants && p[-1] != ',' || p[5] && p[5] != ',') continue; */
+                /* split off engine working directory (if any) */
                 strcpy(engineDir, "");
                 if (sscanf(engineCommand, "cd %[^;];%c", engineDir, &dummy) == 2) {
                     engineCom = engineCommand + strlen(engineDir) + 4;
@@ -1125,13 +1132,14 @@ static void InstallFromDir(
     closedir(dir);
 }
 
-static void AutoInstallProtocol(
- char * settingsFile, char * protocol) {  // install new engines for given protocol (both from package and source)
+/* install new engines for given protocol (both from package and source) */
+static void AutoInstallProtocol(char * settingsFile, char * protocol) {
     InstallFromDir("/usr/local/share/games/plugins", protocol, settingsFile);
     InstallFromDir("/usr/share/games/plugins", protocol, settingsFile);
 }
 
-void AutoInstall(char * settingsFile) {  // install all new XBoard and UCI engines
+/* install all new XBoard and UCI engines */
+void AutoInstall(char * settingsFile) {
     AutoInstallProtocol(settingsFile, "xboard");
     AutoInstallProtocol(settingsFile, "uci");
 }
@@ -1170,11 +1178,9 @@ void InitMenuMarkers(void) {
     if (appData.highlightMoveWithArrow) {
         MarkMenuItem("Options.Arrow", TRUE);
     }
-    /*
-    if (appData.icsAlarm) {
+    /*if (appData.icsAlarm) {
         MarkMenuItem("Options.ICS Alarm", TRUE);
-    }
-    */
+    }*/
     if (appData.ringBellAfterMoves) {
         MarkMenuItem("Options.Move Sound", TRUE);
     }
@@ -1193,11 +1199,9 @@ void InitMenuMarkers(void) {
     if (appData.popupMoveErrors) {
         MarkMenuItem("Options.Popup Move Errors", TRUE);
     }
-    /*
-    if (appData.premove) {
+    /*if (appData.premove) {
         MarkMenuItem("Options.Premove", TRUE);
-    }
-    */
+    }*/
     if (appData.showCoords) {
         MarkMenuItem("Options.Show Coords", TRUE);
     }

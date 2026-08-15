@@ -748,7 +748,7 @@ Option icsOptions[] = {
  {0, SAME_ROW, 0,         NULL, NULL,                              NULL, NULL, Break,    ""                                           },
  {0, 0,        0,         NULL, (void *)&appData.icsAlarm,         "",   NULL, CheckBox, N_("Alarm")                                  },
  {0, 0,        100000000, NULL, (void *)&appData.icsAlarmTime,     "",   NULL, Spin,     N_("Alarm Time (msec):")                     },
- //{ 0, 0, 0, NULL, (void*) &appData.chatBoxes, "", NULL, TextBox, N_("Startup Chat Boxes:") },
+ /*{ 0, 0,     0,         NULL, (void*) &appData.chatBoxes,        "",   NULL, TextBox,  N_("Startup Chat Boxes:")                  },*/
  {0, 0,        0,         NULL, (void *)&appData.colorize,         "",   NULL, CheckBox, N_("Colorize Messages")                      },
  {0, 0,        0,         NULL, (void *)&appData.colorShout,       "",   NULL, TextBox,  N_("Shout Text Colors:")                     },
  {0, 0,        0,         NULL, (void *)&appData.colorSShout,      "",   NULL, TextBox,  N_("S-Shout Text Colors:")                   },
@@ -960,7 +960,7 @@ static Option boardOptions[] = {
  {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
  {0,    0,        0,   NULL, (void *)&appData.upsideDown,            "",                NULL,                 CheckBox,
   N_("Flip Pieces Shogi Style        (Colored buttons restore default)")                                                                                                      },
- //{ 0, 0, 0, NULL, (void*) &appData.allWhite, "", NULL, CheckBox, N_("Use Outline Pieces for Black") },
+/*{ 0,  0,        0,   NULL, (void *)&appData.allWhite,              "",                NULL,                 CheckBox, N_("Use Outline Pieces for Black")                    },*/
  {0,    0,        0,   NULL, (void *)&appData.monoMode,              "",                NULL,                 CheckBox, N_("Mono Mode")                                       },
  {0,    0,        200, NULL, (void *)&appData.logoSize,              "",                NULL,                 Spin,     N_("Logo Size (0=off, requires restart):")            },
  {0,    -1,       5,   NULL, (void *)&appData.overrideLineGap,       "",                NULL,                 Spin,     N_("Line Gap (-1 = default for board size):")         },
@@ -990,7 +990,7 @@ static void DefColor(int n) { SetColorText(n, (char *)boardOptions[n].choice); }
 
 void RefreshColor(int source, int n) {
     int col, j, r, g, b, step = 10;
-    char *s, buf[MSG_SIZ];  // color string
+    char *s, buf[MSG_SIZ];  /* color string */
     GetWidgetText(&boardOptions[source], &s);
     if (sscanf(s, "#%x", &col) != 1) {
         /* malformed */
@@ -1037,7 +1037,8 @@ void RefreshColor(int source, int n) {
     snprintf(buf, MSG_SIZ, "#%06x", col);
     for (j = 1; j < 7; j++) {
         if (buf[j] >= 'a') {
-            buf[j] -= 32;  // capitalize
+            /* capitalize */
+            buf[j] -= 32;
         }
     }
     SetColorText(source + 1, buf);
@@ -1253,7 +1254,8 @@ void EditCommentPopUp(int index, char * title, char * text) {
 }
 
 void CommentPopUp(char * title, char * text) {
-    savedIndex = currentMove;  // [HGM] vari
+    /* [HGM] vari */
+    savedIndex = currentMove;
     NewCommentPopup(title, text, currentMove);
 }
 
@@ -1590,9 +1592,9 @@ static Option installOptions[] = {
  {0,   0,        5,   NULL, (void *)&protocolChoice, (char *)protocols, protocols, ComboBox, N_("Engine Protocol:")                                                },
  {0,   0,        0,   NULL, (void *)&engineDir,      NULL,              NULL,      PathName, N_("Engine Directory:")                                               },
  {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("(Directory will be derived from engine path when empty)")         },
- //{   0,  0,    0, NULL, (void*) &isUCI, NULL, NULL, CheckBox, N_("UCI") },
- //{   0,  0,    0, NULL, (void*) &isUSI, NULL, NULL, CheckBox, N_("USI/UCCI (uses specified -uxiAdapter)") },
- //{   0,  0,    0, NULL, (void*) &v1, NULL, NULL, CheckBox, N_("WB protocol v1 (do not wait for engine features)") },
+/*{0,  0,        0,   NULL, (void *)&isUCI,          NULL,              NULL,      CheckBox, N_("UCI")                                                             },*/
+/*{0,  0,        0,   NULL, (void *)&isUSI,          NULL,              NULL,      CheckBox, N_("USI/UCCI (uses specified -uxiAdapter)")                           },*/
+/*{0,  0,        0,   NULL, (void *)&v1,             NULL,              NULL,      CheckBox, N_("WB protocol v1 (do not wait for engine features)")                },*/
  {0,   0,        0,   NULL, (void *)&InstallOK,      "",                NULL,      EndMark,  ""                                                                    }
 };
 
@@ -1928,7 +1930,7 @@ void FontsProc(void) {
     }
 }
 
-//------------------------------------------------------ Time Control -----------------------------------
+/*------------------------------------------------------ Time Control -----------------------------------*/
 
 static int TcOK(int n);
 int tmpMoves, tmpTc, tmpInc, tmpOdds1, tmpOdds2, tcType, by60;
@@ -2031,7 +2033,7 @@ void TimeControlProc(void) {
     SetTcType(searchTime ? 2 : appData.timeIncrement < 0 ? 0 : 1);
 }
 
-//------------------------------- Ask Question -----------------------------------------
+/*------------------------------- Ask Question -----------------------------------------*/
 
 int SendReply(int n);
 char pendingReplyPrefix[MSG_SIZ];
@@ -2048,14 +2050,15 @@ int SendReply(int n) {
     char buf[MSG_SIZ];
     int err;
     char * reply = answer;
-    // GetWidgetText(&askOptions[1], &reply);
+    /*GetWidgetText(&askOptions[1], &reply);*/
     safeStrCpy(buf, pendingReplyPrefix, sizeof(buf) / sizeof(buf[0]));
     if (*buf) {
         strncat(buf, " ", MSG_SIZ - strlen(buf) - 1);
     }
     strncat(buf, reply, MSG_SIZ - strlen(buf) - 1);
     strncat(buf, "\n", MSG_SIZ - strlen(buf) - 1);
-    OutputToProcess(pendingReplyPR, buf, strlen(buf), &err);  // does not go into debug file??? => bug
+    /* does not go into debug file??? => bug */
+    OutputToProcess(pendingReplyPR, buf, strlen(buf), &err);
     if (err) {
         DisplayFatalError(_("Error writing to chess program"), err, 0);
     }
@@ -2072,7 +2075,7 @@ void AskQuestion(char * title, char * question, char * replyPrefix, ProcRef pr) 
     }
 }
 
-//---------------------------- Promotion Popup --------------------------------------
+/*---------------------------- Promotion Popup --------------------------------------*/
 
 static int count;
 
@@ -2127,9 +2130,11 @@ static void SetPromo(char * name, int nr, char promoChar) {
     promoOptions[nr].min = SAME_ROW;
 }
 
-void PromotionPopUp(char choice) {  // choice depends on variant: prepare dialog acordingly
+void PromotionPopUp(char choice) {
+    /* choice depends on variant: prepare dialog acordingly */
     count = 8;
-    SetPromo(_("Cancel"), --count, -1);  // Beware: GenericPopUp cannot handle user buttons named "cancel" (lowe case)!
+    /* Beware: GenericPopUp cannot handle user buttons named "cancel" (lowe case)! */
+    SetPromo(_("Cancel"), --count, -1);
     if (choice != '+' && !IS_SHOGI(gameInfo.variant)) {
         if (!appData.testLegality || gameInfo.variant == VariantSuicide ||
          gameInfo.variant == VariantSpartan && !WhiteOnMove(currentMove) || gameInfo.variant == VariantGiveaway) {
@@ -2154,8 +2159,7 @@ void PromotionPopUp(char choice) {  // choice depends on variant: prepare dialog
                 SetPromo(_("Lion"), --count, 'l');
             }
         }
-    } else  // [HGM] shogi
-    {
+    } else /* [HGM] shogi */ {
         SetPromo(_("Defer"), --count, '=');
         SetPromo(_("Promote"), --count, '+');
     }
@@ -2163,7 +2167,7 @@ void PromotionPopUp(char choice) {  // choice depends on variant: prepare dialog
     GenericPopUp(promoOptions + count, "Promotion", PromoDlg, BoardWindow, NONMODAL, 0);
 }
 
-//---------------------------- Chat Windows ----------------------------------------------
+/*---------------------------- Chat Windows ----------------------------------------------*/
 
 static char *line, *memo, *chatMemo, *partner, *texts[MAX_CHAT], dirty[MAX_CHAT], *inputs[MAX_CHAT], *icsLine, *tmpLine;
 static int activePartner;
@@ -2270,7 +2274,8 @@ static void PutText(char * text, int pos) {
         pos += strlen(p) - 5;
     }
     if (shellUp[InputBoxDlg]) {
-        opt = &boxOptions[INPUT], dlg = InputBoxDlg;  // for the benefit of Xaw give priority to ICS Input Box
+        /* For the benefit of Xaw, give priority to ICS Input Box. */
+        opt = &boxOptions[INPUT], dlg = InputBoxDlg;
     }
     SetWidgetText(opt, text, dlg);
     SetInsertPos(opt, pos);
@@ -2278,8 +2283,9 @@ static void PutText(char * text, int pos) {
     CursorAtEnd(opt);
 }
 
-int IcsHist(int n, Option * opt, DialogClass dlg) {  // [HGM] input: let up-arrow recall previous line from history
-    char * val = NULL;  // to suppress spurious warning
+/* [HGM] input: let up-arrow recall previous line from history */
+int IcsHist(int n, Option * opt, DialogClass dlg) {
+    char * val = NULL;
     int chat, start;
 
     if (opt != &chatOptions[CHAT_IN] && !(opt == &chatOptions[CHAT_PARTNER] && n == 33)) {
@@ -2296,7 +2302,8 @@ int IcsHist(int n, Option * opt, DialogClass dlg) {  // [HGM] input: let up-arro
             PaneSwitch();
         }
         break;
-    case 33:  // <Esc>
+    /* <Esc> */
+    case 33:
         if (1) {
             BoardToTop();
         } else if (hidden) {
@@ -2318,7 +2325,8 @@ int IcsHist(int n, Option * opt, DialogClass dlg) {  // [HGM] input: let up-arro
             ChatSwitch(chat + 1);
         }
         break;
-    case 10:  // <Tab>
+    /* <Tab> */
+    case 10:
         chat = start = (activePartner - hidden + MAX_CHAT) % MAX_CHAT;
         while (!dirty[chat = (chat + 1) % MAX_CHAT]) {
             if (chat == start) {
@@ -2333,7 +2341,8 @@ int IcsHist(int n, Option * opt, DialogClass dlg) {  // [HGM] input: let up-arro
             }
         }
         if (!chatPartner[chat][0]) {
-            break;  // if all unused, ignore
+            /* if all unused, ignore */
+            break;
         }
         ChatSwitch(chat + 1);
         break;
@@ -2429,7 +2438,8 @@ int ChatOK(int n) {
 }
 
 void DelayedSetText(void) {
-    SetWidgetText(&chatOptions[CHAT_IN], tmpLine, -1);  // leave focus on chat-partner field!
+    /* leave focus on chat-partner field! */
+    SetWidgetText(&chatOptions[CHAT_IN], tmpLine, -1);
     SetInsertPos(&chatOptions[CHAT_IN], strlen(tmpLine));
 }
 
@@ -2510,7 +2520,8 @@ void ClearChat(void) {
     HardSetFocus(&chatOptions[CHAT_PARTNER], 0);
 }
 
-static void NewChat(char * name) {  // open a chat on program request. If no empty one available, use last
+/* open a chat on program request. If no empty one available, use last */
+static void NewChat(char * name) {
     int i;
     for (i = 0; i < MAX_CHAT - 1; i++) {
         if (!chatPartner[i][0]) {
@@ -2522,9 +2533,11 @@ static void NewChat(char * name) {  // open a chat on program request. If no emp
 }
 
 void ConsoleWrite(char * message, int count) {
-    if (shellUp[ChatDlg] && chatOptions[CHAT_ICS].type != Skip) {  // in Xaw this is a no-op
+    /* in Xaw this is a no-op */
+    if (shellUp[ChatDlg] && chatOptions[CHAT_ICS].type != Skip) {
         if (*message == 7) {
-            message++;  // remove bell
+            /* remove bell */
+            message++;
             if (strcmp(message, "\n")) {
                 return;
             }
@@ -2536,10 +2549,12 @@ void ConsoleWrite(char * message, int count) {
 
 void ChatPopUp(void) {
     if (GenericPopUp(chatOptions, _("ICS Interaction"), ChatDlg, BoardWindow, NONMODAL, appData.topLevel)) {
-        AddHandler(&chatOptions[CHAT_PARTNER], ChatDlg, 2), AddHandler(&chatOptions[CHAT_IN], ChatDlg, 2);  // treats return as OK
+        /* treats return as OK */
+        AddHandler(&chatOptions[CHAT_PARTNER], ChatDlg, 2), AddHandler(&chatOptions[CHAT_IN], ChatDlg, 2);
     }
-    Show(&chatOptions[CHAT_PANE], hidden = 1);  // hide
-    // HardSetFocus(&chatOptions[CHAT_IN], 0);
+    /* hide */
+    Show(&chatOptions[CHAT_PANE], hidden = 1);
+    /*HardSetFocus(&chatOptions[CHAT_IN], 0);*/
     MarkMenu("View.OpenChatWindow", ChatDlg);
     CursorAtEnd(&chatOptions[CHAT_IN]);
 }
@@ -2600,7 +2615,7 @@ void EchoOff(void) {
     noEcho = TRUE;
 }
 
-//--------------------------------- Game-List options dialog ------------------------------------------
+/*--------------------------------- Game-List options dialog ------------------------------------------*/
 
 char * strings[LPUSERGLT_SIZE];
 int stringPtr;
@@ -2626,8 +2641,8 @@ static void GLT_Button(int n);
 static int GLT_OK(int n);
 
 static Option listOptions[] = {
- {300, LR | TB,  200, NULL, (void *)strings,     NULL, NULL, ListBox,
-  ""                                                                               }, // For GTK we need to specify a height, as default would just show 3 lines
+ /* For GTK we need to specify a height, as default would just show 3 lines */
+ {300, LR | TB,  200, NULL, (void *)strings,     NULL, NULL, ListBox, ""           },
  {0,   0,        0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("factory")},
  {0,   SAME_ROW, 0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("up")     },
  {0,   SAME_ROW, 0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("down")   },
@@ -2655,7 +2670,8 @@ static void GLT_Button(int n) {
         }
         strings[index] = strings[index + 1];
         strings[++index] = p;
-        LoadListBox(&listOptions[0], "?", index, index - 1);  // only change the two specified entries
+        /* only change the two specified entries */
+        LoadListBox(&listOptions[0], "?", index, index - 1);
     } else if (n == 2) {
         if (index == 0) {
             return;
@@ -2681,19 +2697,14 @@ void GameListOptionsPopUp(DialogClass parent) {
 
 void GameListOptionsProc(void) { GameListOptionsPopUp(BoardWindow); }
 
-//----------------------------- Error popup in various uses -----------------------------
+/*----------------------------- Error popup in various uses -----------------------------*/
 
-/*
- * [HGM] Note:
- * XBoard has always had some pathologic behavior with multiple simultaneous error popups,
- * (which can occur even for modal popups when asynchrounous events, e.g. caused by engine, request a popup),
- * and this new implementation reproduces that as well:
- * Only the shell of the last instance is remembered in shells[ErrorDlg] (which replaces errorShell),
- * so that PopDowns ordered from the code always refer to that instance, and once that is down,
- * have no clue as to how to reach the others. For the Delete Window button calling PopDown this
- * has now been repaired, as the action routine assigned to it gets the shell passed as argument.
- */
-
+/* [HGM] Note: XBoard has always had some pathologic behavior with multiple simultaneous error popups, (which can occur even for
+   modal popups when asynchrounous events, e.g. caused by engine, request a popup), and this new implementation reproduces that as
+   well: Only the shell of the last instance is remembered in shells[ErrorDlg] (which replaces errorShell), so that PopDowns ordered
+   from the code always refer to that instance, and once that is down, have no clue as to how to reach the others. For the Delete
+   Window button calling PopDown this has now been repaired, as the action routine assigned to it gets the shell passed as
+   argument. */
 int errorUp = FALSE;
 
 void ErrorPopDown(void) {
@@ -2702,7 +2713,7 @@ void ErrorPopDown(void) {
     }
     dialogError = FALSE;
     errorUp = FALSE;
-    /* On an explicit request,  we pop down any error dialog. */
+    /* On an explicit request, we pop down any error dialog. */
     PopDown(ErrorDlg);
     PopDown(FatalDlg);
     if (errorExitStatus != -1) {
@@ -2723,8 +2734,8 @@ int ErrorOK(int n) {
 }
 
 static Option errorOptions[] = {
- {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL}, // dummy option: will never be displayed
- {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL}, // textValue field will be set before popup
+ {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL}, /* dummy option: will never be displayed */
+ {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL}, /* textValue field will be set before popup */
  {0, NO_CANCEL, 0, NULL, (void *)&ErrorOK, "",   NULL, EndMark, ""  }
 };
 
@@ -2848,7 +2859,7 @@ void DisplayTitle(char * text) {
         snprintf(icon, sizeof(icon), "%s", "CMail");
         snprintf(title, sizeof(title), "%s: %s", programName, "CMail");
 #ifdef GOTHIC
-        // [HGM] license: This stuff should really be done in back-end, but WinBoard already had a pop-up for it
+        /* [HGM] license: This stuff should really be done in back-end, but WinBoard already had a pop-up for it */
     } else if (gameInfo.variant == VariantGothic) {
         safeStrCpy(icon, programName, sizeof(icon) / sizeof(icon[0]));
         safeStrCpy(title, GOTHIC, sizeof(title) / sizeof(title[0]));
@@ -3060,7 +3071,7 @@ static String dropMenuStrings[DROP_MENU_SIZE + 1] = {"----", N_("Pawn"), N_("Kni
 static ChessSquare dropMenuTranslation[DROP_MENU_SIZE] = {
  (ChessSquare)0, WhitePawn, WhiteKnight, WhiteBishop, WhiteRook, WhiteQueen};
 
-// [HGM] experimental code to pop up window just like the main window, using GenercicPopUp
+/* [HGM] experimental code to pop up window just like the main window, using GenercicPopUp */
 
 static Option * Exp(int n, int x, int y);
 void MenuCallback(int n);
@@ -3080,9 +3091,11 @@ void DisplayLogos(Option * w1, Option * w2) {
         if (appData.icsActive) {
             whiteLogo = blackLogo = second.programLogo;
         }
-        switch (gameMode) {  // pick logos based on game mode
+        switch (gameMode) {
+        /* pick logos based on game mode */
         case IcsObserving:
-            whiteLogo = second.programLogo;  // ICS logo
+            /* ICS logo */
+            whiteLogo = second.programLogo;
             blackLogo = second.programLogo;
         default:
             break;
@@ -3090,10 +3103,12 @@ void DisplayLogos(Option * w1, Option * w2) {
             if (!appData.zippyPlay) {
                 whiteLogo = userLogo;
             }
-            blackLogo = second.programLogo;  // ICS logo
+            /* ICS logo */
+            blackLogo = second.programLogo;
             break;
         case IcsPlayingBlack:
-            whiteLogo = second.programLogo;  // ICS logo
+            /* ICS logo */
+            whiteLogo = second.programLogo;
             blackLogo = appData.zippyPlay ? first.programLogo : userLogo;
             break;
         case TwoMachinesPlay:
@@ -3114,7 +3129,8 @@ void DisplayLogos(Option * w1, Option * w2) {
     DrawLogo(w2, blackLogo);
 }
 
-static void PMSelect(int n) {  // user callback for board context menus
+/* user callback for board context menus */
+static void PMSelect(int n) {
     if (pmFromX < 0 || pmFromY < 0) {
         return;
     }
@@ -3127,7 +3143,7 @@ static void PMSelect(int n) {  // user callback for board context menus
 
 static void CCB(int n) {
     shiftKey = (ShiftKeys() & 3) != 0;
-    if (n < 0) {  // button != 1
+    if (n < 0) {  /* button != 1 */
         n = -n;
         if (shiftKey && (gameMode == MachinePlaysWhite || gameMode == MachinePlaysBlack)) {
             AdjustClock(n == W_BLACK, 1);
@@ -3138,8 +3154,8 @@ static void CCB(int n) {
 }
 
 Option mainOptions[] = {
-  // description of main window in terms of generic dialog creator
- {0, 0xca, 0, NULL, NULL, "", NULL, BarBegin, ""}, // menu bar
+ /* description of main window in terms of generic dialog creator */
+ {0, 0xca, 0, NULL, NULL, "", NULL, BarBegin, ""}, /* menu bar */
  {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_File")},
  {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Edit")},
  {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_View")},
@@ -3149,21 +3165,21 @@ Option mainOptions[] = {
  {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Options")},
  {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Help")},
  {0, 0, 0, NULL, (void *)&SizeKludge, "", NULL, BarEnd, ""},
- {0, LR | T2T | BORDER | SAME_ROW, 0, NULL, NULL, NULL, NULL, Label, "1"}, // optional title in window
- {50, LL | TT, 100, NULL, (void *)&LogoW, NULL, NULL, Skip, ""}, // white logo
- {12, L2L | T2T, 200, NULL, (void *)&CCB, NULL, NULL, Label, "White"}, // white clock
- {13, R2R | T2T | SAME_ROW, 200, NULL, (void *)&CCB, NULL, NULL, Label, "Black"}, // black clock
- {50, RR | TT | SAME_ROW, 100, NULL, (void *)&LogoB, NULL, NULL, Skip, ""}, // black logo
- {0, LR | T2T | BORDER, 401, NULL, NULL, "", NULL, Skip, "2"}, // backup for title in window (if no room for other)
- {0, LR | T2T | BORDER, 270, NULL, NULL, NULL, NULL, Label, "message", &appData.font}, // message field
- {0, RR | TT | SAME_ROW, 125, NULL, NULL, "", NULL, BoxBegin, ""}, // (optional) button bar
+ {0, LR | T2T | BORDER | SAME_ROW, 0, NULL, NULL, NULL, NULL, Label, "1"}, /* optional title in window */
+ {50, LL | TT, 100, NULL, (void *)&LogoW, NULL, NULL, Skip, ""}, /* white logo */
+ {12, L2L | T2T, 200, NULL, (void *)&CCB, NULL, NULL, Label, "White"}, /* white clock */
+ {13, R2R | T2T | SAME_ROW, 200, NULL, (void *)&CCB, NULL, NULL, Label, "Black"}, /* black clock */
+ {50, RR | TT | SAME_ROW, 100, NULL, (void *)&LogoB, NULL, NULL, Skip, ""}, /* black logo */
+ {0, LR | T2T | BORDER, 401, NULL, NULL, "", NULL, Skip, "2"}, /* backup for title in window (if no room for other) */
+ {0, LR | T2T | BORDER, 270, NULL, NULL, NULL, NULL, Label, "message", &appData.font}, /* message field */
+ {0, RR | TT | SAME_ROW, 125, NULL, NULL, "", NULL, BoxBegin, ""}, /* (optional) button bar */
  {0, 0, 0, NULL, (void *)&ToStartEvent, NULL, NULL, Button, N_("<<"), &appData.font},
  {0, SAME_ROW, 0, NULL, (void *)&BackwardEvent, NULL, NULL, Button, N_("<"), &appData.font},
  {0, SAME_ROW, 0, NULL, (void *)&PauseEvent, NULL, NULL, Button, N_(PAUSE_BUTTON), &appData.font},
  {0, SAME_ROW, 0, NULL, (void *)&ForwardEvent, NULL, NULL, Button, N_(">"), &appData.font},
  {0, SAME_ROW, 0, NULL, (void *)&ToEndEvent, NULL, NULL, Button, N_(">>"), &appData.font},
  {0, 0, 0, NULL, NULL, "", NULL, BoxEnd, ""},
- {401, LR | TB, 401, NULL, (char *)&Exp, NULL, NULL, Graph, "shadow board"}, // board
+ {401, LR | TB, 401, NULL, (char *)&Exp, NULL, NULL, Graph, "shadow board"}, /* board */
  {2, COMBO_CALLBACK, 0, NULL, (void *)&PMSelect, NULL, pieceMenuStrings[0], PopUp, "menuW"},
  {2, COMBO_CALLBACK, 0, NULL, (void *)&PMSelect, NULL, pieceMenuStrings[1], PopUp, "menuB"},
  {-1, COMBO_CALLBACK, 0, NULL, (void *)&PMSelect, NULL, dropMenuStrings, PopUp, "menuD"},
@@ -3184,11 +3200,14 @@ Option * LogoB(int n, int x, int y) {
     return NULL;
 }
 
-void SizeKludge(int n) {  // callback called by GenericPopUp immediately after sizing the menu bar
+/* callback called by GenericPopUp immediately after sizing the menu bar */
+void SizeKludge(int n) {
     int width = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
     int w = width - 44 - mainOptions[n].min;
-    mainOptions[W_TITLE].max = w;  // width left behind menu bar
-    if (w < 0.4 * width) {  // if no reasonable amount of space for title, force small layout
+    /* width left behind menu bar */
+    mainOptions[W_TITLE].max = w;
+    /* if no reasonable amount of space for title, force small layout */
+    if (w < 0.4 * width) {
         mainOptions[W_SMALL].type = mainOptions[W_TITLE].type, mainOptions[W_TITLE].type = Skip;
     }
 }
@@ -3387,8 +3406,10 @@ void SecondaryBoardPopUp(void) {
     dualOptions[0].choice = mainOptions[W_WHITE].choice;
     dualOptions[1].choice = mainOptions[W_BLACK].choice;
     dualOptions[3].value = desired_board_dimension_in_pixels(BOARD_HEIGHT, squareSize, lineGap);
-    dualOptions[3].max = dualOptions[2].max = size;  // board width
-    dualOptions[0].max = dualOptions[1].max = size / 2 - 3;  // clock width
+    /* board width */
+    dualOptions[3].max = dualOptions[2].max = size;
+    /* clock width */
+    dualOptions[0].max = dualOptions[1].max = size / 2 - 3;
     GenericPopUp(dualOptions, "XBoard", DummyDlg, BoardWindow, NONMODAL, appData.topLevel);
     SecondaryBoardResize(dualOptions + 3);
 }
@@ -3396,7 +3417,8 @@ void SecondaryBoardPopUp(void) {
 static char clockMsg[2][MSG_SIZ];
 
 void DisplayWhiteClock(long timeRemaining, int highlight) {
-    int m = (clockMsg[0][0] != 0);  // printing message prevails over printing color:time
+    /* printing message prevails over printing color:time */
+    int m = (clockMsg[0][0] != 0);
     if (appData.noGUI) {
         return;
     }
@@ -3427,7 +3449,7 @@ void DisplayBlackClock(long timeRemaining, int highlight) {
 
 void SetClockMessage(int n, char * msg) { safeStrCpy(clockMsg[n], !msg ? "" : *msg ? msg : clockMsg[!n], MSG_SIZ); }
 
-//---------------------------------------------
+/*---------------------------------------------*/
 
 void DisplayMessage(char * message, char * extMessage) {
     /* display a message in the message widget */
@@ -3443,7 +3465,8 @@ void DisplayMessage(char * message, char * extMessage) {
         };
     };
 
-    safeStrCpy(lastMsg, message, MSG_SIZ);  // [HGM] make available
+    /* [HGM] make available */
+    safeStrCpy(lastMsg, message, MSG_SIZ);
 
     /* need to test if messageWidget already exists, since this function
        can also be called during the startup, if for example a Xresource
@@ -3455,7 +3478,7 @@ void DisplayMessage(char * message, char * extMessage) {
     return;
 }
 
-//----------------------------------- File Browser -------------------------------
+/*----------------------------------- File Browser -------------------------------*/
 
 #ifdef HAVE_DIRENT_H
 # include <dirent.h>
