@@ -822,7 +822,7 @@ char * GenerateGlobalTranslationTable(void) {
     static char const * const space_meta = " Meta";
     static char const * const space_shift = " Shift";
     /* There's no need to add 1 for null termination purposes because we will never use a space as the first character. */
-    static int const maximum_modifiers_length = strlen(space_ctrl) + strlen(space_meta) + strlen(space_shift);
+    int const maximum_modifiers_length = strlen(space_ctrl) + strlen(space_meta) + strlen(space_shift);
 
     /* Build keystrokes with and without modifier keys separately, so that the more specific can preceed the other. */
     output[0] = strdup("");
