@@ -1438,12 +1438,15 @@ VOID TimeWarning() {
     }
 }
 
-#define JAWS_ARGS \
-    {"beepOffBoard", ArgInt, (LPVOID)beeps, TRUE, (ArgIniType)1}, {"beepEmpty", ArgInt, (LPVOID)(beeps + 1), TRUE, (ArgIniType)0}, \
-     {"beepWhite", ArgInt, (LPVOID)(beeps + 2), TRUE, (ArgIniType)0}, \
-     {"beepBlack", ArgInt, (LPVOID)(beeps + 3), TRUE, (ArgIniType)0}, \
-     {"beepHoldings", ArgInt, (LPVOID)(beeps + 4), TRUE, (ArgIniType)0}, \
-     {"alarmTimes", ArgString, (LPVOID) & appData.alarmTimes, TRUE, (ArgIniType) ""},
+/* clang-format off */
+#define JAWS_ARG_DESCRIPTORS \
+     {"beepOffBoard", ArgInt,    (LPVOID)beeps,                 TRUE, (ArgIniType)1}, \
+     {"beepEmpty",    ArgInt,    (LPVOID)(beeps + 1),           TRUE, (ArgIniType)0}, \
+     {"beepWhite",    ArgInt,    (LPVOID)(beeps + 2),           TRUE, (ArgIniType)0}, \
+     {"beepBlack",    ArgInt,    (LPVOID)(beeps + 3),           TRUE, (ArgIniType)0}, \
+     {"beepHoldings", ArgInt,    (LPVOID)(beeps + 4),           TRUE, (ArgIniType)0}, \
+     {"alarmTimes",   ArgString, (LPVOID) & appData.alarmTimes, TRUE, (ArgIniType) ""},
+/* clang-format on */
 
 #define JAWS_ALT_INTERCEPT \
     if (suppressOneKey) { \

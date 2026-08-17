@@ -62,7 +62,7 @@ typedef struct {
     uint16_t learnCount;
 } entry_t;
 
-entry_t entry_none = {0, 0, 0, 0};
+entry_t entry_none = {0, 0, 0, 0, 0};
 
 char * promote_pieces = " nbrqac=+";
 

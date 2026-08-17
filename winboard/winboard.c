@@ -856,7 +856,7 @@ void ThawUI() {
 #  include "jaws.c"
 # else
 #  define JAWS_INIT
-#  define JAWS_ARGS
+#  define JAWS_ARG_DESCRIPTORS
 #  define JAWS_ALT_INTERCEPT
 #  define JAWS_KBUP_NAVIGATION
 #  define JAWS_KBDOWN_NAVIGATION

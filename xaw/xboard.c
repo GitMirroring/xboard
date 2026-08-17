@@ -414,7 +414,7 @@ void BoardToTop(void) {
 /*--------------------------------------------------------------------------------------------------------- */
 /* some symbol definitions to provide the proper (= XBoard) context for the code in args.h */
 #define XBOARD TRUE
-#define JAWS_ARGS
+#define JAWS_ARG_DESCRIPTORS
 #define CW_USEDEFAULT (1 << 31)
 #define ICS_TEXT_MENU_SIZE 90
 #define DEBUG_FILE "xboard.debug"
