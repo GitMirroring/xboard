@@ -450,219 +450,240 @@ void SaveSelectedProc(void) { FileNamePopUp(_("Save game file name?"), "", ".pgn
 
 /* Menu definition tables. */
 
+/* clang-format off */
 MenuItem fileMenu[] = {
- {N_("New Game"), "<Ctrl>n", "NewGame", ResetGameEvent},
- {N_("New Shuffle Game..."), NULL, "NewShuffleGame", ShuffleMenuProc},
- {N_("New Variant..."), "<Alt><Shift>v", "NewVariant", NewVariantProc}, /* [HGM] variant: not functional yet */
- {"----", NULL, NULL, NothingProc},
- {N_("Load Game"), "<Ctrl>o", "LoadGame", LoadGameProc, CHECK},
- {N_("Load Position"), "<Ctrl><Shift>o", "LoadPosition", LoadPositionProc},
- {N_("Next Position"), "<Shift>Page_Down", "LoadNextPosition", LoadNextPositionProc},
- {N_("Prev Position"), "<Shift>Page_Up", "LoadPreviousPosition", LoadPrevPositionProc},
- {"----", NULL, NULL, NothingProc},
- {N_("Save Game"), "<Ctrl>s", "SaveGame", SaveGameProc},
- {N_("Save Position"), "<Ctrl><Shift>s", "SavePosition", SavePositionProc},
- {N_("Save Selected Games"), NULL, "SaveSelected", SaveSelectedProc},
- {N_("Save Games as Book"), NULL, "CreateBook", CreateBookDelayed},
- {"----", NULL, NULL, NothingProc},
- {N_("Mail Move"), NULL, "MailMove", MailMoveEvent},
- {N_("Reload CMail Message"), NULL, "ReloadCMailMessage", ReloadCmailMsgProc},
- {"----", NULL, NULL, NothingProc},
- {N_("Quit "), "<Ctrl>q", "Quit", QuitProc},
- {NULL, NULL, NULL, NULL}
+ {N_("New Game"),             "<Ctrl>n",          "NewGame",              ResetGameEvent,       NULL},
+ {N_("New Shuffle Game..."),  NULL,               "NewShuffleGame",       ShuffleMenuProc,      NULL},
+ /* [HGM] variant: not functional yet */
+ {N_("New Variant..."),       "<Alt><Shift>v",    "NewVariant",           NewVariantProc,       NULL},
+ {"----",                     NULL,               NULL,                   NothingProc,          NULL},
+ {N_("Load Game"),            "<Ctrl>o",          "LoadGame",             LoadGameProc,         CHECK},
+ {N_("Load Position"),        "<Ctrl><Shift>o",   "LoadPosition",         LoadPositionProc,     NULL},
+ {N_("Next Position"),        "<Shift>Page_Down", "LoadNextPosition",     LoadNextPositionProc, NULL},
+ {N_("Prev Position"),        "<Shift>Page_Up",   "LoadPreviousPosition", LoadPrevPositionProc, NULL},
+ {"----",                     NULL,               NULL,                   NothingProc,          NULL},
+ {N_("Save Game"),            "<Ctrl>s",          "SaveGame",             SaveGameProc,         NULL},
+ {N_("Save Position"),        "<Ctrl><Shift>s",   "SavePosition",         SavePositionProc,     NULL},
+ {N_("Save Selected Games"),  NULL,               "SaveSelected",         SaveSelectedProc,     NULL},
+ {N_("Save Games as Book"),   NULL,               "CreateBook",           CreateBookDelayed,    NULL},
+ {"----",                     NULL,               NULL,                   NothingProc,          NULL},
+ {N_("Mail Move"),            NULL,               "MailMove",             MailMoveEvent,        NULL},
+ {N_("Reload CMail Message"), NULL,               "ReloadCMailMessage",   ReloadCmailMsgProc,   NULL},
+ {"----",                     NULL,               NULL,                   NothingProc,          NULL},
+ {N_("Quit "),                "<Ctrl>q",          "Quit",                 QuitProc,             NULL},
+ {NULL,                       NULL,               NULL,                   NULL,                 NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem editMenu[] = {
- {N_("Copy Game"),      "<Ctrl>c",        "CopyGame",      CopyGameProc     },
- {N_("Copy Position"),  "<Ctrl><Shift>c", "CopyPosition",  CopyPositionProc },
- {N_("Copy Game List"), NULL,             "CopyGameList",  CopyGameListProc },
- {"----",               NULL,             NULL,            NothingProc      },
- {N_("Paste Game"),     "<Ctrl>v",        "PasteGame",     PasteGameProc    },
- {N_("Paste Position"), "<Ctrl><Shift>v", "PastePosition", PastePositionProc},
- {"----",               NULL,             NULL,            NothingProc      },
- {N_("Edit Game"),      "<Ctrl>e",        "EditGame",      EditGameEvent    },
- {N_("Edit Position"),  "<Ctrl><Shift>e", "EditPosition",  EditPositionEvent},
- {N_("Edit Tags"),      NULL,             "EditTags",      EditTagsProc     },
- {N_("Edit Comment"),   NULL,             "EditComment",   EditCommentProc  },
- {N_("Edit Book"),      NULL,             "EditBook",      EditBookEvent    },
- {"----",               NULL,             NULL,            NothingProc      },
- {N_("Revert"),         "Home",           "Revert",        RevertProc       },
- {N_("Annotate"),       NULL,             "Annotate",      AnnotateProc     },
- {N_("Truncate Game"),  "End",            "TruncateGame",  TruncateGameEvent},
- {"----",               NULL,             NULL,            NothingProc      },
- {N_("Backward"),       "<Alt>Left",      "Backward",      BackwardEvent    },
- {N_("Forward"),        "<Alt>Right",     "Forward",       ForwardEvent     },
- {N_("Back to Start"),  "<Alt>Home",      "BacktoStart",   ToStartEvent     },
- {N_("Forward to End"), "<Alt>End",       "ForwardtoEnd",  ToEndEvent       },
- {NULL,                 NULL,             NULL,            NULL             }
+ {N_("Copy Game"),      "<Ctrl>c",        "CopyGame",      CopyGameProc,      NULL},
+ {N_("Copy Position"),  "<Ctrl><Shift>c", "CopyPosition",  CopyPositionProc,  NULL},
+ {N_("Copy Game List"), NULL,             "CopyGameList",  CopyGameListProc,  NULL},
+ {"----",               NULL,             NULL,            NothingProc,       NULL},
+ {N_("Paste Game"),     "<Ctrl>v",        "PasteGame",     PasteGameProc,     NULL},
+ {N_("Paste Position"), "<Ctrl><Shift>v", "PastePosition", PastePositionProc, NULL},
+ {"----",               NULL,             NULL,            NothingProc,       NULL},
+ {N_("Edit Game"),      "<Ctrl>e",        "EditGame",      EditGameEvent,     NULL},
+ {N_("Edit Position"),  "<Ctrl><Shift>e", "EditPosition",  EditPositionEvent, NULL},
+ {N_("Edit Tags"),      NULL,             "EditTags",      EditTagsProc,      NULL},
+ {N_("Edit Comment"),   NULL,             "EditComment",   EditCommentProc,   NULL},
+ {N_("Edit Book"),      NULL,             "EditBook",      EditBookEvent,     NULL},
+ {"----",               NULL,             NULL,            NothingProc,       NULL},
+ {N_("Revert"),         "Home",           "Revert",        RevertProc,        NULL},
+ {N_("Annotate"),       NULL,             "Annotate",      AnnotateProc,      NULL},
+ {N_("Truncate Game"),  "End",            "TruncateGame",  TruncateGameEvent, NULL},
+ {"----",               NULL,             NULL,            NothingProc,       NULL},
+ {N_("Backward"),       "<Alt>Left",      "Backward",      BackwardEvent,     NULL},
+ {N_("Forward"),        "<Alt>Right",     "Forward",       ForwardEvent,      NULL},
+ {N_("Back to Start"),  "<Alt>Home",      "BacktoStart",   ToStartEvent,      NULL},
+ {N_("Forward to End"), "<Alt>End",       "ForwardtoEnd",  ToEndEvent,        NULL},
+ {NULL,                 NULL,             NULL,            NULL,              NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem viewMenu[] = {
- {N_("Flip View"), "F2", "FlipView", FlipViewProc, CHECK},
- {"----", NULL, NULL, NothingProc},
- {N_("Engine Output"), "<Alt><Shift>o", "EngineOutput", EngineOutputProc, CHECK},
- {N_("Move History"), "<Alt><Shift>h", "MoveHistory", HistoryShowProc, CHECK}, /* [HGM] hist: activate 4.2.7 code */
- {N_("Evaluation Graph"), "<Alt><Shift>e", "EvaluationGraph", EvalGraphProc, CHECK},
- {N_("Game List"), "<Alt><Shift>g", "GameList", ShowGameListProc, CHECK},
- {"----", NULL, NULL, NothingProc},
- {N_("Tags"), NULL, "Tags", EditTagsProc, CHECK},
- {N_("Comments"), NULL, "Comments", EditCommentProc, CHECK},
- {N_("ICS Input Box"), NULL, "ICSInputBox", IcsInputBoxProc, CHECK},
- {N_("ICS/Chat Console"), NULL, "OpenChatWindow", ChatProc, CHECK},
- {N_("ICS text menu"), NULL, "ICStextmenu", IcsTextProc, CHECK},
- {N_("Edit ICS menu..."), NULL, "EditTextMenu", EditMenuProc},
- {"----", NULL, NULL, NothingProc},
- {N_("Edit Theme List..."), NULL, "EditThemeList", EditThemesProc},
- {N_("Board..."), NULL, "Board", BoardOptionsProc},
- {N_("Fonts..."), NULL, "Fonts", FontsProc},
- {N_("Game List Tags..."), NULL, "GameListTags", GameListOptionsProc},
- {NULL, NULL, NULL, NULL}
+ {N_("Flip View"),          "F2",            "FlipView",        FlipViewProc,        CHECK},
+ {"----",                   NULL,            NULL,              NothingProc,         NULL},
+ {N_("Engine Output"),      "<Alt><Shift>o", "EngineOutput",    EngineOutputProc,    CHECK},
+ /* [HGM] hist: activate 4.2.7 code */
+ {N_("Move History"),       "<Alt><Shift>h", "MoveHistory",     HistoryShowProc,     CHECK},
+ {N_("Evaluation Graph"),   "<Alt><Shift>e", "EvaluationGraph", EvalGraphProc,       CHECK},
+ {N_("Game List"),          "<Alt><Shift>g", "GameList",        ShowGameListProc,    CHECK},
+ {"----",                   NULL,            NULL,              NothingProc,         NULL},
+ {N_("Tags"),               NULL,            "Tags",            EditTagsProc,        CHECK},
+ {N_("Comments"),           NULL,            "Comments",        EditCommentProc,     CHECK},
+ {N_("ICS Input Box"),      NULL,            "ICSInputBox",     IcsInputBoxProc,     CHECK},
+ {N_("ICS/Chat Console"),   NULL,            "OpenChatWindow",  ChatProc,            CHECK},
+ {N_("ICS text menu"),      NULL,            "ICStextmenu",     IcsTextProc,         CHECK},
+ {N_("Edit ICS menu..."),   NULL,            "EditTextMenu",    EditMenuProc,        NULL},
+ {"----",                   NULL,            NULL,              NothingProc,         NULL},
+ {N_("Edit Theme List..."), NULL,            "EditThemeList",   EditThemesProc,      NULL},
+ {N_("Board..."),           NULL,            "Board",           BoardOptionsProc,    NULL},
+ {N_("Fonts..."),           NULL,            "Fonts",           FontsProc,           NULL},
+ {N_("Game List Tags..."),  NULL,            "GameListTags",    GameListOptionsProc, NULL},
+ {NULL,                     NULL,            NULL,              NULL,                NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem modeMenu[] = {
- {N_("Machine White"), "<Ctrl>w", "MachineWhite", MachineWhiteEvent, RADIO},
- {N_("Machine Black"), "<Ctrl>b", "MachineBlack", MachineBlackEvent, RADIO},
- {N_("Two Machines"), "<Ctrl>t", "TwoMachines", TwoMachinesEvent, RADIO},
- {N_("Analysis Mode"), "<Ctrl>a", "AnalysisMode", (MenuProc *)AnalyzeModeEvent, RADIO},
- {N_("Analyze Game"), "<Ctrl>g", "AnalyzeFile", AnalyzeFileEvent, RADIO},
- {N_("Edit Game"), "<Ctrl>e", "EditGame", EditGameEvent, RADIO},
- {N_("Edit Position"), "<Ctrl><Shift>e", "EditPosition", EditPositionEvent, RADIO},
- {N_("Training"), NULL, "Training", TrainingEvent, RADIO},
- {N_("ICS Client"), NULL, "ICSClient", IcsClientEvent, RADIO},
- {"----", NULL, NULL, NothingProc},
- {N_("Machine Match"), NULL, "MachineMatch", MatchProc, CHECK},
- {N_("Pause"), "Pause", "Pause", PauseEvent, CHECK},
- {NULL, NULL, NULL, NULL}
+ {N_("Machine White"), "<Ctrl>w",        "MachineWhite", MachineWhiteEvent,            RADIO},
+ {N_("Machine Black"), "<Ctrl>b",        "MachineBlack", MachineBlackEvent,            RADIO},
+ {N_("Two Machines"),  "<Ctrl>t",        "TwoMachines",  TwoMachinesEvent,             RADIO},
+ {N_("Analysis Mode"), "<Ctrl>a",        "AnalysisMode", (MenuProc *)AnalyzeModeEvent, RADIO},
+ {N_("Analyze Game"),  "<Ctrl>g",        "AnalyzeFile",  AnalyzeFileEvent,             RADIO},
+ {N_("Edit Game"),     "<Ctrl>e",        "EditGame",     EditGameEvent,                RADIO},
+ {N_("Edit Position"), "<Ctrl><Shift>e", "EditPosition", EditPositionEvent,            RADIO},
+ {N_("Training"),      NULL,             "Training",     TrainingEvent,                RADIO},
+ {N_("ICS Client"),    NULL,             "ICSClient",    IcsClientEvent,               RADIO},
+ {"----",              NULL,             NULL,           NothingProc,                  NULL},
+ {N_("Machine Match"), NULL,             "MachineMatch", MatchProc,                    CHECK},
+ {N_("Pause"),         "Pause",          "Pause",        PauseEvent,                   CHECK},
+ {NULL,                NULL,             NULL,           NULL,                         NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem actionMenu[] = {
- {N_("Accept"),              "F3",  "Accept",            AcceptEvent       },
- {N_("Decline"),             "F4",  "Decline",           DeclineEvent      },
- {N_("Rematch"),             "F12", "Rematch",           RematchEvent      },
- {"----",                    NULL,  NULL,                NothingProc       },
- {N_("Call Flag"),           "F5",  "CallFlag",          CallFlagEvent     },
- {N_("Draw"),                "F6",  "Draw",              DrawEvent         },
- {N_("Adjourn"),             "F7",  "Adjourn",           AdjournEvent      },
- {N_("Abort"),               "F8",  "Abort",             AbortEvent        },
- {N_("Resign"),              "F9",  "Resign",            ResignEvent       },
- {"----",                    NULL,  NULL,                NothingProc       },
- {N_("Stop Observing"),      "F10", "StopObserving",     StopObservingEvent},
- {N_("Stop Examining"),      "F11", "StopExamining",     StopExaminingEvent},
- {N_("Upload to Examine"),   NULL,  "UploadtoExamine",   UploadGameEvent   },
- {"----",                    NULL,  NULL,                NothingProc       },
- {N_("Adjudicate to White"), NULL,  "AdjudicatetoWhite", AdjuWhiteProc     },
- {N_("Adjudicate to Black"), NULL,  "AdjudicatetoBlack", AdjuBlackProc     },
- {N_("Adjudicate Draw"),     NULL,  "AdjudicateDraw",    AdjuDrawProc      },
- {NULL,                      NULL,  NULL,                NULL              }
+ {N_("Accept"),              "F3",  "Accept",            AcceptEvent,        NULL},
+ {N_("Decline"),             "F4",  "Decline",           DeclineEvent,       NULL},
+ {N_("Rematch"),             "F12", "Rematch",           RematchEvent,       NULL},
+ {"----",                    NULL,  NULL,                NothingProc,        NULL},
+ {N_("Call Flag"),           "F5",  "CallFlag",          CallFlagEvent,      NULL},
+ {N_("Draw"),                "F6",  "Draw",              DrawEvent,          NULL},
+ {N_("Adjourn"),             "F7",  "Adjourn",           AdjournEvent,       NULL},
+ {N_("Abort"),               "F8",  "Abort",             AbortEvent,         NULL},
+ {N_("Resign"),              "F9",  "Resign",            ResignEvent,        NULL},
+ {"----",                    NULL,  NULL,                NothingProc,        NULL},
+ {N_("Stop Observing"),      "F10", "StopObserving",     StopObservingEvent, NULL},
+ {N_("Stop Examining"),      "F11", "StopExamining",     StopExaminingEvent, NULL},
+ {N_("Upload to Examine"),   NULL,  "UploadtoExamine",   UploadGameEvent,    NULL},
+ {"----",                    NULL,  NULL,                NothingProc,        NULL},
+ {N_("Adjudicate to White"), NULL,  "AdjudicatetoWhite", AdjuWhiteProc,      NULL},
+ {N_("Adjudicate to Black"), NULL,  "AdjudicatetoBlack", AdjuBlackProc,      NULL},
+ {N_("Adjudicate Draw"),     NULL,  "AdjudicateDraw",    AdjuDrawProc,       NULL},
+ {NULL,                      NULL,  NULL,                NULL,               NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem engineMenu[100] = {
- {N_("Edit Engine List..."),    NULL,            "EditEngList",      EditEngineProc    },
- {"----",                       NULL,            NULL,               NothingProc       },
- {N_("Load New 1st Engine..."), NULL,            "LoadNew1stEngine", LoadEngine1Proc   },
- {N_("Load New 2nd Engine..."), NULL,            "LoadNew2ndEngine", LoadEngine2Proc   },
- {"----",                       NULL,            NULL,               NothingProc       },
- {N_("Engine #1 Settings..."),  NULL,            "Engine#1Settings", FirstSettingsProc },
- {N_("Engine #2 Settings..."),  NULL,            "Engine#2Settings", SecondSettingsProc},
- {N_("Common Settings..."),     "<Alt><Shift>u", "CommonEngine",     UciMenuProc       },
- {"----",                       NULL,            NULL,               NothingProc       },
- {N_("Hint"),                   NULL,            "Hint",             HintEvent         },
- {N_("Book"),                   NULL,            "Book",             BookEvent         },
- {"----",                       NULL,            NULL,               NothingProc       },
- {N_("Move Now"),               "<Ctrl>m",       "MoveNow",          MoveNowEvent      },
- {N_("Retract Move"),           "<Ctrl>x",       "RetractMove",      RetractMoveEvent  },
- {NULL,                         NULL,            NULL,               NULL              }
+ {N_("Edit Engine List..."),    NULL,            "EditEngList",      EditEngineProc,     NULL},
+ {"----",                       NULL,            NULL,               NothingProc,        NULL},
+ {N_("Load New 1st Engine..."), NULL,            "LoadNew1stEngine", LoadEngine1Proc,    NULL},
+ {N_("Load New 2nd Engine..."), NULL,            "LoadNew2ndEngine", LoadEngine2Proc,    NULL},
+ {"----",                       NULL,            NULL,               NothingProc,        NULL},
+ {N_("Engine #1 Settings..."),  NULL,            "Engine#1Settings", FirstSettingsProc,  NULL},
+ {N_("Engine #2 Settings..."),  NULL,            "Engine#2Settings", SecondSettingsProc, NULL},
+ {N_("Common Settings..."),     "<Alt><Shift>u", "CommonEngine",     UciMenuProc,        NULL},
+ {"----",                       NULL,            NULL,               NothingProc,        NULL},
+ {N_("Hint"),                   NULL,            "Hint",             HintEvent,          NULL},
+ {N_("Book"),                   NULL,            "Book",             BookEvent,          NULL},
+ {"----",                       NULL,            NULL,               NothingProc,        NULL},
+ {N_("Move Now"),               "<Ctrl>m",       "MoveNow",          MoveNowEvent,       NULL},
+ {N_("Retract Move"),           "<Ctrl>x",       "RetractMove",      RetractMoveEvent,   NULL},
+ {NULL,                         NULL,            NULL,               NULL,               NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem optionsMenu[] = {
- {N_("Mute all Sounds"), NULL, "Mute", MuteProc, CHECK},
- {"----", NULL, NULL, NothingProc},
+ {N_("Mute all Sounds"),      NULL,              "Mute",               MuteProc,              CHECK},
+ {"----",                     NULL,              NULL,                 NothingProc,           NULL},
 #ifdef OPTIONSDIALOG
- {N_("General..."), NULL, "General", OptionsProc},
+ {N_("General..."),           NULL,              "General",            OptionsProc,           NULL},
 #endif
- {N_("Time Control..."), "<Alt><Shift>t", "TimeControl", TimeControlProc},
- {N_("Adjudications..."), "<Alt><Shift>j", "Adjudications", EngineMenuProc},
- {N_("ICS..."), NULL, "ICS", IcsOptionsProc},
- {N_("Tournament..."), NULL, "Match", MatchOptionsProc},
- {N_("Load Game..."), NULL, "LoadGame", LoadOptionsProc},
- {N_("Save Game..."), NULL, "SaveGame", SaveOptionsProc},
- {N_("Game List..."), NULL, "GameList", GameListOptionsProc},
- {N_("Sounds..."), NULL, "Sounds", SoundOptionsProc},
- {"----", NULL, NULL, NothingProc},
+ {N_("Time Control..."),       "<Alt><Shift>t",  "TimeControl",        TimeControlProc,       NULL},
+ {N_("Adjudications..."),      "<Alt><Shift>j",  "Adjudications",      EngineMenuProc,        NULL},
+ {N_("ICS..."),                NULL,             "ICS",                IcsOptionsProc,        NULL},
+ {N_("Tournament..."),         NULL,             "Match",              MatchOptionsProc,      NULL},
+ {N_("Load Game..."),          NULL,             "LoadGame",           LoadOptionsProc,       NULL},
+ {N_("Save Game..."),          NULL,             "SaveGame",           SaveOptionsProc,       NULL},
+ {N_("Game List..."),          NULL,             "GameList",           GameListOptionsProc,   NULL},
+ {N_("Sounds..."),             NULL,             "Sounds",             SoundOptionsProc,      NULL},
+ {"----",                      NULL,             NULL,                 NothingProc,           NULL},
 #ifndef OPTIONSDIALOG
- {N_("Always Queen"), "<Ctrl><Shift>q", "AlwaysQueen", AlwaysQueenProc},
- {N_("Animate Dragging"), NULL, "AnimateDragging", AnimateDraggingProc},
- {N_("Animate Moving"), "<Ctrl><Shift>a", "AnimateMoving", AnimateMovingProc},
- {N_("Auto Flag"), "<Ctrl><Shift>f", "AutoFlag", AutoflagProc},
- {N_("Auto Flip View"), NULL, "AutoFlipView", AutoflipProc},
- {N_("Blindfold"), NULL, "Blindfold", BlindfoldProc},
- {N_("Flash Moves"), NULL, "FlashMoves", FlashMovesProc},
+ {N_("Always Queen"),          "<Ctrl><Shift>q", "AlwaysQueen",        AlwaysQueenProc,       NULL},
+ {N_("Animate Dragging"),      NULL,             "AnimateDragging",    AnimateDraggingProc,   NULL},
+ {N_("Animate Moving"),        "<Ctrl><Shift>a", "AnimateMoving",      AnimateMovingProc,     NULL},
+ {N_("Auto Flag"),             "<Ctrl><Shift>f", "AutoFlag",           AutoflagProc,          NULL},
+ {N_("Auto Flip View"),        NULL,             "AutoFlipView",       AutoflipProc,          NULL},
+ {N_("Blindfold"),             NULL,             "Blindfold",          BlindfoldProc,         NULL},
+ {N_("Flash Moves"),           NULL,             "FlashMoves",         FlashMovesProc,        NULL},
 # if HIGHDRAG
- {N_("Highlight Dragging"), NULL, "HighlightDragging", HighlightDraggingProc},
+ {N_("Highlight Dragging"),    NULL,             "HighlightDragging",  HighlightDraggingProc, NULL},
 # endif
- {N_("Highlight Last Move"), NULL, "HighlightLastMove", HighlightLastMoveProc},
- {N_("Highlight With Arrow"), NULL, "HighlightWithArrow", HighlightArrowProc},
- {N_("Move Sound"), NULL, "MoveSound", MoveSoundProc},
- {N_("One-Click Moving"), NULL, "OneClickMoving", OneClickProc},
- {N_("Periodic Updates"), NULL, "PeriodicUpdates", PeriodicUpdatesProc},
- {N_("Ponder Next Move"), "<Ctrl><Shift>p", "PonderNextMove", PonderNextMoveProc},
- {N_("Popup Exit Message"), NULL, "PopupExitMessage", PopupExitMessageProc},
- {N_("Popup Move Errors"), NULL, "PopupMoveErrors", PopupMoveErrorsProc},
- {N_("Show Coords"), NULL, "ShowCoords", ShowCoordsProc},
- {N_("Hide Thinking"), "<Ctrl><Shift>h", "HideThinking", HideThinkingProc},
- {N_("Test Legality"), "<Ctrl><Shift>l", "TestLegality", TestLegalityProc},
- {"----", NULL, NULL, NothingProc},
+ {N_("Highlight Last Move"),   NULL,             "HighlightLastMove",  HighlightLastMoveProc, NULL},
+ {N_("Highlight With Arrow"),  NULL,             "HighlightWithArrow", HighlightArrowProc,    NULL},
+ {N_("Move Sound"),            NULL,             "MoveSound",          MoveSoundProc,         NULL},
+ {N_("One-Click Moving"),      NULL,             "OneClickMoving",     OneClickProc,          NULL},
+ {N_("Periodic Updates"),      NULL,             "PeriodicUpdates",    PeriodicUpdatesProc,   NULL},
+ {N_("Ponder Next Move"),      "<Ctrl><Shift>p", "PonderNextMove",     PonderNextMoveProc,    NULL},
+ {N_("Popup Exit Message"),    NULL,             "PopupExitMessage",   PopupExitMessageProc,  NULL},
+ {N_("Popup Move Errors"),     NULL,             "PopupMoveErrors",    PopupMoveErrorsProc,   NULL},
+ {N_("Show Coords"),           NULL,             "ShowCoords",         ShowCoordsProc,        NULL},
+ {N_("Hide Thinking"),         "<Ctrl><Shift>h", "HideThinking",       HideThinkingProc,      NULL},
+ {N_("Test Legality"),         "<Ctrl><Shift>l", "TestLegality",       TestLegalityProc,      NULL},
+ {"----",                      NULL,             NULL,                 NothingProc,           NULL},
 #endif
- {N_("Save Settings Now"), NULL, "SaveSettingsNow", SaveSettingsProc},
- {N_("Save Settings on Exit"), NULL, "SaveSettingsonExit", SaveOnExitProc, CHECK},
- {NULL, NULL, NULL, NULL}
+ {N_("Save Settings Now"),     NULL,             "SaveSettingsNow",    SaveSettingsProc,      NULL},
+ {N_("Save Settings on Exit"), NULL,             "SaveSettingsonExit", SaveOnExitProc,        CHECK},
+ {NULL,                        NULL,             NULL,                 NULL,                  NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem helpMenu[] = {
- {N_("Info XBoard"),        NULL, "InfoXBoard",       InfoProc     },
- {N_("Man XBoard"),         "F1", "ManXBoard",        ManProc      },
- {"----",                   NULL, NULL,               NothingProc  },
- {N_("XBoard Home Page"),   NULL, "XBoardHomePage",   HomePageProc },
- {N_("On-line User Guide"), NULL, "On-lineUserGuide", GuideProc    },
- {N_("Development News"),   NULL, "DevelopmentNews",  NewsPageProc },
- {N_("e-Mail Bug Report"),  NULL, "e-MailBugReport",  BugReportProc},
- {"----",                   NULL, NULL,               NothingProc  },
- {N_("About XBoard"),       NULL, "AboutXBoard",      AboutProc    },
- {NULL,                     NULL, NULL,               NULL         }
+ {N_("Info XBoard"),        NULL, "InfoXBoard",       InfoProc,      NULL},
+ {N_("Man XBoard"),         "F1", "ManXBoard",        ManProc,       NULL},
+ {"----",                   NULL, NULL,               NothingProc,   NULL},
+ {N_("XBoard Home Page"),   NULL, "XBoardHomePage",   HomePageProc,  NULL},
+ {N_("On-line User Guide"), NULL, "On-lineUserGuide", GuideProc,     NULL},
+ {N_("Development News"),   NULL, "DevelopmentNews",  NewsPageProc,  NULL},
+ {N_("e-Mail Bug Report"),  NULL, "e-MailBugReport",  BugReportProc, NULL},
+ {"----",                   NULL, NULL,               NothingProc,   NULL},
+ {N_("About XBoard"),       NULL, "AboutXBoard",      AboutProc,     NULL},
+ {NULL,                     NULL, NULL,               NULL,          NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 MenuItem noMenu[] = {
- {"",   "<Alt>Next",  "LoadNextGame",      LoadNextGameProc     },
- {"",   "<Alt>Prior", "LoadPrevGame",      LoadPrevGameProc     },
- {"",   NULL,         "ReloadGame",        ReloadGameProc       },
- {"",   NULL,         "ReloadPosition",    ReloadPositionProc   },
+ {"",   "<Alt>Next",  "LoadNextGame",      LoadNextGameProc,      NULL},
+ {"",   "<Alt>Prior", "LoadPrevGame",      LoadPrevGameProc,      NULL},
+ {"",   NULL,         "ReloadGame",        ReloadGameProc,        NULL},
+ {"",   NULL,         "ReloadPosition",    ReloadPositionProc,    NULL},
 #ifndef OPTIONSDIALOG
- {"",   NULL,         "AlwaysQueen",       AlwaysQueenProc      },
- {"",   NULL,         "AnimateDragging",   AnimateDraggingProc  },
- {"",   NULL,         "AnimateMoving",     AnimateMovingProc    },
- {"",   NULL,         "Autoflag",          AutoflagProc         },
- {"",   NULL,         "Autoflip",          AutoflipProc         },
- {"",   NULL,         "Blindfold",         BlindfoldProc        },
- {"",   NULL,         "FlashMoves",        FlashMovesProc       },
+ {"",   NULL,         "AlwaysQueen",       AlwaysQueenProc,       NULL},
+ {"",   NULL,         "AnimateDragging",   AnimateDraggingProc,   NULL},
+ {"",   NULL,         "AnimateMoving",     AnimateMovingProc,     NULL},
+ {"",   NULL,         "Autoflag",          AutoflagProc,          NULL},
+ {"",   NULL,         "Autoflip",          AutoflipProc,          NULL},
+ {"",   NULL,         "Blindfold",         BlindfoldProc,         NULL},
+ {"",   NULL,         "FlashMoves",        FlashMovesProc,        NULL},
 # if HIGHDRAG
- {"",   NULL,         "HighlightDragging", HighlightDraggingProc},
+ {"",   NULL,         "HighlightDragging", HighlightDraggingProc, NULL},
 # endif
- {"",   NULL,         "HighlightLastMove", HighlightLastMoveProc},
- {"",   NULL,         "MoveSound",         MoveSoundProc        },
- {"",   NULL,         "PeriodicUpdates",   PeriodicUpdatesProc  },
- {"",   NULL,         "PopupExitMessage",  PopupExitMessageProc },
- {"",   NULL,         "PopupMoveErrors",   PopupMoveErrorsProc  },
- {"",   NULL,         "ShowCoords",        ShowCoordsProc       },
- {"",   NULL,         "ShowThinking",      ShowThinkingProc     },
- {"",   NULL,         "HideThinking",      HideThinkingProc     },
- {"",   NULL,         "TestLegality",      TestLegalityProc     },
+ {"",   NULL,         "HighlightLastMove", HighlightLastMoveProc, NULL},
+ {"",   NULL,         "MoveSound",         MoveSoundProc,         NULL},
+ {"",   NULL,         "PeriodicUpdates",   PeriodicUpdatesProc,   NULL},
+ {"",   NULL,         "PopupExitMessage",  PopupExitMessageProc,  NULL},
+ {"",   NULL,         "PopupMoveErrors",   PopupMoveErrorsProc,   NULL},
+ {"",   NULL,         "ShowCoords",        ShowCoordsProc,        NULL},
+ {"",   NULL,         "ShowThinking",      ShowThinkingProc,      NULL},
+ {"",   NULL,         "HideThinking",      HideThinkingProc,      NULL},
+ {"",   NULL,         "TestLegality",      TestLegalityProc,      NULL},
 #endif
- {"",   NULL,         "AboutGame",         AboutGameEvent       },
- {"",   "<Ctrl>d",    "DebugProc",         DebugProc            },
- {"",   NULL,         "Nothing",           NothingProc          },
- {NULL, NULL,         NULL,                NULL                 }
+ {"",   NULL,         "AboutGame",         AboutGameEvent,        NULL},
+ {"",   "<Ctrl>d",    "DebugProc",         DebugProc,             NULL},
+ {"",   NULL,         "Nothing",           NothingProc,           NULL},
+ {NULL, NULL,         NULL,                NULL,                  NULL}
 };
+/* clang-format on */
 
+/* clang-format off */
 Menu menuBar[] = {
  {N_("File"),    "File",    fileMenu   },
  {N_("Edit"),    "Edit",    editMenu   },
@@ -675,12 +696,13 @@ Menu menuBar[] = {
  {NULL,          NULL,      NULL       },
  {"",            "None",    noMenu     }
 };
+/* clang-format on */
 
 MenuItem * MenuNameToItem(char * menuName) {
     int i = 0;
     char buf[MSG_SIZ], *p;
     MenuItem * menuTab;
-    static MenuItem a = {NULL, NULL, NULL, NothingProc};
+    static MenuItem a = {NULL, NULL, NULL, NothingProc, NULL};
     extern Option mainOptions[];
     safeStrCpy(buf, menuName, MSG_SIZ);
     p = strchr(buf, '.');
