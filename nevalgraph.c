@@ -84,10 +84,12 @@ static void EvalClick(int x, int y) {
     }
 }
 
+/* clang-format off */
 static Option graphOptions[] = {
- {150, 0x9c, 300, NULL, (void *)&EvalCallback, NULL, NULL, Graph,   ""},
- {0,   2,    0,   NULL, NULL,                  "",   NULL, EndMark, ""}
+ {150, 0x9c, 300, NULL, (void *)&EvalCallback, NULL, NULL, Graph,   "", 0},
+ {0,   2,    0,   NULL, NULL,                  "",   NULL, EndMark, "", 0}
 };
+/* clang-format on */
 
 /* back-end painting; calls back front-end primitives for lines, rectangles and text */
 static void DisplayEvalGraph(void) {

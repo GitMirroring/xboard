@@ -75,11 +75,12 @@ int SelectMove(Option * opt, int n, int x, int y, char * text, int index) {
     return (n == 3);
 }
 
+/* clang-format off */
 Option historyOptions[] = {
- {200, T_VSCRL | T_FILL | T_WRAP | T_TOP, 400, NULL, (void *)&historyText, NULL, (char **)&SelectMove, TextBox, "",
-  &appData.historyFont},
- {0, NO_OK, 0, NULL, (void *)NULL, "", NULL, EndMark, ""}
+ {200, T_VSCRL | T_FILL | T_WRAP | T_TOP, 400, NULL, (void *)&historyText, NULL, (char **)&SelectMove, TextBox, "", &appData.historyFont},
+ {0,   NO_OK,                             0,   NULL, (void *)NULL,         "",   NULL,                 EndMark, "", 0}
 };
+/* clang-format on */
 
 void ScrollToCurrent(int caretPos) { ScrollToCursor(&historyOptions[0], caretPos); }
 

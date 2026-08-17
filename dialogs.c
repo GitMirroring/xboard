@@ -305,38 +305,40 @@ static void DoGeneral(int n) { OptionsProc(); }
 
 #define PARTICIPANTS 6 /* This MUST be the number of the Option for &engineName!*/
 
+/* clang-format off */
 static Option matchOptions[] = {
- {0,   0,                         0,          NULL, (void *)&tfName,                    ".trn",                NULL, FileName, N_("Tournament file:          ")                              },
- {0,   0,                         0,          NULL, NULL,                               NULL,                  NULL, Label,    N_("For concurrent playing of tourney with multiple XBoards:")},
- {0,   0,                         0,          NULL, (void *)&appData.roundSync,         "",                    NULL, CheckBox, N_("Sync after round")                                        },
- {0,   0,                         0,          NULL, (void *)&appData.cycleSync,         "",                    NULL, CheckBox, N_("Sync after cycle")                                        },
- {0,   LR,                        175,        NULL, NULL,                               NULL,                  NULL, Label,    N_("Tourney participants:")                                   },
- {0,   SAME_ROW | RR,             175,        NULL, NULL,                               NULL,                  NULL, Label,    N_("Select Engine:")                                          },
- {200, T_VSCRL | T_FILL | T_WRAP, 175,        NULL, (void *)&engineName,                NULL,                  NULL, TextBox,  ""                                                            },
- {200, SAME_ROW | RR,             175,        NULL, (void *)engineMnemonic,             (char *)&AddToTourney, NULL, ListBox,  ""                                                            },
+ {0,   0,                           0,          NULL, (void *)&tfName,                    ".trn",                    NULL,               FileName, N_("Tournament file:          "),                               NULL},
+ {0,   0,                           0,          NULL, NULL,                               NULL,                      NULL,               Label,    N_("For concurrent playing of tourney with multiple XBoards:"), NULL},
+ {0,   0,                           0,          NULL, (void *)&appData.roundSync,         "",                        NULL,               CheckBox, N_("Sync after round"),                                         NULL},
+ {0,   0,                           0,          NULL, (void *)&appData.cycleSync,         "",                        NULL,               CheckBox, N_("Sync after cycle"),                                         NULL},
+ {0,   LR,                          175,        NULL, NULL,                               NULL,                      NULL,               Label,    N_("Tourney participants:"),                                    NULL},
+ {0,   SAME_ROW | RR,               175,        NULL, NULL,                               NULL,                      NULL,               Label,    N_("Select Engine:"),                                           NULL},
+ {200, T_VSCRL | T_FILL | T_WRAP,   175,        NULL, (void *)&engineName,                NULL,                      NULL,               TextBox,  "",                                                             NULL},
+ {200, SAME_ROW | RR,               175,        NULL, (void *)engineMnemonic,             (char *)&AddToTourney,     NULL,               ListBox,  "",                                                             NULL},
  /* to decouple alignment above and below boxes */
- {0,   SAME_ROW,                  0,          NULL, NULL,                               NULL,                  NULL, Break,    ""                                                            },
- /* { 0,  COMBO_CALLBACK | NO_GETTEXT, 0, NULL, (void*) &AddToTourney, (char*)(engineMnemonic+1), (engineMnemonic+1), ComboBox, N_("Select Engine:") }, */
- {0,   0,                         10,         NULL, (void *)&appData.tourneyType,       "",                    NULL, Spin,     N_("Tourney type (0 = round-robin, 1 = gauntlet):")           },
- {0,   1,                         1000000000, NULL, (void *)&appData.tourneyCycles,     "",                    NULL, Spin,     N_("Number of tourney cycles (or Swiss rounds):")             },
- {0,   1,                         1000000000, NULL, (void *)&appData.defaultMatchGames, "",                    NULL, Spin,     N_("Default Number of Games in Match (or Pairing):")          },
- {0,   0,                         1000000000, NULL, (void *)&appData.matchPause,        "",                    NULL, Spin,     N_("Pause between Match Games (msec):")                       },
- {0,   0,                         0,          NULL, (void *)&appData.saveGameFile,      ".pgn .game",          NULL, FileName, N_("Save Tourney Games on:")                                  },
- {0,   0,                         0,          NULL, (void *)&appData.loadGameFile,      ".pgn .game",          NULL, FileName, N_("Game File with Opening Lines:")                           },
- {0,   -2,                        1000000000, NULL, (void *)&appData.loadGameIndex,     "",                    NULL, Spin,     N_("Game Number (-1 or -2 = Auto-Increment):")                },
- {0,   0,                         0,          NULL, (void *)&appData.loadPositionFile,  ".fen .epd .pos",      NULL, FileName, N_("File with Start Positions:")                              },
- {0,   -2,                        1000000000, NULL, (void *)&appData.loadPositionIndex, "",                    NULL, Spin,     N_("Position Number (-1 or -2 = Auto-Increment):")            },
- {0,   0,                         1000000000, NULL, (void *)&appData.rewindIndex,       "",                    NULL, Spin,     N_("Rewind Index after this many Games (0 = never):")         },
- {0,   0,                         0,          NULL, (void *)&appData.defNoBook,         "",                    NULL, CheckBox, N_("Disable own engine books by default")                     },
- {0,   0,                         0,          NULL, (void *)&DoTimeControl,             NULL,                  NULL, Button,   N_("Time Control")                                            },
- {0,   SAME_ROW,                  0,          NULL, (void *)&DoCommonEngine,            NULL,                  NULL, Button,   N_("Common Engine")                                           },
- {0,   SAME_ROW,                  0,          NULL, (void *)&DoGeneral,                 NULL,                  NULL, Button,   N_("General Options")                                         },
- {0,   SAME_ROW,                  0,          NULL, (void *)&PseudoOK,                  NULL,                  NULL, Button,   N_("Continue Later")                                          },
- {0,   0,                         0,          NULL, (void *)&ReplaceParticipant,        NULL,                  NULL, Button,   N_("Replace Engine")                                          },
- {0,   SAME_ROW,                  0,          NULL, (void *)&UpgradeParticipant,        NULL,                  NULL, Button,   N_("Upgrade Engine")                                          },
- {0,   SAME_ROW,                  0,          NULL, (void *)&CloneTourney,              NULL,                  NULL, Button,   N_("Clone Tourney")                                           },
- {0,   SAME_ROW,                  0,          NULL, (void *)&MatchOK,                   "",                    NULL, EndMark,  ""                                                            }
+ {0,   SAME_ROW,                    0,          NULL, NULL,                               NULL,                      NULL,               Break,    "",                                                             NULL},
+/*{0,  COMBO_CALLBACK | NO_GETTEXT, 0,          NULL, (void*) &AddToTourney,              (char*)(engineMnemonic+1), (engineMnemonic+1), ComboBox, N_("Select Engine:"),                                           NULL}, */
+ {0,   0,                           10,         NULL, (void *)&appData.tourneyType,       "",                        NULL,               Spin,     N_("Tourney type (0 = round-robin, 1 = gauntlet):"),            NULL},
+ {0,   1,                           1000000000, NULL, (void *)&appData.tourneyCycles,     "",                        NULL,               Spin,     N_("Number of tourney cycles (or Swiss rounds):"),              NULL},
+ {0,   1,                           1000000000, NULL, (void *)&appData.defaultMatchGames, "",                        NULL,               Spin,     N_("Default Number of Games in Match (or Pairing):"),           NULL},
+ {0,   0,                           1000000000, NULL, (void *)&appData.matchPause,        "",                        NULL,               Spin,     N_("Pause between Match Games (msec):"),                        NULL},
+ {0,   0,                           0,          NULL, (void *)&appData.saveGameFile,      ".pgn .game",              NULL,               FileName, N_("Save Tourney Games on:"),                                   NULL},
+ {0,   0,                           0,          NULL, (void *)&appData.loadGameFile,      ".pgn .game",              NULL,               FileName, N_("Game File with Opening Lines:"),                            NULL},
+ {0,   -2,                          1000000000, NULL, (void *)&appData.loadGameIndex,     "",                        NULL,               Spin,     N_("Game Number (-1 or -2 = Auto-Increment):"),                 NULL},
+ {0,   0,                           0,          NULL, (void *)&appData.loadPositionFile,  ".fen .epd .pos",          NULL,               FileName, N_("File with Start Positions:"),                               NULL},
+ {0,   -2,                          1000000000, NULL, (void *)&appData.loadPositionIndex, "",                        NULL,               Spin,     N_("Position Number (-1 or -2 = Auto-Increment):"),             NULL},
+ {0,   0,                           1000000000, NULL, (void *)&appData.rewindIndex,       "",                        NULL,               Spin,     N_("Rewind Index after this many Games (0 = never):"),          NULL},
+ {0,   0,                           0,          NULL, (void *)&appData.defNoBook,         "",                        NULL,               CheckBox, N_("Disable own engine books by default"),                      NULL},
+ {0,   0,                           0,          NULL, (void *)&DoTimeControl,             NULL,                      NULL,               Button,   N_("Time Control"),                                             NULL},
+ {0,   SAME_ROW,                    0,          NULL, (void *)&DoCommonEngine,            NULL,                      NULL,               Button,   N_("Common Engine"),                                            NULL},
+ {0,   SAME_ROW,                    0,          NULL, (void *)&DoGeneral,                 NULL,                      NULL,               Button,   N_("General Options"),                                          NULL},
+ {0,   SAME_ROW,                    0,          NULL, (void *)&PseudoOK,                  NULL,                      NULL,               Button,   N_("Continue Later"),                                           NULL},
+ {0,   0,                           0,          NULL, (void *)&ReplaceParticipant,        NULL,                      NULL,               Button,   N_("Replace Engine"),                                           NULL},
+ {0,   SAME_ROW,                    0,          NULL, (void *)&UpgradeParticipant,        NULL,                      NULL,               Button,   N_("Upgrade Engine"),                                           NULL},
+ {0,   SAME_ROW,                    0,          NULL, (void *)&CloneTourney,              NULL,                      NULL,               Button,   N_("Clone Tourney"),                                            NULL},
+ {0,   SAME_ROW,                    0,          NULL, (void *)&MatchOK,                   "",                        NULL,               EndMark,  "",                                                             NULL}
 };
+/* clang-format on */
 
 static void ReplaceParticipant(void) {
     GenericReadout(matchOptions, PARTICIPANTS);
@@ -431,40 +433,42 @@ static int GeneralOptionsOK(int n) {
     return 1;
 }
 
+/* clang-format off */
 static Option generalOptions[] = {
- {0, 0,        0,   NULL, (void *)&appData.whitePOV,               "",   NULL, CheckBox, N_("Absolute Analysis Scores")                  },
- {0, 0,        0,   NULL, (void *)&appData.sweepSelect,            "",   NULL, CheckBox, N_("Almost Always Queen (Detour Under-Promote)")},
- {0, 0,        0,   NULL, (void *)&appData.animateDragging,        "",   NULL, CheckBox, N_("Animate Dragging")                          },
- {0, 0,        0,   NULL, (void *)&appData.animate,                "",   NULL, CheckBox, N_("Animate Moving")                            },
- {0, 0,        0,   NULL, (void *)&appData.autoCallFlag,           "",   NULL, CheckBox, N_("Auto Flag")                                 },
- {0, 0,        0,   NULL, (void *)&appData.autoFlipView,           "",   NULL, CheckBox, N_("Auto Flip View")                            },
- {0, 0,        0,   NULL, (void *)&appData.blindfold,              "",   NULL, CheckBox, N_("Blindfold")                                 },
+ {0, 0,        0,   NULL, (void *)&appData.whitePOV,               "",   NULL, CheckBox, N_("Absolute Analysis Scores"),                   NULL},
+ {0, 0,        0,   NULL, (void *)&appData.sweepSelect,            "",   NULL, CheckBox, N_("Almost Always Queen (Detour Under-Promote)"), NULL},
+ {0, 0,        0,   NULL, (void *)&appData.animateDragging,        "",   NULL, CheckBox, N_("Animate Dragging"),                           NULL},
+ {0, 0,        0,   NULL, (void *)&appData.animate,                "",   NULL, CheckBox, N_("Animate Moving"),                             NULL},
+ {0, 0,        0,   NULL, (void *)&appData.autoCallFlag,           "",   NULL, CheckBox, N_("Auto Flag"),                                  NULL},
+ {0, 0,        0,   NULL, (void *)&appData.autoFlipView,           "",   NULL, CheckBox, N_("Auto Flip View"),                             NULL},
+ {0, 0,        0,   NULL, (void *)&appData.blindfold,              "",   NULL, CheckBox, N_("Blindfold"),                                  NULL},
  /* TRANSLATORS: The drop menu is used to drop a piece onto the board, e.g., while playing bughouse chess or editing a position. */
- {0, 0,        0,   NULL, (void *)&appData.dropMenu,               "",   NULL, CheckBox, N_("Drop Menu")                                 },
- {0, 0,        0,   NULL, (void *)&appData.variations,             "",   NULL, CheckBox, N_("Enable Variation Trees")                    },
- {0, 0,        0,   NULL, (void *)&appData.headers,                "",   NULL, CheckBox, N_("Headers in Engine Output Window")           },
- {0, 0,        0,   NULL, (void *)&appData.hideThinkingFromHuman,  "",   NULL, CheckBox, N_("Hide Thinking from Human")                  },
- {0, 0,        0,   NULL, (void *)&appData.highlightLastMove,      "",   NULL, CheckBox, N_("Highlight Last Move")                       },
- {0, 0,        0,   NULL, (void *)&appData.highlightMoveWithArrow, "",   NULL, CheckBox, N_("Highlight with Arrow")                      },
- {0, 0,        0,   NULL, (void *)&appData.oneClick,               "",   NULL, CheckBox, N_("One-Click Moving")                          },
- {0, 0,        0,   NULL, (void *)&appData.periodicUpdates,        "",   NULL, CheckBox, N_("Periodic Updates (in Analysis Mode)")       },
- {0, SAME_ROW, 0,   NULL, NULL,                                    NULL, NULL, Break,    ""                                              },
- {0, 0,        0,   NULL, (void *)&appData.autoExtend,             "",   NULL, CheckBox, N_("Play Move(s) of Clicked PV (Analysis)")     },
- {0, 0,        0,   NULL, (void *)&appData.ponderNextMove,         "",   NULL, CheckBox, N_("Ponder Next Move")                          },
- {0, 0,        0,   NULL, (void *)&appData.popupExitMessage,       "",   NULL, CheckBox, N_("Popup Exit Messages")                       },
- {0, 0,        0,   NULL, (void *)&appData.popupMoveErrors,        "",   NULL, CheckBox, N_("Popup Move Errors")                         },
- {0, 0,        0,   NULL, (void *)&appData.showEvalInMoveHistory,  "",   NULL, CheckBox, N_("Scores in Move List")                       },
- {0, 0,        0,   NULL, (void *)&appData.showCoords,             "",   NULL, CheckBox, N_("Show Coordinates")                          },
- {0, 0,        0,   NULL, (void *)&appData.markers,                "",   NULL, CheckBox, N_("Show Target Squares")                       },
- {0, 0,        0,   NULL, (void *)&appData.useStickyWindows,       "",   NULL, CheckBox, N_("Sticky Windows")                            },
- {0, 0,        0,   NULL, (void *)&appData.testLegality,           "",   NULL, CheckBox, N_("Test Legality")                             },
- {0, 0,        0,   NULL, (void *)&appData.topLevel,               "",   NULL, CheckBox, N_("Top-Level Dialogs")                         },
- {0, 0,        10,  NULL, (void *)&appData.flashCount,             "",   NULL, Spin,     N_("Flash Moves (0 = no flashing):")            },
- {0, 1,        10,  NULL, (void *)&appData.flashRate,              "",   NULL, Spin,     N_("Flash Rate (high = fast):")                 },
- {0, 5,        100, NULL, (void *)&appData.animSpeed,              "",   NULL, Spin,     N_("Animation Speed (high = slow):")            },
- {0, 1,        5,   NULL, (void *)&appData.zoom,                   "",   NULL, Spin,     N_("Zoom factor in Evaluation Graph:")          },
- {0, 0,        0,   NULL, (void *)&GeneralOptionsOK,               "",   NULL, EndMark,  ""                                              }
+ {0, 0,        0,   NULL, (void *)&appData.dropMenu,               "",   NULL, CheckBox, N_("Drop Menu"),                                  NULL},
+ {0, 0,        0,   NULL, (void *)&appData.variations,             "",   NULL, CheckBox, N_("Enable Variation Trees"),                     NULL},
+ {0, 0,        0,   NULL, (void *)&appData.headers,                "",   NULL, CheckBox, N_("Headers in Engine Output Window"),            NULL},
+ {0, 0,        0,   NULL, (void *)&appData.hideThinkingFromHuman,  "",   NULL, CheckBox, N_("Hide Thinking from Human"),                   NULL},
+ {0, 0,        0,   NULL, (void *)&appData.highlightLastMove,      "",   NULL, CheckBox, N_("Highlight Last Move"),                        NULL},
+ {0, 0,        0,   NULL, (void *)&appData.highlightMoveWithArrow, "",   NULL, CheckBox, N_("Highlight with Arrow"),                       NULL},
+ {0, 0,        0,   NULL, (void *)&appData.oneClick,               "",   NULL, CheckBox, N_("One-Click Moving"),                           NULL},
+ {0, 0,        0,   NULL, (void *)&appData.periodicUpdates,        "",   NULL, CheckBox, N_("Periodic Updates (in Analysis Mode)"),        NULL},
+ {0, SAME_ROW, 0,   NULL, NULL,                                    NULL, NULL, Break,    "",                                               NULL},
+ {0, 0,        0,   NULL, (void *)&appData.autoExtend,             "",   NULL, CheckBox, N_("Play Move(s) of Clicked PV (Analysis)"),      NULL},
+ {0, 0,        0,   NULL, (void *)&appData.ponderNextMove,         "",   NULL, CheckBox, N_("Ponder Next Move"),                           NULL},
+ {0, 0,        0,   NULL, (void *)&appData.popupExitMessage,       "",   NULL, CheckBox, N_("Popup Exit Messages"),                        NULL},
+ {0, 0,        0,   NULL, (void *)&appData.popupMoveErrors,        "",   NULL, CheckBox, N_("Popup Move Errors"),                          NULL},
+ {0, 0,        0,   NULL, (void *)&appData.showEvalInMoveHistory,  "",   NULL, CheckBox, N_("Scores in Move List"),                        NULL},
+ {0, 0,        0,   NULL, (void *)&appData.showCoords,             "",   NULL, CheckBox, N_("Show Coordinates"),                           NULL},
+ {0, 0,        0,   NULL, (void *)&appData.markers,                "",   NULL, CheckBox, N_("Show Target Squares"),                        NULL},
+ {0, 0,        0,   NULL, (void *)&appData.useStickyWindows,       "",   NULL, CheckBox, N_("Sticky Windows"),                             NULL},
+ {0, 0,        0,   NULL, (void *)&appData.testLegality,           "",   NULL, CheckBox, N_("Test Legality"),                              NULL},
+ {0, 0,        0,   NULL, (void *)&appData.topLevel,               "",   NULL, CheckBox, N_("Top-Level Dialogs"),                          NULL},
+ {0, 0,        10,  NULL, (void *)&appData.flashCount,             "",   NULL, Spin,     N_("Flash Moves (0 = no flashing):"),             NULL},
+ {0, 1,        10,  NULL, (void *)&appData.flashRate,              "",   NULL, Spin,     N_("Flash Rate (high = fast):"),                  NULL},
+ {0, 5,        100, NULL, (void *)&appData.animSpeed,              "",   NULL, Spin,     N_("Animation Speed (high = slow):"),             NULL},
+ {0, 1,        5,   NULL, (void *)&appData.zoom,                   "",   NULL, Spin,     N_("Zoom factor in Evaluation Graph:"),           NULL},
+ {0, 0,        0,   NULL, (void *)&GeneralOptionsOK,               "",   NULL, EndMark,  "",                                               NULL}
 };
+/* clang-format on */
 
 void OptionsProc(void) {
     oldPonder = appData.ponderNextMove;
@@ -480,81 +484,82 @@ static void Pick(int n);
 static char warning[MSG_SIZ];
 static int ranksTmp, filesTmp, sizeTmp;
 
+/* clang-format off */
 static Option variantDescriptors[] = {
- {VariantNormal,       0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Normal")                                                               },
- {VariantMakruk,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Makruk")                                                               },
- {VariantFischeRandom, 0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("FRC")                                                                  },
- {VariantShatranj,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Shatranj")                                                             },
- {VariantWildCastle,   0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Wild castle")                                                          },
- {VariantKnightmate,   SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Knightmate")                                                           },
- {VariantNoCastle,     0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("No castle")                                                            },
- {VariantCylinder,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Cylinder *")                                                           },
- {Variant3Check,       0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("3-checks")                                                             },
- {VariantBerolina,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("berolina *")                                                           },
- {VariantAtomic,       0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("atomic")                                                               },
- {VariantTwoKings,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("two kings")                                                            },
+ {VariantNormal,       0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Normal"),                                                                NULL},
+ {VariantMakruk,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Makruk"),                                                                NULL},
+ {VariantFischeRandom, 0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("FRC"),                                                                   NULL},
+ {VariantShatranj,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Shatranj"),                                                              NULL},
+ {VariantWildCastle,   0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Wild castle"),                                                           NULL},
+ {VariantKnightmate,   SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Knightmate"),                                                            NULL},
+ {VariantNoCastle,     0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("No castle"),                                                             NULL},
+ {VariantCylinder,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Cylinder *"),                                                            NULL},
+ {Variant3Check,       0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("3-checks"),                                                              NULL},
+ {VariantBerolina,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("berolina *"),                                                            NULL},
+ {VariantAtomic,       0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("atomic"),                                                                NULL},
+ {VariantTwoKings,     SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("two kings"),                                                             NULL},
  /* To improve alignment */
- {-1,                  0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_(" ")                                                                    },
- {VariantSpartan,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FF0000", NULL, Button,  N_("Spartan")                                                              },
- {0,                   0,        0,               NULL, NULL,              NULL,      NULL, Label,   N_("Board size ( -1 = default for selected variant):")                     },
- {0,                   -1,       BOARD_RANKS - 1, NULL, (void *)&ranksTmp, "",        NULL, Spin,    N_("Number of Board Ranks:")                                               },
- {0,                   -1,       BOARD_FILES,     NULL, (void *)&filesTmp, "",        NULL, Spin,    N_("Number of Board Files:")                                               },
- {0,                   -1,       BOARD_RANKS - 1, NULL, (void *)&sizeTmp,  "",        NULL, Spin,    N_("Holdings Size:")                                                       },
- {0,                   0,        275,             NULL, NULL,              NULL,      NULL, Label,   warning                                                                    },
- {0,                   0,        275,             NULL, NULL,              NULL,      NULL, Label,   N_("Variants marked with * can only be played\nwith legality testing off.")},
- {0,                   SAME_ROW, 0,               NULL, NULL,              NULL,      NULL, Break,   ""                                                                         },
- {VariantASEAN,        0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("ASEAN")                                                                },
- {VariantGreat,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Great Shatranj (10x8)")                                                },
- {VariantSChess,       0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Seirawan")                                                             },
- {VariantFalcon,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Falcon (10x8)")                                                        },
- {VariantSuper,        0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Superchess")                                                           },
- {VariantCapablanca,   SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Capablanca (10x8)")                                                    },
- {VariantCrazyhouse,   0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Crazyhouse")                                                           },
- {VariantGothic,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Gothic (10x8)")                                                        },
- {VariantBughouse,     0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Bughouse")                                                             },
- {VariantJanus,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Janus (10x8)")                                                         },
- {VariantSuicide,      0,        135,             NULL, (void *)&Pick,     "#FFFFBF", NULL, Button,  N_("Suicide")                                                              },
- {VariantCapaRandom,   SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("CRC (10x8)")                                                           },
- {VariantGiveaway,     0,        135,             NULL, (void *)&Pick,     "#FFFFBF", NULL, Button,  N_("give-away")                                                            },
- {VariantGrand,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#5070FF", NULL, Button,  N_("grand (10x10)")                                                        },
- {VariantLosers,       0,        135,             NULL, (void *)&Pick,     "#FFFFBF", NULL, Button,  N_("losers")                                                               },
- {VariantShogi,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFFF", NULL, Button,  N_("shogi (9x9)")                                                          },
- {VariantFairy,        0,        135,             NULL, (void *)&Pick,     "#BFBFBF", NULL, Button,  N_("fairy")                                                                },
- {VariantXiangqi,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFFF", NULL, Button,  N_("xiangqi (9x10)")                                                       },
- {VariantLion,         0,        135,             NULL, (void *)&Pick,     "#BFBFBF", NULL, Button,  N_("mighty lion")                                                          },
- {VariantJanggi,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFFF", NULL, Button,  N_("Janggi (9x10)")
-                                            },
- {VariantChuChess,     0,        135,             NULL, (void *)&Pick,     "#BFBFBF", NULL, Button,  N_("elven chess (10x10)")                                                  },
- {VariantCourier,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFBF", NULL, Button,  N_("courier (12x8)")                                                       },
- {VariantDuck,         0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Duck Chess")                                                           },
- {VariantChu,          SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFBF", NULL, Button,  N_("chu shogi (12x12)")                                                    },
+ {-1,                  0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_(" "),                                                                     NULL},
+ {VariantSpartan,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FF0000", NULL, Button,  N_("Spartan"),                                                               NULL},
+ {0,                   0,        0,               NULL, NULL,              NULL,      NULL, Label,   N_("Board size (-1 = default for selected variant):"),                       NULL},
+ {0,                   -1,       BOARD_RANKS - 1, NULL, (void *)&ranksTmp, "",        NULL, Spin,    N_("Number of Board Ranks:"),                                                NULL},
+ {0,                   -1,       BOARD_FILES,     NULL, (void *)&filesTmp, "",        NULL, Spin,    N_("Number of Board Files:"),                                                NULL},
+ {0,                   -1,       BOARD_RANKS - 1, NULL, (void *)&sizeTmp,  "",        NULL, Spin,    N_("Holdings Size:"),                                                        NULL},
+ {0,                   0,        275,             NULL, NULL,              NULL,      NULL, Label,   warning,                                                                     NULL},
+ {0,                   0,        275,             NULL, NULL,              NULL,      NULL, Label,   N_("Variants marked with * can only be played\nwith legality testing off."), NULL},
+ {0,                   SAME_ROW, 0,               NULL, NULL,              NULL,      NULL, Break,   "",                                                                          NULL},
+ {VariantASEAN,        0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("ASEAN"),                                                                 NULL},
+ {VariantGreat,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Great Shatranj (10x8)"),                                                 NULL},
+ {VariantSChess,       0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Seirawan"),                                                              NULL},
+ {VariantFalcon,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Falcon (10x8)"),                                                         NULL},
+ {VariantSuper,        0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Superchess"),                                                            NULL},
+ {VariantCapablanca,   SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Capablanca (10x8)"),                                                     NULL},
+ {VariantCrazyhouse,   0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Crazyhouse"),                                                            NULL},
+ {VariantGothic,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Gothic (10x8)"),                                                         NULL},
+ {VariantBughouse,     0,        135,             NULL, (void *)&Pick,     "#FFBFBF", NULL, Button,  N_("Bughouse"),                                                              NULL},
+ {VariantJanus,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("Janus (10x8)"),                                                          NULL},
+ {VariantSuicide,      0,        135,             NULL, (void *)&Pick,     "#FFFFBF", NULL, Button,  N_("Suicide"),                                                               NULL},
+ {VariantCapaRandom,   SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFBFFF", NULL, Button,  N_("CRC (10x8)"),                                                            NULL},
+ {VariantGiveaway,     0,        135,             NULL, (void *)&Pick,     "#FFFFBF", NULL, Button,  N_("give-away"),                                                             NULL},
+ {VariantGrand,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#5070FF", NULL, Button,  N_("grand (10x10)"),                                                         NULL},
+ {VariantLosers,       0,        135,             NULL, (void *)&Pick,     "#FFFFBF", NULL, Button,  N_("losers"),                                                                NULL},
+ {VariantShogi,        SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFFF", NULL, Button,  N_("shogi (9x9)"),                                                           NULL},
+ {VariantFairy,        0,        135,             NULL, (void *)&Pick,     "#BFBFBF", NULL, Button,  N_("fairy"),                                                                 NULL},
+ {VariantXiangqi,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFFF", NULL, Button,  N_("xiangqi (9x10)"),                                                        NULL},
+ {VariantLion,         0,        135,             NULL, (void *)&Pick,     "#BFBFBF", NULL, Button,  N_("mighty lion"),                                                           NULL},
+ {VariantJanggi,       SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFFF", NULL, Button,  N_("Janggi (9x10)"),                                                         NULL},
+ {VariantChuChess,     0,        135,             NULL, (void *)&Pick,     "#BFBFBF", NULL, Button,  N_("elven chess (10x10)"),                                                   NULL},
+ {VariantCourier,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFBF", NULL, Button,  N_("courier (12x8)"),                                                        NULL},
+ {VariantDuck,         0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Button,  N_("Duck Chess"),                                                            NULL},
+ {VariantChu,          SAME_ROW, 135,             NULL, (void *)&Pick,     "#BFFFBF", NULL, Button,  N_("chu shogi (12x12)"),                                                     NULL},
  /* optional buttons for engine-defined variants */
- {0,                   NO_OK,    0,               NULL, NULL,              "",        NULL, EndMark, ""                                                                         },
- {0,                   SAME_ROW, 0,               NULL, NULL,              NULL,      NULL, Skip,    ""                                                                         },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL                                                                       },
- {0,                   NO_OK,    0,               NULL, NULL,              "",        NULL, EndMark, ""                                                                         }
+ {0,                   NO_OK,    0,               NULL, NULL,              "",        NULL, EndMark, "",                                                                          NULL},
+ {0,                   SAME_ROW, 0,               NULL, NULL,              NULL,      NULL, Skip,    "",                                                                          NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      0,        135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {VariantUnknown,      SAME_ROW, 135,             NULL, (void *)&Pick,     "#FFFFFF", NULL, Skip,    NULL,                                                                        NULL},
+ {0,                   NO_OK,    0,               NULL, NULL,              "",        NULL, EndMark, "",                                                                          NULL}
 };
+/* clang-format on */
 
 static void Pick(int n) {
     VariantClass v = variantDescriptors[n].value;
@@ -674,21 +679,23 @@ static int CommonOptionsOK(int n) {
     return 1;
 }
 
+/* clang-format off */
 static Option commonEngineOptions[] = {
- {0, 0,        0,     NULL, (void *)&appData.ponderNextMove,       "",     NULL, CheckBox, N_("Ponder Next Move")                    },
- {0, 0,        1000,  NULL, (void *)&appData.smpCores,             "",     NULL, Spin,     N_("Maximum Number of CPUs per Engine:")  },
- {0, 0,        0,     NULL, (void *)&appData.polyglotDir,          NULL,   NULL, PathName, N_("Polygot Directory:")                  },
- {0, 0,        16000, NULL, (void *)&appData.defaultHashSize,      "",     NULL, Spin,     N_("Hash-Table Size (MB):")               },
- {0, 0,        0,     NULL, (void *)&egtPath,                      NULL,   NULL, PathName, N_("EGTB Path:")                          },
- {0, 0,        1000,  NULL, (void *)&appData.defaultCacheSizeEGTB, "",     NULL, Spin,     N_("EGTB Cache Size (MB):")               },
- {0, 0,        0,     NULL, (void *)&appData.usePolyglotBook,      "",     NULL, CheckBox, N_("Use GUI Book")                        },
- {0, 0,        0,     NULL, (void *)&appData.polyglotBook,         ".bin", NULL, FileName, N_("Opening-Book Filename:")              },
- {0, 0,        100,   NULL, (void *)&appData.bookDepth,            "",     NULL, Spin,     N_("Book Depth (moves):")                 },
- {0, 0,        100,   NULL, (void *)&appData.bookStrength,         "",     NULL, Spin,     N_("Book Variety (0) vs. Strength (100):")},
- {0, 0,        0,     NULL, (void *)&appData.firstHasOwnBookUCI,   "",     NULL, CheckBox, N_("Engine #1 Has Own Book")              },
- {0, 0,        0,     NULL, (void *)&appData.secondHasOwnBookUCI,  "",     NULL, CheckBox, N_("Engine #2 Has Own Book          ")    },
- {0, SAME_ROW, 0,     NULL, (void *)&CommonOptionsOK,              "",     NULL, EndMark,  ""                                        }
+ {0, 0,        0,     NULL, (void *)&appData.ponderNextMove,       "",     NULL, CheckBox, N_("Ponder Next Move"),                     NULL},
+ {0, 0,        1000,  NULL, (void *)&appData.smpCores,             "",     NULL, Spin,     N_("Maximum Number of CPUs per Engine:"),   NULL},
+ {0, 0,        0,     NULL, (void *)&appData.polyglotDir,          NULL,   NULL, PathName, N_("Polygot Directory:"),                   NULL},
+ {0, 0,        16000, NULL, (void *)&appData.defaultHashSize,      "",     NULL, Spin,     N_("Hash-Table Size (MB):"),                NULL},
+ {0, 0,        0,     NULL, (void *)&egtPath,                      NULL,   NULL, PathName, N_("EGTB Path:"),                           NULL},
+ {0, 0,        1000,  NULL, (void *)&appData.defaultCacheSizeEGTB, "",     NULL, Spin,     N_("EGTB Cache Size (MB):"),                NULL},
+ {0, 0,        0,     NULL, (void *)&appData.usePolyglotBook,      "",     NULL, CheckBox, N_("Use GUI Book"),                         NULL},
+ {0, 0,        0,     NULL, (void *)&appData.polyglotBook,         ".bin", NULL, FileName, N_("Opening-Book Filename:"),               NULL},
+ {0, 0,        100,   NULL, (void *)&appData.bookDepth,            "",     NULL, Spin,     N_("Book Depth (moves):"),                  NULL},
+ {0, 0,        100,   NULL, (void *)&appData.bookStrength,         "",     NULL, Spin,     N_("Book Variety (0) vs. Strength (100):"), NULL},
+ {0, 0,        0,     NULL, (void *)&appData.firstHasOwnBookUCI,   "",     NULL, CheckBox, N_("Engine #1 Has Own Book"),               NULL},
+ {0, 0,        0,     NULL, (void *)&appData.secondHasOwnBookUCI,  "",     NULL, CheckBox, N_("Engine #2 Has Own Book          "),     NULL},
+ {0, SAME_ROW, 0,     NULL, (void *)&CommonOptionsOK,              "",     NULL, EndMark,  "",                                         NULL}
 };
+/* clang-format on */
 
 void UciMenuProc(void) {
     oldCores = appData.smpCores;
@@ -703,19 +710,21 @@ void UciMenuProc(void) {
 
 /*------------------------------------------ Adjudication Options -------------------------------------- */
 
+/* clang-format off */
 static Option adjudicationOptions[] = {
- {0, 0,        0,    NULL, (void *)&appData.checkMates,              "", NULL, CheckBox, N_("Detect all Mates")                       },
- {0, 0,        0,    NULL, (void *)&appData.testClaims,              "", NULL, CheckBox, N_("Verify Engine Result Claims")            },
- {0, 0,        0,    NULL, (void *)&appData.materialDraws,           "", NULL, CheckBox, N_("Draw if Insufficient Mating Material")   },
- {0, 0,        0,    NULL, (void *)&appData.trivialDraws,            "", NULL, CheckBox, N_("Adjudicate Trivial Draws (3-Move Delay)")},
- {0, 0,        100,  NULL, (void *)&appData.ruleMoves,               "", NULL, Spin,     N_("N-Move Rule:")                           },
- {0, 0,        6,    NULL, (void *)&appData.drawRepeats,             "", NULL, Spin,     N_("N-fold Repeats:")                        },
- {0, 0,        1000, NULL, (void *)&appData.adjudicateDrawMoves,     "", NULL, Spin,     N_("Draw after N Moves Total:")              },
- {0, -5000,    0,    NULL, (void *)&appData.adjudicateLossThreshold, "", NULL, Spin,     N_("Win / Loss Threshold:")                  },
- {0, 0,        0,    NULL, (void *)&first.scoreIsAbsolute,           "", NULL, CheckBox, N_("Negate Score of Engine #1")              },
- {0, 0,        0,    NULL, (void *)&second.scoreIsAbsolute,          "", NULL, CheckBox, N_("Negate Score of Engine #2")              },
- {0, SAME_ROW, 0,    NULL, NULL,                                     "", NULL, EndMark,  ""                                           }
+ {0, 0,        0,    NULL, (void *)&appData.checkMates,              "", NULL, CheckBox, N_("Detect all Mates"),                        NULL},
+ {0, 0,        0,    NULL, (void *)&appData.testClaims,              "", NULL, CheckBox, N_("Verify Engine Result Claims"),             NULL},
+ {0, 0,        0,    NULL, (void *)&appData.materialDraws,           "", NULL, CheckBox, N_("Draw if Insufficient Mating Material"),    NULL},
+ {0, 0,        0,    NULL, (void *)&appData.trivialDraws,            "", NULL, CheckBox, N_("Adjudicate Trivial Draws (3-Move Delay)"), NULL},
+ {0, 0,        100,  NULL, (void *)&appData.ruleMoves,               "", NULL, Spin,     N_("N-Move Rule:"),                            NULL},
+ {0, 0,        6,    NULL, (void *)&appData.drawRepeats,             "", NULL, Spin,     N_("N-fold Repeats:"),                         NULL},
+ {0, 0,        1000, NULL, (void *)&appData.adjudicateDrawMoves,     "", NULL, Spin,     N_("Draw after N Moves Total:"),               NULL},
+ {0, -5000,    0,    NULL, (void *)&appData.adjudicateLossThreshold, "", NULL, Spin,     N_("Win / Loss Threshold:"),                   NULL},
+ {0, 0,        0,    NULL, (void *)&first.scoreIsAbsolute,           "", NULL, CheckBox, N_("Negate Score of Engine #1"),               NULL},
+ {0, 0,        0,    NULL, (void *)&second.scoreIsAbsolute,          "", NULL, CheckBox, N_("Negate Score of Engine #2"),               NULL},
+ {0, SAME_ROW, 0,    NULL, NULL,                                     "", NULL, EndMark,  "",                                            NULL}
 };
+/* clang-format on */
 
 void EngineMenuProc(void) { GenericPopUp(adjudicationOptions, _("Adjudicate non-ICS Games"), TransientDlg, BoardWindow, MODAL, 0); }
 
@@ -726,42 +735,44 @@ static int IcsOptionsOK(int n) {
     return 1;
 }
 
+/* clang-format off */
 Option icsOptions[] = {
- {0, 0,        0,         NULL, (void *)&appData.autoKibitz,       "",   NULL, CheckBox, N_("Auto-Kibitz")                            },
- {0, 0,        0,         NULL, (void *)&appData.autoComment,      "",   NULL, CheckBox, N_("Auto-Comment")                           },
- {0, 0,        0,         NULL, (void *)&appData.autoObserve,      "",   NULL, CheckBox, N_("Auto-Observe")                           },
- {0, 0,        0,         NULL, (void *)&appData.autoRaiseBoard,   "",   NULL, CheckBox, N_("Auto-Raise Board")                       },
- {0, 0,        0,         NULL, (void *)&appData.autoCreateLogon,  "",   NULL, CheckBox, N_("Auto-Create Logon Script")               },
- {0, 0,        0,         NULL, (void *)&appData.bgObserve,        "",   NULL, CheckBox, N_("Background Observe while Playing")       },
- {0, 0,        0,         NULL, (void *)&appData.dualBoard,        "",   NULL, CheckBox, N_("Dual Board for Background-Observed Game")},
- {0, 0,        0,         NULL, (void *)&appData.getMoveList,      "",   NULL, CheckBox, N_("Get Move List")                          },
- {0, 0,        0,         NULL, (void *)&appData.quietPlay,        "",   NULL, CheckBox, N_("Quiet Play")                             },
- {0, 0,        0,         NULL, (void *)&appData.seekGraph,        "",   NULL, CheckBox, N_("Seek Graph")                             },
- {0, 0,        0,         NULL, (void *)&appData.autoRefresh,      "",   NULL, CheckBox, N_("Auto-Refresh Seek Graph")                },
- {0, 0,        0,         NULL, (void *)&appData.autoBox,          "",   NULL, CheckBox, N_("Auto-InputBox PopUp")                    },
- {0, 0,        0,         NULL, (void *)&appData.quitNext,         "",   NULL, CheckBox, N_("Quit after game")                        },
- {0, 0,        0,         NULL, (void *)&appData.premove,          "",   NULL, CheckBox, N_("Premove")                                },
- {0, 0,        0,         NULL, (void *)&appData.premoveWhite,     "",   NULL, CheckBox, N_("Premove for White")                      },
- {0, 0,        0,         NULL, (void *)&appData.premoveWhiteText, "",   NULL, TextBox,  N_("First White Move:")                      },
- {0, 0,        0,         NULL, (void *)&appData.premoveBlack,     "",   NULL, CheckBox, N_("Premove for Black")                      },
- {0, 0,        0,         NULL, (void *)&appData.premoveBlackText, "",   NULL, TextBox,  N_("First Black Move:")                      },
- {0, SAME_ROW, 0,         NULL, NULL,                              NULL, NULL, Break,    ""                                           },
- {0, 0,        0,         NULL, (void *)&appData.icsAlarm,         "",   NULL, CheckBox, N_("Alarm")                                  },
- {0, 0,        100000000, NULL, (void *)&appData.icsAlarmTime,     "",   NULL, Spin,     N_("Alarm Time (msec):")                     },
- /*{ 0, 0,     0,         NULL, (void*) &appData.chatBoxes,        "",   NULL, TextBox,  N_("Startup Chat Boxes:")                  },*/
- {0, 0,        0,         NULL, (void *)&appData.colorize,         "",   NULL, CheckBox, N_("Colorize Messages")                      },
- {0, 0,        0,         NULL, (void *)&appData.colorShout,       "",   NULL, TextBox,  N_("Shout Text Colors:")                     },
- {0, 0,        0,         NULL, (void *)&appData.colorSShout,      "",   NULL, TextBox,  N_("S-Shout Text Colors:")                   },
- {0, 0,        0,         NULL, (void *)&appData.colorChannel1,    "",   NULL, TextBox,  N_("Channel #1 Text Colors:")                },
- {0, 0,        0,         NULL, (void *)&appData.colorChannel,     "",   NULL, TextBox,  N_("Other Channel Text Colors:")             },
- {0, 0,        0,         NULL, (void *)&appData.colorKibitz,      "",   NULL, TextBox,  N_("Kibitz Text Colors:")                    },
- {0, 0,        0,         NULL, (void *)&appData.colorTell,        "",   NULL, TextBox,  N_("Tell Text Colors:")                      },
- {0, 0,        0,         NULL, (void *)&appData.colorChallenge,   "",   NULL, TextBox,  N_("Challenge Text Colors:")                 },
- {0, 0,        0,         NULL, (void *)&appData.colorRequest,     "",   NULL, TextBox,  N_("Request Text Colors:")                   },
- {0, 0,        0,         NULL, (void *)&appData.colorSeek,        "",   NULL, TextBox,  N_("Seek Text Colors:")                      },
- {0, 0,        0,         NULL, (void *)&appData.colorNormal,      "",   NULL, TextBox,  N_("Other Text Colors:")                     },
- {0, 0,        0,         NULL, (void *)&IcsOptionsOK,             "",   NULL, EndMark,  ""                                           }
+ {0, 0,        0,         NULL, (void *)&appData.autoKibitz,       "",   NULL, CheckBox, N_("Auto-Kibitz"),                             NULL},
+ {0, 0,        0,         NULL, (void *)&appData.autoComment,      "",   NULL, CheckBox, N_("Auto-Comment"),                            NULL},
+ {0, 0,        0,         NULL, (void *)&appData.autoObserve,      "",   NULL, CheckBox, N_("Auto-Observe"),                            NULL},
+ {0, 0,        0,         NULL, (void *)&appData.autoRaiseBoard,   "",   NULL, CheckBox, N_("Auto-Raise Board"),                        NULL},
+ {0, 0,        0,         NULL, (void *)&appData.autoCreateLogon,  "",   NULL, CheckBox, N_("Auto-Create Logon Script"),                NULL},
+ {0, 0,        0,         NULL, (void *)&appData.bgObserve,        "",   NULL, CheckBox, N_("Background Observe while Playing"),        NULL},
+ {0, 0,        0,         NULL, (void *)&appData.dualBoard,        "",   NULL, CheckBox, N_("Dual Board for Background-Observed Game"), NULL},
+ {0, 0,        0,         NULL, (void *)&appData.getMoveList,      "",   NULL, CheckBox, N_("Get Move List"),                           NULL},
+ {0, 0,        0,         NULL, (void *)&appData.quietPlay,        "",   NULL, CheckBox, N_("Quiet Play"),                              NULL},
+ {0, 0,        0,         NULL, (void *)&appData.seekGraph,        "",   NULL, CheckBox, N_("Seek Graph"),                              NULL},
+ {0, 0,        0,         NULL, (void *)&appData.autoRefresh,      "",   NULL, CheckBox, N_("Auto-Refresh Seek Graph"),                 NULL},
+ {0, 0,        0,         NULL, (void *)&appData.autoBox,          "",   NULL, CheckBox, N_("Auto-InputBox PopUp"),                     NULL},
+ {0, 0,        0,         NULL, (void *)&appData.quitNext,         "",   NULL, CheckBox, N_("Quit after game"),                         NULL},
+ {0, 0,        0,         NULL, (void *)&appData.premove,          "",   NULL, CheckBox, N_("Premove"),                                 NULL},
+ {0, 0,        0,         NULL, (void *)&appData.premoveWhite,     "",   NULL, CheckBox, N_("Premove for White"),                       NULL},
+ {0, 0,        0,         NULL, (void *)&appData.premoveWhiteText, "",   NULL, TextBox,  N_("First White Move:"),                       NULL},
+ {0, 0,        0,         NULL, (void *)&appData.premoveBlack,     "",   NULL, CheckBox, N_("Premove for Black"),                       NULL},
+ {0, 0,        0,         NULL, (void *)&appData.premoveBlackText, "",   NULL, TextBox,  N_("First Black Move:"),                       NULL},
+ {0, SAME_ROW, 0,         NULL, NULL,                              NULL, NULL, Break,    "",                                            NULL},
+ {0, 0,        0,         NULL, (void *)&appData.icsAlarm,         "",   NULL, CheckBox, N_("Alarm"),                                   NULL},
+ {0, 0,        100000000, NULL, (void *)&appData.icsAlarmTime,     "",   NULL, Spin,     N_("Alarm Time (msec):"),                      NULL},
+/*{0, 0,       0,         NULL, (void *)&appData.chatBoxes,        "",   NULL, TextBox,  N_("Startup Chat Boxes:"),                     NULL},*/
+ {0, 0,        0,         NULL, (void *)&appData.colorize,         "",   NULL, CheckBox, N_("Colorize Messages"),                       NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorShout,       "",   NULL, TextBox,  N_("Shout Text Colors:"),                      NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorSShout,      "",   NULL, TextBox,  N_("S-Shout Text Colors:"),                    NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorChannel1,    "",   NULL, TextBox,  N_("Channel #1 Text Colors:"),                 NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorChannel,     "",   NULL, TextBox,  N_("Other Channel Text Colors:"),              NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorKibitz,      "",   NULL, TextBox,  N_("Kibitz Text Colors:"),                     NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorTell,        "",   NULL, TextBox,  N_("Tell Text Colors:"),                       NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorChallenge,   "",   NULL, TextBox,  N_("Challenge Text Colors:"),                  NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorRequest,     "",   NULL, TextBox,  N_("Request Text Colors:"),                    NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorSeek,        "",   NULL, TextBox,  N_("Seek Text Colors:"),                       NULL},
+ {0, 0,        0,         NULL, (void *)&appData.colorNormal,      "",   NULL, TextBox,  N_("Other Text Colors:"),                      NULL},
+ {0, 0,        0,         NULL, (void *)&IcsOptionsOK,             "",   NULL, EndMark,  "",                                            NULL}
 };
+/* clang-format on */
 
 void IcsOptionsProc(void) { GenericPopUp(icsOptions, _("ICS Options"), TransientDlg, BoardWindow, MODAL, 0); }
 
@@ -783,24 +794,26 @@ static int LoadOptionsOK(void) {
     return 1;
 }
 
+/* clang-format off */
 static Option loadOptions[] = {
- {0, 0,  0,        NULL, (void *)&appData.autoDisplayTags,    "",                 NULL,      CheckBox,   N_("Auto-Display Tags")                                        },
- {0, 0,  0,        NULL, (void *)&appData.autoDisplayComment, "",                 NULL,      CheckBox,   N_("Auto-Display Comment")                                     },
- {0, LR, 0,        NULL, NULL,                                NULL,               NULL,      Label,      N_("Auto-Play speed of loaded games\n(0 = instant, -1 = off):")},
- {0, -1, 10000000, NULL, (void *)&appData.timeDelay,          "",                 NULL,      Fractional, N_("Seconds per Move:")                                        },
- {0, LR, 0,        NULL, NULL,                                NULL,               NULL,      Label,      N_("\noptions to use in game-viewer mode:")                    },
- {0, 0,  300,      NULL, (void *)&appData.viewerOptions,      "",                 NULL,      TextBox,    ""                                                             },
- {0, LR, 0,        NULL, NULL,                                NULL,               NULL,      Label,      N_("\nThresholds for position filtering in game list:")        },
- {0, 0,  5000,     NULL, (void *)&appData.eloThreshold1,      "",                 NULL,      Spin,       N_("Elo of strongest player at least:")                        },
- {0, 0,  5000,     NULL, (void *)&appData.eloThreshold2,      "",                 NULL,      Spin,       N_("Elo of weakest player at least:")                          },
- {0, 0,  5000,     NULL, (void *)&appData.dateThreshold,      "",                 NULL,      Spin,       N_("No games before year:")                                    },
- {0, 1,  50,       NULL, (void *)&appData.stretch,            "",                 NULL,      Spin,       N_("Minimum nr consecutive positions:")                        },
- {0, 0,  197,      NULL, (void *)&countRange,                 "",                 NULL,      TextBox,    "Final nr of pieces"                                           },
- {0, 0,  205,      NULL, (void *)&searchMode,                 (char *)modeValues, modeNames, ComboBox,   N_("Search mode:")                                             },
- {0, 0,  0,        NULL, (void *)&appData.ignoreColors,       "",                 NULL,      CheckBox,   N_("Also match reversed colors")                               },
- {0, 0,  0,        NULL, (void *)&appData.findMirror,         "",                 NULL,      CheckBox,   N_("Also match left-right flipped position")                   },
- {0, 0,  0,        NULL, (void *)&LoadOptionsOK,              "",                 NULL,      EndMark,    ""                                                             }
+ {0, 0,  0,        NULL, (void *)&appData.autoDisplayTags,    "",                 NULL,      CheckBox,   N_("Auto-Display Tags"),                                         NULL},
+ {0, 0,  0,        NULL, (void *)&appData.autoDisplayComment, "",                 NULL,      CheckBox,   N_("Auto-Display Comment"),                                      NULL},
+ {0, LR, 0,        NULL, NULL,                                NULL,               NULL,      Label,      N_("Auto-Play speed of loaded games\n(0 = instant, -1 = off):"), NULL},
+ {0, -1, 10000000, NULL, (void *)&appData.timeDelay,          "",                 NULL,      Fractional, N_("Seconds per Move:"),                                         NULL},
+ {0, LR, 0,        NULL, NULL,                                NULL,               NULL,      Label,      N_("\noptions to use in game-viewer mode:"),                     NULL},
+ {0, 0,  300,      NULL, (void *)&appData.viewerOptions,      "",                 NULL,      TextBox,    "",                                                              NULL},
+ {0, LR, 0,        NULL, NULL,                                NULL,               NULL,      Label,      N_("\nThresholds for position filtering in game list:"),         NULL},
+ {0, 0,  5000,     NULL, (void *)&appData.eloThreshold1,      "",                 NULL,      Spin,       N_("Elo of strongest player at least:"),                         NULL},
+ {0, 0,  5000,     NULL, (void *)&appData.eloThreshold2,      "",                 NULL,      Spin,       N_("Elo of weakest player at least:"),                           NULL},
+ {0, 0,  5000,     NULL, (void *)&appData.dateThreshold,      "",                 NULL,      Spin,       N_("No games before year:"),                                     NULL},
+ {0, 1,  50,       NULL, (void *)&appData.stretch,            "",                 NULL,      Spin,       N_("Minimum nr consecutive positions:"),                         NULL},
+ {0, 0,  197,      NULL, (void *)&countRange,                 "",                 NULL,      TextBox,    "Final nr of pieces",                                            NULL},
+ {0, 0,  205,      NULL, (void *)&searchMode,                 (char *)modeValues, modeNames, ComboBox,   N_("Search mode:"),                                              NULL},
+ {0, 0,  0,        NULL, (void *)&appData.ignoreColors,       "",                 NULL,      CheckBox,   N_("Also match reversed colors"),                                NULL},
+ {0, 0,  0,        NULL, (void *)&appData.findMirror,         "",                 NULL,      CheckBox,   N_("Also match left-right flipped position"),                    NULL},
+ {0, 0,  0,        NULL, (void *)&LoadOptionsOK,              "",                 NULL,      EndMark,    "",                                                              NULL}
 };
+/* clang-format on */
 
 void LoadOptionsPopUp(DialogClass parent) {
     free_then_strdup(&countRange, "");
@@ -815,18 +828,20 @@ void LoadOptionsProc(void) {
 
 /*------------------------------------------- Save Game Options -------------------------------------------- */
 
+/* clang-format off */
 static Option saveOptions[] = {
- {0, 0,        0, NULL, (void *)&appData.autoSaveGames,         "",     NULL, CheckBox, N_("Auto-Save Games")                        },
- {0, 0,        0, NULL, (void *)&appData.onlyOwn,               "",     NULL, CheckBox, N_("Own Games Only")                         },
- {0, 0,        0, NULL, (void *)&appData.saveGameFile,          ".pgn", NULL, FileName, N_("Save Games on File:")                    },
- {0, 0,        0, NULL, (void *)&appData.savePositionFile,      ".fen", NULL, FileName, N_("Save Final Positions on File:")          },
- {0, 0,        0, NULL, (void *)&appData.pgnEventHeader,        "",     NULL, TextBox,  N_("PGN Event Header:")                      },
- {0, 0,        0, NULL, (void *)&appData.oldSaveStyle,          "",     NULL, CheckBox, N_("Old Save Style (as opposed to PGN)")     },
- {0, 0,        0, NULL, (void *)&appData.numberTag,             "",     NULL, CheckBox, N_("Include Number Tag in tourney PGN")      },
- {0, 0,        0, NULL, (void *)&appData.saveExtendedInfoInPGN, "",     NULL, CheckBox, N_("Save Score/Depth Info in PGN")           },
- {0, 0,        0, NULL, (void *)&appData.saveOutOfBookInfo,     "",     NULL, CheckBox, N_("Save Out-of-Book Info in PGN           ")},
- {0, SAME_ROW, 0, NULL, NULL,                                   "",     NULL, EndMark,  ""                                           }
+ {0, 0,        0, NULL, (void *)&appData.autoSaveGames,         "",     NULL, CheckBox, N_("Auto-Save Games"),                    NULL},
+ {0, 0,        0, NULL, (void *)&appData.onlyOwn,               "",     NULL, CheckBox, N_("Own Games Only"),                     NULL},
+ {0, 0,        0, NULL, (void *)&appData.saveGameFile,          ".pgn", NULL, FileName, N_("Save Games on File:"),                NULL},
+ {0, 0,        0, NULL, (void *)&appData.savePositionFile,      ".fen", NULL, FileName, N_("Save Final Positions on File:"),      NULL},
+ {0, 0,        0, NULL, (void *)&appData.pgnEventHeader,        "",     NULL, TextBox,  N_("PGN Event Header:"),                  NULL},
+ {0, 0,        0, NULL, (void *)&appData.oldSaveStyle,          "",     NULL, CheckBox, N_("Old Save Style (as opposed to PGN)"), NULL},
+ {0, 0,        0, NULL, (void *)&appData.numberTag,             "",     NULL, CheckBox, N_("Include Number Tag in tourney PGN"),  NULL},
+ {0, 0,        0, NULL, (void *)&appData.saveExtendedInfoInPGN, "",     NULL, CheckBox, N_("Save Score/Depth Info in PGN"),       NULL},
+ {0, 0,        0, NULL, (void *)&appData.saveOutOfBookInfo,     "",     NULL, CheckBox, N_("Save Out-of-Book Info in PGN"),       NULL},
+ {0, SAME_ROW, 0, NULL, NULL,                                   "",     NULL, EndMark,  "",                                       NULL}
 };
+/* clang-format on */
 
 void SaveOptionsProc(void) { GenericPopUp(saveOptions, _("Save Game Options"), TransientDlg, BoardWindow, MODAL, 0); }
 
@@ -858,31 +873,33 @@ static char * soundFiles[] = {
  NULL,
  NULL};
 
+/* clang-format off */
 static Option soundOptions[] = {
- {0, 0,        0, NULL, (void *)(soundFiles + 2) /* kludge! */, ".wav",             NULL,       FileName, N_("User WAV File:")   },
- {0, 0,        0, NULL, (void *)&appData.soundProgram,          "",                 NULL,       TextBox,  N_("Sound Program:")   },
- {0, 0,        0, NULL, (void *)&trialSound,                    (char *)soundFiles, soundNames, ComboBox, N_("Try-Out Sound:")   },
- {0, SAME_ROW, 0, NULL, (void *)&Test,                          NULL,               NULL,       Button,   N_("Play")             },
- {0, 0,        0, NULL, (void *)&appData.soundMove,             (char *)soundFiles, soundNames, ComboBox, N_("Move:")            },
- {0, 0,        0, NULL, (void *)&appData.soundIcsWin,           (char *)soundFiles, soundNames, ComboBox, N_("Win:")             },
- {0, 0,        0, NULL, (void *)&appData.soundIcsLoss,          (char *)soundFiles, soundNames, ComboBox, N_("Lose:")            },
- {0, 0,        0, NULL, (void *)&appData.soundIcsDraw,          (char *)soundFiles, soundNames, ComboBox, N_("Draw:")            },
- {0, 0,        0, NULL, (void *)&appData.soundIcsUnfinished,    (char *)soundFiles, soundNames, ComboBox, N_("Unfinished:")      },
- {0, 0,        0, NULL, (void *)&appData.soundIcsAlarm,         (char *)soundFiles, soundNames, ComboBox, N_("Alarm:")           },
- {0, 0,        0, NULL, (void *)&appData.soundChallenge,        (char *)soundFiles, soundNames, ComboBox, N_("Challenge:")       },
- {0, SAME_ROW, 0, NULL, NULL,                                   NULL,               NULL,       Break,    ""                     },
- {0, 0,        0, NULL, (void *)&appData.soundDirectory,        NULL,               NULL,       PathName, N_("Sounds Directory:")},
- {0, 0,        0, NULL, (void *)&appData.soundShout,            (char *)soundFiles, soundNames, ComboBox, N_("Shout:")           },
- {0, 0,        0, NULL, (void *)&appData.soundSShout,           (char *)soundFiles, soundNames, ComboBox, N_("S-Shout:")         },
- {0, 0,        0, NULL, (void *)&appData.soundChannel,          (char *)soundFiles, soundNames, ComboBox, N_("Channel:")         },
- {0, 0,        0, NULL, (void *)&appData.soundChannel1,         (char *)soundFiles, soundNames, ComboBox, N_("Channel 1:")       },
- {0, 0,        0, NULL, (void *)&appData.soundTell,             (char *)soundFiles, soundNames, ComboBox, N_("Tell:")            },
- {0, 0,        0, NULL, (void *)&appData.soundKibitz,           (char *)soundFiles, soundNames, ComboBox, N_("Kibitz:")          },
- {0, 0,        0, NULL, (void *)&appData.soundRequest,          (char *)soundFiles, soundNames, ComboBox, N_("Request:")         },
- {0, 0,        0, NULL, (void *)&appData.soundRoar,             (char *)soundFiles, soundNames, ComboBox, N_("Lion roar:")       },
- {0, 0,        0, NULL, (void *)&appData.soundSeek,             (char *)soundFiles, soundNames, ComboBox, N_("Seek:")            },
- {0, SAME_ROW, 0, NULL, NULL,                                   "",                 NULL,       EndMark,  ""                     }
+ {0, 0,        0, NULL, (void *)(soundFiles + 2) /* kludge! */, ".wav",             NULL,       FileName, N_("User WAV File:"),    NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundProgram,          "",                 NULL,       TextBox,  N_("Sound Program:"),    NULL},
+ {0, 0,        0, NULL, (void *)&trialSound,                    (char *)soundFiles, soundNames, ComboBox, N_("Try-Out Sound:"),    NULL},
+ {0, SAME_ROW, 0, NULL, (void *)&Test,                          NULL,               NULL,       Button,   N_("Play"),              NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundMove,             (char *)soundFiles, soundNames, ComboBox, N_("Move:"),             NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundIcsWin,           (char *)soundFiles, soundNames, ComboBox, N_("Win:"),              NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundIcsLoss,          (char *)soundFiles, soundNames, ComboBox, N_("Lose:"),             NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundIcsDraw,          (char *)soundFiles, soundNames, ComboBox, N_("Draw:"),             NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundIcsUnfinished,    (char *)soundFiles, soundNames, ComboBox, N_("Unfinished:"),       NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundIcsAlarm,         (char *)soundFiles, soundNames, ComboBox, N_("Alarm:"),            NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundChallenge,        (char *)soundFiles, soundNames, ComboBox, N_("Challenge:"),        NULL},
+ {0, SAME_ROW, 0, NULL, NULL,                                   NULL,               NULL,       Break,    "",                      NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundDirectory,        NULL,               NULL,       PathName, N_("Sounds Directory:"), NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundShout,            (char *)soundFiles, soundNames, ComboBox, N_("Shout:"),            NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundSShout,           (char *)soundFiles, soundNames, ComboBox, N_("S-Shout:"),          NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundChannel,          (char *)soundFiles, soundNames, ComboBox, N_("Channel:"),          NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundChannel1,         (char *)soundFiles, soundNames, ComboBox, N_("Channel 1:"),        NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundTell,             (char *)soundFiles, soundNames, ComboBox, N_("Tell:"),             NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundKibitz,           (char *)soundFiles, soundNames, ComboBox, N_("Kibitz:"),           NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundRequest,          (char *)soundFiles, soundNames, ComboBox, N_("Request:"),          NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundRoar,             (char *)soundFiles, soundNames, ComboBox, N_("Lion roar:"),        NULL},
+ {0, 0,        0, NULL, (void *)&appData.soundSeek,             (char *)soundFiles, soundNames, ComboBox, N_("Seek:"),             NULL},
+ {0, SAME_ROW, 0, NULL, NULL,                                   "",                 NULL,       EndMark,  "",                      NULL}
 };
+/* clang-format on */
 
 static void Test(int n) {
     GenericReadout(soundOptions, 1);
@@ -912,65 +929,66 @@ extern char *engineLine, *nickName;
 
 #define THEMELIST 1
 
+/* clang-format off */
 static Option boardOptions[] = {
- {0,    LR | T2T, 0,   NULL, NULL,                                   NULL,              NULL,                 Label,    N_("Selectable themes:")                              },
- {300,  LR | TB,  200, NULL, (void *)engineMnemonic,                 (char *)&ThemeSel, NULL,                 ListBox,  ""                                                    },
- {0,    LR | T2T, 0,   NULL, NULL,                                   NULL,              NULL,                 Label,    N_("New name for current theme:")                     },
- {0,    0,        0,   NULL, (void *)&nickName,                      "",                NULL,                 TextBox,  ""                                                    },
- {0,    SAME_ROW, 0,   NULL, NULL,                                   NULL,              NULL,                 Break,    NULL                                                  },
- {0,    0,        70,  NULL, (void *)&appData.whitePieceColor,       "",                NULL,                 TextBox,  N_("White Piece Color:")                              },
- {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#FFFFCC",   Button,   "      "                                              },
+ {0,    LR | T2T, 0,   NULL, NULL,                                   NULL,              NULL,                 Label,    N_("Selectable themes:"),                                                 NULL},
+ {300,  LR | TB,  200, NULL, (void *)engineMnemonic,                 (char *)&ThemeSel, NULL,                 ListBox,  "",                                                                       NULL},
+ {0,    LR | T2T, 0,   NULL, NULL,                                   NULL,              NULL,                 Label,    N_("New name for current theme:"),                                        NULL},
+ {0,    0,        0,   NULL, (void *)&nickName,                      "",                NULL,                 TextBox,  "",                                                                       NULL},
+ {0,    SAME_ROW, 0,   NULL, NULL,                                   NULL,              NULL,                 Break,    NULL,                                                                     NULL},
+ {0,    0,        70,  NULL, (void *)&appData.whitePieceColor,       "",                NULL,                 TextBox,  N_("White Piece Color:"),                                                 NULL},
+ {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#FFFFCC",   Button,   "      ",                                                                 NULL},
  /* TRANSLATORS: The role of R here is to be a single letter that represents the colour red. */
- {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R")                                               },
+ {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R"),                                                                  NULL},
  /* TRANSLATORS: The role of G here is to be a single letter that represents the colour green. */
- {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G")                                               },
+ {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G"),                                                                  NULL},
  /* TRANSLATORS: The role of B here is to be a single letter that represents the colour blue. */
- {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B")                                               },
+ {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B"),                                                                  NULL},
  /* TRANSLATORS: The role of D here is to be a single letter that represents making a colour darker. */
- {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
- {0,    0,        70,  NULL, (void *)&appData.blackPieceColor,       "",                NULL,                 TextBox,  N_("Black Piece Color:")                              },
- {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#202020",   Button,   "      "                                              },
- {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R")                                               },
- {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G")                                               },
- {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B")                                               },
- {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
- {0,    0,        70,  NULL, (void *)&appData.lightSquareColor,      "",                NULL,                 TextBox,  N_("Light Square Color:")                             },
- {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#C8C365",   Button,   "      "                                              },
- {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R")                                               },
- {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G")                                               },
- {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B")                                               },
- {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
- {0,    0,        70,  NULL, (void *)&appData.darkSquareColor,       "",                NULL,                 TextBox,  N_("Dark Square Color:")                              },
- {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#77A26D",   Button,   "      "                                              },
- {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R")                                               },
- {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G")                                               },
- {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B")                                               },
- {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
- {0,    0,        70,  NULL, (void *)&appData.highlightSquareColor,  "",                NULL,                 TextBox,  N_("Highlight Color:")                                },
- {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#FFFF00",   Button,   "      "                                              },
- {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R")                                               },
- {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G")                                               },
- {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B")                                               },
- {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
- {0,    0,        70,  NULL, (void *)&appData.premoveHighlightColor, "",                NULL,                 TextBox,  N_("Premove Highlight Color:")                        },
- {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#FF0000",   Button,   "      "                                              },
- {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R")                                               },
- {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G")                                               },
- {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B")                                               },
- {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D")                                               },
- {0,    0,        0,   NULL, (void *)&appData.upsideDown,            "",                NULL,                 CheckBox,
-  N_("Flip Pieces Shogi Style        (Colored buttons restore default)")                                                                                                      },
-/*{ 0,  0,        0,   NULL, (void *)&appData.allWhite,              "",                NULL,                 CheckBox, N_("Use Outline Pieces for Black")                    },*/
- {0,    0,        0,   NULL, (void *)&appData.monoMode,              "",                NULL,                 CheckBox, N_("Mono Mode")                                       },
- {0,    0,        200, NULL, (void *)&appData.logoSize,              "",                NULL,                 Spin,     N_("Logo Size (0=off, requires restart):")            },
- {0,    -1,       5,   NULL, (void *)&appData.overrideLineGap,       "",                NULL,                 Spin,     N_("Line Gap (-1 = default for board size):")         },
- {0,    0,        0,   NULL, (void *)&appData.useBitmaps,            "",                NULL,                 CheckBox, N_("Use Board Textures")                              },
- {0,    0,        0,   NULL, (void *)&appData.darkBackTextureFile,   ".png",            (char **)(intptr_t)1, FileName, N_("Dark-Squares Texture File:")                      },
- {0,    0,        0,   NULL, (void *)&appData.liteBackTextureFile,   ".png",            (char **)(intptr_t)2, FileName, N_("Light-Squares Texture File:")                     },
- {0,    0,        0,   NULL, (void *)&appData.trueColors,            "",                NULL,                 CheckBox, N_("Use external piece bitmaps with their own colors")},
- {0,    0,        0,   NULL, (void *)&appData.pieceDirectory,        NULL,              (char **)(intptr_t)3, PathName, N_("Directory with Pieces Images:")                   },
- {0,    0,        0,   NULL, (void *)&BoardOptionsOK,                "",                NULL,                 EndMark,  ""                                                    }
+ {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D"),                                                                  NULL},
+ {0,    0,        70,  NULL, (void *)&appData.blackPieceColor,       "",                NULL,                 TextBox,  N_("Black Piece Color:"),                                                 NULL},
+ {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#202020",   Button,   "      ",                                                                 NULL},
+ {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R"),                                                                  NULL},
+ {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G"),                                                                  NULL},
+ {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B"),                                                                  NULL},
+ {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D"),                                                                  NULL},
+ {0,    0,        70,  NULL, (void *)&appData.lightSquareColor,      "",                NULL,                 TextBox,  N_("Light Square Color:"),                                                NULL},
+ {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#C8C365",   Button,   "      ",                                                                 NULL},
+ {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R"),                                                                  NULL},
+ {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G"),                                                                  NULL},
+ {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B"),                                                                  NULL},
+ {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D"),                                                                  NULL},
+ {0,    0,        70,  NULL, (void *)&appData.darkSquareColor,       "",                NULL,                 TextBox,  N_("Dark Square Color:"),                                                 NULL},
+ {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#77A26D",   Button,   "      ",                                                                 NULL},
+ {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R"),                                                                  NULL},
+ {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G"),                                                                  NULL},
+ {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B"),                                                                  NULL},
+ {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D"),                                                                  NULL},
+ {0,    0,        70,  NULL, (void *)&appData.highlightSquareColor,  "",                NULL,                 TextBox,  N_("Highlight Color:"),                                                   NULL},
+ {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#FFFF00",   Button,   "      ",                                                                 NULL},
+ {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R"),                                                                  NULL},
+ {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G"),                                                                  NULL},
+ {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B"),                                                                  NULL},
+ {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D"),                                                                  NULL},
+ {0,    0,        70,  NULL, (void *)&appData.premoveHighlightColor, "",                NULL,                 TextBox,  N_("Premove Highlight Color:"),                                           NULL},
+ {1000, SAME_ROW, 0,   NULL, (void *)&DefColor,                      NULL,              (char **)"#FF0000",   Button,   "      ",                                                                 NULL},
+ {1,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("R"),                                                                  NULL},
+ {2,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("G"),                                                                  NULL},
+ {3,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("B"),                                                                  NULL},
+ {4,    SAME_ROW, 0,   NULL, (void *)&AdjustColor,                   NULL,              NULL,                 Button,   N_("D"),                                                                  NULL},
+ {0,    0,        0,   NULL, (void *)&appData.upsideDown,            "",                NULL,                 CheckBox, N_("Flip Pieces Shogi Style          (Colored buttons restore default)"), NULL},
+/*{0,   0,        0,   NULL, (void *)&appData.allWhite,              "",                NULL,                 CheckBox, N_("Use Outline Pieces for Black"),                                       NULL},*/
+ {0,    0,        0,   NULL, (void *)&appData.monoMode,              "",                NULL,                 CheckBox, N_("Mono Mode"),                                                          NULL},
+ {0,    0,        200, NULL, (void *)&appData.logoSize,              "",                NULL,                 Spin,     N_("Logo Size (0=off, requires restart):"),                               NULL},
+ {0,    -1,       5,   NULL, (void *)&appData.overrideLineGap,       "",                NULL,                 Spin,     N_("Line Gap (-1 = default for board size):"),                            NULL},
+ {0,    0,        0,   NULL, (void *)&appData.useBitmaps,            "",                NULL,                 CheckBox, N_("Use Board Textures"),                                                 NULL},
+ {0,    0,        0,   NULL, (void *)&appData.darkBackTextureFile,   ".png",            (char **)(intptr_t)1, FileName, N_("Dark-Squares Texture File:"),                                         NULL},
+ {0,    0,        0,   NULL, (void *)&appData.liteBackTextureFile,   ".png",            (char **)(intptr_t)2, FileName, N_("Light-Squares Texture File:"),                                        NULL},
+ {0,    0,        0,   NULL, (void *)&appData.trueColors,            "",                NULL,                 CheckBox, N_("Use external piece bitmaps with their own colors"),                   NULL},
+ {0,    0,        0,   NULL, (void *)&appData.pieceDirectory,        NULL,              (char **)(intptr_t)3, PathName, N_("Directory with Pieces Images:"),                                      NULL},
+ {0,    0,        0,   NULL, (void *)&BoardOptionsOK,                "",                NULL,                 EndMark,  "",                                                                       NULL}
 };
+/* clang-format on */
 
 static int BoardOptionsOK(int n) {
     /* called by pressing OK, and theme selected */
@@ -1199,13 +1217,14 @@ static int NewComCallback(int n) {
     return 1;
 }
 
+/* clang-format off */
 Option commentOptions[] = {
- {200, T_VSCRL | T_FILL | T_WRAP | T_TOP, 250, NULL, (void *)&commentText, NULL, (char **)&CommentClick, TextBox, "",
-  &appData.commentFont},
- {0, 0, 50, NULL, (void *)&ClearComment, NULL, NULL, Button, N_("clear")},
- {0, SAME_ROW, 100, NULL, (void *)&SaveChanges, NULL, NULL, Button, N_("save changes")},
- {0, SAME_ROW, 0, NULL, (void *)&NewComCallback, "", NULL, EndMark, ""}
+ {200, T_VSCRL | T_FILL | T_WRAP | T_TOP, 250, NULL, (void *)&commentText,    NULL, (char **)&CommentClick, TextBox, "",                 &appData.commentFont},
+ {0,   0,                                 50,  NULL, (void *)&ClearComment,   NULL, NULL,                   Button,  N_("clear"),        NULL},
+ {0,   SAME_ROW,                          100, NULL, (void *)&SaveChanges,    NULL, NULL,                   Button,  N_("save changes"), NULL},
+ {0,   SAME_ROW,                          0,   NULL, (void *)&NewComCallback, "",   NULL,                   EndMark, "",                 NULL}
 };
+/* clang-format on */
 
 static int CommentClick(Option * opt, int n, int x, int y, char * val, int index) {
     if (n != 3) {
@@ -1296,13 +1315,15 @@ static int NewTagsCallback(int n) {
 
 static void NewMove(void) { addToBookFlag = !addToBookFlag; }
 
+/* clang-format off */
 Option tagsOptions[] = {
- {0, 0, 0, NULL, NULL, NULL, NULL, Label, NULL},
- {200, T_VSCRL | T_FILL | T_TOP, 200, NULL, (void *)&tagsText, NULL, (char **)&TagsClick, TextBox, "", &appData.tagsFont},
- {0, 0, 100, NULL, (void *)&NewMove, NULL, NULL, Button, N_("add next move")},
- {0, SAME_ROW, 100, NULL, (void *)&changeTags, NULL, NULL, Button, N_("commit changes")},
- {0, SAME_ROW, 0, NULL, (void *)&NewTagsCallback, "", NULL, EndMark, ""}
+ {0,   0,                        0,   NULL, NULL,                     NULL, NULL,                Label,   NULL,                 NULL},
+ {200, T_VSCRL | T_FILL | T_TOP, 200, NULL, (void *)&tagsText,        NULL, (char **)&TagsClick, TextBox, "",                   &appData.tagsFont},
+ {0,   0,                        100, NULL, (void *)&NewMove,         NULL, NULL,                Button,  N_("add next move"),  NULL},
+ {0,   SAME_ROW,                 100, NULL, (void *)&changeTags,      NULL, NULL,                Button,  N_("commit changes"), NULL},
+ {0,   SAME_ROW,                 0,   NULL, (void *)&NewTagsCallback, "",   NULL,                EndMark, "",                   NULL}
 };
+/* clang-format on */
 
 static int TagsClick(Option * opt, int n, int x, int y, char * val, int index) {
     if (!bookUp || n != 3) {
@@ -1423,10 +1444,12 @@ static char * NextInHistory(void) {
 
 #define INPUT 0
 
+/* clang-format off */
 Option boxOptions[] = {
- {30, T_TOP, 400, NULL, (void *)&icsText, NULL, NULL, TextBox, ""},
- {0,  NO_OK, 0,   NULL, NULL,             "",   NULL, EndMark, ""}
+ {30, T_TOP, 400, NULL, (void *)&icsText, NULL, NULL, TextBox, "", NULL},
+ {0,  NO_OK, 0,   NULL, NULL,             "",   NULL, EndMark, "", NULL}
 };
+/* clang-format on */
 
 void ICSInputSendText(void) {
     char * val;
@@ -1477,10 +1500,12 @@ void IcsInputBoxProc(void) {
 
 static int TypeInOK(int n);
 
+/* clang-format off */
 Option typeOptions[] = {
- {30, T_TOP, 400, NULL, (void *)&icsText,  NULL, NULL, TextBox, ""},
- {0,  NO_OK, 0,   NULL, (void *)&TypeInOK, "",   NULL, EndMark, ""}
+ {30, T_TOP, 400, NULL, (void *)&icsText,  NULL, NULL, TextBox, "", NULL},
+ {0,  NO_OK, 0,   NULL, (void *)&TypeInOK, "",   NULL, EndMark, "", NULL}
 };
+/* clang-format on */
 
 static int TypeInOK(int n) {
     TypeInDoneEvent(icsText);
@@ -1576,27 +1601,29 @@ static int InstallOK(int n);
 
 static char * protocols[] = {"autodetect", "WB", "UCI", "USI/UCCI", "WB v1", NULL};
 
+/* clang-format off */
 static Option installOptions[] = {
- {0,   LR | T2T, 0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("Select engine from list:")                                        },
- {300, LR | TB,  200, NULL, (void *)engineMnemonic,  (char *)&EngSel,   NULL,      ListBox,  ""                                                                    },
- {0,   SAME_ROW, 0,   NULL, NULL,                    NULL,              NULL,      Break,    NULL                                                                  },
- {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("or specify one below:")                                           },
- {0,   0,        0,   NULL, (void *)&engineName,     NULL,              NULL,      FileName, N_("Engine Command:")                                                 },
- {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("------------- User preferences (optional) ---------------")       },
- {0,   0,        0,   NULL, (void *)&nickName,       NULL,              NULL,      TextBox,  N_("Nickname (optional):")                                            },
- {0,   0,        0,   NULL, (void *)&useNick,        NULL,              NULL,      CheckBox, N_("Use nickname in PGN player tags of engine-engine games")          },
- {0,   0,        0,   NULL, (void *)&storeVariant,   NULL,              NULL,      CheckBox, N_("Force current variant with this engine")                          },
- {0,   0,        0,   NULL, (void *)&hasBook,        NULL,              NULL,      CheckBox, N_("Must not use GUI book")                                           },
- {0,   0,        0,   NULL, (void *)&addToList,      NULL,              NULL,      CheckBox, N_("Add this engine to the list")                                     },
- {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("--------- Advanced (only change in exceptional cases) ----------")},
- {0,   0,        5,   NULL, (void *)&protocolChoice, (char *)protocols, protocols, ComboBox, N_("Engine Protocol:")                                                },
- {0,   0,        0,   NULL, (void *)&engineDir,      NULL,              NULL,      PathName, N_("Engine Directory:")                                               },
- {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("(Directory will be derived from engine path when empty)")         },
-/*{0,  0,        0,   NULL, (void *)&isUCI,          NULL,              NULL,      CheckBox, N_("UCI")                                                             },*/
-/*{0,  0,        0,   NULL, (void *)&isUSI,          NULL,              NULL,      CheckBox, N_("USI/UCCI (uses specified -uxiAdapter)")                           },*/
-/*{0,  0,        0,   NULL, (void *)&v1,             NULL,              NULL,      CheckBox, N_("WB protocol v1 (do not wait for engine features)")                },*/
- {0,   0,        0,   NULL, (void *)&InstallOK,      "",                NULL,      EndMark,  ""                                                                    }
+ {0,   LR | T2T, 0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("Select engine from list:"),                                         NULL},
+ {300, LR | TB,  200, NULL, (void *)engineMnemonic,  (char *)&EngSel,   NULL,      ListBox,  "",                                                                     NULL},
+ {0,   SAME_ROW, 0,   NULL, NULL,                    NULL,              NULL,      Break,    NULL,                                                                   NULL},
+ {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("or specify one below:"),                                            NULL},
+ {0,   0,        0,   NULL, (void *)&engineName,     NULL,              NULL,      FileName, N_("Engine Command:"),                                                  NULL},
+ {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("------------- User preferences (optional) ---------------"),        NULL},
+ {0,   0,        0,   NULL, (void *)&nickName,       NULL,              NULL,      TextBox,  N_("Nickname (optional):"),                                             NULL},
+ {0,   0,        0,   NULL, (void *)&useNick,        NULL,              NULL,      CheckBox, N_("Use nickname in PGN player tags of engine-engine games"),           NULL},
+ {0,   0,        0,   NULL, (void *)&storeVariant,   NULL,              NULL,      CheckBox, N_("Force current variant with this engine"),                           NULL},
+ {0,   0,        0,   NULL, (void *)&hasBook,        NULL,              NULL,      CheckBox, N_("Must not use GUI book"),                                            NULL},
+ {0,   0,        0,   NULL, (void *)&addToList,      NULL,              NULL,      CheckBox, N_("Add this engine to the list"),                                      NULL},
+ {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("--------- Advanced (only change in exceptional cases) ----------"), NULL},
+ {0,   0,        5,   NULL, (void *)&protocolChoice, (char *)protocols, protocols, ComboBox, N_("Engine Protocol:"),                                                 NULL},
+ {0,   0,        0,   NULL, (void *)&engineDir,      NULL,              NULL,      PathName, N_("Engine Directory:"),                                                NULL},
+ {0,   LR,       0,   NULL, NULL,                    NULL,              NULL,      Label,    N_("(Directory will be derived from engine path when empty)"),          NULL},
+/*{0,  0,        0,   NULL, (void *)&isUCI,          NULL,              NULL,      CheckBox, N_("UCI"),                                                              NULL},*/
+/*{0,  0,        0,   NULL, (void *)&isUSI,          NULL,              NULL,      CheckBox, N_("USI/UCCI (uses specified -uxiAdapter)"),                            NULL},*/
+/*{0,  0,        0,   NULL, (void *)&v1,             NULL,              NULL,      CheckBox, N_("WB protocol v1 (do not wait for engine features)"),                 NULL},*/
+ {0,   0,        0,   NULL, (void *)&InstallOK,      "",                NULL,      EndMark,  "",                                                                     NULL}
 };
+/* clang-format on */
 
 static int InstallOK(int n) {
     if (n && (n = SelectedListBoxItem(&installOptions[1])) > 0) {
@@ -1717,14 +1744,16 @@ static int ShuffleOK(int n) {
     return 1;
 }
 
+/* clang-format off */
 static Option shuffleOptions[] = {
- {0, 0,        0,          NULL, (void *)&shuffleOpenings,            NULL, NULL, CheckBox, N_("shuffle")               },
- {0, 0,        0,          NULL, (void *)&appData.fischerCastling,    NULL, NULL, CheckBox, N_("Fischer castling")      },
- {0, -1,       2000000000, NULL, (void *)&appData.defaultFrcPosition, "",   NULL, Spin,     N_("Start-position number:")},
- {0, 0,        0,          NULL, (void *)&SetRandom,                  NULL, NULL, Button,   N_("randomize")             },
- {0, SAME_ROW, 0,          NULL, (void *)&SetRandom,                  NULL, NULL, Button,   N_("pick fixed")            },
- {0, SAME_ROW, 0,          NULL, (void *)&ShuffleOK,                  "",   NULL, EndMark,  ""                          }
+ {0, 0,        0,          NULL, (void *)&shuffleOpenings,            NULL, NULL, CheckBox, N_("shuffle"),                NULL},
+ {0, 0,        0,          NULL, (void *)&appData.fischerCastling,    NULL, NULL, CheckBox, N_("Fischer castling"),       NULL},
+ {0, -1,       2000000000, NULL, (void *)&appData.defaultFrcPosition, "",   NULL, Spin,     N_("Start-position number:"), NULL},
+ {0, 0,        0,          NULL, (void *)&SetRandom,                  NULL, NULL, Button,   N_("randomize"),              NULL},
+ {0, SAME_ROW, 0,          NULL, (void *)&SetRandom,                  NULL, NULL, Button,   N_("pick fixed"),             NULL},
+ {0, SAME_ROW, 0,          NULL, (void *)&ShuffleOK,                  "",   NULL, EndMark,  "",                           NULL}
 };
+/* clang-format on */
 
 static void SetRandom(int n) {
     int r = n == 3 ? -1 : random() & (1 << 30) - 1;
@@ -1793,53 +1822,55 @@ static int FontsOK(int n) {
     return 0;
 }
 
+/* clang-format off */
 static Option fontOptions[] = {
- {0,   60,       200, NULL, (void *)&appData.clockFont,    NULL, NULL, TextBox, N_("Clocks (requires restart):")                                  },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   60,       70,  NULL, (void *)&appData.font,         NULL, NULL, TextBox, N_("Message (above board):")                                      },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   60,       70,  NULL, (void *)&appData.icsFont,      NULL, NULL, TextBox, N_("ICS Chat/Console:")                                           },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   60,       70,  NULL, (void *)&appData.tagsFont,     NULL, NULL, TextBox, N_("Edit tags / book / engine list:")                             },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   60,       70,  NULL, (void *)&appData.commentFont,  NULL, NULL, TextBox, N_("Edit comments:")                                              },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   60,       70,  NULL, (void *)&appData.historyFont,  NULL, NULL, TextBox, N_("Move history / Engine Output:")                               },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   60,       70,  NULL, (void *)&appData.gameListFont, NULL, NULL, TextBox, N_("Game list:")                                                  },
- {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+")                                                           },
- {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-")                                                           },
- {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B")                                                           },
- {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I")                                                           },
- {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*")                                                           },
- {0,   0,        0,   NULL, NULL,                          NULL, NULL, Label,   N_("\nThe * buttons will set the font to the one selected below:")},
- {0,   0,        0,   NULL, NULL,                          NULL, NULL, Button,  "fontsel"                                                         },
- {0,   0,        0,   NULL, (void *)&FontsOK,              "",   NULL, EndMark, ""                                                                }
+ {0,   60,       200, NULL, (void *)&appData.clockFont,    NULL, NULL, TextBox, N_("Clocks (requires restart):"),                                   NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   60,       70,  NULL, (void *)&appData.font,         NULL, NULL, TextBox, N_("Message (above board):"),                                       NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   60,       70,  NULL, (void *)&appData.icsFont,      NULL, NULL, TextBox, N_("ICS Chat/Console:"),                                            NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   60,       70,  NULL, (void *)&appData.tagsFont,     NULL, NULL, TextBox, N_("Edit tags / book / engine list:"),                              NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   60,       70,  NULL, (void *)&appData.commentFont,  NULL, NULL, TextBox, N_("Edit comments:"),                                               NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   60,       70,  NULL, (void *)&appData.historyFont,  NULL, NULL, TextBox, N_("Move history / Engine Output:"),                                NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   60,       70,  NULL, (void *)&appData.gameListFont, NULL, NULL, TextBox, N_("Game list:"),                                                   NULL},
+ {1,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("+"),                                                            NULL},
+ {2,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("-"),                                                            NULL},
+ {3,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("B"),                                                            NULL},
+ {4,   SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("I"),                                                            NULL},
+ {666, SAME_ROW, 0,   NULL, (void *)&AdjustFont,           NULL, NULL, Button,  N_("*"),                                                            NULL},
+ {0,   0,        0,   NULL, NULL,                          NULL, NULL, Label,   N_("\nThe * buttons will set the font to the one selected below:"), NULL},
+ {0,   0,        0,   NULL, NULL,                          NULL, NULL, Button,  "fontsel",                                                          NULL},
+ {0,   0,        0,   NULL, (void *)&FontsOK,              "",   NULL, EndMark, "",                                                                 NULL}
 };
+/* clang-format on */
 
 static char name[MSG_SIZ], *bold, *ital, points;
 
@@ -1943,19 +1974,21 @@ static char * Value(int n) {
     return buf;
 }
 
+/* clang-format off */
 static Option tcOptions[] = {
- {0, 0,        0,     NULL, (void *)&SetTcType, NULL, NULL, Button,   N_("classical")                   },
- {0, SAME_ROW, 0,     NULL, (void *)&SetTcType, NULL, NULL, Button,   N_("incremental")                 },
- {0, SAME_ROW, 0,     NULL, (void *)&SetTcType, NULL, NULL, Button,   N_("fixed max")                   },
- {0, 0,        0,     NULL, (void *)&by60,      "",   NULL, CheckBox, N_("Divide entered times by 60")  },
- {0, 0,        200,   NULL, (void *)&tmpMoves,  NULL, NULL, Spin,     N_("Moves per session:")          },
- {0, 0,        10000, NULL, (void *)&tmpTc,     NULL, NULL, Spin,     N_("Initial time (min):")         },
- {0, 0,        10000, NULL, (void *)&tmpInc,    NULL, NULL, Spin,     N_("Increment or max (sec/move):")},
- {0, 0,        0,     NULL, NULL,               NULL, NULL, Label,    N_("Time-Odds factors:")          },
- {0, 1,        1000,  NULL, (void *)&tmpOdds1,  NULL, NULL, Spin,     N_("Engine #1")                   },
- {0, 1,        1000,  NULL, (void *)&tmpOdds2,  NULL, NULL, Spin,     N_("Engine #2 / Human")           },
- {0, 0,        0,     NULL, (void *)&TcOK,      "",   NULL, EndMark,  ""                                }
+ {0, 0,        0,     NULL, (void *)&SetTcType, NULL, NULL, Button,   N_("classical"),                    NULL},
+ {0, SAME_ROW, 0,     NULL, (void *)&SetTcType, NULL, NULL, Button,   N_("incremental"),                  NULL},
+ {0, SAME_ROW, 0,     NULL, (void *)&SetTcType, NULL, NULL, Button,   N_("fixed max"),                    NULL},
+ {0, 0,        0,     NULL, (void *)&by60,      "",   NULL, CheckBox, N_("Divide entered times by 60"),   NULL},
+ {0, 0,        200,   NULL, (void *)&tmpMoves,  NULL, NULL, Spin,     N_("Moves per session:"),           NULL},
+ {0, 0,        10000, NULL, (void *)&tmpTc,     NULL, NULL, Spin,     N_("Initial time (min):"),          NULL},
+ {0, 0,        10000, NULL, (void *)&tmpInc,    NULL, NULL, Spin,     N_("Increment or max (sec/move):"), NULL},
+ {0, 0,        0,     NULL, NULL,               NULL, NULL, Label,    N_("Time-Odds factors:"),           NULL},
+ {0, 1,        1000,  NULL, (void *)&tmpOdds1,  NULL, NULL, Spin,     N_("Engine #1"),                    NULL},
+ {0, 1,        1000,  NULL, (void *)&tmpOdds2,  NULL, NULL, Spin,     N_("Engine #2 / Human"),            NULL},
+ {0, 0,        0,     NULL, (void *)&TcOK,      "",   NULL, EndMark,  "",                                 NULL}
 };
+/* clang-format on */
 
 static int TcOK(int n) {
     char *tc, buf[MSG_SIZ];
@@ -2040,11 +2073,13 @@ char pendingReplyPrefix[MSG_SIZ];
 ProcRef pendingReplyPR;
 char * answer;
 
+/* clang-format off */
 Option askOptions[] = {
- {0, 0, 0, NULL, NULL,               NULL, NULL, Label,   NULL},
- {0, 0, 0, NULL, (void *)&answer,    "",   NULL, TextBox, ""  },
- {0, 0, 0, NULL, (void *)&SendReply, "",   NULL, EndMark, ""  }
+ {0, 0, 0, NULL, NULL,               NULL, NULL, Label,   NULL, NULL},
+ {0, 0, 0, NULL, (void *)&answer,    "",   NULL, TextBox, "",   NULL},
+ {0, 0, 0, NULL, (void *)&SendReply, "",   NULL, EndMark, "",   NULL}
 };
+/* clang-format on */
 
 int SendReply(int n) {
     char buf[MSG_SIZ];
@@ -2081,17 +2116,19 @@ static int count;
 
 static void PromoPick(int n);
 
+/* clang-format off */
 static Option promoOptions[] = {
- {0, 0,                0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL},
- {0, SAME_ROW | NO_OK, 0, NULL, NULL,               "",   NULL, EndMark, ""  }
+ {0, 0,                0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW,         0, NULL, (void *)&PromoPick, NULL, NULL, Button,  NULL, NULL},
+ {0, SAME_ROW | NO_OK, 0, NULL, NULL,               "",   NULL, EndMark, "",   NULL}
 };
+/* clang-format on */
 
 static void PromoPick(int n) {
     int promoChar = promoOptions[n + count].value;
@@ -2244,23 +2281,25 @@ int ContextMenu(Option * opt, int button, int x, int y, char * text, int index) 
     return TRUE;
 }
 
+/* clang-format off */
 Option chatOptions[] = {
- {0,   0,                                 0,   NULL, NULL,                NULL, NULL,                 Label,   N_("Chats:")       },
- {1,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat")     },
- {2,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat")     },
- {3,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat")     },
- {4,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat")     },
- {5,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat")     },
- {250, T_VSCRL | T_FILL | T_WRAP | T_TOP, 510, NULL, (void *)&memo,       NULL, (void *)&ContextMenu, TextBox, ""                 },
- {0,   0,                                 0,   NULL, NULL,                "",   NULL,                 Break,   ""                 },
- {0,   T_TOP,                             100, NULL, (void *)&partner,    NULL, NULL,                 TextBox, N_("Chat partner:")},
- {0,   SAME_ROW,                          0,   NULL, (void *)&ClearChat,  NULL, NULL,                 Button,  N_("End Chat")     },
- {0,   SAME_ROW,                          0,   NULL, (void *)&PaneSwitch, NULL, NULL,                 Button,  N_("Hide")         },
- {250, T_VSCRL | T_FILL | T_WRAP | T_TOP, 510, NULL, (void *)&chatMemo,   NULL, (void *)&ContextMenu, TextBox, ""                 },
- {0,   0,                                 0,   NULL, NULL,                "",   NULL,                 Break,   ""                 },
- {0,   0,                                 510, NULL, (void *)&line,       NULL, NULL,                 TextBox, ""                 },
- {0,   NO_OK | SAME_ROW,                  0,   NULL, (void *)&ChatOK,     NULL, NULL,                 EndMark, ""                 }
+ {0,   0,                                 0,   NULL, NULL,                NULL, NULL,                 Label,   N_("Chats:"),        NULL},
+ {1,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat"),      NULL},
+ {2,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat"),      NULL},
+ {3,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat"),      NULL},
+ {4,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat"),      NULL},
+ {5,   SAME_ROW | TT,                     75,  NULL, (void *)&ChatSwitch, NULL, NULL,                 Button,  N_("New Chat"),      NULL},
+ {250, T_VSCRL | T_FILL | T_WRAP | T_TOP, 510, NULL, (void *)&memo,       NULL, (void *)&ContextMenu, TextBox, "",                  NULL},
+ {0,   0,                                 0,   NULL, NULL,                "",   NULL,                 Break,   "",                  NULL},
+ {0,   T_TOP,                             100, NULL, (void *)&partner,    NULL, NULL,                 TextBox, N_("Chat partner:"), NULL},
+ {0,   SAME_ROW,                          0,   NULL, (void *)&ClearChat,  NULL, NULL,                 Button,  N_("End Chat"),      NULL},
+ {0,   SAME_ROW,                          0,   NULL, (void *)&PaneSwitch, NULL, NULL,                 Button,  N_("Hide"),          NULL},
+ {250, T_VSCRL | T_FILL | T_WRAP | T_TOP, 510, NULL, (void *)&chatMemo,   NULL, (void *)&ContextMenu, TextBox, "",                  NULL},
+ {0,   0,                                 0,   NULL, NULL,                "",   NULL,                 Break,   "",                  NULL},
+ {0,   0,                                 510, NULL, (void *)&line,       NULL, NULL,                 TextBox, "",                  NULL},
+ {0,   NO_OK | SAME_ROW,                  0,   NULL, (void *)&ChatOK,     NULL, NULL,                 EndMark, "",                  NULL}
 };
+/* clang-format on */
 
 static void PutText(char * text, int pos) {
     char buf[MSG_SIZ], *p;
@@ -2640,14 +2679,16 @@ void GLT_DeSelectList(void) {}
 static void GLT_Button(int n);
 static int GLT_OK(int n);
 
+/* clang-format off */
 static Option listOptions[] = {
  /* For GTK we need to specify a height, as default would just show 3 lines */
- {300, LR | TB,  200, NULL, (void *)strings,     NULL, NULL, ListBox, ""           },
- {0,   0,        0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("factory")},
- {0,   SAME_ROW, 0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("up")     },
- {0,   SAME_ROW, 0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("down")   },
- {0,   SAME_ROW, 0,   NULL, (void *)&GLT_OK,     "",   NULL, EndMark, ""           }
+ {300, LR | TB,  200, NULL, (void *)strings,     NULL, NULL, ListBox, "",            NULL},
+ {0,   0,        0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("factory"), NULL},
+ {0,   SAME_ROW, 0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("up"),      NULL},
+ {0,   SAME_ROW, 0,   NULL, (void *)&GLT_Button, NULL, NULL, Button,  N_("down"),    NULL},
+ {0,   SAME_ROW, 0,   NULL, (void *)&GLT_OK,     "",   NULL, EndMark, "",            NULL}
 };
+/* clang-format on */
 
 static int GLT_OK(int n) {
     GLT_ParseList();
@@ -2733,11 +2774,15 @@ int ErrorOK(int n) {
     return FALSE;
 }
 
+/* clang-format off */
 static Option errorOptions[] = {
- {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL}, /* dummy option: will never be displayed */
- {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL}, /* textValue field will be set before popup */
- {0, NO_CANCEL, 0, NULL, (void *)&ErrorOK, "",   NULL, EndMark, ""  }
+ /* dummy option: will never be displayed */
+ {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL, NULL},
+ /* textValue field will be set before popup */
+ {0, 0,         0, NULL, NULL,             NULL, NULL, Label,   NULL, NULL},
+ {0, NO_CANCEL, 0, NULL, (void *)&ErrorOK, "",   NULL, EndMark, "",   NULL}
 };
+/* clang-format on */
 
 void ErrorPopUp(char * title, char * label, int modal) {
     errorUp = TRUE;
@@ -3153,38 +3198,50 @@ static void CCB(int n) {
     }
 }
 
+/* clang-format off */
 Option mainOptions[] = {
  /* description of main window in terms of generic dialog creator */
- {0, 0xca, 0, NULL, NULL, "", NULL, BarBegin, ""}, /* menu bar */
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_File")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Edit")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_View")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Mode")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Action")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("E_ngine")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Options")},
- {0, COMBO_CALLBACK, 0, NULL, (void *)&MenuCallback, NULL, NULL, DropDown, N_("_Help")},
- {0, 0, 0, NULL, (void *)&SizeKludge, "", NULL, BarEnd, ""},
- {0, LR | T2T | BORDER | SAME_ROW, 0, NULL, NULL, NULL, NULL, Label, "1"}, /* optional title in window */
- {50, LL | TT, 100, NULL, (void *)&LogoW, NULL, NULL, Skip, ""}, /* white logo */
- {12, L2L | T2T, 200, NULL, (void *)&CCB, NULL, NULL, Label, "White"}, /* white clock */
- {13, R2R | T2T | SAME_ROW, 200, NULL, (void *)&CCB, NULL, NULL, Label, "Black"}, /* black clock */
- {50, RR | TT | SAME_ROW, 100, NULL, (void *)&LogoB, NULL, NULL, Skip, ""}, /* black logo */
- {0, LR | T2T | BORDER, 401, NULL, NULL, "", NULL, Skip, "2"}, /* backup for title in window (if no room for other) */
- {0, LR | T2T | BORDER, 270, NULL, NULL, NULL, NULL, Label, "message", &appData.font}, /* message field */
- {0, RR | TT | SAME_ROW, 125, NULL, NULL, "", NULL, BoxBegin, ""}, /* (optional) button bar */
- {0, 0, 0, NULL, (void *)&ToStartEvent, NULL, NULL, Button, N_("<<"), &appData.font},
- {0, SAME_ROW, 0, NULL, (void *)&BackwardEvent, NULL, NULL, Button, N_("<"), &appData.font},
- {0, SAME_ROW, 0, NULL, (void *)&PauseEvent, NULL, NULL, Button, N_(PAUSE_BUTTON), &appData.font},
- {0, SAME_ROW, 0, NULL, (void *)&ForwardEvent, NULL, NULL, Button, N_(">"), &appData.font},
- {0, SAME_ROW, 0, NULL, (void *)&ToEndEvent, NULL, NULL, Button, N_(">>"), &appData.font},
- {0, 0, 0, NULL, NULL, "", NULL, BoxEnd, ""},
- {401, LR | TB, 401, NULL, (char *)&Exp, NULL, NULL, Graph, "shadow board"}, /* board */
- {2, COMBO_CALLBACK, 0, NULL, (void *)&PMSelect, NULL, pieceMenuStrings[0], PopUp, "menuW"},
- {2, COMBO_CALLBACK, 0, NULL, (void *)&PMSelect, NULL, pieceMenuStrings[1], PopUp, "menuB"},
- {-1, COMBO_CALLBACK, 0, NULL, (void *)&PMSelect, NULL, dropMenuStrings, PopUp, "menuD"},
- {0, NO_OK, 0, NULL, NULL, "", NULL, EndMark, ""}
+ /* menu bar */
+ {0,   0xca,                         0,   NULL, NULL,                   "",   NULL,                BarBegin, "",               NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_File"),      NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_Edit"),      NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_View"),      NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_Mode"),      NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_Action"),    NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("E_ngine"),    NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_Options"),   NULL},
+ {0,   COMBO_CALLBACK,               0,   NULL, (void *)&MenuCallback,  NULL, NULL,                DropDown, N_("_Help"),      NULL},
+ {0,   0,                            0,   NULL, (void *)&SizeKludge,    "",   NULL,                BarEnd,   "",               NULL},
+ /* optional title in window */
+ {0,   LR | T2T | BORDER | SAME_ROW, 0,   NULL, NULL,                   NULL, NULL,                Label,    "1",              NULL},
+ /* white logo */
+ {50,  LL | TT,                      100, NULL, (void *)&LogoW,         NULL, NULL,                Skip,     "",               NULL},
+ /* white clock */
+ {12,  L2L | T2T,                    200, NULL, (void *)&CCB,           NULL, NULL,                Label,    "White",          NULL},
+ /* black clock */
+ {13,  R2R | T2T | SAME_ROW,         200, NULL, (void *)&CCB,           NULL, NULL,                Label,    "Black",          NULL},
+ /* black logo */
+ {50,  RR | TT | SAME_ROW,           100, NULL, (void *)&LogoB,         NULL, NULL,                Skip,     "",               NULL},
+ /* backup for title in window (if no room for other) */
+ {0,   LR | T2T | BORDER,            401, NULL, NULL,                   "",   NULL,                Skip,     "2",              NULL},
+ /* message field */
+ {0,   LR | T2T | BORDER,            270, NULL, NULL,                   NULL, NULL,                Label,    "message",        &appData.font},
+ /* (optional) button bar */
+ {0,   RR | TT | SAME_ROW,           125, NULL, NULL,                   "",   NULL,                BoxBegin, "",               NULL},
+ {0,   0,                            0,   NULL, (void *)&ToStartEvent,  NULL, NULL,                Button,   N_("<<"),         &appData.font},
+ {0,   SAME_ROW,                     0,   NULL, (void *)&BackwardEvent, NULL, NULL,                Button,   N_("<"),          &appData.font},
+ {0,   SAME_ROW,                     0,   NULL, (void *)&PauseEvent,    NULL, NULL,                Button,   N_(PAUSE_BUTTON), &appData.font},
+ {0,   SAME_ROW,                     0,   NULL, (void *)&ForwardEvent,  NULL, NULL,                Button,   N_(">"),          &appData.font},
+ {0,   SAME_ROW,                     0,   NULL, (void *)&ToEndEvent,    NULL, NULL,                Button,   N_(">>"),         &appData.font},
+ {0,   0,                            0,   NULL, NULL,                   "",   NULL,                BoxEnd,   "",               NULL},
+ /* board */
+ {401, LR | TB,                      401, NULL, (char *)&Exp,           NULL, NULL,                Graph,    "shadow board",   NULL},
+ {2,   COMBO_CALLBACK,               0,   NULL, (void *)&PMSelect,      NULL, pieceMenuStrings[0], PopUp,    "menuW",          NULL},
+ {2,   COMBO_CALLBACK,               0,   NULL, (void *)&PMSelect,      NULL, pieceMenuStrings[1], PopUp,    "menuB",          NULL},
+ {-1,  COMBO_CALLBACK,               0,   NULL, (void *)&PMSelect,      NULL, dropMenuStrings    , PopUp,    "menuD",          NULL},
+ {0,   NO_OK,                        0,   NULL, NULL,                   "",   NULL,                EndMark,  "",               NULL}
 };
+/* clang-format on */
 
 Option * LogoW(int n, int x, int y) {
     if (n == 10) {
@@ -3390,15 +3447,20 @@ static Option * SecondaryBoardExposeCallbackFn(int n, int x, int y) {
     return NULL;
 }
 
+/* clang-format off */
 /* These are for the secondary board window. */
 Option dualOptions[] = {
- {0,   L2L | T2T,            198, NULL, NULL, NULL, NULL, Label,   "White"               }, /* white clock */
- {0,   R2R | T2T | SAME_ROW, 198, NULL, NULL, NULL, NULL, Label,   "Black"               }, /* black clock */
- {0,   LR | T2T | BORDER,    401, NULL, NULL, NULL, NULL, Label,   "Experimental feature"}, /* message field */
- {401, LR | TT,              401, NULL, (char *)&SecondaryBoardExposeCallbackFn,
-                                              NULL, NULL, Graph,   "Secondary board"     }, /* board */
- {0,   NO_OK,                0,   NULL, NULL, "",   NULL, EndMark, ""                    }
+ /* white clock */
+ {0,   L2L | T2T,            198, NULL, NULL,                                    NULL, NULL, Label,   "White",                NULL},
+ /* black clock */
+ {0,   R2R | T2T | SAME_ROW, 198, NULL, NULL,                                    NULL, NULL, Label,   "Black",                NULL},
+ /* message field */
+ {0,   LR | T2T | BORDER,    401, NULL, NULL,                                    NULL, NULL, Label,   "Experimental feature", NULL},
+ /* board */
+ {401, LR | TT,              401, NULL, (char *)&SecondaryBoardExposeCallbackFn, NULL, NULL, Graph,   "Secondary board",      NULL},
+ {0,   NO_OK,                0,   NULL, NULL,                                    "",   NULL, EndMark, "",                     NULL}
 };
+/* clang-format on */
 
 void SecondaryBoardPopUp(void) {
     int size = desired_board_dimension_in_pixels(BOARD_WIDTH, squareSize, lineGap);
@@ -3511,19 +3573,21 @@ int BrowseOK(int n);
 void Switch(int n);
 void CreateDir(int n);
 
+/* clang-format off */
 Option browseOptions[] = {
- {0,   LR | T2T,             500, NULL, NULL,                   NULL,                 NULL,      Label,    title              },
- {0,   L2L | T2T,            250, NULL, NULL,                   NULL,                 NULL,      Label,    N_("Directories:") },
- {0,   R2R | T2T | SAME_ROW, 100, NULL, NULL,                   NULL,                 NULL,      Label,    N_("Files:")       },
- {0,   R2R | TT | SAME_ROW,  70,  NULL, (void *)&Switch,        NULL,                 NULL,      Button,   N_("by name")      },
- {0,   R2R | TT | SAME_ROW,  70,  NULL, (void *)&Switch,        NULL,                 NULL,      Button,   N_("by type")      },
- {300, L2L | TB,             250, NULL, (void *)folderList,     (char *)&DirSelProc,  NULL,      ListBox,  ""                 },
- {300, R2R | TB | SAME_ROW,  250, NULL, (void *)fileList,       (char *)&FileSelProc, NULL,      ListBox,  ""                 },
- {0,   0,                    300, NULL, (void *)&fileName,      NULL,                 NULL,      TextBox,  N_("Filename:")    },
- {0,   SAME_ROW,             120, NULL, (void *)&CreateDir,     NULL,                 NULL,      Button,   N_("New directory")},
- {0,   COMBO_CALLBACK,       150, NULL, (void *)&SetTypeFilter, NULL,                 FileTypes, ComboBox, N_("File type:")   },
- {0,   SAME_ROW,             0,   NULL, (void *)&BrowseOK,      "",                   NULL,      EndMark,  ""                 }
+ {0,   LR | T2T,             500, NULL, NULL,                   NULL,                 NULL,      Label,    title,               NULL},
+ {0,   L2L | T2T,            250, NULL, NULL,                   NULL,                 NULL,      Label,    N_("Directories:"),  NULL},
+ {0,   R2R | T2T | SAME_ROW, 100, NULL, NULL,                   NULL,                 NULL,      Label,    N_("Files:"),        NULL},
+ {0,   R2R | TT | SAME_ROW,  70,  NULL, (void *)&Switch,        NULL,                 NULL,      Button,   N_("by name"),       NULL},
+ {0,   R2R | TT | SAME_ROW,  70,  NULL, (void *)&Switch,        NULL,                 NULL,      Button,   N_("by type"),       NULL},
+ {300, L2L | TB,             250, NULL, (void *)folderList,     (char *)&DirSelProc,  NULL,      ListBox,  "",                  NULL},
+ {300, R2R | TB | SAME_ROW,  250, NULL, (void *)fileList,       (char *)&FileSelProc, NULL,      ListBox,  "",                  NULL},
+ {0,   0,                    300, NULL, (void *)&fileName,      NULL,                 NULL,      TextBox,  N_("Filename:"),     NULL},
+ {0,   SAME_ROW,             120, NULL, (void *)&CreateDir,     NULL,                 NULL,      Button,   N_("New directory"), NULL},
+ {0,   COMBO_CALLBACK,       150, NULL, (void *)&SetTypeFilter, NULL,                 FileTypes, ComboBox, N_("File type:"),    NULL},
+ {0,   SAME_ROW,             0,   NULL, (void *)&BrowseOK,      "",                   NULL,      EndMark,  "",                  NULL}
 };
+/* clang-format on */
 
 int BrowseOK(int n) {
     if (!fileName[0]) {

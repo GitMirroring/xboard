@@ -75,18 +75,20 @@ static int GameListPrepare(int byPos, int narrow);
 static void GameListReplace(int page);
 static void GL_Button(int n);
 
+/* clang-format off */
 Option gamesOptions[] = {
- {200, LR | TB, 400, NULL, (void *)list, NULL, NULL, ListBox, "", &appData.gameListFont},
- {0, 0, 100, NULL, (void *)&filterPtr, "", NULL, TextBox, ""},
- {4, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("find position")},
+ {200, LR | TB,          400, NULL, (void *)list,       NULL, NULL, ListBox, "",                  &appData.gameListFont},
+ {0,   0,                100, NULL, (void *)&filterPtr, "",   NULL, TextBox, "",                  0},
+ {4,   SAME_ROW,         0,   NULL, (void *)&GL_Button, NULL, NULL, Button,  N_("find position"), 0},
  /* buttons referred to by ID in value (=first) field! */
- {2, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("narrow")},
- {3, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("thresholds")},
- {9, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("tags")},
- {5, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("next")},
- {6, SAME_ROW, 0, NULL, (void *)&GL_Button, NULL, NULL, Button, N_("close")},
- {0, SAME_ROW | NO_OK, 0, NULL, NULL, "", NULL, EndMark, ""}
+ {2,   SAME_ROW,         0,   NULL, (void *)&GL_Button, NULL, NULL, Button,  N_("narrow"),        0},
+ {3,   SAME_ROW,         0,   NULL, (void *)&GL_Button, NULL, NULL, Button,  N_("thresholds"),    0},
+ {9,   SAME_ROW,         0,   NULL, (void *)&GL_Button, NULL, NULL, Button,  N_("tags"),          0},
+ {5,   SAME_ROW,         0,   NULL, (void *)&GL_Button, NULL, NULL, Button,  N_("next"),          0},
+ {6,   SAME_ROW,         0,   NULL, (void *)&GL_Button, NULL, NULL, Button,  N_("close"),         0},
+ {0,   SAME_ROW | NO_OK, 0,   NULL, NULL,               "",   NULL, EndMark, "",                  0}
 };
+/* clang-format on */
 
 static void GL_Button(int n) {
     int index;

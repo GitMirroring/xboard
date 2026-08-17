@@ -70,24 +70,26 @@ int highTextEnd[2];
 
 int MemoProc(Option * opt, int n, int x, int y, char * text, int index);
 
+/* clang-format off */
 Option engoutOptions[] = {
- {0, LL | T2T, 18, NULL, NULL, NULL, NULL, Icon, " "},
- {0, L2L | T2T | SAME_ROW, 162, NULL, NULL, NULL, NULL, Label, N_("engine name")},
- {0, T2T | SAME_ROW, 30, NULL, NULL, NULL, NULL, Icon, " "},
+ {0,   LL | T2T,             18,  NULL, NULL,          NULL, NULL,              Icon,    " ",               0},
+ {0,   L2L | T2T | SAME_ROW, 162, NULL, NULL,          NULL, NULL,              Label,   N_("engine name"), 0},
+ {0,   T2T | SAME_ROW,       30,  NULL, NULL,          NULL, NULL,              Icon,    " ",               0},
  /* TRANSLATORS: Here, "move" is used as a noun, e.g., "the move Nf3". */
- {0, R2R | T2T | SAME_ROW, 188, NULL, NULL, NULL, NULL, Label, N_("move")},
- {0, RR | T2T | SAME_ROW, 80, NULL, NULL, NULL, NULL, Label, N_("NPS")},
- {200, T_VSCRL | T_TOP, 500, NULL, (void *)&mem1, NULL, (char **)MemoProc, TextBox, "", &appData.historyFont},
- {0, 0, 0, NULL, NULL, "", NULL, Break, ""},
- {0, LL | T2T, 18, NULL, NULL, NULL, NULL, Icon, " "},
- {0, L2L | T2T | SAME_ROW, 162, NULL, NULL, NULL, NULL, Label, N_("engine name")},
- {0, T2T | SAME_ROW, 30, NULL, NULL, NULL, NULL, Icon, " "},
+ {0,   R2R | T2T | SAME_ROW, 188, NULL, NULL,          NULL, NULL,              Label,   N_("move"),        0},
+ {0,   RR | T2T | SAME_ROW,  80,  NULL, NULL,          NULL, NULL,              Label,   N_("NPS"),         0},
+ {200, T_VSCRL | T_TOP,      500, NULL, (void *)&mem1, NULL, (char **)MemoProc, TextBox, "",                &appData.historyFont},
+ {0,   0,                    0,   NULL, NULL,          "",   NULL,              Break,   "",                0},
+ {0,   LL | T2T,             18,  NULL, NULL,          NULL, NULL,              Icon,    " ",               0},
+ {0,   L2L | T2T | SAME_ROW, 162, NULL, NULL,          NULL, NULL,              Label,   N_("engine name"), 0},
+ {0,   T2T | SAME_ROW,       30,  NULL, NULL,          NULL, NULL,              Icon,    " ",               0},
  /* TRANSLATORS: Here, "move" is used as a noun, e.g., "the move Nf3". */
- {0, R2R | T2T | SAME_ROW, 188, NULL, NULL, NULL, NULL, Label, N_("move")},
- {0, RR | T2T | SAME_ROW, 80, NULL, NULL, NULL, NULL, Label, N_("NPS")},
- {200, T_VSCRL | T_TOP, 500, NULL, (void *)&mem2, NULL, (char **)MemoProc, TextBox, "", &appData.historyFont},
- {0, NO_OK, 0, NULL, NULL, "", NULL, EndMark, ""}
+ {0,   R2R | T2T | SAME_ROW, 188, NULL, NULL,          NULL, NULL,              Label,   N_("move"),        0},
+ {0,   RR | T2T | SAME_ROW,  80,  NULL, NULL,          NULL, NULL,              Label,   N_("NPS"),         0},
+ {200, T_VSCRL | T_TOP,      500, NULL, (void *)&mem2, NULL, (char **)MemoProc, TextBox, "",                &appData.historyFont},
+ {0,   NO_OK,                0,   NULL, NULL,          "",   NULL,              EndMark, "",                0}
 };
+/* clang-format on */
 
 /* user callback for mouse events in memo */
 int MemoProc(Option * opt, int n, int x, int y, char * text, int index) {
